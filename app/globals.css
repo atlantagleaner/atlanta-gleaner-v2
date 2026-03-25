@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: #F5F5F5;
+  width: 100%;
+}
+
+/* Scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  animation: scanline-drift 12s linear infinite;
+}
+
+@keyframes scanline-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 40px; }
+}
+
+/* Backlit glow on all text */
+.glow {
+  text-shadow:
+    0 0 6px rgba(245,245,245,0.5),
+    0 0 12px rgba(245,245,245,0.15);
+}
+
+/* Subtle flicker on the whole screen */
+.flicker {
+  animation: flicker 8s infinite ease-in-out;
+}
+
+@keyframes flicker {
+  0%   { opacity: 1;    }
+  92%  { opacity: 1;    }
+  93%  { opacity: 0.97; }
+  94%  { opacity: 1;    }
+  96%  { opacity: 0.98; }
+  100% { opacity: 1;    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 0; }
