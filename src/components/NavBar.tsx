@@ -154,14 +154,13 @@ export function NavBar() {
               ...mono,
               display: 'block',
               fontSize: '11px',
-              fontWeight: 600,
+              fontWeight: pathname === href ? 700 : 500,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: pathname === href ? '#000' : '#555',
               textDecoration: 'none',
               padding: '14px 24px',
               borderBottom: '1px solid rgba(0,0,0,0.06)',
-              fontWeight: pathname === href ? 700 : 500,
             }}
           >
             {label}
