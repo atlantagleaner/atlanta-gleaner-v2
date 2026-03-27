@@ -2,8 +2,7 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Archive — searchable, accordion index of all published volumes.
-// Layout: Banner · search bar · [2-col volume grid | sticky Twitter feed]
-// Future Supabase: replace ARCHIVE_DATA with server-side paginated query.
+// Layout: Banner · page title · search bar · [2-col volume grid | sticky Twitter]
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState } from 'react'
@@ -17,8 +16,6 @@ export default function ArchivePage() {
   const [searchTerm,   setSearchTerm]   = useState('')
   const [inputFocused, setInputFocused] = useState(false)
 
-  // Filter volumes → months → articles by search term.
-  // When not searching, all months are shown (including empty ones).
   const filteredData = searchTerm
     ? ARCHIVE_DATA
         .map(volume => ({
@@ -45,28 +42,27 @@ export default function ArchivePage() {
 
   return (
     <>
-      {/* Banner — same component as home page */}
       <Banner />
 
       <main style={{ padding: '0 20px 80px', maxWidth: PAGE_MAX_W, margin: '0 auto' }}>
 
-        {/* ── Page title ─────────────────────────────────────────────────── */}
+        {/* Page title */}
         <div style={PAGE_TITLE_BLOCK}>
           <h1 style={{ ...T.pageTitle, color: PALETTE.black, margin: 0 }}>
             Archive
           </h1>
         </div>
 
-        {/* ── Search bar ─────────────────────────────────────────────────── */}
+        {/* Search bar */}
         <div style={{ marginBottom: '28px' }}>
           <div style={{
-            display:      'flex',
-            alignItems:   'center',
-            border:       `1px solid ${inputFocused ? PALETTE.black : 'rgba(0,0,0,0.18)'}`,
-            background:   PALETTE.white,
-            padding:      '10px 14px',
-            maxWidth:     '480px',
-            transition:   'border-color 0.15s',
+            display:    'flex',
+            alignItems: 'center',
+            border:     `1px solid ${inputFocused ? PALETTE.black : 'rgba(0,0,0,0.18)'}`,
+            background: PALETTE.white,
+            padding:    '10px 14px',
+            maxWidth:   '480px',
+            transition: 'border-color 0.15s',
           }}>
             <span style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, marginRight: '10px', flexShrink: 0 }}>
               SEARCH▸
@@ -92,7 +88,6 @@ export default function ArchivePage() {
               <button
                 onClick={() => setSearchTerm('')}
                 style={{
-                  ...T.micro,
                   background: 'none',
                   border:     'none',
                   cursor:     'pointer',
@@ -103,19 +98,16 @@ export default function ArchivePage() {
                   lineHeight: 1,
                 }}
               >
-                ×
+                x
               </button>
             )}
           </div>
-
-          {/* Result count — only shown when searching */}
           {searchTerm && (
             <p style={{
               ...T.micro,
-              color:      PALETTE.black,
-              opacity:    0.5,
-              margin:     '6px 0 0',
-              textAlign:  'left',
+              color:       PALETTE.black,
+              opacity:     0.5,
+              margin:      '6px 0 0',
               paddingLeft: '2px',
             }}>
               {resultCount} result{resultCount !== 1 ? 's' : ''}
@@ -123,17 +115,14 @@ export default function ArchivePage() {
           )}
         </div>
 
-        {/* ── Main grid ──────────────────────────────────────────────────── */}
-        {/*  Left zone (2/3): volume accordion boxes in a 2-col sub-grid     */}
-        {/*  Right zone (1/3): Twitter feed, sticky so it tracks the scroll  */}
+        {/* Main grid: 2-col accordions + sticky Twitter */}
         <div style={{
-          display:               'grid',
-          gridTemplateColumns:   '1fr 1fr 300px',
-          gap:                   '20px',
-          alignItems:            'start',
+          display:             'grid',
+          gridTemplateColumns: '1fr 1fr 300px',
+          gap:                 '20px',
+          alignItems:          'start',
         }}>
-
-          {/* Volume accordions — span first 2 columns as a nested 2-col grid */}
+          {/* Volume accordions */}
           <div style={{
             gridColumn:          '1 / 3',
             display:             'grid',
@@ -153,22 +142,22 @@ export default function ArchivePage() {
               <p style={{
                 ...T.micro,
                 color:      PALETTE.black,
-                opacity:    0.5,
-                gridColumn: '1 / 3',
-                padding:    '48px 0',
+                opacity:    0.45,
+                gridColumn: '1 / -1',
+                padding:    '40px 0',
                 textAlign:  'center',
               }}>
-                [ No results for &ldquo;{searchTerm}&rdquo; ]
+                No results for &ldquo;{searchTerm}&rdquo;
               </p>
             )}
           </div>
 
-          {/* Twitter feed — sticky right column */}
-          <div style={{ position: 'sticky', top: '60px' }}>
+          {/* Sticky Twitter feed */}
+          <div style={{ position: 'sticky', top: '20px' }}>
             <TwitterBox />
           </div>
-
         </div>
+
       </main>
     </>
   )
