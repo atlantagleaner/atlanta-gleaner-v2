@@ -26,9 +26,14 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
     return () => clearInterval(id)
   }, [])
 
-  const showDatetime = publishedDate && now
+  // Show date/time on homepage or on case pages with publishedDate
+  const isHomepage = pathname === '/'
+  const showDatetime = (isHomepage || publishedDate) && now
   const dateStr = showDatetime
-    ? new Date(publishedDate + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? (publishedDate
+        ? new Date(publishedDate + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        : now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      )
     : ''
   const timeStr = now
     ? now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })
