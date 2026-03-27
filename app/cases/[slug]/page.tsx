@@ -39,7 +39,6 @@
 
 import { notFound } from 'next/navigation'
 import { Banner }     from '@/src/components/Banner'
-import { NavBar }     from '@/src/components/NavBar'
 import { NewsBox }    from '@/src/components/NewsBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
 import { getCaseBySlug, ALL_CASES, type CaseLaw } from '@/src/data/cases'
@@ -346,7 +345,6 @@ export default function CasePage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <NavBar publishedDate={c.publishedAt} />
       <Banner />
 
       <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: '0 20px 80px' }}>
