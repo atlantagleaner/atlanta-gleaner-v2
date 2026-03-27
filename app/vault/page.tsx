@@ -7,6 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, type CSSProperties } from 'react'
+import { Banner } from '@/src/components/Banner'
 
 const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" }
 const serif: CSSProperties = { fontFamily: "'Cormorant Garamond', serif" }
@@ -134,20 +135,16 @@ function ProductCard({ name, description, price, imageUrl, shopifyUrl, tag }: ty
 
 export default function VaultPage() {
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 24px 80px' }}>
-
-      {/* Page header */}
-      <div style={{ marginBottom: '36px', borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px' }}>
-        <p style={{ ...mono, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.28em', color: '#888', margin: '0 0 8px' }}>
-          The Atlanta Gleaner · Merchandise
-        </p>
-        <h1 style={{ ...serif, fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontWeight: 700, lineHeight: 1, color: '#0A0A0A', margin: '0 0 12px', textShadow: '0 0 1px rgba(0,0,0,0.2)' }}>
-          The Vault
-        </h1>
-        <p style={{ ...sans, fontSize: '14px', color: '#666', margin: 0 }}>
-          High-contrast goods. Archival aesthetics. Ships from Atlanta.
-        </p>
+    <>
+      <Banner />
+      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
+        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
+          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+            Vault
+          </h1>
+        </div>
       </div>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px 80px' }}>
 
       {/* Product grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
@@ -159,6 +156,7 @@ export default function VaultPage() {
         Secure checkout via Shopify · Ships 3–5 business days · Atlanta, GA
       </p>
 
-    </div>
+      </div>
+    </>
   )
 }

@@ -17,9 +17,9 @@ html, body {
 
 /* ── Scrollbar ─────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #EBE5D8; }
-::-webkit-scrollbar-thumb { background: #bbb; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #888; }
+::-webkit-scrollbar-track { background: #E8E8E8; }
+::-webkit-scrollbar-thumb { background: #999; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #666; }
 
 /* ── Selection ─────────────────────────────────────────────────────────────── */
-::selection { background: #111; color: #F7F2EA; }
+::selection { background: #2C2C2C; color: #FFFFFF; }

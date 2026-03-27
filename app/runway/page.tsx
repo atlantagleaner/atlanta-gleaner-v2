@@ -1,4 +1,5 @@
 import { type CSSProperties } from 'react'
+import { Banner } from '@/src/components/Banner'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Runway — embedded YouTube music videos
@@ -78,26 +79,23 @@ function VideoSlot({ title, artist, youtubeId, note }: typeof VIDEOS[0]) {
 
 export default function RunwayPage() {
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 24px 80px' }}>
-
-      {/* Page header */}
-      <div style={{ marginBottom: '36px', borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px' }}>
-        <p style={{ ...mono, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.28em', color: '#888', margin: '0 0 8px' }}>
-          The Atlanta Gleaner · Film Reel
-        </p>
-        <h1 style={{ ...serif, fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontWeight: 700, lineHeight: 1, color: '#0A0A0A', margin: '0 0 12px', textShadow: '0 0 1px rgba(0,0,0,0.2)' }}>
-          The Runway
-        </h1>
-        <p style={{ ...sans, fontSize: '14px', color: '#666', margin: 0 }}>
-          Curated music selections from the editor. Updated irregularly.
-        </p>
+    <>
+      <Banner />
+      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
+        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
+          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+            Runway
+          </h1>
+        </div>
       </div>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px 80px' }}>
 
       {/* Video grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
         {VIDEOS.map(v => <VideoSlot key={v.id} {...v} />)}
       </div>
 
-    </div>
+      </div>
+    </>
   )
 }

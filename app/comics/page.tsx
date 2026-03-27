@@ -1,4 +1,5 @@
 import { type CSSProperties } from 'react'
+import { Banner } from '@/src/components/Banner'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Comics — comic panels displayed like framed art in a gallery
@@ -102,26 +103,23 @@ function ComicFrame({ series, caption, imageUrl, publishedAt, frameNo }: typeof 
 
 export default function ComicsPage() {
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px 80px' }}>
-
-      {/* Page header */}
-      <div style={{ marginBottom: '36px', borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px' }}>
-        <p style={{ ...mono, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.28em', color: '#888', margin: '0 0 8px' }}>
-          The Atlanta Gleaner · Gallery
-        </p>
-        <h1 style={{ ...serif, fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontWeight: 700, lineHeight: 1, color: '#0A0A0A', margin: '0 0 12px', textShadow: '0 0 1px rgba(0,0,0,0.2)' }}>
-          Comics
-        </h1>
-        <p style={{ ...sans, fontSize: '14px', color: '#666', margin: 0 }}>
-          Selected comic panels. Each framed as a found object.
-        </p>
+    <>
+      <Banner />
+      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
+        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
+          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+            Comics
+          </h1>
+        </div>
       </div>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 80px' }}>
 
       {/* Masonry-style grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
         {COMICS.map(c => <ComicFrame key={c.id} {...c} />)}
       </div>
 
-    </div>
+      </div>
+    </>
   )
 }

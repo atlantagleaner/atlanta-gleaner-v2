@@ -1,171 +1,114 @@
 'use client'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// NavBar — sticky top navigation
-// Future Solito: replace <a> with React Navigation links; keep layout logic
-// ─────────────────────────────────────────────────────────────────────────────
-
-import { useState, type CSSProperties } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { PALETTE, T } from '@/src/styles/tokens'
 
 const NAV_LINKS = [
-  { label: 'Archive',  href: '/archive' },
-  { label: 'Runway',   href: '/runway'  },
-  { label: 'Comics',   href: '/comics'  },
-  { label: 'Vault',    href: '/vault'   },
-  { label: 'About',    href: '/about'   },
+  { label: 'Archive', href: '/archive' },
+  { label: 'Runway',  href: '/runway'  },
+  { label: 'Comics',  href: '/comics'  },
+  { label: 'Vault',   href: '/vault'   },
+  { label: 'About',   href: '/about'   },
 ]
 
-const mono: CSSProperties = {
-  fontFamily: "'IBM Plex Mono', monospace",
-}
-
 export function NavBar() {
-  const pathname = usePathname()
-  const [menuOpen, setMenuOpen] = useState(false)
+  const pathname    = usePathname()
+  const [open, setOpen] = useState(false)
+  const navRef      = useRef<HTMLElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function onPointerDown(e: PointerEvent) {
+      const t = e.target as Node
+      if (!navRef.current?.contains(t) && !dropdownRef.current?.contains(t)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [open])
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: `
-        .ag-nav-link { transition: color 0.15s, background 0.15s; }
-        .ag-nav-link:hover { color: #000 !important; background: rgba(0,0,0,0.06) !important; }
-        .ag-nav-link.active { color: #000 !important; border-bottom: 2px solid #000; }
-        .ag-hamburger:hover { background: rgba(0,0,0,0.06) !important; }
-        .ag-mobile-link { transition: background 0.12s; }
-        .ag-mobile-link:hover { background: rgba(0,0,0,0.05) !important; }
-        @media (max-width: 767px) {
-          .ag-desktop-links { display: none !important; }
-          .ag-hamburger { display: flex !important; }
+        .ag-plus-btn { transition: opacity 0.15s; }
+        .ag-plus-btn:hover { opacity: 0.5; }
+        .ag-plus-icon {
+          display: inline-block;
+          transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .ag-plus-icon--open { transform: rotate(45deg); }
+        .ag-dropdown {
+          position: fixed; top: 48px; left: 0; right: 0; z-index: 190;
+          background: ${PALETTE.white};
+          border-bottom: 1px solid rgba(0,0,0,0.10);
+          transform-origin: top center;
+          transition: transform 0.24s cubic-bezier(0.4,0,0.2,1),
+                      opacity   0.20s cubic-bezier(0.4,0,0.2,1);
+        }
+        .ag-dropdown--closed { transform: scaleY(0); opacity: 0; pointer-events: none; visibility: hidden; }
+        .ag-dropdown-link { transition: background 0.1s; }
+        .ag-dropdown-link:hover { background: ${PALETTE.warm} !important; }
+        @media (max-width: 767px) { .ag-dropdown-link { padding: 16px 20px !important; } }
         @media (min-width: 768px) {
-          .ag-desktop-links { display: flex !important; }
-          .ag-hamburger { display: none !important; }
+          .ag-dropdown {
+            left: auto; right: 16px; width: 160px; top: 52px;
+            border-radius: 2px; border: 1px solid rgba(0,0,0,0.12);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+          }
+          .ag-dropdown-link { padding: 11px 14px !important; }
         }
       `}} />
 
-      <nav style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 200,
-        background: 'rgba(247, 242, 234, 0.96)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+      <nav ref={navRef} style={{
+        position: 'sticky', top: 0, zIndex: 200,
+        background: PALETTE.white,
         borderBottom: '1px solid rgba(0,0,0,0.10)',
         height: '48px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px',
       }}>
-        {/* Logo */}
         <Link href="/" style={{
-          ...mono,
-          fontSize: '11px',
-          fontWeight: 600,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          color: '#000',
-          textDecoration: 'none',
+          ...T.site, color: PALETTE.black, textDecoration: 'none',
         }}>
           The Atlanta Gleaner
         </Link>
 
-        {/* Desktop links */}
-        <div className="ag-desktop-links" style={{ gap: '2px', alignItems: 'center' }}>
-          {NAV_LINKS.map(({ label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`ag-nav-link${pathname === href ? ' active' : ''}`}
+        <button
+          className="ag-plus-btn"
+          onClick={() => setOpen(v => !v)}
+          aria-label="Toggle navigation"
+          aria-expanded={open}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '4px 8px', color: PALETTE.black,
+            fontSize: '24px', fontWeight: 300, lineHeight: 1,
+            display: 'flex', alignItems: 'center',
+          }}
+        >
+          <span className={`ag-plus-icon${open ? ' ag-plus-icon--open' : ''}`}>+</span>
+        </button>
+      </nav>
+
+      <div ref={dropdownRef} className={`ag-dropdown${open ? '' : ' ag-dropdown--closed'}`} aria-hidden={!open}>
+        {NAV_LINKS.map(({ label, href }) => {
+          const active = pathname === href
+          return (
+            <Link key={href} href={href} className="ag-dropdown-link" onClick={() => setOpen(false)}
               style={{
-                ...mono,
-                fontSize: '10px',
-                fontWeight: 600,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: pathname === href ? '#000' : '#666',
+                ...T.nav,
+                display: 'block',
+                fontWeight: active ? 700 : 500,
+                color: PALETTE.black,
                 textDecoration: 'none',
-                padding: '6px 10px',
-                borderRadius: '2px',
-                borderBottom: pathname === href ? '2px solid #000' : '2px solid transparent',
+                borderBottom: '1px solid rgba(0,0,0,0.07)',
               }}
             >
               {label}
             </Link>
-          ))}
-        </div>
-
-        {/* Hamburger (mobile) */}
-        <button
-          className="ag-hamburger"
-          onClick={() => setMenuOpen(v => !v)}
-          style={{
-            display: 'none', // overridden by media query
-            flexDirection: 'column',
-            gap: '5px',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px',
-            borderRadius: '4px',
-          }}
-          aria-label="Toggle menu"
-        >
-          {[0,1,2].map(i => (
-            <span key={i} style={{
-              display: 'block',
-              width: '20px',
-              height: '1.5px',
-              background: '#000',
-              transition: 'all 0.2s',
-              transformOrigin: 'center',
-              transform: menuOpen
-                ? i === 0 ? 'translateY(6.5px) rotate(45deg)'
-                : i === 2 ? 'translateY(-6.5px) rotate(-45deg)'
-                : 'scaleX(0)'
-                : 'none',
-            }} />
-          ))}
-        </button>
-      </nav>
-
-      {/* Mobile dropdown */}
-      <div style={{
-        position: 'fixed',
-        top: '48px',
-        left: 0,
-        right: 0,
-        zIndex: 190,
-        background: 'rgba(247, 242, 234, 0.98)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(0,0,0,0.10)',
-        overflow: 'hidden',
-        maxHeight: menuOpen ? '300px' : '0',
-        transition: 'max-height 0.25s ease',
-      }}>
-        {NAV_LINKS.map(({ label, href }) => (
-          <Link
-            key={href}
-            href={href}
-            className="ag-mobile-link"
-            onClick={() => setMenuOpen(false)}
-            style={{
-              ...mono,
-              display: 'block',
-              fontSize: '11px',
-              fontWeight: pathname === href ? 700 : 500,
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: pathname === href ? '#000' : '#555',
-              textDecoration: 'none',
-              padding: '14px 24px',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-            }}
-          >
-            {label}
-          </Link>
-        ))}
+          )
+        })}
       </div>
     </>
   )

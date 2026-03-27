@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { Banner } from '@/src/components/Banner'
+import { DateClock } from '@/src/components/DateClock'
 import { NewsBox } from '@/src/components/NewsBox'
 import { CaseLawBox } from '@/src/components/CaseLawBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
@@ -13,6 +14,9 @@ export default function HomePage() {
     <>
       {/* Masthead */}
       <Banner />
+
+      {/* Date + live clock */}
+      <DateClock />
 
       {/* Three resizable content panels */}
       <div style={{ paddingTop: '24px' }}>
