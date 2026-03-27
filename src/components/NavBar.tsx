@@ -69,7 +69,11 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         .ag-dropdown--closed { transform: scaleY(0); opacity: 0; pointer-events: none; visibility: hidden; }
         .ag-dropdown-link { transition: background 0.1s; }
         .ag-dropdown-link:hover { background: ${PALETTE.warm} !important; }
-        @media (max-width: 767px) { .ag-dropdown-link { padding: 16px 20px !important; } }
+        /* Sticky nav on mobile only */
+        @media (max-width: 767px) {
+          .ag-nav { position: sticky !important; top: 0 !important; }
+          .ag-dropdown-link { padding: 16px 20px !important; }
+        }
         @media (min-width: 768px) {
           .ag-dropdown {
             left: auto; right: 16px; width: 160px; top: 52px;
@@ -80,30 +84,30 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         }
       `}} />
 
-      <nav ref={navRef} style={{
-        position: 'sticky', top: 0, zIndex: 200,
+      <nav ref={navRef} className="ag-nav" style={{
+        position: 'relative', zIndex: 200,
         background: PALETTE.white,
         borderBottom: '1px solid rgba(0,0,0,0.10)',
         minHeight: showDatetime ? '64px' : '48px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px',
       }}>
-        {showDatetime ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            <div style={{ ...T.site, color: PALETTE.black, fontSize: SIZE_SM }}>
-              {dateStr}
-            </div>
-            <div style={{ ...T.nav, color: PALETTE.black, fontSize: SIZE_SM, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>
-              {timeStr}
-            </div>
-          </div>
-        ) : (
-          <Link href="/" style={{
-            ...T.site, color: PALETTE.black, textDecoration: 'none',
-          }}>
-            The Atlanta Gleaner
-          </Link>
-        )}
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          {showDatetime ? (
+            <>
+              <div style={{ ...T.site, color: PALETTE.black, fontSize: SIZE_SM }}>
+                {dateStr}
+              </div>
+              <div style={{ ...T.nav, color: PALETTE.black, fontSize: SIZE_SM, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>
+                {timeStr}
+              </div>
+            </>
+          ) : (
+            <span style={{ ...T.site, color: PALETTE.black }}>
+              The Atlanta Gleaner
+            </span>
+          )}
+        </Link>
 
         <button
           className="ag-plus-btn"
