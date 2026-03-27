@@ -239,6 +239,7 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             <MetaRow label="Citations"    value={caseData.citations} />
             <MetaRow label="Judges"       value={caseData.judges} />
             <MetaRow label="Disposition"  value={caseData.disposition} />
+            {caseData.noticeText && <MetaRow label="Notice" value={caseData.noticeText} />}
           </div>
 
           {/* Line space separator */}
@@ -293,23 +294,9 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             </p>
 
             {/* Conclusion */}
-            <p style={{ ...T.prose, color: PALETTE.black, margin: '0 0 12px 0' }}>
+            <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
               {caseData.conclusionText}
             </p>
-
-            {/* Notice banner — warm bg, left accent, NOT bold */}
-            {caseData.noticeText && (
-              <div style={{
-                ...T.micro,
-                color:      PALETTE.black,
-                background: 'transparent',
-                borderTop:  `1px solid rgba(0,0,0,0.10)`,
-                paddingTop: '12px',
-                marginTop:  '12px',
-              }}>
-                {caseData.noticeText}
-              </div>
-            )}
           </div>
 
           {/* ── Opinion block — white background ───────────────────────────── */}
