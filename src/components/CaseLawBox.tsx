@@ -3,50 +3,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CaseLawBox — Roll-B panel. Each instance is a specific published case.
 //
-// ── OPINION FORMATTING + FIDELITY SPEC ───────────────────────────────────────
-//
 // FIDELITY (non-negotiable):
 //   · Opinion text is reproduced verbatim from the official slip opinion.
-//   · No word, punctuation mark, or capitalization may be altered.
-//   · Footnotes are preserved as footnotes — never inlined or dropped.
-//   · Footnote markers in the body ({fn:N}) become bidirectional <sup> links:
-//       body marker  →  anchor #[id]-fn-N  (jumps to footnote)
-//       footnote num →  anchor #[id]-ref-N (jumps back to citation in text)
-//   · Asterisk notices (UNCORRECTED, etc.) are shown at the top, NOT bolded.
-//
-// STRUCTURE (top to bottom):
-//   [warm] Notice banner — T.micro, left-border, no bold weight
-//   [white] Header — BOX_HEADER label + serif case title
-//   [warm] Metadata — Court · Date · Docket · Citations · Judges · Disposition
-//   [warm] Editorial — Core Terms + Case Summary + Holding + Conclusion
-//   [white] Opinion — "Opinion" serif header · author line · paragraphs
-//          · footnote list (if any) · Load Full Opinion button
-//
-// TYPOGRAPHY:
-//   Case title:      FONT.serif, clamp(1.6rem, 3.5vw, 2.6rem), weight 700
-//   Notice text:     T.micro — weight 600 (label tracking), NOT bold
-//   Metadata label:  T.micro, minWidth 120px
-//   Metadata value:  FONT.sans 12px, weight 400
-//   Core terms:      FONT.sans 12px, label chip on PALETTE.warm
-//   Summary header:  T.micro
-//   Summary prose:   T.prose
-//   Holding:         T.prose weight 600, border-left 3px black
-//   Opinion header:  FONT.serif 24px weight 700
-//   Author line:     T.label
-//   Paragraphs:      T.prose, lineHeight 1.72
-//   Block quotes:    FONT.serif italic, border-left 3px, paddingLeft 16px
-//   Footnote marks:  <sup> T.micro, links to #fn anchor
-//   Footnote list:   T.micro label + FONT.sans 12px text, back-link to #ref
+//   · Footnote markers ({fn:N}) become bidirectional <sup> links.
+//   · Case citation names italicized per Bluebook Rule 10.2.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, type CSSProperties } from 'react'
+import React, { useState, type CSSProperties } from 'react'
 import { FEATURED_CASE, type CaseLaw } from '@/src/data/cases'
 import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER, ITEM_RULE } from '@/src/styles/tokens'
 
-// ─── MetaRow ──────────────────────────────────────────────────────────────────
-// label  — T.micro, minWidth 120px
-// value  — FONT.sans 12px, always weight 400 (never bolded)
-// notice — applies warm background tint + left border accent; no weight change
 function MetaRow({
   label, value, notice = false,
 }: {
@@ -67,7 +33,7 @@ function MetaRow({
         ...FONT.sans,
         fontSize:    '12px',
         color:       PALETTE.black,
-        fontWeight:  400,            // always regular — never bolded
+        fontWeight:  400,
         background:  'transparent',
         lineHeight:  1.4,
         borderLeft:  notice ? `2px solid ${PALETTE.black}` : 'none',
@@ -79,26 +45,39 @@ function MetaRow({
   )
 }
 
-// ─── Footnote-aware paragraph renderer ───────────────────────────────────────
-// Parses {fn:N} markers in opinion text into bidirectional <sup> links.
-// Also detects paragraphs that are pure block quotes (start + end with ").
+const CITE_RX =
+  /((?:[A-Z][A-Za-z'\u2019\-]+)(?:\s+(?:[A-Z][A-Za-z'\u2019\-]+|of|the|a|an|in|for|at|by|de|La|Los|Las|El))*\s+v\.\s+(?:[A-Z][A-Za-z'\u2019\-]+)(?:\s+(?:[A-Z][A-Za-z'\u2019\-]+|of|the|a|an|in|for|at|by|de|La|Los|Las|El))*)/
+
+function withCiteItalics(text: string, keyPrefix: string): React.ReactNode[] {
+  const result: React.ReactNode[] = []
+  const parts = text.split(CITE_RX)
+  parts.forEach((part, i) => {
+    if (!part) return
+    if (i % 2 === 1) {
+      result.push(<em key={`${keyPrefix}-cite-${i}`} style={{ fontStyle: 'italic' }}>{part}</em>)
+    } else {
+      result.push(part)
+    }
+  })
+  return result
+}
+
 function renderOpinionParagraph(
   para:    string,
   caseId:  string,
   paraKey: number,
 ) {
-  // Block quote detection
   const trimmed = para.trim()
   const isBlockQuote =
-    trimmed.startsWith('\u201c') || // left double-quote
+    trimmed.startsWith('\u201c') ||
     trimmed.startsWith('"')
 
-  // Split on {fn:N} markers
-  const parts = para.split(/\{fn:(\d+)\}/g)
-  const nodes = parts.map((part, i) => {
+  const fnParts = para.split(/\{fn:(\d+)\}/g)
+  const nodes: React.ReactNode[] = []
+
+  fnParts.forEach((part, i) => {
     if (i % 2 === 1) {
-      // Odd indices are the captured footnote numbers
-      return (
+      nodes.push(
         <sup key={`fn-mark-${i}`}>
           <a
             id={`${caseId}-ref-${part}`}
@@ -115,8 +94,9 @@ function renderOpinionParagraph(
           </a>
         </sup>
       )
+    } else {
+      withCiteItalics(part, `${paraKey}-${i}`).forEach(n => nodes.push(n))
     }
-    return part
   })
 
   if (isBlockQuote) {
@@ -149,9 +129,6 @@ function renderOpinionParagraph(
   )
 }
 
-// ─── Footnote list ─────────────────────────────────────────────────────────────
-// Renders at the bottom of the opinion. Each footnote number links back to its
-// citation in the body text (#[caseId]-ref-N).
 function FootnoteList({
   footnotes,
   caseId,
@@ -160,6 +137,8 @@ function FootnoteList({
   caseId:    string
 }) {
   const entries = Object.entries(footnotes)
+    .filter(([, text]) => text.trim() !== '')
+    .sort(([a], [b]) => parseInt(a) - parseInt(b))
   if (entries.length === 0) return null
   return (
     <div style={{
@@ -177,7 +156,6 @@ function FootnoteList({
           marginBottom: '8px',
           alignItems:   'baseline',
         }}>
-          {/* Back-link to body citation */}
           <a
             href={`#${caseId}-ref-${num}`}
             style={{
@@ -190,7 +168,7 @@ function FootnoteList({
             {num}.
           </a>
           <span style={{ ...FONT.sans, fontSize: '12px', color: PALETTE.black, lineHeight: 1.55 }}>
-            {text}
+            {withCiteItalics(text, `fn-${num}`)}
           </span>
         </div>
       ))}
@@ -198,7 +176,6 @@ function FootnoteList({
   )
 }
 
-// ─── CaseLawBox ───────────────────────────────────────────────────────────────
 interface CaseLawBoxProps {
   caseData?: CaseLaw
   style?:    CSSProperties
@@ -214,8 +191,6 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
     <div style={{ height: '100%', ...style }}>
       <div style={BOX_SHELL}>
         <div style={{ overflowY: 'auto', flex: 1 }}>
-
-          {/* ── Header: label + case title ─────────────────────────────────── */}
           <div style={{ padding: '20px 20px 16px' }}>
             <h2 style={{ ...BOX_HEADER, margin: '0 0 16px 0' }}>Case Law Updates</h2>
             <h3 style={{
@@ -230,8 +205,6 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
               {caseData.title}
             </h3>
           </div>
-
-          {/* ── Metadata block — warm background ───────────────────────────── */}
           <div style={{ padding: '12px 20px', ...ITEM_RULE, background: PALETTE.warm }}>
             <MetaRow label="Court"        value={caseData.court} />
             <MetaRow label="Date Decided" value={caseData.dateDecided} />
@@ -241,14 +214,8 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             <MetaRow label="Disposition"  value={caseData.disposition} />
             {caseData.noticeText && <MetaRow label="Notice" value={caseData.noticeText} />}
           </div>
-
-          {/* Line space separator */}
           <div style={{ height: '12px' }} />
-
-          {/* ── Editorial block — Core Terms + Summary + Holding + Conclusion ─ */}
           <div style={{ padding: '14px 20px', ...ITEM_RULE, background: PALETTE.warm }}>
-
-            {/* Core terms */}
             {caseData.coreTerms.length > 0 && (
               <p style={{ ...FONT.sans, fontSize: '12px', color: PALETTE.black, margin: '0 0 14px 0' }}>
                 <span style={{
@@ -264,8 +231,6 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
                 {caseData.coreTerms.join(' · ')}
               </p>
             )}
-
-            {/* Summary subheader */}
             <p style={{
               ...T.micro,
               color:         PALETTE.black,
@@ -275,13 +240,9 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             }}>
               Case Summary
             </p>
-
-            {/* Summary prose */}
             <p style={{ ...T.prose, color: PALETTE.black, margin: '0 0 12px 0' }}>
               {caseData.summary}
             </p>
-
-            {/* Holding — left-border accent */}
             <p style={{
               ...T.prose,
               fontWeight:  600,
@@ -292,17 +253,11 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             }}>
               {caseData.holdingBold}
             </p>
-
-            {/* Conclusion */}
             <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
               {caseData.conclusionText}
             </p>
           </div>
-
-          {/* ── Opinion block — white background ───────────────────────────── */}
           <div style={{ padding: '20px 20px 28px' }}>
-
-            {/* Opinion section header */}
             <h4 style={{
               ...FONT.serif,
               fontSize:      '24px',
@@ -313,23 +268,15 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             }}>
               Opinion
             </h4>
-
-            {/* Author attribution */}
             <p style={{ ...T.label, color: PALETTE.black, margin: '0 0 16px 0' }}>
               {caseData.opinionAuthor}
             </p>
-
-            {/* Opinion paragraphs with footnote markers */}
             {paragraphs.map((para, i) =>
               renderOpinionParagraph(para, caseData.id, i)
             )}
-
-            {/* Bidirectional footnote list */}
             {caseData.footnotes && (
               <FootnoteList footnotes={caseData.footnotes} caseId={caseData.id} />
             )}
-
-            {/* Load Full Opinion button */}
             {!opinionOpen ? (
               <button
                 onMouseEnter={() => setBtnHovered(true)}
@@ -355,9 +302,7 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
                 [ Full opinion · Supabase integration pending ]
               </p>
             )}
-
           </div>
-
         </div>
       </div>
     </div>
