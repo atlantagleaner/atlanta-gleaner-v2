@@ -25,7 +25,7 @@ export function Banner() {
       </h1>
       <p style={{
         ...T.nav,
-        fontSize: '18px',
+        fontSize: '24px',
         letterSpacing: '0.30em',
         color: PALETTE.black,
         margin: '0 0 10px 0',
@@ -35,7 +35,7 @@ export function Banner() {
       </p>
       <p style={{
         ...T.nav,
-        fontSize: '18px',
+        fontSize: '24px',
         color: PALETTE.black,
         margin: '0 0 28px 0',
         textAlign: 'center',

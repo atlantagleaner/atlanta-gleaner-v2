@@ -229,7 +229,7 @@ export const ITEM_RULE: CSSProperties = {
  */
 export const PAGE_TITLE_BLOCK: CSSProperties = {
   borderBottom: '1px solid rgba(0,0,0,0.14)',
-  padding:      '18px 0 16px',
+  padding:      '0 0 16px',
   margin:       '0 0 28px 0',
 }
 

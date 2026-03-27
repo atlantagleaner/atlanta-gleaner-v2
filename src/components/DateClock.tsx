@@ -23,7 +23,7 @@ export function DateClock() {
   return (
     <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: '0 20px' }}>
       <div style={PAGE_TITLE_BLOCK}>
-        <h1 style={{ ...T.pageTitle, color: PALETTE.black, margin: '0 0 6px 0' }}>
+        <h1 style={{ ...T.pageTitle, fontSize: SIZE_MD, color: PALETTE.black, margin: '0 0 6px 0' }}>
           {dateStr}
         </h1>
         <span style={{
