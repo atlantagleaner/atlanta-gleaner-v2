@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { PALETTE, T, SIZE_SM, PAGE_MAX_W, PAGE_TITLE_BLOCK } from '@/src/styles/tokens'
+import { PALETTE, T, SIZE_SM, SIZE_MD, PAGE_MAX_W, PAGE_TITLE_BLOCK } from '@/src/styles/tokens'
 
 export function DateClock() {
   const [now, setNow] = useState<Date | null>(null)
