@@ -285,4 +285,3 @@ export const PAGE_TITLE_BLOCK: CSSProperties = {
 //   3. Enter the corresponding footnote text in the footnotes Record.
 //   4. Set noticeText if the slip opinion carries an asterisk notice.
 //   5. Verify the full text against the slip opinion before committing.
-// ─────────────────────────────────────────────────────────────────────────────

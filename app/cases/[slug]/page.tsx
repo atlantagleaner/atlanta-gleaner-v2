@@ -39,6 +39,7 @@
 
 import { notFound } from 'next/navigation'
 import { Banner }     from '@/src/components/Banner'
+import { NavBar }     from '@/src/components/NavBar'
 import { NewsBox }    from '@/src/components/NewsBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
 import { getCaseBySlug, ALL_CASES, type CaseLaw } from '@/src/data/cases'
@@ -338,26 +339,6 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
   )
 }
 
-// ─── Published date title block ───────────────────────────────────────────────
-function PublishedDateBlock({ publishedAt }: { publishedAt: string }) {
-  const date = new Date(publishedAt + 'T12:00:00')
-  const dateStr = date.toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric',
-  })
-  return (
-    <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: '0 20px' }}>
-      <div style={PAGE_TITLE_BLOCK}>
-        <h2 style={{ ...T.pageTitle, color: PALETTE.black, margin: '0 0 6px 0' }}>
-          {dateStr}
-        </h2>
-        <span style={{ ...T.nav, color: PALETTE.black, opacity: 0.45 }}>
-          Published in The Atlanta Gleaner
-        </span>
-      </div>
-    </div>
-  )
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function CasePage({ params }: { params: { slug: string } }) {
   const c = getCaseBySlug(params.slug)
@@ -365,8 +346,8 @@ export default function CasePage({ params }: { params: { slug: string } }) {
 
   return (
     <>
+      <NavBar publishedDate={c.publishedAt} />
       <Banner />
-      <PublishedDateBlock publishedAt={c.publishedAt} />
 
       <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: '0 20px 80px' }}>
         <div style={{

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { PALETTE, T } from '@/src/styles/tokens'
+import { PALETTE, T, SIZE_SM } from '@/src/styles/tokens'
 
 const NAV_LINKS = [
   { label: 'Archive', href: '/archive' },
@@ -13,11 +13,26 @@ const NAV_LINKS = [
   { label: 'About',   href: '/about'   },
 ]
 
-export function NavBar() {
+export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const pathname    = usePathname()
   const [open, setOpen] = useState(false)
+  const [now, setNow] = useState<Date | null>(null)
   const navRef      = useRef<HTMLElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setNow(new Date())
+    const id = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const showDatetime = publishedDate && now
+  const dateStr = showDatetime
+    ? new Date(publishedDate + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : ''
+  const timeStr = now
+    ? now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })
+    : ''
 
   useEffect(() => {
     if (!open) return
@@ -65,15 +80,26 @@ export function NavBar() {
         position: 'sticky', top: 0, zIndex: 200,
         background: PALETTE.white,
         borderBottom: '1px solid rgba(0,0,0,0.10)',
-        height: '48px',
+        minHeight: showDatetime ? '64px' : '48px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px',
       }}>
-        <Link href="/" style={{
-          ...T.site, color: PALETTE.black, textDecoration: 'none',
-        }}>
-          The Atlanta Gleaner
-        </Link>
+        {showDatetime ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div style={{ ...T.site, color: PALETTE.black, fontSize: SIZE_SM }}>
+              {dateStr}
+            </div>
+            <div style={{ ...T.nav, color: PALETTE.black, fontSize: SIZE_SM, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>
+              {timeStr}
+            </div>
+          </div>
+        ) : (
+          <Link href="/" style={{
+            ...T.site, color: PALETTE.black, textDecoration: 'none',
+          }}>
+            The Atlanta Gleaner
+          </Link>
+        )}
 
         <button
           className="ag-plus-btn"

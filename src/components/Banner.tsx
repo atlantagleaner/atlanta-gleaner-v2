@@ -14,7 +14,6 @@ export function Banner() {
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       padding: '113px 24px 83px',
     }}>
-      {/* Masthead title — T.display */}
       <h1 style={{
         ...T.display,
         color: PALETTE.black,
@@ -24,8 +23,6 @@ export function Banner() {
       }}>
         The Atlanta Gleaner.
       </h1>
-
-      {/* Tagline — larger than T.nav, wider tracking */}
       <p style={{
         ...T.nav,
         fontSize: '18px',
@@ -36,8 +33,6 @@ export function Banner() {
       }}>
         Georgia Case Law Updates and Legal News
       </p>
-
-      {/* Byline — larger than T.nav */}
       <p style={{
         ...T.nav,
         fontSize: '18px',
@@ -47,8 +42,6 @@ export function Banner() {
       }}>
         Edited By George Washington
       </p>
-
-      {/* Portrait */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc}
