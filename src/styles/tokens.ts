@@ -50,7 +50,7 @@ export const FONT: Record<'mono' | 'serif' | 'sans', CSSProperties> = {
 
 export const SIZE_SM = '10px'                          // labels / nav / metadata
 export const SIZE_MD = '14px'                          // body / prose / captions
-export const SIZE_LG = 'clamp(1.6rem, 3.5vw, 2.5rem)' // page title blocks
+export const SIZE_LG = 'clamp(1.2rem, 2.8vw, 2rem)'   // page title blocks
 
 /** Standard max-width used by every page content wrapper + title block. */
 export const PAGE_MAX_W = '1600px'
@@ -228,7 +228,6 @@ export const ITEM_RULE: CSSProperties = {
  * Apply to a container div; place T.pageTitle content inside.
  */
 export const PAGE_TITLE_BLOCK: CSSProperties = {
-  borderTop:    '2px solid #000000',
   borderBottom: '1px solid rgba(0,0,0,0.14)',
   padding:      '18px 0 16px',
   margin:       '0 0 28px 0',

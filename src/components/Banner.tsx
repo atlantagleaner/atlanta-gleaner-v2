@@ -25,9 +25,10 @@ export function Banner() {
         The Atlanta Gleaner.
       </h1>
 
-      {/* Tagline — T.nav, wider tracking */}
+      {/* Tagline — larger than T.nav, wider tracking */}
       <p style={{
         ...T.nav,
+        fontSize: '18px',
         letterSpacing: '0.30em',
         color: PALETTE.black,
         margin: '0 0 10px 0',
@@ -36,9 +37,10 @@ export function Banner() {
         Georgia Case Law Updates and Legal News
       </p>
 
-      {/* Byline — T.nav */}
+      {/* Byline — larger than T.nav */}
       <p style={{
         ...T.nav,
+        fontSize: '18px',
         color: PALETTE.black,
         margin: '0 0 28px 0',
         textAlign: 'center',
