@@ -30,10 +30,6 @@ export async function fetchFeed(url: string): Promise<Array<{title: string, link
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// XML Parsing helpers
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface FeedItem {
   title: string;
   link: string;
@@ -92,10 +88,6 @@ function parseItem(chunk: string, isAtom: boolean): FeedItem {
   return { title, link, pubDate, snippet };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Extraction utilities
-// ─────────────────────────────────────────────────────────────────────────────
-
 function extractCdata(xml: string, tag: string): string {
   const cdataRe = new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\/${tag}>`, 'i');
   let m = xml.match(cdataRe);
@@ -115,11 +107,11 @@ function extractAttrHref(xml: string, tag: string): string {
 }
 
 function extractAtomLink(chunk: string): string {
-  const altRe = /<link[^>]*rel="alternate"[^>]*href="([^"]*)"[^>]*/?>/i;
+  const altRe = new RegExp('<link[^>]*rel="alternate"[^>]*href="([^"]*)"[^>]*\\/?>','i');
   let m = chunk.match(altRe);
   if (m) return m[1];
 
-  const hrefRe = /<link[^>]*href="([^"]*)"[^>]*/?>/i;
+  const hrefRe = new RegExp('<link[^>]*href="([^"]*)"[^>]*\\/?>','i');
   m = chunk.match(hrefRe);
   if (m) return m[1];
 
@@ -127,7 +119,7 @@ function extractAtomLink(chunk: string): string {
 }
 
 function extractPermaGuid(chunk: string): string {
-  const re = /<guid[^>]*isPermaLink="true"[^>]*>([^<]+)</guid>/i;
+  const re = new RegExp('<guid[^>]*isPermaLink="true"[^>]*>([^<]+)<\/guid>','i');
   const m = chunk.match(re);
   return m ? m[1].trim() : '';
 }
