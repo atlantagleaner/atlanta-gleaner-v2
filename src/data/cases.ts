@@ -48,7 +48,7 @@ const CASES_2026: CaseLaw[] = [
       'reimbursement',
     ],
     summary:
-      'In 2020, Atlanta Police Officer Devin Brosnan was involved in the shooting of Rayshard Brooks and immediately requested a Union attorney, relying on recruitment materials promising 24/7 legal representation. When the Union failed to provide counsel prior to his arrest, Brosnan hired a private defense firm for $250,000 and sued the Union for breach of contract.',
+      'Officer Devin Brosnan sued his police union, the International Brotherhood of Police Officers, for breach of contract after it failed to provide legal representation during the high-profile investigation of the Rayshard Brooks shooting. Brosnan, who had relied on Union recruitment materials promising "24/7 legal representation," was forced to secure private counsel at a cost of $250,000.',
     holdingBold:
       "The Georgia Court of Appeals affirmed partial summary judgment in favor of Brosnan, holding that the Union's documents and verbal assurances created an enforceable contract that the Union breached.",
     conclusionText:
