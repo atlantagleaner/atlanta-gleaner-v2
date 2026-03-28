@@ -16,33 +16,14 @@
 //   6. Update archive.ts with the case's entry in its volume/month.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export interface CaseLaw {
-  id:             string
-  slug:           string              // used as URL segment: /cases/[slug]
-  title:          string
-  shortTitle:     string
-  court:          string
-  docketNumber:   string
-  dateDecided:    string
-  citations:      string
-  judges:         string
-  disposition:    string
-  coreTerms:      string[]            // editorial — leave [] until filled in
-  summary:        string              // editorial summary — leave "" until filled in
-  holdingBold:    string              // editorial holding — leave "" until filled in
-  conclusionText: string              // editorial conclusion — leave "" until filled in
-  opinionAuthor:  string
-  opinionText:    string              // verbatim slip opinion — \n\n = paragraph break
-                                      // inline footnote markers: {fn:N}
-  footnotes?:     Record<string, string> // { '1': 'footnote text', ... }
-                                      // bidirectional: body {fn:N} <-> footnote list
-  publishedAt:    string              // ISO date — when republished on this site
-  noticeText?:    string              // e.g. "THIS OPINION IS UNCORRECTED..."
-}
+export type { CaseLaw } from './types'
+import type { CaseLaw } from './types'
 
-// ─── Year imports ─────────────────────────────────────────────────────────────
-import { CASES_2022 } from './cases-2022'
-import { CASES_2023 } from './cases-2023'
+// ─── Year imports (JSON for fast bundling; types asserted against CaseLaw) ───
+import CASES_2022_RAW from './cases-2022.json'
+import CASES_2023_RAW from './cases-2023.json'
+const CASES_2022 = CASES_2022_RAW as CaseLaw[]
+const CASES_2023 = CASES_2023_RAW as CaseLaw[]
 
 // ─── 2026 cases (current year — small enough to live here) ───────────────────
 const CASES_2026: CaseLaw[] = [

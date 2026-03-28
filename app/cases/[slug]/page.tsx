@@ -2,10 +2,40 @@
 // Individual Case Page
 // Layout: Banner · ResizablePanels [NewsBox | Opinion | FarSideBox]
 //
+// ── OPINION FORMATTING + FIDELITY RULES ──────────────────────────────────────
+//
 // FIDELITY (non-negotiable):
 //   · Opinion text is reproduced verbatim from the official slip opinion.
-//   · Footnote markers in the body ({fn:N}) become bidirectional <sup> links.
+//   · No word, punctuation mark, or capitalization may be altered.
+//   · Footnotes are preserved as footnotes — never inlined or dropped.
+//   · Footnote markers in the body ({fn:N}) become bidirectional <sup> links:
+//       body marker  →  jumps to #[caseId]-fn-N  (bottom of opinion)
+//       footnote num →  links back to #[caseId]-ref-N (citation in text)
+//   · Asterisk notices (UNCORRECTED, etc.) shown at top, regular weight.
 //   · Case citation names (e.g. Smith v. Phillips) are italicized per Bluebook.
+//
+// STRUCTURE (top to bottom):
+//   [warm] Notice banner — T.micro, left-border accent, weight 400
+//   [white] Header — BOX_HEADER + serif case title
+//   [warm] Metadata — Court · Date · Docket · Citations · Judges · Disposition
+//   [warm] Editorial — Core Terms · Case Summary · Holding · Conclusion
+//   [white] Opinion — header · author · paragraphs · footnote list
+//
+// TYPOGRAPHY:
+//   Case title:       FONT.serif, clamp(2rem, 5vw, 3.5rem), weight 700
+//   Notice text:      T.micro, weight 400 (never bold), warm bg, left-border
+//   Metadata label:   T.micro, minWidth 120px
+//   Metadata value:   FONT.sans 12px, weight 400
+//   Core terms label: T.micro inverted chip (black bg, white text)
+//   Summary prose:    T.prose
+//   Holding:          T.prose weight 600, border-left 3px black
+//   Opinion header:   FONT.serif 24px weight 700
+//   Author line:      T.label
+//   Paragraphs:       T.prose, lineHeight 1.72, margin 0 0 1.1em
+//   Block quotes:     FONT.serif italic 15px, border-left 3px, paddingLeft 16px
+//   Citation names:   <em> (italic) per Bluebook — "Smith v. Phillips"
+//   Footnote marks:   <sup><a> T.micro weight 700, color black, no underline
+//   Footnote list:    T.micro number (back-link) + FONT.sans 12px text
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { notFound }       from 'next/navigation'
@@ -64,6 +94,10 @@ function MetaRow({
   )
 }
 
+// ─── Citation name italicizer ─────────────────────────────────────────────────
+// Per Bluebook Rule 10.2: case names in citations are always italicized.
+// Detects "Name v. Name" patterns (handles multi-word names, prepositions).
+// E.g. "Smith v. Phillips", "City of Atlanta v. Williams", "Watkins v. State"
 const CITE_RX =
   /((?:[A-Z][A-Za-z'\u2019\-]+)(?:\s+(?:[A-Z][A-Za-z'\u2019\-]+|of|the|a|an|in|for|at|by|de|La|Los|Las|El))*\s+v\.\s+(?:[A-Z][A-Za-z'\u2019\-]+)(?:\s+(?:[A-Z][A-Za-z'\u2019\-]+|of|the|a|an|in|for|at|by|de|La|Los|Las|El))*)/
 
@@ -81,12 +115,16 @@ function withCiteItalics(text: string, keyPrefix: string): ReactNode[] {
   return result
 }
 
+// ─── Footnote-aware paragraph renderer ───────────────────────────────────────
+// Handles {fn:N} markers (→ bidirectional superscript links) and citation
+// name italicization. Block-quote paragraphs (start with " or ") are indented.
 function renderParagraph(para: string, caseId: string, key: number): ReactNode {
   const trimmed = para.trim()
   const isBlockQuote =
     trimmed.startsWith('\u201c') ||
     trimmed.startsWith('"')
 
+  // Split on {fn:N} markers; odd indices are the captured footnote numbers
   const fnParts = para.split(/\{fn:(\d+)\}/g)
   const nodes: ReactNode[] = []
 
@@ -144,6 +182,10 @@ function renderParagraph(para: string, caseId: string, key: number): ReactNode {
   )
 }
 
+// ─── Footnote list ─────────────────────────────────────────────────────────────
+// Skips empty entries (Word separator footnotes come in as empty strings).
+// Renders footnote text with citation name italicization per Bluebook.
+// Each footnote number is a back-link to its citation in the opinion body.
 function FootnoteList({
   footnotes,
   caseId,
@@ -152,7 +194,7 @@ function FootnoteList({
   caseId:    string
 }) {
   const entries = Object.entries(footnotes)
-    .filter(([, text]) => text.trim() !== '')
+    .filter(([, text]) => text.trim() !== '')   // skip empty separator entries
     .sort(([a], [b]) => parseInt(a) - parseInt(b))
 
   if (entries.length === 0) return null
@@ -173,6 +215,7 @@ function FootnoteList({
           marginBottom: '8px',
           alignItems:   'baseline',
         }}>
+          {/* Back-link to body citation */}
           <a
             href={`#${caseId}-ref-${num}`}
             style={{
@@ -232,7 +275,11 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
           <MetaRow label="Judges"       value={c.judges} />
           <MetaRow label="Disposition"  value={c.disposition} />
         </div>
+
+        {/* ── Single line gap: metadata (official) → editorial (editorial) ── */}
         <div style={{ height: '12px' }} />
+
+        {/* ── Editorial block — Core Terms + Summary, warm background ─────── */}
         {!isPending && (c.coreTerms.length > 0 || c.summary || c.holdingBold) && (
           <div style={{ padding: '14px 20px', ...ITEM_RULE, background: PALETTE.warm }}>
             {c.coreTerms.length > 0 && (
@@ -250,6 +297,7 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
                 {c.coreTerms.join(' · ')}
               </p>
             )}
+
             {c.summary && (
               <>
                 <p style={{
@@ -266,6 +314,7 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
                 </p>
               </>
             )}
+
             {c.holdingBold && (
               <p style={{
                 ...T.prose,
@@ -278,6 +327,7 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
                 {c.holdingBold}
               </p>
             )}
+
             {c.conclusionText && (
               <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
                 {c.conclusionText}
@@ -285,58 +335,4 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
             )}
           </div>
         )}
-        <div style={{ padding: '24px 20px 48px' }}>
-          {isPending ? (
-            <div style={{
-              background: PALETTE.warm,
-              border:     '1px solid rgba(0,0,0,0.10)',
-              padding:    '40px 20px',
-              textAlign:  'center',
-            }}>
-              <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>
-                [ Full opinion · Pending upload ]
-              </p>
-            </div>
-          ) : (
-            <>
-              <p style={{ ...T.label, color: PALETTE.black, margin: '0 0 20px 0' }}>
-                {c.opinionAuthor}
-              </p>
-              {paragraphs.map((para, i) => renderParagraph(para, c.id, i))}
-              {c.footnotes && (
-                <FootnoteList footnotes={c.footnotes} caseId={c.id} />
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default function CasePage({ params }: { params: { slug: string } }) {
-  const c = getCaseBySlug(params.slug)
-  if (!c) notFound()
-
-  return (
-    <>
-      <Banner />
-      <div style={{ paddingTop: '24px' }}>
-        <ResizablePanels
-          left={{
-            label: 'Roll-A · News',
-            node:  <NewsBox />,
-          }}
-          center={{
-            label: 'Roll-B · Opinion',
-            node:  <OpinionPanel c={c} />,
-          }}
-          right={{
-            label: 'Roll-C · The Far Side',
-            node:  <FarSideBox publishedDate={c.publishedAt} />,
-          }}
-        />
-      </div>
-    </>
-  )
-}
+        <div style={{

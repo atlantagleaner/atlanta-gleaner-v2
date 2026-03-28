@@ -1,4 +1,4 @@
-import type { CaseLaw } from './cases'
+import type { CaseLaw } from './types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Volume I — 2022 (10 cases)

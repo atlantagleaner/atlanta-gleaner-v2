@@ -17,7 +17,7 @@ interface FarSideBoxProps {
 
 export function FarSideBox({
   imageUrl,
-  caption = '"We\'ve updated our privacy policy, changed our terms of service, and eaten your family."',
+  caption = '"Suddenly, Ted remembered he had left the primordial soup on."',
   publishedDate,
   style,
 }: FarSideBoxProps) {

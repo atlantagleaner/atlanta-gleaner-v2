@@ -15,7 +15,7 @@ const COMICS = [
   {
     id: 'c1',
     series: 'The Far Side',
-    caption: '"We\'ve updated our privacy policy, changed our terms of service, and eaten your family."',
+    caption: '"Suddenly, Ted remembered he had left the primordial soup on."',
     imageUrl: null as string | null,
     publishedAt: 'March 25, 2026',
     frameNo: '01',
