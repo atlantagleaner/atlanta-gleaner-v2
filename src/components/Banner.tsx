@@ -25,7 +25,7 @@ export function Banner() {
       </h1>
       <p style={{
         ...T.nav,
-        fontSize: '24px',
+        fontSize: '16px',
         letterSpacing: '0.30em',
         color: PALETTE.black,
         margin: '0 0 28px 0',
