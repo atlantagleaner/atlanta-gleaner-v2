@@ -23,14 +23,26 @@ function MetaRow({
   if (!value) return null
   return (
     <div style={{
-      display: 'flex', flexDirection: 'row', alignItems: 'baseline',
-      padding: '6px 0', ...ITEM_RULE, gap: '8px', flexWrap: 'wrap',
+      position:      'relative',
+      paddingTop:    '6px',
+      paddingBottom: '6px',
+      paddingLeft:   '128px',        // 120px label + 8px gap
+      paddingRight:  '0',
+      ...ITEM_RULE,
     }}>
-      <span style={{ ...T.micro, color: PALETTE.black, minWidth: '120px', flexShrink: 0 }}>
+      <span style={{
+        ...T.micro,
+        color:    PALETTE.black,
+        position: 'absolute',
+        left:     0,
+        top:      '6px',             // match parent padding-top
+        width:    '120px',
+      }}>
         {label}:
       </span>
       <span style={{
         ...FONT.sans,
+        display:     'block',
         fontSize:    '12px',
         color:       PALETTE.black,
         fontWeight:  400,
@@ -38,6 +50,7 @@ function MetaRow({
         lineHeight:  1.4,
         borderLeft:  notice ? `2px solid ${PALETTE.black}` : 'none',
         paddingLeft: notice ? '7px' : '0',
+        wordBreak:   'break-word',
       }}>
         {value}
       </span>
