@@ -99,7 +99,7 @@ function renderOpinionParagraph(
               ...T.micro,
               color:          PALETTE.black,
               textDecoration: 'none',
-              fontWeight:     700,
+              fontWeight:     400,
               fontSize:       '9px',
             }}
           >
