@@ -336,3 +336,44 @@ function OpinionPanel({ c }: { c: CaseLaw }) {
           </div>
         )}
         <div style={{
+          padding: '20px 20px 32px',
+        }}>
+          {isPending ? (
+            <p style={{ ...T.prose, color: PALETTE.black }}>
+              Full opinion text to be added.
+            </p>
+          ) : (
+            <>
+              {c.opinionAuthor && (
+                <p style={{ ...T.label, color: PALETTE.black, margin: '0 0 16px 0' }}>
+                  {c.opinionAuthor}
+                </p>
+              )}
+              {paragraphs.map((para, i) => renderParagraph(para, c.id, i))}
+              {c.footnotes && Object.keys(c.footnotes).length > 0 && (
+                <FootnoteList footnotes={c.footnotes} caseId={c.id} />
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+export default function CasePage({ params }: { params: { slug: string } }) {
+  const c = getCaseBySlug(params.slug)
+  if (!c) notFound()
+
+  return (
+    <>
+      <Banner />
+      <ResizablePanels>
+        <NewsBox />
+        <OpinionPanel c={c} />
+        <FarSideBox />
+      </ResizablePanels>
+    </>
+  )
+}
