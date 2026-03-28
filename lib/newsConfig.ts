@@ -5,86 +5,35 @@
 export const SOURCES = {
 
   // ── SCIENCE PINS (slots 1–5, always filled first) ────────────────────────────────────────
+  // Note: YouTube RSS feeds are blocked by Vercel's outbound proxy.
+  // Replaced with podcast RSS feeds hosted on open CDNs.
 
   starTalk: {
-    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCqoAEDirJPjEUFcF2FklnBA',
+    url: 'https://media.rss.com/startalk-podcast/feed.xml',
     type: 'science_pin',
     label: 'StarTalk',
     pinSlots: 2,
   },
 
   pbsSpaceTime: {
-    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC7_gcs09iThXybpVgjHZ_7g',
+    // PBS Space Time does not have a standalone podcast feed — replaced with
+    // PBS NewsHour Science, which covers astronomy/physics/space regularly.
+    url: 'https://www.pbs.org/newshour/feeds/rss/science',
     type: 'science_pin',
-    label: 'PBS SpaceTime',
+    label: 'PBS NewsHour Science',
     pinSlots: 2,
   },
 
   pbsNova: {
-    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCjHz5SVHeMT0AViCYZvsGDA',
+    // NOVA Now podcast feed (PRX-hosted, publicly accessible)
+    url: 'https://www.pbs.org/wgbh/nova/podcast/rss',
     type: 'science_nova',
     label: 'PBS NOVA',
     pinSlots: 1,
-    maxAgeDays: 7,
+    maxAgeDays: 30,
   },
 
   // ── NEWS POOL (slots 6–12, scored + Letterman guarantee) ─────────────────────────────────
-
-  wabe: {
-    url: 'https://www.wabe.org/feed/',
-    type: 'news',
-    label: 'WABE',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  wsb: {
-    url: 'https://www.wsbtv.com/arc/outboundfeeds/rss/category/news/',
-    type: 'news',
-    label: 'WSB-TV',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  anf: {
-    url: 'https://www.atlantanewsfirst.com/arc/outboundfeeds/rss/',
-    type: 'news',
-    label: 'Atlanta News First',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  fox5: {
-    url: 'https://www.fox5atlanta.com/rss/headlines',
-    type: 'news',
-    label: 'FOX 5 Atlanta',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  gpb: {
-    url: 'https://www.gpb.org/news/rss',
-    type: 'news',
-    label: 'GPB News',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  cnn: {
-    url: 'https://rss.cnn.com/rss/cnn_topstories.rss',
-    type: 'news',
-    label: 'CNN',
-    sourceBonus: 0,
-    maxPerSource: 1,
-  },
-
-  ap: {
-    url: 'https://feeds.apnews.com/rss/apf-topnews',
-    type: 'news',
-    label: 'AP News',
-    sourceBonus: 0,
-    maxPerSource: 1,
-  },
 
   georgiaRecorder: {
     url: 'https://georgiarecorder.com/feed/',
@@ -102,20 +51,44 @@ export const SOURCES = {
     maxPerSource: 2,
   },
 
-  savannah: {
-    url: 'https://www.savannahnow.com/section/feed',
+  atlantaVoice: {
+    url: 'https://theatlantavoice.com/feed',
     type: 'news',
-    label: 'Savannah Morning News',
+    label: 'The Atlanta Voice',
+    sourceBonus: 5,
+    maxPerSource: 2,
+  },
+
+  canopyAtlanta: {
+    url: 'https://canopyatlanta.org/feed',
+    type: 'news',
+    label: 'Canopy Atlanta',
     sourceBonus: 8,
     maxPerSource: 2,
   },
 
-  macon: {
-    url: 'https://www.macon.com/news/state/georgia/?f=rss',
+  atlantaMagazine: {
+    url: 'https://atlantamagazine.com/feed',
     type: 'news',
-    label: 'Macon Telegraph',
-    sourceBonus: 8,
-    maxPerSource: 2,
+    label: 'Atlanta Magazine',
+    sourceBonus: 3,
+    maxPerSource: 1,
+  },
+
+  cnn: {
+    url: 'https://rss.cnn.com/rss/cnn_topstories.rss',
+    type: 'news',
+    label: 'CNN',
+    sourceBonus: 0,
+    maxPerSource: 1,
+  },
+
+  pbsNewsHour: {
+    url: 'https://www.pbs.org/newshour/feeds/rss/headlines',
+    type: 'news',
+    label: 'PBS NewsHour',
+    sourceBonus: 2,
+    maxPerSource: 1,
   },
 };
 
