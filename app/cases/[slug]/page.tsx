@@ -369,11 +369,11 @@ export default function CasePage({ params }: { params: { slug: string } }) {
   return (
     <>
       <Banner />
-      <ResizablePanels>
-        <NewsBox />
-        <OpinionPanel c={c} />
-        <FarSideBox />
-      </ResizablePanels>
+      <ResizablePanels
+        left={{   label: 'News',    node: <NewsBox /> }}
+        center={{ label: 'Opinion', node: <OpinionPanel c={c} /> }}
+        right={{  label: 'Context', node: <FarSideBox /> }}
+      />
     </>
   )
 }
