@@ -115,10 +115,8 @@ function renderOpinionParagraph(
   if (isBlockQuote) {
     return (
       <blockquote key={paraKey} style={{
-        ...FONT.serif,
-        fontSize:    '15px',
+        ...T.prose,
         fontStyle:   'italic',
-        fontWeight:  500,
         lineHeight:  1.65,
         color:       PALETTE.black,
         borderLeft:  `3px solid ${PALETTE.black}`,
