@@ -119,8 +119,6 @@ function renderOpinionParagraph(
         fontStyle:   'italic',
         lineHeight:  1.65,
         color:       PALETTE.black,
-        borderLeft:  `3px solid ${PALETTE.black}`,
-        paddingLeft: '16px',
         margin:      '0 0 1.1em 0',
       }}>
         {nodes}
