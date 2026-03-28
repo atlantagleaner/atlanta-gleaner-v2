@@ -1,4 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+
+/* ── Text-selection fix ──────────────────────────────────────────────────────
+   ResizablePanels sets user-select: none as an inline style on its outer
+   wrapper to prevent accidental text selection during drag/resize operations.
+   Restore selectability for all actual text-content elements with !important,
+   which overrides inherited inline styles.
+   Drag handles (cursor:grab divs) and resize bars keep their own
+   user-select: none via their own inline styles, so this doesn't break DnD.
+────────────────────────────────────────────────────────────────────────────── */
+p,
+blockquote,
+cite,
+h1, h2, h3, h4, h5, h6,
+li,
+td,
+th,
+figcaption,
+.prose,
+.prose * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
