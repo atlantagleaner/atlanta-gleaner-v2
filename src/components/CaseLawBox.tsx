@@ -254,14 +254,7 @@ export function CaseLawBox({ caseData = FEATURED_CASE, style }: CaseLawBoxProps)
             <p style={{ ...T.prose, color: PALETTE.black, margin: '0 0 12px 0' }}>
               {caseData.summary}
             </p>
-            <p style={{
-              ...T.prose,
-              fontWeight:  600,
-              borderLeft:  `3px solid ${PALETTE.black}`,
-              paddingLeft: '12px',
-              margin:      '0 0 12px 0',
-              color:       PALETTE.black,
-            }}>
+            <p style={{ ...T.prose, color: PALETTE.black, margin: '0 0 12px 0' }}>
               {caseData.holdingBold}
             </p>
             <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
