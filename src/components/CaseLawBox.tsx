@@ -119,7 +119,7 @@ function renderOpinionParagraph(
         fontStyle:   'italic',
         lineHeight:  1.65,
         color:       PALETTE.black,
-        margin:      '0 0 1.1em 0',
+        margin:      '0 0 1.1em 32px',
       }}>
         {nodes}
       </blockquote>
