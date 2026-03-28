@@ -28,19 +28,10 @@ export function Banner() {
         fontSize: '24px',
         letterSpacing: '0.30em',
         color: PALETTE.black,
-        margin: '0 0 10px 0',
-        textAlign: 'center',
-      }}>
-        Georgia Case Law Updates and Legal News
-      </p>
-      <p style={{
-        ...T.nav,
-        fontSize: '24px',
-        color: PALETTE.black,
         margin: '0 0 28px 0',
         textAlign: 'center',
       }}>
-        Edited By George Washington
+        Testing Testing Testing
       </p>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
