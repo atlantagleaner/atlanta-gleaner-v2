@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Atlanta Gleaner — Daily News Refresh Cron Route
-// Triggered automatically by Vercel Cron at 5 AM ET daily.
+// Triggered automatically by Vercel Cron at 12:00 AM UTC (5:00 AM ET) daily.
 // Protected by CRON_SECRET environment variable.
 // ─────────────────────────────────────────────────────────────────────────────
 
