@@ -34,7 +34,7 @@ const T = {
 const N7 = {
   border: '1px solid rgba(0,0,0,0.18)',
   background: '#FFFFFF',
-  height: '100%',
+  height: 'fit-content',
   display: 'flex',
   flexDirection: 'column' as const,
 };
@@ -166,9 +166,9 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
   }, []);
 
   return (
-    <div style={{ height: '100%', ...style }}>
+    <div style={{ height: 'fit-content', ...style }}>
       <div style={N7}>
-        <div style={{ padding: eQ, overflowY: 'auto', flex: 1 }}>
+        <div style={{ padding: eQ, overflowY: 'auto' }}>
           <h2 style={AO}>News Index</h2>
 
           {loading && <LoadingSkeleton />}
