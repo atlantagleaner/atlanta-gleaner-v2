@@ -35,6 +35,7 @@ export const SOURCES = {
     type: 'news',
     label: 'WABE',
     sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   wsb: {
@@ -42,6 +43,7 @@ export const SOURCES = {
     type: 'news',
     label: 'WSB-TV',
     sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   anf: {
@@ -49,6 +51,7 @@ export const SOURCES = {
     type: 'news',
     label: 'Atlanta News First',
     sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   fox5: {
@@ -56,6 +59,7 @@ export const SOURCES = {
     type: 'news',
     label: 'FOX 5 Atlanta',
     sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   gpb: {
@@ -63,6 +67,7 @@ export const SOURCES = {
     type: 'news',
     label: 'GPB News',
     sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   cnn: {
@@ -70,6 +75,7 @@ export const SOURCES = {
     type: 'news',
     label: 'CNN',
     sourceBonus: 0,
+    maxPerSource: 1,
   },
 
   ap: {
@@ -77,20 +83,23 @@ export const SOURCES = {
     type: 'news',
     label: 'AP News',
     sourceBonus: 0,
+    maxPerSource: 1,
   },
 
   georgiaRecorder: {
     url: 'https://georgiarecorder.com/feed/',
     type: 'news',
     label: 'Georgia Recorder',
-    sourceBonus: 10,
+    sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   roughDraft: {
     url: 'https://roughdraftatlanta.com/feed/',
     type: 'news',
     label: 'Rough Draft Atlanta',
-    sourceBonus: 10,
+    sourceBonus: 5,
+    maxPerSource: 2,
   },
 
   savannah: {
@@ -98,6 +107,7 @@ export const SOURCES = {
     type: 'news',
     label: 'Savannah Morning News',
     sourceBonus: 8,
+    maxPerSource: 2,
   },
 
   macon: {
@@ -105,6 +115,7 @@ export const SOURCES = {
     type: 'news',
     label: 'Macon Telegraph',
     sourceBonus: 8,
+    maxPerSource: 2,
   },
 };
 
@@ -177,4 +188,3 @@ export const SLOT_CONFIG = {
   letterman: 2,
   news: 5,
 };
-

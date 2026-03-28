@@ -114,8 +114,20 @@ async function computeNews() {
 
   const usedUrls = new Set(lettermanPicks.map((i: NewsSlotItem) => i.url));
   const remainingSlots = SLOT_CONFIG.total - slots.length - lettermanPicks.length;
+
+  // Enforce per-source caps to prevent any single source from dominating
+  const sourceConfig: Record<string, any> = SOURCES;
+  const sourceCountMap: Record<string, number> = {};
   const newsPicks = regularPool
-    .filter((i: NewsSlotItem) => !usedUrls.has(i.url))
+    .filter((i: NewsSlotItem) => {
+      if (usedUrls.has(i.url)) return false;
+      const sourceCfg = Object.values(sourceConfig).find((s: any) => s.label === i.source) as any;
+      const cap = sourceCfg?.maxPerSource ?? 3;
+      const count = sourceCountMap[i.source] ?? 0;
+      if (count >= cap) return false;
+      sourceCountMap[i.source] = count + 1;
+      return true;
+    })
     .slice(0, remainingSlots)
     .map((i: NewsSlotItem) => ({ ...i, slot: 'news' }));
 
