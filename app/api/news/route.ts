@@ -112,33 +112,48 @@ async function computeNews() {
     ...i, slot: 'letterman',
   }));
 
-  const usedUrls = new Set(lettermanPicks.map((i: NewsSlotItem) => i.url));
+  // FIX 1: Seed usedUrls with BOTH science pin URLs and letterman URLs so
+  // news picks can never duplicate an already-claimed slot.
+  const usedUrls = new Set<string>([
+    ...slots.map((i: NewsSlotItem) => i.url),
+    ...lettermanPicks.map((i: NewsSlotItem) => i.url),
+  ]);
+
   const remainingSlots = SLOT_CONFIG.total - slots.length - lettermanPicks.length;
 
-  // Enforce per-source caps to prevent any single source from dominating
+  // FIX 2: Apply per-source caps AFTER slicing to the needed count, not before.
+  // Collect candidates that pass the URL-dedup check first, then enforce caps
+  // only on the items we actually intend to keep.
   const sourceConfig: Record<string, any> = SOURCES;
   const sourceCountMap: Record<string, number> = {};
-  const newsPicks = regularPool
-    .filter((i: NewsSlotItem) => {
-      if (usedUrls.has(i.url)) return false;
-      const sourceCfg = Object.values(sourceConfig).find((s: any) => s.label === i.source) as any;
-      const cap = sourceCfg?.maxPerSource ?? 3;
-      const count = sourceCountMap[i.source] ?? 0;
-      if (count >= cap) return false;
-      sourceCountMap[i.source] = count + 1;
-      return true;
-    })
-    .slice(0, remainingSlots)
-    .map((i: NewsSlotItem) => ({ ...i, slot: 'news' }));
+  const newsPicks: NewsSlotItem[] = [];
 
+  for (const i of regularPool) {
+    if (newsPicks.length >= remainingSlots) break;
+    if (usedUrls.has(i.url)) continue;
+
+    const sourceCfg = Object.values(sourceConfig).find((s: any) => s.label === i.source) as any;
+    const cap = sourceCfg?.maxPerSource ?? 3;
+    const count = sourceCountMap[i.source] ?? 0;
+    if (count >= cap) continue;
+
+    sourceCountMap[i.source] = count + 1;
+    usedUrls.add(i.url); // FIX 3: Keep usedUrls current as we pick items
+    newsPicks.push({ ...i, slot: 'news' });
+  }
+
+  // FIX 4: Gap-fill uses the now-current usedUrls set, so no duplicates sneak in.
   const totalLetterman = lettermanPicks.length;
   if (totalLetterman < SLOT_CONFIG.letterman) {
     const gap = SLOT_CONFIG.letterman - totalLetterman;
-    const extras = regularPool
-      .filter((i: NewsSlotItem) => !usedUrls.has(i.url) && !newsPicks.find((n: NewsSlotItem) => n.url === i.url))
-      .slice(0, gap)
-      .map((i: NewsSlotItem) => ({ ...i, slot: 'news' }));
-    newsPicks.push(...extras);
+    let filled = 0;
+    for (const i of regularPool) {
+      if (filled >= gap) break;
+      if (usedUrls.has(i.url)) continue;
+      usedUrls.add(i.url);
+      newsPicks.push({ ...i, slot: 'news' });
+      filled++;
+    }
   }
 
   return {
