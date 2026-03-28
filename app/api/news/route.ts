@@ -67,9 +67,11 @@ async function computeNews() {
   const now = new Date();
   const slots: NewsSlotItem[] = [];
 
+  // StarTalk: slots 1-2
   slots.push(...await fetchSciencePin(SOURCES.starTalk, 2));
-  slots.push(...await fetchSciencePin(SOURCES.pbsSpaceTime, 2));
-
+  // PBS Space Time: slot 3
+  slots.push(...await fetchSciencePin(SOURCES.pbsSpaceTime, 1));
+  // NOVA: slot 4
   const novaItems = await fetchSciencePin(SOURCES.pbsNova, 1, 7);
   const novaIncluded = novaItems.length > 0;
   slots.push(...novaItems);

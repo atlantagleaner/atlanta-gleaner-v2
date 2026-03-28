@@ -9,19 +9,17 @@ export const SOURCES = {
   // Replaced with podcast RSS feeds hosted on open CDNs.
 
   starTalk: {
-    url: 'https://media.rss.com/startalk-podcast/feed.xml',
+    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCvNQn5Ld87p4F8o5WbU1Vaw',
     type: 'science_pin',
     label: 'StarTalk',
     pinSlots: 2,
   },
 
   pbsSpaceTime: {
-    // PBS Space Time does not have a standalone podcast feed — replaced with
-    // PBS NewsHour Science, which covers astronomy/physics/space regularly.
-    url: 'https://www.pbs.org/newshour/feeds/rss/science',
+    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC7pgm_sM7zG7tL_C1b84L-g',
     type: 'science_pin',
-    label: 'PBS NewsHour Science',
-    pinSlots: 2,
+    label: 'PBS Space Time',
+    pinSlots: 1,
   },
 
   pbsNova: {
@@ -156,8 +154,8 @@ export const SCORING = {
 export const SLOT_CONFIG = {
   total: 12,
   starTalk: 2,
-  pbsSpaceTime: 2,
+  pbsSpaceTime: 1,
   pbsNova: 1,
   letterman: 2,
-  news: 5,
+  news: 6,
 };
