@@ -156,7 +156,7 @@ export const T: Record<string, CSSProperties> = {
    */
   display: {
     ...FONT.serif,
-    fontSize:      'clamp(3rem, 10vw, 7rem)',
+    fontSize:      'clamp(3rem, 15vw, 7rem)',
     fontWeight:    700,
     letterSpacing: '-0.03em',
     lineHeight:    0.95,
