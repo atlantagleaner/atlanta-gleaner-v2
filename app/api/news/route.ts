@@ -1,102 +1,84 @@
 import { NextResponse } from 'next/server';
 
-// Force dynamic to break the 25-hour cache
+// Force fresh data and break the old 25-hour cache
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 export const runtime = 'nodejs';
-export const maxDuration = 60;
 
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const SEARCH_API_KEY = process.env.SERPER_API_KEY;
 
-const PODCASTS = [
-  { label: 'StarTalk', youtubeId: 'UC9X7u_73YfV7Mpx2fO1u0gQ' },
-  { label: 'PBS Space Time', youtubeId: 'UC7_gcs09iThXyqcRLV6TSHeA' },
-];
+type SerperNewsRow = {
+  title: string;
+  link: string;
+  source: string;
+  date?: string;
+};
 
-type CrawlItem = {
+type GleanerItem = {
   title: string;
   url: string;
   source: string;
+  date?: string;
   publishedAt: string;
-  type: string;
+  type: 'video' | 'text';
   score: number;
+  slot: string;
 };
 
-async function fetchPodcasts(source: { label: string; youtubeId: string }) {
-  if (!YOUTUBE_API_KEY) return [];
-  try {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${source.youtubeId}&maxResults=10&order=date&type=video&key=${YOUTUBE_API_KEY}`
-    );
-    const data = await res.json();
-    // Filter out Shorts by checking title and description for keywords
-    return (data.items || [])
-      .filter(
-        (v: { snippet: { title: string; description: string } }) =>
-          !v.snippet.title.toLowerCase().includes('#shorts') &&
-          !v.snippet.description.toLowerCase().includes('#shorts')
-      )
-      .map((v: { id: { videoId: string }; snippet: { title: string; publishedAt?: string } }) => ({
-        title: v.snippet.title,
-        url: `https://www.youtube.com/watch?v=${v.id.videoId}`,
-        source: source.label,
-        publishedAt: v.snippet.publishedAt || '',
-        type: 'video',
-        score: 100,
-      }));
-  } catch (e) {
-    console.error(`Podcast Fetch Error (${source.label}):`, e);
-    return [];
-  }
-}
-
-async function crawlNews(query: string, limit: number = 10): Promise<CrawlItem[]> {
+/**
+ * Unified Search Function
+ * Uses Serper.dev to find news, videos, or esoteric articles.
+ */
+async function gleanerSearch(query: string, num: number = 10): Promise<GleanerItem[]> {
   if (!SEARCH_API_KEY) return [];
   try {
     const res = await fetch('https://google.serper.dev/news', {
       method: 'POST',
       headers: { 'X-API-KEY': SEARCH_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ q: query, num: limit }),
+      body: JSON.stringify({ q: query, num }),
     });
     const data = await res.json();
-    return (data.news || []).map(
-      (n: { title: string; link: string; source: string; date?: string }): CrawlItem => ({
+    return (data.news || []).map((n: SerperNewsRow): GleanerItem => {
+      const isVideo = n.link.includes('youtube.com');
+      return {
         title: n.title,
         url: n.link,
         source: n.source,
+        date: n.date,
         publishedAt: n.date || '',
-        type: 'text',
-        score: 80,
-      })
-    );
+        type: isVideo ? 'video' : 'text',
+        score: 0,
+        slot: 'news',
+      };
+    });
   } catch (e) {
-    console.error(`Crawl Error for "${query}":`, e);
+    console.error(`Gleaner Search Error (${query}):`, e);
     return [];
   }
 }
 
-async function computeNews() {
-  const finalSlots: unknown[] = new Array(20).fill(null);
+async function computeNews(): Promise<GleanerItem[]> {
+  const finalSlots: (GleanerItem | null)[] = new Array(20).fill(null);
   const usedUrls = new Set<string>();
 
-  // --- SLOTS 1-4: PODCASTS (NO SHORTS) ---
-  const podcastData = await Promise.all(PODCASTS.map(fetchPodcasts));
-  const podcastPicks = podcastData.flat().slice(0, 4);
-  podcastPicks.forEach((p, i) => {
+  // 1. SLOTS 1-4: SCIENCE PODCASTS (No Shorts)
+  // We search specifically for long-form videos to avoid YouTube Shorts
+  const podcastQuery =
+    '(site:youtube.com/c/startalk OR site:youtube.com/c/pbsspacetime) -shorts';
+  const podcasts = await gleanerSearch(podcastQuery, 6);
+  podcasts.slice(0, 4).forEach((p, i) => {
     finalSlots[i] = { ...p, slot: 'science_pin' };
     usedUrls.add(p.url);
   });
 
-  // --- SLOTS 17-20: ESOTERIC INTERNATIONAL ---
-  // Querying for high-quality, obscure, or in-depth global topics
-  const esotericNews = await crawlNews(
-    'longform international journalism esoteric obscure global issues depth',
-    6
-  );
-  let esotericIdx = 16; // Index for slot 17
-  esotericNews.forEach((n: CrawlItem) => {
+  // 2. SLOTS 17-20: ESOTERIC INTERNATIONAL
+  // Target high-quality, obscure, and long-form global journalism
+  const esotericQuery =
+    'site:aeon.co OR site:nautil.us OR site:restofworld.org international depth obscure';
+  const esoteric = await gleanerSearch(esotericQuery, 6);
+  let esotericIdx = 16;
+  esoteric.forEach((n) => {
     if (esotericIdx < 20 && !usedUrls.has(n.url)) {
       finalSlots[esotericIdx] = { ...n, slot: 'news-international' };
       usedUrls.add(n.url);
@@ -104,40 +86,47 @@ async function computeNews() {
     }
   });
 
-  // --- SLOTS 5-16: ATLANTA LOCAL (WITH GUARANTEES) ---
-  const localSearch = await crawlNews('Atlanta news wsb-tv atlanta news first', 20);
+  // 3. SLOTS 5-16: ATLANTA LOCAL (WITH OUTLET GUARANTEES)
+  // Search specifically for your guaranteed outlets first
+  const localQuery = 'site:wsbtv.com OR site:atlantanewsfirst.com Atlanta breaking news';
+  const localNews = await gleanerSearch(localQuery, 15);
 
-  // Handle 2 WSB and 2 ANF guarantees first
-  let localFillIdx = 4; // Start at slot 5
-  ;['WSB-TV', 'Atlanta News First'].forEach((target) => {
-    const matches = localSearch
-      .filter((n: CrawlItem) => (n.source || '').toLowerCase().includes(target.toLowerCase()))
-      .slice(0, 2);
-    matches.forEach((m: CrawlItem) => {
-      if (localFillIdx < 16 && !usedUrls.has(m.url)) {
-        finalSlots[localFillIdx] = { ...m, slot: 'news' };
-        usedUrls.add(m.url);
-        localFillIdx++;
-      }
-    });
-  });
-
-  // Fill remaining local slots up to 16
-  localSearch.forEach((n: CrawlItem) => {
-    if (localFillIdx < 16 && !usedUrls.has(n.url)) {
-      finalSlots[localFillIdx] = { ...n, slot: 'news' };
+  let localIdx = 4; // Starting at Slot 5
+  localNews.forEach((n) => {
+    if (localIdx < 16 && !usedUrls.has(n.url)) {
+      finalSlots[localIdx] = { ...n, slot: 'news' };
       usedUrls.add(n.url);
-      localFillIdx++;
+      localIdx++;
     }
   });
 
-  // Cleanup: Remove any nulls if searches came up short
-  return finalSlots.filter((s): s is Record<string, unknown> => s !== null);
+  // Final cleanup for any empty slots
+  return finalSlots.filter((s): s is GleanerItem => s !== null);
 }
 
 export async function GET() {
   try {
     const items = await computeNews();
+
+    // If absolutely nothing came back, return a clear diagnostic for the user
+    if (items.length === 0) {
+      return NextResponse.json({
+        items: [
+          {
+            title: 'Check SERPER_API_KEY in Vercel settings.',
+            url: '#',
+            source: 'System',
+            publishedAt: '',
+            score: 0,
+            slot: 'news',
+            type: 'text' as const,
+          },
+        ],
+        generatedAt: new Date().toISOString(),
+        count: 1,
+      });
+    }
+
     const generatedAt = new Date().toISOString();
     return NextResponse.json(
       { items, generatedAt, count: items.length },
@@ -149,7 +138,6 @@ export async function GET() {
   }
 }
 
-/** Cron and some clients call POST; delegate to the same handler. */
 export async function POST() {
   return GET();
 }
