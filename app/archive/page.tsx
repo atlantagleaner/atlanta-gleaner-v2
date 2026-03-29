@@ -2,12 +2,12 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Archive — searchable, accordion index of all published volumes.
-// Layout: Banner · page title · search bar · [2-col volume grid | sticky Twitter]
+// Layout: Banner · page title · search bar · [volume grid | sticky Twitter]
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState } from 'react'
 import { Banner }       from '@/src/components/Banner'
-import { AccordionBox } from '@/src/components/AccordionBox'
+import { VolumeBox } from '@/src/components/VolumeBox'
 import { TwitterBox }   from '@/src/components/TwitterBox'
 import { ARCHIVE_DATA } from '@/src/data/archive'
 import { PALETTE, T, PAGE_MAX_W, PAGE_TITLE_BLOCK } from '@/src/styles/tokens'
@@ -115,45 +115,34 @@ export default function ArchivePage() {
           )}
         </div>
 
-        {/* Main grid: 2-col accordions + sticky Twitter */}
-        <div style={{
-          display:             'grid',
-          gridTemplateColumns: '1fr 1fr 300px',
-          gap:                 '20px',
-          alignItems:          'start',
-        }}>
-          {/* Volume accordions */}
-          <div style={{
-            gridColumn:          '1 / 3',
-            display:             'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap:                 '20px',
-            alignItems:          'start',
-          }}>
+        {/* Main layout: volume grid + sticky Twitter */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-[20px] items-start">
+          <div className="w-full lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-[20px] items-start">
             {filteredData.length > 0 ? (
               filteredData.map(volume => (
-                <AccordionBox
+                <VolumeBox
                   key={volume.id}
                   volume={volume}
                   searchTerm={searchTerm}
                 />
               ))
             ) : (
-              <p style={{
-                ...T.micro,
-                color:      PALETTE.black,
-                opacity:    0.45,
-                gridColumn: '1 / -1',
-                padding:    '40px 0',
-                textAlign:  'center',
-              }}>
+              <p
+                className="col-span-full"
+                style={{
+                  ...T.micro,
+                  color:     PALETTE.black,
+                  opacity:   0.45,
+                  padding:   '40px 0',
+                  textAlign: 'center',
+                }}
+              >
                 No results for &ldquo;{searchTerm}&rdquo;
               </p>
             )}
           </div>
 
-          {/* Sticky Twitter feed */}
-          <div style={{ position: 'sticky', top: '20px' }}>
+          <div className="w-full lg:col-span-4 lg:sticky lg:top-[20px]">
             <TwitterBox />
           </div>
         </div>

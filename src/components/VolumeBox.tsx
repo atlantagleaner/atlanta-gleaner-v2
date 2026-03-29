@@ -1,9 +1,8 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AccordionBox — reusable accordion-style box for the archive page.
-// Each box represents one Volume; months are collapsible rows; articles
-// expand inside each month.
+// VolumeBox — Archive volume panel: collapsible shell, resizable height, months
+// with nested articles.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState } from 'react'
@@ -74,6 +73,7 @@ function MonthRow({ month, forceOpen }: { month: MonthArchive; forceOpen: boolea
   return (
     <div style={{ ...ITEM_RULE }}>
       <button
+        type="button"
         onClick={() => setOpen(o => !o)}
         style={{
           width:          '100%',
@@ -132,19 +132,62 @@ function MonthRow({ month, forceOpen }: { month: MonthArchive; forceOpen: boolea
   )
 }
 
-interface AccordionBoxProps {
+interface VolumeBoxProps {
   volume:     Volume
   searchTerm: string
 }
 
-export function AccordionBox({ volume, searchTerm }: AccordionBoxProps) {
+export function VolumeBox({ volume, searchTerm }: VolumeBoxProps) {
+  const [expanded, setExpanded] = useState(true)
   const isSearching = searchTerm.length > 0
+
   return (
-    <div style={{ ...BOX_SHELL, height: 'auto' }}>
-      <h2 style={{ ...BOX_HEADER, padding: '8px 14px', margin: 0 }}>
-        {volume.title} · Archive Log
-      </h2>
-      <div>
+    <div
+      style={{
+        ...BOX_SHELL,
+        resize:   'vertical',
+        overflow: 'hidden',
+        minHeight: expanded ? '200px' : undefined,
+      }}
+      draggable={true}
+    >
+      <button
+        type="button"
+        onClick={() => setExpanded(e => !e)}
+        style={{
+          ...BOX_HEADER,
+          padding:       '8px 14px',
+          margin:        0,
+          width:         '100%',
+          display:       'flex',
+          alignItems:    'center',
+          justifyContent: 'space-between',
+          gap:           '12px',
+          background:    'none',
+          border:        'none',
+          borderBottom:  BOX_HEADER.borderBottom,
+          cursor:        'pointer',
+          textAlign:     'left',
+          flexShrink:    0,
+        }}
+      >
+        <span style={{ flex: 1, minWidth: 0 }}>
+          {volume.title} · Archive Log
+        </span>
+        <span style={{ ...T.micro, color: PALETTE.black, flexShrink: 0 }}>
+          {expanded ? '[ − ]' : '[ + ]'}
+        </span>
+      </button>
+
+      <div
+        style={{
+          flex:       1,
+          minHeight:  0,
+          overflowY:  expanded ? 'auto' : 'hidden',
+          display:    expanded ? 'flex' : 'none',
+          flexDirection: 'column',
+        }}
+      >
         {volume.months.map(month => (
           <MonthRow
             key={month.monthYear}
