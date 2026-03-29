@@ -1,30 +1,30 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FarSideBox — Roll-C panel. One comic per publication date.
-// Future: accept `imageUrl` and `caption` as props from Supabase
+// FarSideBox — Roll-C panel. One comic strip.
+// Future: wire `imageUrl` and `caption` from Supabase
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { type CSSProperties } from 'react'
 import { PALETTE, T, BOX_SHELL, BOX_HEADER, BOX_PADDING } from '@/src/styles/tokens'
 
 interface FarSideBoxProps {
-  imageUrl?:      string
-  caption?:       string
-  publishedDate?: string
-  style?:         CSSProperties
+  imageUrl?: string
+  caption?:  string
+  style?:    CSSProperties
 }
 
 export function FarSideBox({
   imageUrl,
   caption = '"Suddenly, Ted remembered he had left the primordial soup on."',
-  publishedDate,
   style,
 }: FarSideBoxProps) {
   return (
-    <div style={{ height: '100%', ...style }}>
+    // FIX: Changed height from '100%' to 'fit-content' so the module hugs its content.
+    <div style={{ height: 'fit-content', ...style }}>
+      {/* Ensure your BOX_SHELL in tokens.ts is also set to height: 'fit-content' */}
       <div style={BOX_SHELL}>
-        <div style={{ padding: BOX_PADDING, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: BOX_PADDING, display: 'flex', flexDirection: 'column' }}>
 
           {/* Section header — BOX_HEADER */}
           <h2 style={BOX_HEADER}>The Far Side</h2>
