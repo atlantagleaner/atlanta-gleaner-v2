@@ -2,6 +2,7 @@ import { unstable_cache, revalidateTag } from 'next/cache';
 import { fetchFeed } from '@/lib/rssParser';
 import { SOURCES, SCORING, SLOT_CONFIG } from '@/lib/newsConfig';
 
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const maxDuration = 45;
 
@@ -24,14 +25,14 @@ const ESOTERIC_TERMS = [
 const getCachedNews = unstable_cache(
  computeNews,
  ['gleaner-news'],
- { revalidate: 90000, tags: ['gleaner-news'] }
+ { revalidate: 60, tags: ['gleaner-news'] }
 );
 
 export async function GET() {
  try {
  const news = await getCachedNews();
  return Response.json(news, {
- headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' },
+ headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=86400' },
  });
  } catch (err) {
  console.error('[news/route] GET error:', err);
