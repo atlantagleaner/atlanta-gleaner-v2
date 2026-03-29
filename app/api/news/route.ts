@@ -1,157 +1,155 @@
-import { unstable_cache, revalidateTag } from 'next/cache';
-import { fetchFeed } from '@/lib/rssParser';
-import { SOURCES, SCORING, SLOT_CONFIG } from '@/lib/newsConfig';
+import { NextResponse } from 'next/server';
 
+// Force dynamic to break the 25-hour cache
 export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
 export const runtime = 'nodejs';
-export const maxDuration = 45;
+export const maxDuration = 60;
 
-const TOTAL_ITEMS = 15;
-const INTERNATIONAL_QUOTA = 4;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+const SEARCH_API_KEY = process.env.SERPER_API_KEY;
 
-const INVESTIGATIVE_TERMS = [
- 'investigation', 'exclusive', 'uncovered', 'records show', 
- 'documents reveal', 'whistleblower', 'public records', 
- 'foia', 'investigative', 'exposed', 'watchdog', 'scrutiny',
- 'channel 2 investigates', 'atlanta news first investigates'
+const PODCASTS = [
+  { label: 'StarTalk', youtubeId: 'UC9X7u_73YfV7Mpx2fO1u0gQ' },
+  { label: 'PBS Space Time', youtubeId: 'UC7_gcs09iThXyqcRLV6TSHeA' },
 ];
 
-const ESOTERIC_TERMS = [
- 'deep dive', 'analysis', 'in-depth', 'esoteric', 'obscure',
- 'niche', 'longread', 'untold', 'forgotten', 'phenomenon',
- 'special report', 'origins', 'history of', 'complexities'
-];
+type CrawlItem = {
+  title: string;
+  url: string;
+  source: string;
+  publishedAt: string;
+  type: string;
+  score: number;
+};
 
-const getCachedNews = unstable_cache(
- computeNews,
- ['gleaner-news'],
- { revalidate: 60, tags: ['gleaner-news'] }
-);
-
-export async function GET() {
- try {
- const news = await getCachedNews();
- return Response.json(news, {
- headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=86400' },
- });
- } catch (err) {
- console.error('[news/route] GET error:', err);
- return Response.json({ items: [], error: 'Feed unavailable' }, { status: 200 });
- }
+async function fetchPodcasts(source: { label: string; youtubeId: string }) {
+  if (!YOUTUBE_API_KEY) return [];
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${source.youtubeId}&maxResults=10&order=date&type=video&key=${YOUTUBE_API_KEY}`
+    );
+    const data = await res.json();
+    // Filter out Shorts by checking title and description for keywords
+    return (data.items || [])
+      .filter(
+        (v: { snippet: { title: string; description: string } }) =>
+          !v.snippet.title.toLowerCase().includes('#shorts') &&
+          !v.snippet.description.toLowerCase().includes('#shorts')
+      )
+      .map((v: { id: { videoId: string }; snippet: { title: string; publishedAt?: string } }) => ({
+        title: v.snippet.title,
+        url: `https://www.youtube.com/watch?v=${v.id.videoId}`,
+        source: source.label,
+        publishedAt: v.snippet.publishedAt || '',
+        type: 'video',
+        score: 100,
+      }));
+  } catch (e) {
+    console.error(`Podcast Fetch Error (${source.label}):`, e);
+    return [];
+  }
 }
 
-function scoreItem(item: any, source: any, now: Date, isInternational: boolean): number {
- let score = source.sourceBonus || 0;
- const text = `${item.title} ${item.snippet || ''}`.toLowerCase();
-
- // Watchdog Bonus
- if (INVESTIGATIVE_TERMS.some(kw => text.includes(kw))) {
- score += 35; 
- }
-
- // Esoteric Deep Dive Bonus (Heavily weighted for international)
- if (isInternational && ESOTERIC_TERMS.some(kw => text.includes(kw))) {
- score += 45; 
- }
-
- const tiers = [
- { keywords: SCORING.tier1, points: 25 },
- { keywords: SCORING.tier2, points: 20 },
- { keywords: SCORING.tier3, points: 15 },
- ];
-
- for (const { keywords, points } of tiers) {
- if (keywords?.some((kw: string) => text.includes(kw))) {
- score += points;
- }
- }
-
- const pubDate = new Date(item.pubDate || item.publishedAt);
- const ageHours = (now.getTime() - pubDate.getTime()) / (1000 * 60 * 60);
- if (ageHours < 12) score += 10;
- 
- return score;
+async function crawlNews(query: string, limit: number = 10): Promise<CrawlItem[]> {
+  if (!SEARCH_API_KEY) return [];
+  try {
+    const res = await fetch('https://google.serper.dev/news', {
+      method: 'POST',
+      headers: { 'X-API-KEY': SEARCH_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: query, num: limit }),
+    });
+    const data = await res.json();
+    return (data.news || []).map(
+      (n: { title: string; link: string; source: string; date?: string }): CrawlItem => ({
+        title: n.title,
+        url: n.link,
+        source: n.source,
+        publishedAt: n.date || '',
+        type: 'text',
+        score: 80,
+      })
+    );
+  } catch (e) {
+    console.error(`Crawl Error for "${query}":`, e);
+    return [];
+  }
 }
 
 async function computeNews() {
- const now = new Date();
- const slots = [];
+  const finalSlots: unknown[] = new Array(20).fill(null);
+  const usedUrls = new Set<string>();
 
- // 1. Science Pins
- slots.push(...await fetchSciencePin(SOURCES.starTalk, 2));
- slots.push(...await fetchSciencePin(SOURCES.pbsSpaceTime, 1));
- 
- // 2. Fetch and Score ALL News
- const newsSources = Object.entries(SOURCES).filter(([, s]: any) => s.type === 'news' || s.type === 'international');
- const allRawItems = await Promise.all(
- newsSources.map(async ([key, source]: any) => {
- try {
- const isInternational = source.type === 'international' || source.isInternational === true;
- const items = await fetchFeed(source.url);
- 
- return items.slice(0, 25).map((item: any) => ({
- title: item.title,
- url: item.link,
- source: source.label,
- publishedAt: item.pubDate,
- score: scoreItem(item, source, now, isInternational),
- isInternational,
- slot: null,
- }));
- } catch { return []; }
- })
- );
+  // --- SLOTS 1-4: PODCASTS (NO SHORTS) ---
+  const podcastData = await Promise.all(PODCASTS.map(fetchPodcasts));
+  const podcastPicks = podcastData.flat().slice(0, 4);
+  podcastPicks.forEach((p, i) => {
+    finalSlots[i] = { ...p, slot: 'science_pin' };
+    usedUrls.add(p.url);
+  });
 
- const allItems = allRawItems.flat().sort((a: any, b: any) => b.score - a.score);
- const usedUrls = new Set<string>(slots.map((i: any) => i.url));
- const guaranteedPicks: any[] = [];
+  // --- SLOTS 17-20: ESOTERIC INTERNATIONAL ---
+  // Querying for high-quality, obscure, or in-depth global topics
+  const esotericNews = await crawlNews(
+    'longform international journalism esoteric obscure global issues depth',
+    6
+  );
+  let esotericIdx = 16; // Index for slot 17
+  esotericNews.forEach((n: CrawlItem) => {
+    if (esotericIdx < 20 && !usedUrls.has(n.url)) {
+      finalSlots[esotericIdx] = { ...n, slot: 'news-international' };
+      usedUrls.add(n.url);
+      esotericIdx++;
+    }
+  });
 
- // 3a. Guarantee Local Local Sources (2 each)
- const primarySources = [SOURCES.wsbTV?.label, SOURCES.atlantaNewsFirst?.label].filter(Boolean); 
- for (const label of primarySources) {
- const topTwo = allItems
- .filter((i: any) => i.source === label && !usedUrls.has(i.url))
- .slice(0, 2);
- 
- topTwo.forEach((i: any) => {
- usedUrls.add(i.url);
- guaranteedPicks.push({ ...i, slot: 'news-local' });
- });
- }
+  // --- SLOTS 5-16: ATLANTA LOCAL (WITH GUARANTEES) ---
+  const localSearch = await crawlNews('Atlanta news wsb-tv atlanta news first', 20);
 
- // 3b. Guarantee International Deep Dives (Top 4)
- const topInternational = allItems
- .filter((i: any) => i.isInternational && !usedUrls.has(i.url))
- .slice(0, INTERNATIONAL_QUOTA);
+  // Handle 2 WSB and 2 ANF guarantees first
+  let localFillIdx = 4; // Start at slot 5
+  ;['WSB-TV', 'Atlanta News First'].forEach((target) => {
+    const matches = localSearch
+      .filter((n: CrawlItem) => (n.source || '').toLowerCase().includes(target.toLowerCase()))
+      .slice(0, 2);
+    matches.forEach((m: CrawlItem) => {
+      if (localFillIdx < 16 && !usedUrls.has(m.url)) {
+        finalSlots[localFillIdx] = { ...m, slot: 'news' };
+        usedUrls.add(m.url);
+        localFillIdx++;
+      }
+    });
+  });
 
- topInternational.forEach((i: any) => {
- usedUrls.add(i.url);
- guaranteedPicks.push({ ...i, slot: 'news-international' });
- });
+  // Fill remaining local slots up to 16
+  localSearch.forEach((n: CrawlItem) => {
+    if (localFillIdx < 16 && !usedUrls.has(n.url)) {
+      finalSlots[localFillIdx] = { ...n, slot: 'news' };
+      usedUrls.add(n.url);
+      localFillIdx++;
+    }
+  });
 
- // 4. Fill remaining slots to reach 15
- const remainingSlots = TOTAL_ITEMS - slots.length - guaranteedPicks.length;
- const newsPicks = allItems
- .filter((i: any) => !usedUrls.has(i.url))
- .slice(0, Math.max(0, remainingSlots))
- .map((i: any) => ({ ...i, slot: 'news' }));
-
- return {
- items: [...slots, ...guaranteedPicks, ...newsPicks].slice(0, TOTAL_ITEMS),
- generatedAt: now.toISOString(),
- };
+  // Cleanup: Remove any nulls if searches came up short
+  return finalSlots.filter((s): s is Record<string, unknown> => s !== null);
 }
 
-async function fetchSciencePin(source: any, count: number) {
- if (!source) return [];
- try {
- const items = await fetchFeed(source.url);
- return items.slice(0, count).map((item: any) => ({
- title: item.title,
- url: item.link,
- source: source.label,
- score: 999,
- slot: source.type,
- }));
- } catch { return []; }
+export async function GET() {
+  try {
+    const items = await computeNews();
+    const generatedAt = new Date().toISOString();
+    return NextResponse.json(
+      { items, generatedAt, count: items.length },
+      { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30' } }
+    );
+  } catch (error) {
+    console.error('[news/route] GET error:', error);
+    return NextResponse.json({ items: [], generatedAt: null, count: 0 }, { status: 500 });
+  }
+}
+
+/** Cron and some clients call POST; delegate to the same handler. */
+export async function POST() {
+  return GET();
 }
