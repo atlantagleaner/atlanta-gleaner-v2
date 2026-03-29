@@ -189,7 +189,7 @@ export const T: Record<string, CSSProperties> = {
 export const BOX_SHELL: CSSProperties = {
   border:        '1px solid rgba(0,0,0,0.18)',
   background:    '#FFFFFF',
-  height:        '100%',
+  height:        'fit-content',
   display:       'flex',
   flexDirection: 'column',
 }

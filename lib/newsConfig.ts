@@ -31,7 +31,21 @@ export const SOURCES = {
     maxAgeDays: 30,
   },
 
-  // ── NEWS POOL (slots 6–12, scored + Letterman guarantee) ─────────────────────────────────
+  wsbTV: {
+    url: 'https://www.wsbtv.com/arc/outboundfeeds/rss/category/news/local/',
+    type: 'local_tv_pin',
+    label: 'WSB-TV News',
+    pinSlots: 2,
+  },
+
+  atlantaNewsFirst: {
+    url: 'https://www.atlantanewsfirst.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory',
+    type: 'local_tv_pin',
+    label: 'Atlanta News First',
+    pinSlots: 2,
+  },
+
+  // ── NEWS POOL (scored + Letterman guarantee) ─────────────────────────────────
 
   georgiaRecorder: {
     url: 'https://georgiarecorder.com/feed/',
@@ -156,6 +170,8 @@ export const SLOT_CONFIG = {
   starTalk: 2,
   pbsSpaceTime: 1,
   pbsNova: 1,
+  wsbTv: 2,
+  atlantaNewsFirst: 2,
   letterman: 2,
-  news: 6,
+  news: 2,
 };

@@ -2,7 +2,8 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Atlanta Gleaner — NewsBox Component (Live RSS Edition)
-// Fetches 12 live slots from /api/news on mount.
+// Architecture: Autonomous Module. Self-contained design spec; does not
+// inherit from global tokens to ensure cross-page identity consistency.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect } from 'react';
