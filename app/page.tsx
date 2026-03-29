@@ -27,7 +27,7 @@ export default function HomePage() {
           }}
           right={{
             label: 'Roll-C · The Far Side',
-            node: <FarSideBox publishedDate="March 25, 2026" />,
+            node: <FarSideBox />,
           }}
         />
       </div>
