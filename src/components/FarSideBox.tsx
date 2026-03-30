@@ -1,97 +1,60 @@
 'use client'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FarSideBox — Roll-C panel. One comic strip.
-// Future: wire `imageUrl` and `caption` from Supabase
-// ─────────────────────────────────────────────────────────────────────────────
+import React from 'react'
+import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER } from '@/src/styles/tokens'
 
-import { type CSSProperties } from 'react'
-import { PALETTE, T, BOX_SHELL, BOX_HEADER, BOX_PADDING } from '@/src/styles/tokens'
-
-interface FarSideBoxProps {
-  imageUrl?: string
-  caption?:  string
-  style?:    CSSProperties
-}
-
-export function FarSideBox({
-  imageUrl,
-  caption = '"Suddenly, Ted remembered he had left the primordial soup on."',
-  style,
-}: FarSideBoxProps) {
+export function FarSideBox() {
   return (
-    // FIX: Changed height from '100%' to 'fit-content' so the module hugs its content.
-    <div style={{ height: 'fit-content', ...style }}>
-      {/* Ensure your BOX_SHELL in tokens.ts is also set to height: 'fit-content' */}
-      <div style={BOX_SHELL}>
-        <div style={{ padding: BOX_PADDING, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ ...BOX_SHELL, height: '100%', border: `1px solid ${PALETTE.black}`, display: 'flex', flexDirection: 'column', background: PALETTE.white }}>
+      
+      {/* 1. Header (The Roll Label) */}
+      <div style={{ padding: '12px 16px', background: PALETTE.black }}>
+        <h2 style={{ ...BOX_HEADER, color: PALETTE.white, margin: 0 }}>
+          Roll-C · The Far Side
+        </h2>
+      </div>
 
-          {/* Section header — BOX_HEADER */}
-          <h2 style={BOX_HEADER}>The Far Side</h2>
+      {/* 2. Content Area */}
+      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        
+        <h3 style={{ ...FONT.sans, fontSize: '14px', fontWeight: 900, letterSpacing: '0.1em', margin: '0 0 8px 0', color: PALETTE.black }}>
+          THE FAR SIDE
+        </h3>
+        
+        <hr style={{ border: 'none', borderTop: '2px solid black', margin: '0 0 24px 0' }} />
 
-          {imageUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={imageUrl}
-              alt="The Far Side comic"
-              style={{
-                width: '100%',
-                border: '1px solid rgba(0,0,0,0.10)',
-                display: 'block',
-                filter: 'grayscale(20%) contrast(1.05)',
-              }}
-            />
-          ) : (
-            /* Placeholder — warm background, film-frame icon */
-            <div style={{
-              border:          '1px solid rgba(0,0,0,0.10)',
-              width:           '100%',
-              aspectRatio:     '1 / 1',
-              display:         'flex',
-              flexDirection:   'column',
-              justifyContent:  'center',
-              alignItems:      'center',
-              padding:         '20px',
-              background:      PALETTE.warm,
-            }}>
-              <svg
-                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                style={{ width: '40px', height: '40px', color: PALETTE.black, marginBottom: '12px' }}
-                strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter"
-              >
-                <rect x="2" y="2" width="20" height="20" />
-                <rect x="2"  y="2"  width="3" height="3" fill="currentColor" />
-                <rect x="2"  y="7"  width="3" height="3" fill="currentColor" />
-                <rect x="2"  y="12" width="3" height="3" fill="currentColor" />
-                <rect x="2"  y="17" width="3" height="3" fill="currentColor" />
-                <rect x="19" y="2"  width="3" height="3" fill="currentColor" />
-                <rect x="19" y="7"  width="3" height="3" fill="currentColor" />
-                <rect x="19" y="12" width="3" height="3" fill="currentColor" />
-                <rect x="19" y="17" width="3" height="3" fill="currentColor" />
-                <circle cx="9" cy="9" r="1.5" />
-                <polyline points="22 16 17 11 6 22" />
-              </svg>
-              {/* Placeholder label — T.micro */}
-              <p style={{ ...T.micro, color: PALETTE.black, margin: 0, textAlign: 'center' }}>
-                [ Comic Awaiting Scan ]
-              </p>
-            </div>
-          )}
-
-          {/* Caption — T.caption */}
-          {caption && (
-            <p style={{
-              ...T.caption,
-              color:      PALETTE.black,
-              textAlign:  'center',
-              marginTop:  '16px',
-              marginBottom: 0,
-            }}>
-              {caption}
-            </p>
-          )}
-
+        {/* 3. The Image Placeholder (Locked in) */}
+        <div style={{ 
+          flex: 1, 
+          width: '100%', 
+          background: '#E5E5E5', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          border: '1px solid #D1D1D1',
+          minHeight: '300px',
+          marginBottom: '20px'
+        }}>
+          <div style={{ fontSize: '40px', marginBottom: '12px' }}>🎞️</div>
+          <p style={{ ...FONT.sans, fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', margin: 0 }}>
+            [ COMIC AWAITING SCAN ]
+          </p>
         </div>
+
+        {/* 4. The Caption */}
+        <p style={{ 
+          ...FONT.serif, 
+          fontSize: '16px', 
+          lineHeight: 1.5, 
+          fontStyle: 'italic', 
+          textAlign: 'center', 
+          color: PALETTE.black,
+          padding: '0 10px'
+        }}>
+          "Suddenly, Ted remembered he had left the primordial soup on."
+        </p>
+
       </div>
     </div>
   )
