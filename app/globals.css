@@ -1,120 +1,140 @@
-/* --- ATLANTA GLEANER MASTER STYLES --- */
+/* --- ATLANTA GLEANER: DESIGN TOKEN ALIGNMENT --- */
 
 :root {
-  --color-warm-grey: #EEEDEB;
-  --color-white: #FFFFFF;
-  --color-black: #000000;
-  --size-sm: 10px;
-  --size-md: 14px;
+  --palette-white: #FFFFFF;
+  --palette-warm: #EEEDEB;
+  --palette-black: #000000;
   --font-serif: 'Cormorant Garamond', serif;
   --font-sans: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
 
-* { box-sizing: border-box; padding: 0; margin: 0; }
-
 body {
-  background-color: #f5f5f5;
-  color: var(--color-black);
-  font-family: var(--font-sans);
-  font-size: var(--size-md);
-  font-weight: 500;
+  background-color: var(--palette-warm);
+  color: var(--palette-black);
   -webkit-font-smoothing: antialiased;
 }
 
-/* CASE LAW BOX MODULE */
+/* OPINION ARCHITECTURE - FIDELITY SPEC */
 
 .notice-banner {
-  background-color: var(--color-warm-grey);
-  font-family: var(--font-mono);
-  font-size: var(--size-sm);
-  text-transform: uppercase;
-  padding: 12px 20px;
+  background-color: var(--palette-warm);
+  border-left: 3px solid var(--palette-black);
+  padding: 12px 16px;
   margin-bottom: 24px;
-  border: 1px solid var(--color-black);
-  line-height: 1.4;
+  /* T.micro alignment */
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.case-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 24px;
 }
 
 .metadata-grid {
+  background-color: var(--palette-warm);
   display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 8px 16px;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 24px;
+  padding: 20px;
   margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-black);
 }
 
 .metadata-label {
+  /* T.micro alignment */
   font-family: var(--font-mono);
-  font-size: var(--size-sm);
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: #666;
 }
 
 .metadata-value {
   font-family: var(--font-sans);
-  font-size: var(--size-md);
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .holding-block {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 700;
-  border-left: 6px solid var(--color-black);
+  /* T.prose + weight 600 */
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.65;
+  border-left: 3px solid var(--palette-black);
   padding: 16px 24px;
   margin: 32px 0;
-  background-color: var(--color-white);
-  line-height: 1.3;
+  background-color: var(--palette-white);
 }
 
-.opinion-container {
-  background: var(--color-white);
-  padding: 0;
+.opinion-header {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 48px 0 16px;
 }
 
 .opinion-author {
+  /* T.label alignment */
   font-family: var(--font-mono);
-  font-size: var(--size-sm);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   margin-bottom: 24px;
   display: block;
 }
 
 .opinion-body {
+  /* T.prose alignment */
   font-family: var(--font-sans);
-  font-size: var(--size-md);
+  font-size: 14px;
   line-height: 1.72;
 }
 
-.opinion-body p { margin-bottom: 1.4em; }
+.opinion-body p { margin-bottom: 1.1em; }
 
 .opinion-body blockquote {
-  margin: 2em 0 2em 40px;
-  padding-left: 20px;
-  border-left: 2px solid var(--color-black);
+  font-family: var(--font-serif);
+  font-size: 15px;
   font-style: italic;
+  border-left: 3px solid var(--palette-black);
+  padding-left: 16px;
+  margin: 2em 0;
 }
 
 .star-pagination {
-  color: #999;
   font-family: var(--font-mono);
-  font-size: 0.85em;
-  margin: 0 4px;
+  font-size: 10px;
+  color: #999;
+  margin-right: 6px;
 }
 
 .footnote-list {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-black);
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(0,0,0,0.1);
 }
 
 .footnote-item {
-  font-size: var(--size-sm);
   display: flex;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.55;
 }
 
-.footnote-marker { font-weight: 700; min-width: 15px; }
+.footnote-marker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
