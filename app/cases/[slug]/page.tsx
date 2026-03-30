@@ -1,13 +1,14 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import CaseLawBox from '@/components/CaseLawBox'; 
+// Fixed paths to include 'src'
+import CaseLawBox from '@/src/components/CaseLawBox'; 
 import allCases from '@/src/data/cases.json'; 
 
 interface Props {
   params: { slug: string };
 }
 
-// 1. This tells Vercel exactly which 133 pages to build
+// Pre-builds all 133 pages for speed
 export async function generateStaticParams() {
   return allCases.map((c: any) => ({
     slug: c.slug,
@@ -15,7 +16,7 @@ export async function generateStaticParams() {
 }
 
 export default function CasePage({ params }: Props) {
-  // 2. Find the case
+  // Find the case in our JSON library
   const currentCase = allCases.find((c: any) => c.slug === params.slug);
 
   if (!currentCase) {
@@ -24,7 +25,6 @@ export default function CasePage({ params }: Props) {
 
   return (
     <main className="flex flex-col items-center py-10 px-4 min-h-screen bg-[#EEEDEB]">
-      {/* 3. The established CaseLawBox layout */}
       <CaseLawBox caseData={currentCase} />
     </main>
   );
