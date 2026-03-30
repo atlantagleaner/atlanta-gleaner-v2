@@ -1,36 +1,27 @@
 import React from 'react';
 
 // --- 📘 THE BLUEPRINT (TypeScript Interface) ---
-// This tells Cursor exactly what data makes up a single case.
+// Updated to match the exact output of process-cases.js
 export interface CaseData {
+  slug?: string;
   title: string;
   court: string;
   dateDecided: string;
   docketNo: string;
   citations: string;
-  judges: string;
-  disposition: string;
+  judges?: string;
+  opinionBy?: string;
+  disposition?: string;
   summary: string;
-  priorHistory?: string; // The "?" means this is optional (some cases might not have it)
+  priorHistory?: string; 
   counsel?: string;
   opinionBody: string;
   footnotes?: { id: number; rawText: string }[];
 }
 
-// --- 🧹 THE CLEANING ROBOTS ---
-const cleanOpinionText = (rawText: string) => {
-  return rawText.replace(/\[\*{2,3}\d+\]/g, '');
-};
-
-const cleanFootnoteText = (rawFootnote: string) => {
-  return rawFootnote.replace(/^\d+\.\s*\d*\s*/, '').replace(/\s*↑?$/, '');
-};
-
 // --- 🏗️ THE MAIN COMPONENT ---
-// We now pass 'caseData' into the component so it dynamically fills in the blanks.
 export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
   
-  // If no data is passed in somehow, don't crash the page.
   if (!caseData) return null;
 
   return (
@@ -58,11 +49,19 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
           <span className="uppercase tracking-wide font-medium">Citations:</span>
           <span>{caseData.citations}</span>
 
-          <span className="uppercase tracking-wide font-medium">Judges:</span>
-          <span>{caseData.judges}</span>
+          {caseData.judges && (
+            <>
+              <span className="uppercase tracking-wide font-medium">Judges:</span>
+              <span>{caseData.judges}</span>
+            </>
+          )}
 
-          <span className="uppercase tracking-wide font-medium">Disposition:</span>
-          <span>{caseData.disposition}</span>
+          {caseData.disposition && (
+            <>
+              <span className="uppercase tracking-wide font-medium">Disposition:</span>
+              <span>{caseData.disposition}</span>
+            </>
+          )}
         </div>
         
         {/* The Notice Line */}
@@ -85,7 +84,7 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
       {/* 5. OPINION BLOCK */}
       <section className="bg-[#FFFFFF] p-6 font-sans border-t border-[#000000]">
         
-        {/* Only show this block if prior history or counsel actually exists for this case */}
+        {/* Only show this block if prior history or counsel actually exists */}
         {(caseData.priorHistory || caseData.counsel) && (
           <div className="mb-8 space-y-2 text-[10px]">
             {caseData.priorHistory && (
@@ -97,11 +96,13 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
           </div>
         )}
 
-        {/* The cleaned-up main reading text */}
-        <div className="space-y-4 text-[14px] font-medium leading-relaxed mb-12">
-          <p>
-            {cleanOpinionText(caseData.opinionBody)} 
-          </p>
+        {caseData.opinionBy && (
+          <p className="font-bold text-[14px] mb-4 uppercase">Opinion by: {caseData.opinionBy}</p>
+        )}
+
+        {/* The whitespace-pre-wrap class respects the \n\n from our script */}
+        <div className="space-y-4 text-[14px] font-medium leading-relaxed mb-12 whitespace-pre-wrap">
+          {caseData.opinionBody}
         </div>
 
         {/* Footnotes */}
@@ -110,10 +111,10 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
             <ol className="space-y-3">
               {caseData.footnotes.map((fn) => (
                 <li key={fn.id} id={`fn-${fn.id}`} className="flex gap-2">
-                  <a href={`#ref-${fn.id}`} className="font-bold hover:underline shrink-0">
+                  <a href={`#ref-${fn.id}`} className="font-bold hover:underline shrink-0 text-blue-600">
                     {fn.id}.
                   </a>
-                  <span>{cleanFootnoteText(fn.rawText)}</span>
+                  <span>{fn.rawText}</span>
                 </li>
               ))}
             </ol>
