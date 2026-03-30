@@ -1,5 +1,5 @@
 // app/opinions/[slug]/page.tsx
-import cases from '@/data/cases.json';
+import cases from '@/src/data/cases.json';
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {

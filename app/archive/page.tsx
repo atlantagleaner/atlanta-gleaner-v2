@@ -2,7 +2,17 @@ import React from 'react';
 import allCases from '@/src/data/cases.json';
 import Link from 'next/link';
 
-// Updated to include 'summary' from our new JSON structure
+interface CaseRecord {
+  slug: string;
+  metadata: {
+    title: string;
+    dateDecided: string;
+    docketNo: string;
+    court: string;
+  };
+  summary: string;
+}
+
 interface Case {
   slug: string;
   title: string;
@@ -13,7 +23,14 @@ interface Case {
 }
 
 export default function ArchivePage() {
-  const cases = allCases as Case[];
+  const cases = (allCases as CaseRecord[]).map((c) => ({
+    slug: c.slug,
+    title: c.metadata.title,
+    dateDecided: c.metadata.dateDecided,
+    docketNo: c.metadata.docketNo,
+    court: c.metadata.court,
+    summary: c.summary,
+  }));
 
   // Sort: Newest cases first
   const sortedCases = [...cases].sort((a, b) => 
