@@ -5,21 +5,26 @@ import Link from 'next/link'
 import { T, PALETTE, BOX_SHELL, BOX_HEADER, FONT } from '@/src/styles/tokens'
 
 export interface CaseData {
-  id: string; title: string; citation: string; url: string; snippet: string; coreTerms?: string[];
+  id: string; title: string; citation: string; fullDate: string; url: string; month: string; coreTerms?: string[];
 }
 
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTH_ORDER = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January", "Undated"];
 
 export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }) {
   const [openMonth, setOpenMonth] = useState<string | null>(null);
 
   const groupedCases = useMemo(() => {
-    return cases.reduce((acc, c) => {
-      const foundMonth = MONTHS.find(m => c.snippet.includes(m)) || "Undated";
-      if (!acc[foundMonth]) acc[foundMonth] = [];
-      acc[foundMonth].push(c);
+    const groups = cases.reduce((acc, c) => {
+      const m = c.month || "Undated";
+      if (!acc[m]) acc[m] = [];
+      acc[m].push(c);
       return acc;
     }, {} as Record<string, CaseData[]>);
+    
+    // Sort keys by our MONTH_ORDER array
+    return Object.keys(groups)
+      .sort((a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b))
+      .reduce((acc, key) => { acc[key] = groups[key]; return acc; }, {} as Record<string, CaseData[]>);
   }, [cases]);
 
   return (
@@ -28,32 +33,44 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
         <h2 style={{ ...BOX_HEADER, color: PALETTE.white, margin: 0 }}>{label}</h2>
       </div>
 
-      <div style={{ overflowY: 'auto', flex: 1 }}>
+      <div style={{ overflowY: 'auto', flex: 1, background: PALETTE.white }}>
         {Object.entries(groupedCases).map(([month, monthCases]) => (
           <div key={month} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+            
+            {/* THE RESTORED MONTH BAR */}
             <button 
               onClick={() => setOpenMonth(openMonth === month ? null : month)}
               style={{
-                width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between',
-                background: openMonth === month ? '#fcfcfc' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left'
+                width: '100%', 
+                padding: '14px 16px', 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                background: openMonth === month ? '#F7F7F7' : 'transparent', 
+                border: 'none', 
+                borderBottom: openMonth === month ? '1px solid rgba(0,0,0,0.1)' : 'none',
+                cursor: 'pointer', 
+                textAlign: 'left',
+                transition: 'background 0.2s'
               }}
             >
-              <span style={{ ...T.micro, fontWeight: 700, letterSpacing: '0.12em', color: PALETTE.black }}>{month.toUpperCase()}</span>
-              <span style={{ fontSize: '12px', color: PALETTE.black }}>{openMonth === month ? '−' : '+'}</span>
+              <span style={{ ...T.micro, fontWeight: 700, letterSpacing: '0.12em', color: PALETTE.black }}>
+                {month.toUpperCase()}
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: PALETTE.black }}>
+                {openMonth === month ? '−' : '+'}
+              </span>
             </button>
 
+            {/* THE CASES INSIDE THE MONTH */}
             {openMonth === month && (
               <div style={{ padding: '0 16px 16px' }}>
                 {monthCases.map(c => (
                   <div key={c.id} style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0' }}>
-                    <Link href={c.url} style={{ textDecoration: 'none', color: PALETTE.black }}>
-                      <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 2px 0', fontWeight: 700 }}>{c.title}</h4>
-                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#666', margin: '0 0 10px 0' }}>{c.citation}</p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                        {c.coreTerms?.map(term => (
-                          <span key={term} style={{ fontSize: '9px', padding: '2px 5px', background: '#000', color: '#fff', borderRadius: '1px', textTransform: 'uppercase' }}>{term}</span>
-                        ))}
-                      </div>
+                    <Link href={c.url} style={{ textDecoration: 'none', color: PALETTE.black, display: 'block' }}>
+                      <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 4px 0', fontWeight: 700 }}>{c.title}</h4>
+                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#666', margin: '0' }}>
+                        {c.citation} {c.fullDate !== "Date Unknown" && ` · ${c.fullDate}`}
+                      </p>
                     </Link>
                   </div>
                 ))}
@@ -61,6 +78,11 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
             )}
           </div>
         ))}
+        {cases.length === 0 && (
+          <div style={{ padding: '24px', textAlign: 'center', ...T.micro, color: '#999' }}>
+            No cases found for this volume.
+          </div>
+        )}
       </div>
     </div>
   )

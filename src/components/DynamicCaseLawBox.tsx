@@ -1,63 +1,146 @@
 'use client'
 
 import React from 'react'
-import { PALETTE, FONT } from '@/src/styles/tokens'
+import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER, ITEM_RULE } from '@/src/styles/tokens'
 
+// 1. Restore the original MetaRow component
+function MetaRow({ label, value, notice = false }: { label: string; value: string; notice?: boolean }) {
+  if (!value) return null
+  return (
+    <div style={{
+      position:      'relative',
+      paddingTop:    '6px',
+      paddingBottom: '6px',
+      paddingLeft:   '128px',        // 120px label + 8px gap
+      paddingRight:  '0',
+      ...ITEM_RULE,
+    }}>
+      <span style={{
+        ...T.micro,
+        color:    PALETTE.black,
+        position: 'absolute',
+        left:     0,
+        top:      '6px',
+        width:    '120px',
+      }}>
+        {label}:
+      </span>
+      <span style={{
+        ...FONT.sans,
+        display:     'block',
+        fontSize:    '12px',
+        color:       PALETTE.black,
+        fontWeight:  400,
+        background:  'transparent',
+        lineHeight:  1.4,
+        borderLeft:  notice ? `2px solid ${PALETTE.black}` : 'none',
+        paddingLeft: notice ? '7px' : '0',
+        wordBreak:   'break-word',
+      }}>
+        {value}
+      </span>
+    </div>
+  )
+}
+
+// 2. The Main Component
 export function DynamicCaseLawBox({ caseMeta, htmlContent }: { caseMeta: any, htmlContent: string }) {
   if (!caseMeta) {
-    return <div style={{ padding: '40px', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>LOADING OPINION...</div>;
+    return <div style={{ padding: '40px', fontFamily: 'var(--font-mono)' }}>LOADING RECORD...</div>;
   }
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: PALETTE.white, border: `1px solid ${PALETTE.black}` }}>
-      
-      {/* Scrollable Reading Pane */}
-      <div style={{ padding: '32px 24px', overflowY: 'auto', flex: 1 }}>
-        
-        {/* 1. Case Title */}
-        <h2 style={{ ...FONT.serif, fontSize: '32px', fontWeight: 700, margin: '0 0 16px 0', color: PALETTE.black, lineHeight: 1.1 }}>
-          {caseMeta.title}
-        </h2>
+    <div style={{ height: '100%' }}>
+      <div style={{ ...BOX_SHELL, border: `1px solid ${PALETTE.black}` }}>
+        <div style={{ overflowY: 'auto', flex: 1, background: PALETTE.white }}>
+          
+          {/* HEADER & TITLE */}
+          <div style={{ padding: '20px 20px 16px' }}>
+            <h2 style={{ ...BOX_HEADER, margin: '0 0 16px 0', color: PALETTE.black }}>Case Law Updates</h2>
+            <h3 style={{
+              ...FONT.serif,
+              fontSize:   'clamp(1.6rem, 3.5vw, 2.6rem)',
+              fontWeight: 700,
+              lineHeight: 1.05,
+              color:      PALETTE.black,
+              margin:     0,
+              textShadow: '0 0 1px rgba(0,0,0,0.2)',
+            }}>
+              {caseMeta.title}
+            </h3>
+          </div>
 
-        {/* 2. Grey Metadata Boxes */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
-          <div style={{ background: '#EEEDEB', padding: '6px 10px', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', color: PALETTE.black }}>
-            {caseMeta.citation}
+          {/* THE METADATA ROWS (Warm Background) */}
+          <div style={{ padding: '12px 20px', ...ITEM_RULE, background: PALETTE.warm || '#f9f9f9' }}>
+            <MetaRow label="Court"        value="PENDING" />
+            <MetaRow label="Date Decided" value={caseMeta.fullDate || 'PENDING'} />
+            <MetaRow label="Docket No"    value="PENDING" />
+            <MetaRow label="Citations"    value={caseMeta.citation || 'PENDING'} />
+            <MetaRow label="Judges"       value="PENDING" />
+            <MetaRow label="Disposition"  value="PENDING" />
           </div>
-          <div style={{ background: '#EEEDEB', padding: '6px 10px', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', color: PALETTE.black }}>
-            {caseMeta.fullDate}
+
+          <div style={{ height: '12px' }} />
+
+          {/* CORE TERMS & SUMMARY */}
+          <div style={{ padding: '14px 20px', ...ITEM_RULE, background: PALETTE.warm || '#f9f9f9' }}>
+            {caseMeta.coreTerms && caseMeta.coreTerms.length > 0 && (
+              <p style={{ ...FONT.sans, fontSize: '12px', color: PALETTE.black, margin: '0 0 14px 0' }}>
+                <span style={{
+                  ...T.micro,
+                  background:    PALETTE.black,
+                  color:         PALETTE.white,
+                  padding:       '1px 6px',
+                  marginRight:   '8px',
+                  letterSpacing: '0.08em',
+                }}>
+                  Core Terms
+                </span>
+                {caseMeta.coreTerms.join(' · ')}
+              </p>
+            )}
+            
+            <p style={{
+              ...T.micro,
+              color:         PALETTE.black,
+              margin:        '0 0 8px 0',
+              paddingBottom: '6px',
+              ...ITEM_RULE,
+            }}>
+              Case Summary
+            </p>
+            <p style={{ ...T.prose, color: PALETTE.black, margin: '0 0 12px 0' }}>
+              {caseMeta.snippet || "Editorial summary pending review."}
+            </p>
           </div>
+
+          {/* THE OPINION SECTION */}
+          <div style={{ padding: '20px 20px 28px' }}>
+            <h4 style={{
+              ...FONT.serif,
+              fontSize:      '24px',
+              fontWeight:    700,
+              margin:        '0 0 8px 0',
+              borderBottom:  '1px solid rgba(0,0,0,0.10)',
+              paddingBottom: '8px',
+              color:         PALETTE.black
+            }}>
+              Opinion
+            </h4>
+            
+            <p style={{ ...T.label, color: PALETTE.black, margin: '0 0 16px 0' }}>
+              AUTHOR PENDING
+            </p>
+
+            {/* Injects the HTML from the Word Document directly into the original opinion styling */}
+            <div 
+              className="opinion-content"
+              style={{ ...T.prose, lineHeight: 1.72, color: PALETTE.black, margin: '0 0 1.1em 0' }}
+              dangerouslySetInnerHTML={{ __html: htmlContent }} 
+            />
+          </div>
+
         </div>
-
-        {/* 3. Black Core Term Boxes */}
-        {caseMeta.coreTerms && caseMeta.coreTerms.length > 0 && (
-          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px', flexWrap: 'wrap' }}>
-            {caseMeta.coreTerms.map((term: string) => (
-              <div key={term} style={{ background: PALETTE.black, color: PALETTE.white, padding: '4px 8px', fontSize: '9px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {term}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* 4. The Summary Block */}
-        <div style={{ marginBottom: '40px', padding: '16px 20px', borderLeft: `4px solid ${PALETTE.black}`, background: '#fcfcfc' }}>
-          <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 10px 0', color: '#666' }}>
-            Automated Snippet
-          </h4>
-          <p style={{ ...FONT.serif, fontSize: '15px', lineHeight: 1.6, margin: 0, color: PALETTE.black, opacity: 0.9 }}>
-            {caseMeta.snippet}...
-          </p>
-        </div>
-
-        <hr style={{ border: 'none', borderTop: '1px solid #E5E5E5', marginBottom: '40px' }} />
-
-        {/* 5. The Actual Opinion Text */}
-        <div 
-          style={{ ...FONT.serif, fontSize: '16px', lineHeight: 1.8, color: PALETTE.black }}
-          dangerouslySetInnerHTML={{ __html: htmlContent }} 
-        />
-        
       </div>
     </div>
   )
