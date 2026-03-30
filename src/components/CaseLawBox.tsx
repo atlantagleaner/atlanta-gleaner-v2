@@ -1,7 +1,6 @@
 import React from 'react';
 
 // --- 📘 THE BLUEPRINT (TypeScript Interface) ---
-// Updated to match the exact output of process-cases.js
 export interface CaseData {
   slug?: string;
   title: string;
@@ -100,10 +99,12 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
           <p className="font-bold text-[14px] mb-4 uppercase">Opinion by: {caseData.opinionBy}</p>
         )}
 
-        {/* The whitespace-pre-wrap class respects the \n\n from our script */}
-        <div className="space-y-4 text-[14px] font-medium leading-relaxed mb-12 whitespace-pre-wrap">
-          {caseData.opinionBody}
-        </div>
+        {/* --- 🪄 HTML INJECTION FOR FORMATTING --- */}
+        {/* We use dangerouslySetInnerHTML to render the rich formatting (bold, italics) from LexisNexis */}
+        <div 
+          className="space-y-4 text-[14px] font-medium leading-relaxed mb-12"
+          dangerouslySetInnerHTML={{ __html: caseData.opinionBody }}
+        />
 
         {/* Footnotes */}
         {caseData.footnotes && caseData.footnotes.length > 0 && (
