@@ -1,72 +1,78 @@
 'use client'
 
-import React from 'react'
-import { PALETTE, FONT, BOX_SHELL, ITEM_RULE } from '@/src/styles/tokens'
+import React, { useMemo } from 'react'
+import { PALETTE, FONT, T, BOX_SHELL, ITEM_RULE } from '@/src/styles/tokens'
 
-// SIZE_SM (10px): Metadata labels and values
 function MetaRow({ label, value }: { label: string; value: string }) {
   if (!value || value === "undefined") return null
   return (
-    <div style={{ position: 'relative', paddingTop: '4px', paddingBottom: '4px', paddingLeft: '128px', ...ITEM_RULE }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', position: 'absolute', left: 0, top: '6px', width: '120px', fontWeight: 700 }}>{label}:</span>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', display: 'block', lineHeight: 1.4 }}>{value}</span>
+    <div style={{ position: 'relative', padding: '4px 0', paddingLeft: '140px', ...ITEM_RULE }}>
+      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', position: 'absolute', left: 0, width: '130px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        {label}:
+      </span>
+      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', lineHeight: 1.4, fontWeight: 500 }}>
+        {value}
+      </span>
     </div>
   )
 }
 
 export function DynamicCaseLawBox({ caseMeta, htmlContent }: { caseMeta: any, htmlContent: string }) {
-  if (!caseMeta) return <div style={{ padding: '40px', fontFamily: 'var(--font-mono)' }}>LOADING...</div>;
+  if (!caseMeta) return <div style={{ padding: '40px', fontFamily: 'var(--font-mono)', fontSize: '10px' }}>LOADING RECORD...</div>;
+
+  const processedHtml = useMemo(() => {
+    if (!htmlContent) return '';
+    return htmlContent
+      .replace(/(\d+)\.\s*<a/g, '<a') 
+      .replace(/id="footnote-ref-(\d+)"/g, 'id="fnref$1"')
+      .replace(/href="#footnote-(\d+)"/g, 'href="#fn$1"');
+  }, [htmlContent]);
 
   return (
-    <div style={{ height: '100%', border: `1px solid ${PALETTE.black}`, background: '#EEEDEB', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100%', ...BOX_SHELL, border: `1px solid ${PALETTE.black}`, display: 'flex', flexDirection: 'column' }}>
       <div style={{ overflowY: 'auto', flex: 1 }}>
         
-        {/* HEADER */}
-        <div style={{ padding: '24px 24px 20px', background: '#EEEDEB' }}>
-          <h3 style={{ ...FONT.serif, fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.05, color: '#000' }}>
+        {/* HEADER BLOCK */}
+        <div style={{ padding: '24px 20px', background: '#FFFFFF', borderBottom: `1px solid ${PALETTE.black}` }}>
+          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 700, lineHeight: 1.05, color: PALETTE.black, margin: 0 }}>
             {caseMeta.title}
           </h3>
         </div>
 
-        {/* 1. METADATA BLOCK (#EEEDEB) */}
-        <div style={{ padding: '16px 24px', background: '#EEEDEB', borderTop: `1px solid ${PALETTE.black}`, borderBottom: `1px solid ${PALETTE.black}` }}>
+        {/* METADATA BLOCK */}
+        <div style={{ padding: '16px 20px', background: '#EEEDEB' }}>
           <MetaRow label="Court" value={caseMeta.court} />
           <MetaRow label="Date Decided" value={caseMeta.fullDate} />
           <MetaRow label="Docket No" value={caseMeta.docketNumber} />
           <MetaRow label="Citations" value={caseMeta.citation} />
-          <MetaRow label="Judges" value={caseMeta.judges} />
+          <MetaRow label="Judges" value={caseMeta.judges || "PENDING"} />
           <MetaRow label="Disposition" value={caseMeta.disposition} />
-          
-          {/* Notice Line (10px) */}
-          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', margin: 0, color: '#000' }}>
-              <strong>Notice:</strong> THIS OPINION IS UNCORRECTED AND SUBJECT TO REVISION.
+          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', fontWeight: 500, margin: 0 }}>
+              Notice: THIS OPINION IS UNCORRECTED AND SUBJECT TO REVISION.
             </p>
           </div>
         </div>
 
-        {/* 12px SEPARATOR GAP */}
-        <div style={{ height: '12px', background: '#EEEDEB' }} />
+        <div style={{ height: '12px', background: '#FFFFFF', borderTop: `1px solid ${PALETTE.black}`, borderBottom: `1px solid ${PALETTE.black}` }} />
 
-        {/* 2. EDITORIAL BLOCK (#EEEDEB) */}
-        <div style={{ padding: '20px 24px', background: '#EEEDEB', borderTop: `1px solid ${PALETTE.black}`, borderBottom: `1px solid ${PALETTE.black}` }}>
-          <div style={{ marginBottom: '16px' }}>
-             <span style={{ background: '#000', color: '#fff', padding: '2px 6px', fontSize: '10px', fontFamily: 'var(--font-mono)', marginRight: '8px' }}>CORE TERMS</span>
-             <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 500 }}>{caseMeta.coreTerms?.join(' · ')}</span>
-          </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 500, margin: '0 0 12px 0' }}><strong>Summary:</strong> {caseMeta.summary}</p>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 500, margin: '0 0 12px 0' }}><strong>Holding:</strong> {caseMeta.holding}</p>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 500, margin: 0 }}><strong>Conclusion:</strong> {caseMeta.conclusion}</p>
+        {/* EDITORIAL BLOCK */}
+        <div style={{ padding: '20px', background: '#EEEDEB', borderBottom: `1px solid ${PALETTE.black}` }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', fontWeight: 500, margin: '0 0 12px 0' }}>
+            <strong style={{ textTransform: 'uppercase', fontSize: '10px', display: 'block', marginBottom: '4px' }}>Case Summary:</strong>
+            {caseMeta.snippet}
+          </p>
         </div>
 
-        {/* 3. OPINION BLOCK (#FFFFFF) */}
-        <div style={{ padding: '40px 24px', background: '#FFFFFF' }}>
-          <h4 style={{ ...FONT.serif, fontSize: '22px', fontWeight: 700, borderBottom: '1px solid #000', paddingBottom: '12px', marginBottom: '32px' }}>
-            Opinion
-          </h4>
+        {/* OPINION BLOCK */}
+        <div style={{ padding: '32px 20px', background: '#FFFFFF' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', fontWeight: 700, margin: '0 0 24px 0', textTransform: 'uppercase' }}>
+             {caseMeta.opinionAuthor || "AUTHOR PENDING"}
+          </p>
           <div 
-            className="opinion-content" 
-            dangerouslySetInnerHTML={{ __html: htmlContent }} 
+            className="opinion-content"
+            style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', fontWeight: 500, lineHeight: 1.72, color: PALETTE.black }}
+            dangerouslySetInnerHTML={{ __html: processedHtml }} 
           />
         </div>
 

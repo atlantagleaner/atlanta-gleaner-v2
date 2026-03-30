@@ -18,6 +18,7 @@ async function processArchive() {
     const caseName = parts.join(' ').trim(); 
     const slug = fileNameNoExt.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
+    // Mammoth preserves verbatim formatting
     const result = await mammoth.convertToHtml({ path: path.join(INPUT_DIR, file) });
     const text = result.value.replace(/<[^>]*>/g, ' '); 
 
@@ -26,7 +27,6 @@ async function processArchive() {
     const dateMatch = text.match(dateRegex);
     const docketMatch = text.match(/(Case No\.|No\.)\s+([A-Z0-9-]+)/i);
     const dispMatch = text.match(/(Judgment affirmed|Judgment reversed|Affirmed in part|Reversed in part|Vacated|Remanded)/i);
-    const judgesMatch = text.match(/(Before|Before:)\s+([A-Za-z,\s]+?)\./i);
 
     fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), result.value);
 
@@ -40,12 +40,8 @@ async function processArchive() {
       url: `/cases/${slug}`,
       court: courtMatch ? courtMatch[0].toUpperCase() : "GEORGIA COURT OF APPEALS",
       docketNumber: docketMatch ? docketMatch[2] : "PENDING",
-      judges: judgesMatch ? judgesMatch[2] : "PENDING",
       disposition: dispMatch ? dispMatch[0].toUpperCase() : "PENDING",
-      summary: "Editorial summary pending review.",
-      holding: "Holding pending review.",
-      conclusion: "Conclusion pending review.",
-      coreTerms: ["PENDING"]
+      snippet: "Editorial summary pending review."
     });
   }
   searchIndex.sort((a, b) => b.id.localeCompare(a.id));
