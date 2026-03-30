@@ -10,8 +10,15 @@ import allCases from '@/src/data/cases.json';
 const cases = allCases as CaseData[];
 
 export default function HomePage() {
-  // Automatically grab the most recent case from your 140 opinions
-  const featuredCase = cases[0];
+  // Sort cases by dateDecided (assuming YYYY-MM-DD format or similar)
+  // before picking the featured case
+  const sortedCases = [...cases].sort(
+    (a, b) =>
+      new Date(b.metadata.dateDecided).getTime() -
+      new Date(a.metadata.dateDecided).getTime()
+  );
+
+  const featuredCase = sortedCases[0];
 
   return (
     <main className="min-h-screen bg-[#EEEDEB]">
