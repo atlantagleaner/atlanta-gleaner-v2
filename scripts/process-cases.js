@@ -1,65 +1,55 @@
 const fs = require('fs');
 const path = require('path');
-const mammoth = require('mammoth'); // This handles your .Docx files
+const mammoth = require('mammoth');
 
-// 1. Setup the "Pantry" and the "Storefront"
 const INPUT_DIR = 'C:/Users/arjun/Desktop/Archive'; 
 const OUTPUT_DIR = './public/cases-data';
 const INDEX_FILE = './public/search-index.json';
 
-// 2. The Legal Dictionary (Core Terms)
 const LEGAL_CATEGORIES = {
-  'CRIMINAL': ['murder', 'felony', 'evidence', 'sentence', 'jury', 'police', 'arrest'],
-  'TORT': ['negligence', 'injury', 'accident', 'liability', 'insurance', 'damages'],
-  'CONSTITUTIONAL': ['privacy', 'rights', 'amendment', 'statute', 'constitution'],
-  'PROCEDURAL': ['jurisdiction', 'motion', 'appeal', 'remand', 'summary judgment']
+  'CRIMINAL': ['murder', 'felony', 'evidence', 'jury', 'police'],
+  'TORT': ['negligence', 'injury', 'accident', 'liability', 'insurance'],
+  'CONSTITUTIONAL': ['privacy', 'rights', 'statute', 'constitution']
 };
 
 async function processArchive() {
-  const files = fs.readdirSync(INPUT_DIR).filter(f => f.endsWith('.Docx') || f.endsWith('.docx'));
-  console.log(`Found ${files.length} cases in the pantry.`);
-
+  if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  const files = fs.readdirSync(INPUT_DIR).filter(f => f.toLowerCase().endsWith('.docx'));
   const searchIndex = [];
 
   for (const file of files) {
-    const fullPath = path.join(INPUT_DIR, file);
+    const fileNameNoExt = file.replace(/\.docx$/i, '');
     
-    // Extract the Name and Citation from the filename (e.g., Name_Citation.Docx)
-    const fileNameNoExt = file.replace(/\.(Docx|docx)$/, '');
-    const [caseName, citation] = fileNameNoExt.split('_');
+    // ARCHITECTURE: Split only at the LAST underscore to protect names like "City of X_ LLC"
+    const parts = fileNameNoExt.split('_');
+    const citation = parts.length > 1 ? parts.pop().trim() : "Citation Pending";
+    const caseName = parts.join(' ').trim(); 
     const slug = fileNameNoExt.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-    // Turn Word Doc into HTML
-    const result = await mammoth.convertToHtml({ path: fullPath });
-    const html = result.value;
-    const plainText = html.replace(/<[^>]*>/g, ' ').toLowerCase();
+    const result = await mammoth.convertToHtml({ path: path.join(INPUT_DIR, file) });
+    const plainText = result.value.replace(/<[^>]*>/g, ' ').toLowerCase();
 
-    // Identify Core Terms
     const coreTerms = [];
     for (const [category, keywords] of Object.entries(LEGAL_CATEGORIES)) {
-      if (keywords.some(kw => plainText.includes(kw))) {
-        coreTerms.push(category);
-      }
+      if (keywords.some(kw => plainText.includes(kw))) coreTerms.push(category);
     }
 
-    // Save the pretty HTML file for the website
-    fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), html);
+    fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), result.value);
 
-    // Add it to the "Brain" (Search Index)
     searchIndex.push({
       id: slug,
-      title: fileNameNoExt,
+      title: caseName,
+      citation: citation,
       url: `/cases/${slug}`,
-      snippet: plainText.substring(0, 300), // First 300 characters for the date/context
-      coreTerms: coreTerms.slice(0, 3) // Take the top 3 categories
+      snippet: plainText.substring(0, 400),
+      coreTerms: coreTerms.slice(0, 3)
     });
-
     console.log(`Processed: ${caseName}`);
   }
 
-  // Save the updated Brain
+  // Sort so newest is always at the top of the JSON
+  searchIndex.sort((a, b) => b.id.localeCompare(a.id)); 
   fs.writeFileSync(INDEX_FILE, JSON.stringify(searchIndex, null, 2));
-  console.log('✅ Success! The Archive is updated and the Brain is smarter.');
 }
 
 processArchive();
