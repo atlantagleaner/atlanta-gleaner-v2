@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export interface CaseData {
   slug: string;
@@ -69,6 +70,15 @@ const CaseLawBox: React.FC<Props> = ({ caseData }) => {
           ))}
         </footer>
       )}
+
+      <div className="mt-4 pt-4 border-t border-black/10">
+        <Link
+          href={`/cases/${caseData.slug}`}
+          className="inline-block font-mono text-[10px] uppercase tracking-widest border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors"
+        >
+          Read Full Opinion →
+        </Link>
+      </div>
     </article>
   );
 };
