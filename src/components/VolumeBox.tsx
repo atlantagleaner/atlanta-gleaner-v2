@@ -1,200 +1,93 @@
 'use client'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// VolumeBox — Archive volume panel: collapsible shell, resizable height, months
-// with nested articles.
-// ─────────────────────────────────────────────────────────────────────────────
-
-import { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER, ITEM_RULE } from '@/src/styles/tokens'
-import type { Volume, MonthArchive, Article } from '@/src/data/archive'
+import { T, PALETTE, BOX_SHELL, BOX_HEADER, FONT } from '@/src/styles/tokens'
 
-function ArticleCard({ article, last }: { article: Article; last: boolean }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <div style={{
-      paddingBottom: last ? 0 : '20px',
-      marginBottom:  last ? 0 : '20px',
-      borderBottom:  last ? 'none' : '1px solid rgba(0,0,0,0.07)',
-    }}>
-      <p style={{ ...T.micro, color: PALETTE.black, margin: '0 0 6px 0' }}>
-        {article.date}
-      </p>
-      <Link
-        href={article.url}
-        style={{ textDecoration: 'none', display: 'block', marginBottom: '8px' }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <span style={{
-          ...T.body,
-          color:           hovered ? PALETTE.white : PALETTE.black,
-          backgroundColor: hovered ? PALETTE.black : 'transparent',
-          padding:         hovered ? '2px 4px' : '2px 0',
-          transition:      'all 0.1s',
-          display:         'inline',
-        }}>
-          {article.title}
-        </span>
-      </Link>
-      <p style={{
-        ...T.micro,
-        fontWeight:    500,
-        textTransform: 'none',
-        letterSpacing: '0.04em',
-        lineHeight:    1.6,
-        color:         PALETTE.black,
-        margin:        '0 0 6px 0',
-        whiteSpace:    'pre-wrap',
-      }}>
-        {article.citation}
-      </p>
-      <p style={{
-        ...T.micro,
-        fontStyle:  'italic',
-        color:      PALETTE.black,
-        opacity:    0.65,
-        margin:     0,
-        lineHeight: 1.5,
-      }}>
-        {article.tags}
-      </p>
-    </div>
-  )
+// Define the shape of our data
+export interface CaseData {
+  id: string; title: string; url: string; snippet: string; coreTerms?: string[];
 }
 
-function MonthRow({ month, forceOpen }: { month: MonthArchive; forceOpen: boolean }) {
-  const [open, setOpen] = useState(false)
-  const expanded = forceOpen || open
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  if (month.articles.length === 0 && !forceOpen) return null
+export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }) {
+  const [openMonth, setOpenMonth] = useState<string | null>(null);
+
+  // OPTIMIZATION: useMemo forces the computer to only sort the months ONCE when the data loads, 
+  // instead of re-sorting every single time the user clicks a button.
+  const groupedCases = useMemo(() => {
+    return cases.reduce((acc, c) => {
+      const foundMonth = MONTHS.find(m => c.snippet.includes(m)) || "Undated";
+      if (!acc[foundMonth]) acc[foundMonth] = [];
+      acc[foundMonth].push(c);
+      return acc;
+    }, {} as Record<string, CaseData[]>);
+  }, [cases]);
 
   return (
-    <div style={{ ...ITEM_RULE }}>
-      <button
-        type="button"
-        onClick={() => setOpen(o => !o)}
-        style={{
-          width:          '100%',
-          display:        'flex',
-          alignItems:     'center',
-          justifyContent: 'space-between',
-          padding:        '11px 14px',
-          background:     'none',
-          border:         'none',
-          cursor:         'pointer',
-          textAlign:      'left',
-          transition:     'background 0.1s',
-        }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = PALETTE.warm }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none' }}
-      >
-        <span style={{
-          ...FONT.serif,
-          fontSize:      '17px',
-          fontWeight:    600,
-          color:         PALETTE.black,
-          textTransform: 'uppercase',
-          letterSpacing: '0.04em',
-        }}>
-          {month.monthYear}
-        </span>
-        <span style={{ ...T.micro, color: PALETTE.black, flexShrink: 0, marginLeft: '12px' }}>
-          {month.articles.length > 0 ? `${month.articles.length} ` : ''}
-          {expanded ? '[ - ]' : '[ + ]'}
-        </span>
-      </button>
-      <div style={{
-        display:          'grid',
-        gridTemplateRows: expanded ? '1fr' : '0fr',
-        transition:       'grid-template-rows 0.26s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        <div style={{ overflow: 'hidden' }}>
-          <div style={{ padding: '6px 14px 18px' }}>
-            {month.articles.length > 0 ? (
-              month.articles.map((article, i) => (
-                <ArticleCard
-                  key={i}
-                  article={article}
-                  last={i === month.articles.length - 1}
-                />
-              ))
-            ) : (
-              <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.4, margin: 0 }}>
-                [ No entries this month ]
-              </p>
-            )}
-          </div>
-        </div>
+    <div style={{ ...BOX_SHELL, height: '100%', border: `1px solid ${PALETTE.black}`, display: 'flex', flexDirection: 'column' }}>
+      
+      {/* Header */}
+      <div style={{ padding: '12px 16px', background: PALETTE.black }}>
+        <h2 style={{ ...BOX_HEADER, color: PALETTE.white, margin: 0 }}>{label}</h2>
       </div>
-    </div>
-  )
-}
 
-interface VolumeBoxProps {
-  volume:     Volume
-  searchTerm: string
-}
+      <div style={{ overflowY: 'auto', flex: 1 }}>
+        {cases.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', ...T.micro, opacity: 0.5 }}>Loading volume...</div>
+        ) : (
+          Object.entries(groupedCases).map(([month, monthCases]) => (
+            <div key={month} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+              
+              {/* Accordion Button */}
+              <button 
+                onClick={() => setOpenMonth(openMonth === month ? null : month)}
+                style={{
+                  width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between',
+                  background: openMonth === month ? '#fcfcfc' : 'transparent', border: 'none', cursor: 'pointer',
+                  textAlign: 'left', transition: 'background 0.2s'
+                }}
+              >
+                <span style={{ ...T.micro, fontWeight: 700, letterSpacing: '0.12em', color: PALETTE.black }}>
+                  {month.toUpperCase()}
+                </span>
+                <span style={{ fontSize: '12px', color: PALETTE.black }}>
+                  {openMonth === month ? '−' : '+'}
+                </span>
+              </button>
 
-export function VolumeBox({ volume, searchTerm }: VolumeBoxProps) {
-  const [expanded, setExpanded] = useState(true)
-  const isSearching = searchTerm.length > 0
-
-  return (
-    <div
-      style={{
-        ...BOX_SHELL,
-        resize:   'vertical',
-        overflow: 'hidden',
-        minHeight: expanded ? '200px' : undefined,
-      }}
-      draggable={true}
-    >
-      <button
-        type="button"
-        onClick={() => setExpanded(e => !e)}
-        style={{
-          ...BOX_HEADER,
-          padding:       '8px 14px',
-          margin:        0,
-          width:         '100%',
-          display:       'flex',
-          alignItems:    'center',
-          justifyContent: 'space-between',
-          gap:           '12px',
-          background:    'none',
-          border:        'none',
-          borderBottom:  BOX_HEADER.borderBottom,
-          cursor:        'pointer',
-          textAlign:     'left',
-          flexShrink:    0,
-        }}
-      >
-        <span style={{ flex: 1, minWidth: 0 }}>
-          {volume.title} · Archive Log
-        </span>
-        <span style={{ ...T.micro, color: PALETTE.black, flexShrink: 0 }}>
-          {expanded ? '[ − ]' : '[ + ]'}
-        </span>
-      </button>
-
-      <div
-        style={{
-          flex:       1,
-          minHeight:  0,
-          overflowY:  expanded ? 'auto' : 'hidden',
-          display:    expanded ? 'flex' : 'none',
-          flexDirection: 'column',
-        }}
-      >
-        {volume.months.map(month => (
-          <MonthRow
-            key={month.monthYear}
-            month={month}
-            forceOpen={isSearching && month.articles.length > 0}
-          />
-        ))}
+              {/* Case List */}
+              {openMonth === month && (
+                <div style={{ padding: '0 16px 16px' }}>
+                  {monthCases.map(c => {
+                    const [name, citation] = c.title.split('_');
+                    return (
+                      <div key={c.id} style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0' }}>
+                        <Link href={c.url} style={{ textDecoration: 'none', color: PALETTE.black }}>
+                          <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 2px 0', fontWeight: 700 }}>
+                            {name}
+                          </h4>
+                          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#666', margin: '0 0 10px 0', letterSpacing: '0.02em' }}>
+                            {citation || "Citation Pending"}
+                          </p>
+                          {/* Map through Core Terms if the script found them */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                            {c.coreTerms?.map(term => (
+                              <span key={term} style={{ fontSize: '9px', padding: '2px 5px', background: '#000', color: '#fff', borderRadius: '1px', textTransform: 'uppercase' }}>
+                                {term}
+                              </span>
+                            ))}
+                          </div>
+                        </Link>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

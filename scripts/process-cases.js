@@ -1,68 +1,65 @@
 const fs = require('fs');
 const path = require('path');
-const mammoth = require('mammoth');
+const mammoth = require('mammoth'); // This handles your .Docx files
 
-const INPUT_DIR = 'C:\\Users\\arjun\\Desktop\\Archive';
-const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'cases-data');
-const INDEX_FILE = path.join(__dirname, '..', 'public', 'search-index.json');
+// 1. Setup the "Pantry" and the "Storefront"
+const INPUT_DIR = 'C:/Users/arjun/Desktop/Archive'; 
+const OUTPUT_DIR = './public/cases-data';
+const INDEX_FILE = './public/search-index.json';
 
-async function processCases() {
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  }
+// 2. The Legal Dictionary (Core Terms)
+const LEGAL_CATEGORIES = {
+  'CRIMINAL': ['murder', 'felony', 'evidence', 'sentence', 'jury', 'police', 'arrest'],
+  'TORT': ['negligence', 'injury', 'accident', 'liability', 'insurance', 'damages'],
+  'CONSTITUTIONAL': ['privacy', 'rights', 'amendment', 'statute', 'constitution'],
+  'PROCEDURAL': ['jurisdiction', 'motion', 'appeal', 'remand', 'summary judgment']
+};
 
-  const files = fs.readdirSync(INPUT_DIR);
+async function processArchive() {
+  const files = fs.readdirSync(INPUT_DIR).filter(f => f.endsWith('.Docx') || f.endsWith('.docx'));
+  console.log(`Found ${files.length} cases in the pantry.`);
+
   const searchIndex = [];
-  let processedCount = 0;
-  let skippedFiles = [];
-
-  console.log(`Found ${files.length} total items in the folder.`);
 
   for (const file of files) {
-    // 1. Check for .docx AND .DOCX (case-insensitive)
-    if (file.toLowerCase().endsWith('.docx') && !file.startsWith('~$')) {
-      const filePath = path.join(INPUT_DIR, file);
-      
-      // Clean up the file name for the URL
-      const slug = file.toLowerCase().replace('.docx', '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-      
-      console.log(`Processing: ${file}...`);
-      
-      try {
-        const result = await mammoth.convertToHtml({ path: filePath });
-        const htmlContent = result.value;
-        
-        fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), htmlContent);
-        
-        const cleanText = htmlContent.replace(/<[^>]*>?/gm, '');
-        const snippet = cleanText.substring(0, 200).trim() + '...';
-        
-        searchIndex.push({
-          id: slug,
-          title: file.replace(/\.[^/.]+$/, ""), // Keeps the original title casing
-          url: `/cases/${slug}`,
-          snippet: snippet
-        });
-        
-        processedCount++;
-      } catch (err) {
-        console.error(`❌ Error processing ${file}:`, err.message);
+    const fullPath = path.join(INPUT_DIR, file);
+    
+    // Extract the Name and Citation from the filename (e.g., Name_Citation.Docx)
+    const fileNameNoExt = file.replace(/\.(Docx|docx)$/, '');
+    const [caseName, citation] = fileNameNoExt.split('_');
+    const slug = fileNameNoExt.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+    // Turn Word Doc into HTML
+    const result = await mammoth.convertToHtml({ path: fullPath });
+    const html = result.value;
+    const plainText = html.replace(/<[^>]*>/g, ' ').toLowerCase();
+
+    // Identify Core Terms
+    const coreTerms = [];
+    for (const [category, keywords] of Object.entries(LEGAL_CATEGORIES)) {
+      if (keywords.some(kw => plainText.includes(kw))) {
+        coreTerms.push(category);
       }
-    } else {
-      // Keep track of what we are skipping and why
-      skippedFiles.push(file);
     }
+
+    // Save the pretty HTML file for the website
+    fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), html);
+
+    // Add it to the "Brain" (Search Index)
+    searchIndex.push({
+      id: slug,
+      title: fileNameNoExt,
+      url: `/cases/${slug}`,
+      snippet: plainText.substring(0, 300), // First 300 characters for the date/context
+      coreTerms: coreTerms.slice(0, 3) // Take the top 3 categories
+    });
+
+    console.log(`Processed: ${caseName}`);
   }
 
-  // Save the master search index
+  // Save the updated Brain
   fs.writeFileSync(INDEX_FILE, JSON.stringify(searchIndex, null, 2));
-  
-  console.log(`\n✅ Success! Processed ${processedCount} cases.`);
-  
-  if (skippedFiles.length > 0) {
-    console.log(`\n⚠️ Skipped ${skippedFiles.length} files. Here are the first few so we can see why:`);
-    console.log(skippedFiles.slice(0, 10)); // Shows the names of the first 10 skipped files
-  }
+  console.log('✅ Success! The Archive is updated and the Brain is smarter.');
 }
 
-processCases();
+processArchive();

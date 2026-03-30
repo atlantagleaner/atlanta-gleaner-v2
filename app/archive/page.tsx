@@ -1,150 +1,58 @@
 'use client'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Archive — searchable, accordion index of all published volumes.
-// Layout: Banner · page title · search bar · [volume grid | sticky Twitter]
-// ─────────────────────────────────────────────────────────────────────────────
-
-import { useState } from 'react'
-import { Banner }       from '@/src/components/Banner'
-import { VolumeBox } from '@/src/components/VolumeBox'
-import { TwitterBox }   from '@/src/components/TwitterBox'
-import { ARCHIVE_DATA } from '@/src/data/archive'
-import { PALETTE, T, PAGE_MAX_W, PAGE_TITLE_BLOCK } from '@/src/styles/tokens'
+import { useEffect, useState, useMemo } from 'react'
+import { Banner } from '@/src/components/Banner'
+import { FourResizablePanels } from '@/src/components/FourResizablePanels'
+import { VolumeBox, type CaseData } from '@/src/components/VolumeBox'
+import { PAGE_TITLE_BLOCK, PALETTE, T } from '@/src/styles/tokens'
 
 export default function ArchivePage() {
-  const [searchTerm,   setSearchTerm]   = useState('')
-  const [inputFocused, setInputFocused] = useState(false)
+  const [allCases, setAllCases] = useState<CaseData[]>([]);
 
-  const filteredData = searchTerm
-    ? ARCHIVE_DATA
-        .map(volume => ({
-          ...volume,
-          months: volume.months
-            .map(month => ({
-              ...month,
-              articles: month.articles.filter(article =>
-                [article.title, article.citation, article.tags, month.monthYear]
-                  .join(' ')
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase())
-              ),
-            }))
-            .filter(month => month.articles.length > 0),
-        }))
-        .filter(volume => volume.months.length > 0)
-    : ARCHIVE_DATA
+  // OPTIMIZATION: Fetch the data exactly ONE time when the page loads.
+  useEffect(() => {
+    fetch('/search-index.json')
+      .then(res => res.json())
+      .then(data => setAllCases(data));
+  }, []);
 
-  const resultCount = filteredData.reduce(
-    (sum, vol) => sum + vol.months.reduce((s, m) => s + m.articles.length, 0),
-    0
-  )
+  // OPTIMIZATION: Quickly sort the master list into the 4 volumes using useMemo
+  const vol1Cases = useMemo(() => allCases.filter(c => c.snippet.includes('2022') || c.snippet.includes('2023')), [allCases]);
+  const vol2Cases = useMemo(() => allCases.filter(c => c.snippet.includes('2024')), [allCases]);
+  const vol3Cases = useMemo(() => allCases.filter(c => c.snippet.includes('2025')), [allCases]);
+  const vol4Cases = useMemo(() => allCases.filter(c => c.snippet.includes('2026')), [allCases]);
 
   return (
     <>
       <Banner />
 
-      <main style={{ padding: '0 20px 80px', maxWidth: PAGE_MAX_W, margin: '0 auto' }}>
-
-        {/* Page title */}
+      <main style={{ padding: '0 20px 80px', maxWidth: '1800px', margin: '0 auto' }}>
+        
         <div style={PAGE_TITLE_BLOCK}>
           <h1 style={{ ...T.pageTitle, color: PALETTE.black, margin: 0 }}>
             Archive
           </h1>
         </div>
 
-        {/* Search bar */}
-        <div style={{ marginBottom: '28px' }}>
-          <div style={{
-            display:    'flex',
-            alignItems: 'center',
-            border:     `1px solid ${inputFocused ? PALETTE.black : 'rgba(0,0,0,0.18)'}`,
-            background: PALETTE.white,
-            padding:    '10px 14px',
-            maxWidth:   '480px',
-            transition: 'border-color 0.15s',
-          }}>
-            <span style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, marginRight: '10px', flexShrink: 0 }}>
-              SEARCH▸
-            </span>
-            <input
-              type="text"
-              placeholder="case name, citation, tags..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              onFocus={() => setInputFocused(true)}
-              onBlur={() => setInputFocused(false)}
-              style={{
-                ...T.nav,
-                flex:       1,
-                border:     'none',
-                outline:    'none',
-                background: 'transparent',
-                color:      PALETTE.black,
-                fontSize:   '10px',
-              }}
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                style={{
-                  background: 'none',
-                  border:     'none',
-                  cursor:     'pointer',
-                  color:      PALETTE.black,
-                  opacity:    0.45,
-                  fontSize:   '16px',
-                  padding:    '0 0 0 8px',
-                  lineHeight: 1,
-                }}
-              >
-                x
-              </button>
-            )}
-          </div>
-          {searchTerm && (
-            <p style={{
-              ...T.micro,
-              color:       PALETTE.black,
-              opacity:     0.5,
-              margin:      '6px 0 0',
-              paddingLeft: '2px',
-            }}>
-              {resultCount} result{resultCount !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-
-        {/* Main layout: volume grid + sticky Twitter */}
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-[20px] items-start">
-          <div className="w-full lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-[20px] items-start">
-            {filteredData.length > 0 ? (
-              filteredData.map(volume => (
-                <VolumeBox
-                  key={volume.id}
-                  volume={volume}
-                  searchTerm={searchTerm}
-                />
-              ))
-            ) : (
-              <p
-                className="col-span-full"
-                style={{
-                  ...T.micro,
-                  color:     PALETTE.black,
-                  opacity:   0.45,
-                  padding:   '40px 0',
-                  textAlign: 'center',
-                }}
-              >
-                No results for &ldquo;{searchTerm}&rdquo;
-              </p>
-            )}
-          </div>
-
-          <div className="w-full lg:col-span-4 lg:sticky lg:top-[20px]">
-            <TwitterBox />
-          </div>
+        <div style={{ paddingTop: '24px' }}>
+          <FourResizablePanels
+            col1={{
+              label: 'Roll-A · Volume I',
+              node: <VolumeBox label="Volume I: 2022-2023" cases={vol1Cases} />
+            }}
+            col2={{
+              label: 'Roll-B · Volume II',
+              node: <VolumeBox label="Volume II: 2024" cases={vol2Cases} />
+            }}
+            col3={{
+              label: 'Roll-C · Volume III',
+              node: <VolumeBox label="Volume III: 2025" cases={vol3Cases} />
+            }}
+            col4={{
+              label: 'Roll-D · Volume IV',
+              node: <VolumeBox label="Volume IV: 2026" cases={vol4Cases} />
+            }}
+          />
         </div>
 
       </main>
