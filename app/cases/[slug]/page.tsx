@@ -1,42 +1,31 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { Banner } from '@/src/components/Banner';
-import { NewsBox } from '@/src/components/NewsBox';
-import { DynamicCaseLawBox } from '@/src/components/DynamicCaseLawBox';
-import { FarSideBox } from '@/src/components/FarSideBox';
-import { ResizablePanels } from '@/src/components/ResizablePanels';
+import React from 'react';
+import { notFound } from 'next/navigation';
+import CaseLawBox from '@/components/CaseLawBox'; 
+import allCases from '@/src/data/cases.json'; 
 
-export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  
-  // 1. Load the "Brain" to find the metadata
-  const indexPath = path.join(process.cwd(), 'public', 'search-index.json');
-  const index = JSON.parse(await fs.readFile(indexPath, 'utf-8'));
-  const current = index.find((c: any) => c.id === slug);
+interface Props {
+  params: { slug: string };
+}
 
-  // 2. Load the actual HTML opinion
-  const htmlPath = path.join(process.cwd(), 'public', 'cases-data', `${slug}.html`);
-  const html = await fs.readFile(htmlPath, 'utf-8');
+// 1. This tells Vercel exactly which 133 pages to build
+export async function generateStaticParams() {
+  return allCases.map((c: any) => ({
+    slug: c.slug,
+  }));
+}
+
+export default function CasePage({ params }: Props) {
+  // 2. Find the case
+  const currentCase = allCases.find((c: any) => c.slug === params.slug);
+
+  if (!currentCase) {
+    notFound();
+  }
 
   return (
-    <>
-      <Banner />
-      <div style={{ paddingTop: '24px' }}>
-        <ResizablePanels
-          left={{ 
-            label: 'Roll-A · News', 
-            node: <NewsBox key="news" /> 
-          }}
-          center={{ 
-            label: `Roll-B · Case Law: ${current?.title?.toUpperCase() || slug.toUpperCase()}`, 
-            node: <DynamicCaseLawBox key="case" caseMeta={current} htmlContent={html} /> 
-          }}
-          right={{ 
-            label: 'Roll-C · The Far Side', 
-            node: <FarSideBox key="farside" /> 
-          }}
-        />
-      </div>
-    </>
+    <main className="flex flex-col items-center py-10 px-4 min-h-screen bg-[#EEEDEB]">
+      {/* 3. The established CaseLawBox layout */}
+      <CaseLawBox caseData={currentCase} />
+    </main>
   );
 }
