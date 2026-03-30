@@ -5,9 +5,16 @@ import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER } from '@/src/styles/tokens'
 
 export function FarSideBox() {
   return (
-    <div style={{ ...BOX_SHELL, height: '100%', border: `1px solid ${PALETTE.black}`, display: 'flex', flexDirection: 'column', background: PALETTE.white }}>
+    <div style={{ 
+      ...BOX_SHELL, 
+      height: 'fit-content', // Forces the box to wrap strictly around content
+      border: `1px solid ${PALETTE.black}`, 
+      display: 'flex', 
+      flexDirection: 'column', 
+      background: PALETTE.white 
+    }}>
       
-      {/* 1. Header (The Roll Label) */}
+      {/* 1. Header Bar */}
       <div style={{ padding: '12px 16px', background: PALETTE.black }}>
         <h2 style={{ ...BOX_HEADER, color: PALETTE.white, margin: 0 }}>
           Roll-C · The Far Side
@@ -15,7 +22,7 @@ export function FarSideBox() {
       </div>
 
       {/* 2. Content Area */}
-      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
         
         <h3 style={{ ...FONT.sans, fontSize: '14px', fontWeight: 900, letterSpacing: '0.1em', margin: '0 0 8px 0', color: PALETTE.black }}>
           THE FAR SIDE
@@ -23,17 +30,16 @@ export function FarSideBox() {
         
         <hr style={{ border: 'none', borderTop: '2px solid black', margin: '0 0 24px 0' }} />
 
-        {/* 3. The Image Placeholder (Locked in) */}
+        {/* 3. The Image Placeholder (Locked to Square) */}
         <div style={{ 
-          flex: 1, 
           width: '100%', 
+          aspectRatio: '1 / 1', // Keeps the comic area a perfect square
           background: '#E5E5E5', 
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
           justifyContent: 'center',
           border: '1px solid #D1D1D1',
-          minHeight: '300px',
           marginBottom: '20px'
         }}>
           <div style={{ fontSize: '40px', marginBottom: '12px' }}>🎞️</div>
@@ -50,7 +56,8 @@ export function FarSideBox() {
           fontStyle: 'italic', 
           textAlign: 'center', 
           color: PALETTE.black,
-          padding: '0 10px'
+          padding: '0 10px',
+          margin: 0
         }}>
           "Suddenly, Ted remembered he had left the primordial soup on."
         </p>
