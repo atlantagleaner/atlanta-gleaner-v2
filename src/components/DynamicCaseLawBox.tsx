@@ -1,80 +1,64 @@
 'use client'
 
-import React, { type CSSProperties } from 'react'
-// We import your exact design tokens so it perfectly matches the site
-import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER } from '@/src/styles/tokens'
+import React from 'react'
+import { PALETTE, FONT } from '@/src/styles/tokens'
 
-interface DynamicCaseLawBoxProps {
-  htmlContent: string;
-  slugTitle: string;
-  style?: CSSProperties;
-}
-
-export function DynamicCaseLawBox({ htmlContent, slugTitle, style }: DynamicCaseLawBoxProps) {
-  // Clean up the URL slug to make it look like a case title
-  const formattedTitle = slugTitle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+export function DynamicCaseLawBox({ caseMeta, htmlContent }: { caseMeta: any, htmlContent: string }) {
+  if (!caseMeta) {
+    return <div style={{ padding: '40px', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>LOADING OPINION...</div>;
+  }
 
   return (
-    <div style={{ height: '100%', ...style }}>
-      <div style={BOX_SHELL}>
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          
-          {/* 1. The Header Section (Matches your original layout) */}
-          <div style={{ padding: '20px 20px 16px' }}>
-            <h2 style={{ ...BOX_HEADER, margin: '0 0 16px 0' }}>Case Law Archive</h2>
-            <h3 style={{
-              ...FONT.serif,
-              fontSize:   'clamp(1.6rem, 3.5vw, 2.6rem)',
-              fontWeight: 700,
-              lineHeight: 1.05,
-              color:      PALETTE.black,
-              margin:     0,
-              textShadow: '0 0 1px rgba(0,0,0,0.2)',
-            }}>
-              {formattedTitle}
-            </h3>
-          </div>
-
-          {/* 2. The Opinion Section */}
-          <div style={{ padding: '20px 20px 28px' }}>
-            <h4 style={{
-              ...FONT.serif,
-              fontSize:      '24px',
-              fontWeight:    700,
-              margin:        '0 0 16px 0',
-              borderBottom:  '1px solid rgba(0,0,0,0.10)',
-              paddingBottom: '8px',
-            }}>
-              Opinion Transcript
-            </h4>
-            
-            {/* 3. The Injection Zone */}
-            {/* We wrap the raw HTML in a div that forces your typography rules onto the Word Doc text */}
-            <div 
-              className="dynamic-opinion-content"
-              dangerouslySetInnerHTML={{ __html: htmlContent }} 
-              style={{ 
-                ...T.prose, 
-                color: PALETTE.black,
-                lineHeight: 1.72 
-              }} 
-            />
-          </div>
-
-        </div>
-      </div>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: PALETTE.white, border: `1px solid ${PALETTE.black}` }}>
       
-      {/* We add a tiny style block here to ensure the injected Word Doc paragraphs 
-        and bold tags follow the Gleaner's design system.
-      */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .dynamic-opinion-content p {
-          margin: 0 0 1.1em 0;
-        }
-        .dynamic-opinion-content strong {
-          font-weight: 600;
-        }
-      `}} />
+      {/* Scrollable Reading Pane */}
+      <div style={{ padding: '32px 24px', overflowY: 'auto', flex: 1 }}>
+        
+        {/* 1. Case Title */}
+        <h2 style={{ ...FONT.serif, fontSize: '32px', fontWeight: 700, margin: '0 0 16px 0', color: PALETTE.black, lineHeight: 1.1 }}>
+          {caseMeta.title}
+        </h2>
+
+        {/* 2. Grey Metadata Boxes */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+          <div style={{ background: '#EEEDEB', padding: '6px 10px', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', color: PALETTE.black }}>
+            {caseMeta.citation}
+          </div>
+          <div style={{ background: '#EEEDEB', padding: '6px 10px', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em', color: PALETTE.black }}>
+            {caseMeta.fullDate}
+          </div>
+        </div>
+
+        {/* 3. Black Core Term Boxes */}
+        {caseMeta.coreTerms && caseMeta.coreTerms.length > 0 && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px', flexWrap: 'wrap' }}>
+            {caseMeta.coreTerms.map((term: string) => (
+              <div key={term} style={{ background: PALETTE.black, color: PALETTE.white, padding: '4px 8px', fontSize: '9px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {term}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 4. The Summary Block */}
+        <div style={{ marginBottom: '40px', padding: '16px 20px', borderLeft: `4px solid ${PALETTE.black}`, background: '#fcfcfc' }}>
+          <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 10px 0', color: '#666' }}>
+            Automated Snippet
+          </h4>
+          <p style={{ ...FONT.serif, fontSize: '15px', lineHeight: 1.6, margin: 0, color: PALETTE.black, opacity: 0.9 }}>
+            {caseMeta.snippet}...
+          </p>
+        </div>
+
+        <hr style={{ border: 'none', borderTop: '1px solid #E5E5E5', marginBottom: '40px' }} />
+
+        {/* 5. The Actual Opinion Text */}
+        <div 
+          style={{ ...FONT.serif, fontSize: '16px', lineHeight: 1.8, color: PALETTE.black }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }} 
+        />
+        
+      </div>
     </div>
   )
 }
