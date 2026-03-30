@@ -6,12 +6,6 @@ const INPUT_DIR = 'C:/Users/arjun/Desktop/Archive';
 const OUTPUT_DIR = './public/cases-data';
 const INDEX_FILE = './public/search-index.json';
 
-const LEGAL_CATEGORIES = {
-  'CRIMINAL': ['murder', 'felony', 'evidence', 'jury', 'police'],
-  'TORT': ['negligence', 'injury', 'accident', 'liability', 'insurance'],
-  'CONSTITUTIONAL': ['privacy', 'rights', 'statute', 'constitution']
-};
-
 async function processArchive() {
   if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   const files = fs.readdirSync(INPUT_DIR).filter(f => f.toLowerCase().endsWith('.docx'));
@@ -19,20 +13,19 @@ async function processArchive() {
 
   for (const file of files) {
     const fileNameNoExt = file.replace(/\.docx$/i, '');
-    
-    // ARCHITECTURE: Split only at the LAST underscore to protect names like "City of X_ LLC"
     const parts = fileNameNoExt.split('_');
-    const citation = parts.length > 1 ? parts.pop().trim() : "Citation Pending";
+    const citation = parts.length > 1 ? parts.pop().trim() : "CITATION PENDING";
     const caseName = parts.join(' ').trim(); 
     const slug = fileNameNoExt.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
     const result = await mammoth.convertToHtml({ path: path.join(INPUT_DIR, file) });
-    const plainText = result.value.replace(/<[^>]*>/g, ' ').toLowerCase();
+    const plainText = result.value.replace(/<[^>]*>/g, ' ');
 
-    const coreTerms = [];
-    for (const [category, keywords] of Object.entries(LEGAL_CATEGORIES)) {
-      if (keywords.some(kw => plainText.includes(kw))) coreTerms.push(category);
-    }
+    const dateRegex = /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+(\d{4})/i;
+    const dateMatch = plainText.match(dateRegex);
+    const fullDate = dateMatch ? dateMatch[0].replace(',', ', ') : "DATE PENDING";
+    const month = dateMatch ? dateMatch[1] : "Undated";
+    const year = dateMatch ? dateMatch[2] : "Undated";
 
     fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), result.value);
 
@@ -40,16 +33,16 @@ async function processArchive() {
       id: slug,
       title: caseName,
       citation: citation,
+      fullDate: fullDate,
+      month: month,
+      year: year,
       url: `/cases/${slug}`,
-      snippet: plainText.substring(0, 400),
-      coreTerms: coreTerms.slice(0, 3)
+      snippet: "Editorial summary pending review.",
+      coreTerms: ["PENDING"]
     });
-    console.log(`Processed: ${caseName}`);
   }
 
-  // Sort so newest is always at the top of the JSON
-  searchIndex.sort((a, b) => b.id.localeCompare(a.id)); 
+  searchIndex.sort((a, b) => b.id.localeCompare(a.id));
   fs.writeFileSync(INDEX_FILE, JSON.stringify(searchIndex, null, 2));
 }
-
 processArchive();

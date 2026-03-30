@@ -8,24 +8,41 @@ import { PAGE_TITLE_BLOCK, PALETTE, T } from '@/src/styles/tokens'
 
 export default function ArchivePage() {
   const [allCases, setAllCases] = useState<CaseData[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetch('/search-index.json').then(res => res.json()).then(data => setAllCases(data));
   }, []);
 
-  const vol1 = useMemo(() => allCases.filter(c => c.snippet.includes('2022') || c.snippet.includes('2023')), [allCases]);
-  const vol2 = useMemo(() => allCases.filter(c => c.snippet.includes('2024')), [allCases]);
-  const vol3 = useMemo(() => allCases.filter(c => c.snippet.includes('2025')), [allCases]);
-  const vol4 = useMemo(() => allCases.filter(c => c.snippet.includes('2026')), [allCases]);
+  const filtered = useMemo(() => {
+    const lower = searchTerm.toLowerCase();
+    return allCases.filter(c => 
+      [c.title, c.citation, c.fullDate, ...(c.coreTerms || [])].join(' ').toLowerCase().includes(lower)
+    );
+  }, [allCases, searchTerm]);
+
+  const vol1 = useMemo(() => filtered.filter(c => ['2022', '2023'].includes(c.year)), [filtered]);
+  const vol2 = useMemo(() => filtered.filter(c => c.year === '2024'), [filtered]);
+  const vol3 = useMemo(() => filtered.filter(c => c.year === '2025'), [filtered]);
+  const vol4 = useMemo(() => filtered.filter(c => c.year === '2026'), [filtered]);
 
   return (
     <>
       <Banner />
       <main style={{ padding: '0 20px 80px', maxWidth: '1800px', margin: '0 auto' }}>
-        <div style={PAGE_TITLE_BLOCK}>
-          <h1 style={{ ...T.pageTitle, color: PALETTE.black, margin: 0 }}>Archive</h1>
+        <div style={PAGE_TITLE_BLOCK}><h1 style={{ ...T.pageTitle, margin: 0 }}>Archive</h1></div>
+
+        <div style={{ marginBottom: '32px', maxWidth: '480px' }}>
+          <input 
+            type="text" 
+            placeholder="SEARCH RECORDS..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: '100%', padding: '12px 14px', border: `1px solid ${PALETTE.black}`, fontFamily: 'var(--font-mono)', fontSize: '11px' }} 
+          />
         </div>
-        <div style={{ paddingTop: '24px' }}>
+
+        <div style={{ paddingTop: '8px' }}>
           <FourResizablePanels
             col1={{ label: 'Roll-A · Volume IV', node: <VolumeBox label="Volume IV: 2026" cases={vol4} /> }}
             col2={{ label: 'Roll-B · Volume III', node: <VolumeBox label="Volume III: 2025" cases={vol3} /> }}
