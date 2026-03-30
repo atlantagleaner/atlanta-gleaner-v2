@@ -9,8 +9,14 @@
     "url": "/cases/york-v--moore-367-ga--app--152",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Smith",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "wright-v--state-315-ga--459",
@@ -22,8 +28,14 @@
     "url": "/cases/wright-v--state-315-ga--459",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Spivey",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "woodruff-v--jones-366-ga--app--393",
@@ -35,8 +47,14 @@
     "url": "/cases/woodruff-v--jones-366-ga--app--393",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Jacobs",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "wood-v--state-366-ga--app--305",
@@ -48,8 +66,14 @@
     "url": "/cases/wood-v--state-366-ga--app--305",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Veal",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "wood-v--state-316-ga--811",
@@ -61,8 +85,14 @@
     "url": "/cases/wood-v--state-316-ga--811",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Trammell",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "williams-v--state-315-ga--490",
@@ -74,8 +104,14 @@
     "url": "/cases/williams-v--state-315-ga--490",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge LaGrua",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "williams-v--kasulka-properties--lp-370-ga--app--653",
@@ -87,8 +123,14 @@
     "url": "/cases/williams-v--kasulka-properties--lp-370-ga--app--653",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Hanson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "williams-v--harvey-366-ga--app--395",
@@ -100,8 +142,14 @@
     "url": "/cases/williams-v--harvey-366-ga--app--395",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Harrison",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "white-v--mcgouirk-370-ga--app--318",
@@ -113,8 +161,14 @@
     "url": "/cases/white-v--mcgouirk-370-ga--app--318",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Morgan",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "weaver-v--millsaps-370-ga--app--513",
@@ -126,8 +180,14 @@
     "url": "/cases/weaver-v--millsaps-370-ga--app--513",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Howell, Senior Judge",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "watts-v--joseph-374-ga--app--367",
@@ -139,8 +199,14 @@
     "url": "/cases/watts-v--joseph-374-ga--app--367",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Edwards",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "walsh-v--bowen-367-ga--app--208",
@@ -152,8 +218,14 @@
     "url": "/cases/walsh-v--bowen-367-ga--app--208",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Brown",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "voterga-v--state-of-georgia-368-ga--app--119",
@@ -165,8 +237,14 @@
     "url": "/cases/voterga-v--state-of-georgia-368-ga--app--119",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Adams",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "ussery-v--state-366-ga--app--379",
@@ -178,8 +256,14 @@
     "url": "/cases/ussery-v--state-366-ga--app--379",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge South",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "united-states-v--tia-deyon-pugh-90-f-4th-1318",
@@ -191,8 +275,14 @@
     "url": "/cases/united-states-v--tia-deyon-pugh-90-f-4th-1318",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "21-13136",
+    "judges": "running away",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "united-states-v--perez-quevedo-2022-u-s--app--lexis-35958",
@@ -204,8 +294,14 @@
     "url": "/cases/united-states-v--perez-quevedo-2022-u-s--app--lexis-35958",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "21-14021",
+    "judges": "ROSENBAUM, JILL PRYOR, and BRANCH, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "united-states-v--nicholl-2023-u-s--app--lexis-3397",
@@ -217,8 +313,14 @@
     "url": "/cases/united-states-v--nicholl-2023-u-s--app--lexis-3397",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-12043",
+    "judges": "WILSON, ROSENBAUM, and LUCK, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "united-states-v--martin-2023-u-s--app--lexis-22906",
@@ -230,8 +332,14 @@
     "url": "/cases/united-states-v--martin-2023-u-s--app--lexis-22906",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "23-11477",
+    "judges": "WILSON, LUCK and DUBINA, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "united-states-v--garza-2023-u-s--app--lexis-996",
@@ -243,8 +351,14 @@
     "url": "/cases/united-states-v--garza-2023-u-s--app--lexis-996",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "21-13294",
+    "judges": "JILL PRYOR, BRANCH, and LUCK, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "torres-toledo-v--state-366-ga--app--526",
@@ -256,8 +370,14 @@
     "url": "/cases/torres-toledo-v--state-366-ga--app--526",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Fuller",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "thomas-v--state-366-ga--app--738",
@@ -269,8 +389,14 @@
     "url": "/cases/thomas-v--state-366-ga--app--738",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A22A1677",
+    "judges": "Judge Sparks",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "thomas-v--henry-county-water-auth--367-ga--app--469",
@@ -282,8 +408,14 @@
     "url": "/cases/thomas-v--henry-county-water-auth--367-ga--app--469",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Veal",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "tatum-v--state-367-ga--app--439",
@@ -295,8 +427,14 @@
     "url": "/cases/tatum-v--state-367-ga--app--439",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Malcom",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "suresh---durga--inc--v--doe-369-ga--app--787",
@@ -308,8 +446,14 @@
     "url": "/cases/suresh---durga--inc--v--doe-369-ga--app--787",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A23I0094",
+    "judges": "Judge Jacobs",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "suddarth-v--lounsbrough-369-ga--app--158",
@@ -321,8 +465,14 @@
     "url": "/cases/suddarth-v--lounsbrough-369-ga--app--158",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Cowart",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "strong-v--state-2026-ga--lexis-76",
@@ -334,8 +484,14 @@
     "url": "/cases/strong-v--state-2026-ga--lexis-76",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "the stabbings, Strong and Felicie returned home late in the evening after a weekend trip to Florida",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--wood-367-ga--app--10",
@@ -347,8 +503,14 @@
     "url": "/cases/state-v--wood-367-ga--app--10",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Simpson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--wilson-315-ga--613",
@@ -360,8 +522,14 @@
     "url": "/cases/state-v--wilson-315-ga--613",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Adkins",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--mckinney-366-ga--app--251",
@@ -373,8 +541,14 @@
     "url": "/cases/state-v--mckinney-366-ga--app--251",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Ellerbe",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--jones-371-ga--app--445",
@@ -386,8 +560,14 @@
     "url": "/cases/state-v--jones-371-ga--app--445",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Helhoski",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--hillsman-368-ga--app--873",
@@ -399,8 +579,14 @@
     "url": "/cases/state-v--hillsman-368-ga--app--873",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "For",
+    "judges": "Judge Edwards",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--harris-316-ga--272",
@@ -412,8 +598,14 @@
     "url": "/cases/state-v--harris-316-ga--272",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S23A0090",
+    "judges": "Judge Edwards",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-v--arroyo-315-ga--582",
@@ -425,8 +617,14 @@
     "url": "/cases/state-v--arroyo-315-ga--582",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "either of those two events",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-of-ga--v--sistersong-women-of-color-reproductive-justice-collective-317-ga--528",
@@ -438,8 +636,14 @@
     "url": "/cases/state-of-ga--v--sistersong-women-of-color-reproductive-justice-collective-317-ga--528",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "234",
+    "judges": "Judge McBurney",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "state-of-ga--v--fed--defender-program--inc--315-ga--319",
@@ -451,8 +655,14 @@
     "url": "/cases/state-of-ga--v--fed--defender-program--inc--315-ga--319",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "1",
+    "judges": "Judge Williams",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "starship-enters--of-atlanta--inc--v--gwinnett-county-319-ga--293",
@@ -464,8 +674,14 @@
     "url": "/cases/starship-enters--of-atlanta--inc--v--gwinnett-county-319-ga--293",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "A18A1492",
+    "judges": "Judge Hutchinson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "spratlin-v--state-366-ga--app--607",
@@ -477,8 +693,14 @@
     "url": "/cases/spratlin-v--state-366-ga--app--607",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A22A1213",
+    "judges": "Judge Lott",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "smoot-lee-v--corizon-health--inc--366-ga--app--511",
@@ -490,8 +712,14 @@
     "url": "/cases/smoot-lee-v--corizon-health--inc--366-ga--app--511",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Sapp",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "smalley-v--state-371-ga--app--253",
@@ -503,8 +731,14 @@
     "url": "/cases/smalley-v--state-371-ga--app--253",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Coker",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "simms-v--state-2026-ga--lexis-101",
@@ -516,8 +750,14 @@
     "url": "/cases/simms-v--state-2026-ga--lexis-101",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "PENDING",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "simmons-v--bates-366-ga--app--410",
@@ -529,8 +769,14 @@
     "url": "/cases/simmons-v--bates-366-ga--app--410",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lewis",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "shingler-v--ga--farm-bureau-mut--ins--co--369-ga--app--95",
@@ -542,8 +788,14 @@
     "url": "/cases/shingler-v--ga--farm-bureau-mut--ins--co--369-ga--app--95",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Balkcom",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "sheffield-v--jekyll-island-state-park-authority-369-ga--app--265",
@@ -555,8 +807,14 @@
     "url": "/cases/sheffield-v--jekyll-island-state-park-authority-369-ga--app--265",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lane",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "savannah-state-univ--found---inc--v--lewis-370-ga--app--180",
@@ -568,8 +826,14 @@
     "url": "/cases/savannah-state-univ--found---inc--v--lewis-370-ga--app--180",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge White",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "royal-v--state-farm-mut--auto--ins--co--366-ga--app--313",
@@ -581,8 +845,14 @@
     "url": "/cases/royal-v--state-farm-mut--auto--ins--co--366-ga--app--313",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Cushner",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "rose-v--sec-y-87-f-4th-469",
@@ -594,8 +864,14 @@
     "url": "/cases/rose-v--sec-y-87-f-4th-469",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-12593",
+    "judges": "PENDING",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "rodriguez-v--state-farm-mut--auto--ins--co--366-ga--app--65",
@@ -607,8 +883,14 @@
     "url": "/cases/rodriguez-v--state-farm-mut--auto--ins--co--366-ga--app--65",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Panos",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "robertson-v--state-366-ga--app--623",
@@ -620,8 +902,14 @@
     "url": "/cases/robertson-v--state-366-ga--app--623",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "S22I0281",
+    "judges": "Judge South",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "rivera-v--state-317-ga--398",
@@ -633,8 +921,14 @@
     "url": "/cases/rivera-v--state-317-ga--398",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Hughes",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "randolph-v--state-317-ga--146",
@@ -646,8 +940,14 @@
     "url": "/cases/randolph-v--state-317-ga--146",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Flournoy",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "ramos-v--owens-366-ga--app--216",
@@ -659,8 +959,14 @@
     "url": "/cases/ramos-v--owens-366-ga--app--216",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Golick",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "raffensperger-v--jackson-316-ga--383",
@@ -672,8 +978,14 @@
     "url": "/cases/raffensperger-v--jackson-316-ga--383",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S23X0018",
+    "judges": "Judge Dunaway",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "quint-v--state-367-ga--app--339",
@@ -685,8 +997,14 @@
     "url": "/cases/quint-v--state-367-ga--app--339",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Leary",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "priester-v--turner-370-ga--app--269",
@@ -698,8 +1016,14 @@
     "url": "/cases/priester-v--turner-370-ga--app--269",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Reeves",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "priester-v--state-316-ga--133",
@@ -711,8 +1035,14 @@
     "url": "/cases/priester-v--state-316-ga--133",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Thompson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "powell-v--state-318-ga--875",
@@ -724,8 +1054,14 @@
     "url": "/cases/powell-v--state-318-ga--875",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S24A0239",
+    "judges": "Judge Harrison",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "pittman-v--state-366-ga--app--372",
@@ -737,8 +1073,14 @@
     "url": "/cases/pittman-v--state-366-ga--app--372",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Booth",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "pierce-v--banks-368-ga--app--496",
@@ -750,8 +1092,14 @@
     "url": "/cases/pierce-v--banks-368-ga--app--496",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Auslander",
     "disposition": "REMANDED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "perry-v--state-366-ga--app--341",
@@ -763,8 +1111,14 @@
     "url": "/cases/perry-v--state-366-ga--app--341",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Massey",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "perrault-v--state-316-ga--241",
@@ -776,8 +1130,14 @@
     "url": "/cases/perrault-v--state-316-ga--241",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Trammell",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "perez-v--bush-2025-ga--state-lexis-860",
@@ -789,8 +1149,14 @@
     "url": "/cases/perez-v--bush-2025-ga--state-lexis-860",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "23SC-0520-A",
+    "judges": "this Court is the traffic citation does not accurately depict the collision",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "patrick-v--kingston-370-ga--app--570",
@@ -802,8 +1168,14 @@
     "url": "/cases/patrick-v--kingston-370-ga--app--570",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Auslander",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "owens-v--state-303-ga--254",
@@ -815,8 +1187,14 @@
     "url": "/cases/owens-v--state-303-ga--254",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Van Pelt",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "myrick-v--fulton-cnty--69-f-4th-1277",
@@ -828,8 +1206,14 @@
     "url": "/cases/myrick-v--fulton-cnty--69-f-4th-1277",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-10441",
+    "judges": "NEWSOM, LUCK, and TJOFLAT, Circuit Judges",
     "disposition": "AFFIRMED IN PART",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "myfamilydoc--llc-v--johnston-366-ga--app--459",
@@ -841,8 +1225,14 @@
     "url": "/cases/myfamilydoc--llc-v--johnston-366-ga--app--459",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge South",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "montgomery-v--state-315-ga--467",
@@ -854,8 +1244,14 @@
     "url": "/cases/montgomery-v--state-315-ga--467",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Jackson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "mohr-v--state-370-ga--app--194",
@@ -867,8 +1263,14 @@
     "url": "/cases/mohr-v--state-370-ga--app--194",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Craig",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "metropolitan-atlanta-rapid-transit-auth--v--brown-366-ga--app--275",
@@ -880,8 +1282,14 @@
     "url": "/cases/metropolitan-atlanta-rapid-transit-auth--v--brown-366-ga--app--275",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Cox",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "mcbrayer-v--scarbrough-317-ga--387",
@@ -893,8 +1301,14 @@
     "url": "/cases/mcbrayer-v--scarbrough-317-ga--387",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "leaving him unattended",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "maynor-v--state-317-ga--492",
@@ -906,8 +1320,14 @@
     "url": "/cases/maynor-v--state-317-ga--492",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "On",
+    "judges": "Judge Dunaway",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "maynard-v--snapchat--inc--366-ga--app--507",
@@ -919,8 +1339,14 @@
     "url": "/cases/maynard-v--snapchat--inc--366-ga--app--507",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Thacker",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "martin-v--state-370-ga--app--275",
@@ -932,8 +1358,14 @@
     "url": "/cases/martin-v--state-370-ga--app--275",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Massey",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "martin-argaw-v--state-369-ga--app--117",
@@ -945,8 +1377,14 @@
     "url": "/cases/martin-argaw-v--state-369-ga--app--117",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Beyers",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "mahogany-v--state-366-ga--app--750",
@@ -958,8 +1396,14 @@
     "url": "/cases/mahogany-v--state-366-ga--app--750",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lukemire",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "love-v--mcknight-321-ga--196",
@@ -971,8 +1415,14 @@
     "url": "/cases/love-v--mcknight-321-ga--196",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "colliding with McKnight, who had stopped ahead of him",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "lodge-v--united-states-ag-92-f-4th-1298",
@@ -984,8 +1434,14 @@
     "url": "/cases/lodge-v--united-states-ag-92-f-4th-1298",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-10416",
+    "judges": "WILLIAM PRYOR, Chief Judge, and ROSENBAUM and HULL, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "locklear-v--state-317-ga--115",
@@ -997,8 +1453,14 @@
     "url": "/cases/locklear-v--state-317-ga--115",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Morse",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "lewis-v--state-367-ga--app--638",
@@ -1010,8 +1472,14 @@
     "url": "/cases/lewis-v--state-367-ga--app--638",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Thacker",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "jones-v--ga--farm-bureau-mut--ins--co--367-ga--app--35",
@@ -1023,8 +1491,14 @@
     "url": "/cases/jones-v--ga--farm-bureau-mut--ins--co--367-ga--app--35",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A22A1685",
+    "judges": "Judge Kaufold",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "jennis-v--state-375-ga--app--743",
@@ -1036,8 +1510,14 @@
     "url": "/cases/jennis-v--state-375-ga--app--743",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lall, pro hac vice",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "jackson-v--state-318-ga--393",
@@ -1049,8 +1529,14 @@
     "url": "/cases/jackson-v--state-318-ga--393",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S23A0854",
+    "judges": "Judge Scott Smith",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "int-l-bhd--of-police-officers-local-623--inc--v--brosnan-2026-ga--app--lexis-92",
@@ -1062,8 +1548,14 @@
     "url": "/cases/int-l-bhd--of-police-officers-local-623--inc--v--brosnan-2026-ga--app--lexis-92",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "PENDING",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "inquiry--cerning-judge-coomer-315-ga--841",
@@ -1075,8 +1567,14 @@
     "url": "/cases/inquiry--cerning-judge-coomer-315-ga--841",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "239",
+    "judges": "Judge Coomer was a judge or judicial candidate",
     "disposition": "REMANDED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "in-the-matter-of-crawford-317-ga--297",
@@ -1088,8 +1586,14 @@
     "url": "/cases/in-the-matter-of-crawford-317-ga--297",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "194192",
+    "judges": "the special master that he used that money for personal purposes",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "in-the-matter-of-calhoun-317-ga--726",
@@ -1101,8 +1605,14 @@
     "url": "/cases/in-the-matter-of-calhoun-317-ga--726",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "103915",
+    "judges": "this Court ",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hughes-v--state-366-ga--app--335",
@@ -1114,8 +1624,14 @@
     "url": "/cases/hughes-v--state-366-ga--app--335",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Sams",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hughes-v--ace-american-insurance-company-368-ga--app--650",
@@ -1127,8 +1643,14 @@
     "url": "/cases/hughes-v--ace-american-insurance-company-368-ga--app--650",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Bratton",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "howard-v--ctw-enterprises--inc--367-ga--app--494",
@@ -1140,8 +1662,14 @@
     "url": "/cases/howard-v--ctw-enterprises--inc--367-ga--app--494",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "1",
+    "judges": "Judge Doran",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "honeyfund-com-inc--v--governor-94-f-4th-1272",
@@ -1153,8 +1681,14 @@
     "url": "/cases/honeyfund-com-inc--v--governor-94-f-4th-1272",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-13135",
+    "judges": "WILSON, GRANT, and BRASHER, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "holt-v--rickman-368-ga--app--55",
@@ -1166,8 +1700,14 @@
     "url": "/cases/holt-v--rickman-368-ga--app--55",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Hanson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hoffman-v--se--ob-gyn-ctr---llc-378-ga--app--306",
@@ -1179,8 +1719,14 @@
     "url": "/cases/hoffman-v--se--ob-gyn-ctr---llc-378-ga--app--306",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge White",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hightower-v--state-315-ga--399",
@@ -1192,8 +1738,14 @@
     "url": "/cases/hightower-v--state-315-ga--399",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Cox",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hartwell-r-r--co--v--hartwell-first-united-methodist-church-370-ga--app--134",
@@ -1205,8 +1757,14 @@
     "url": "/cases/hartwell-r-r--co--v--hartwell-first-united-methodist-church-370-ga--app--134",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A20A1065",
+    "judges": "Judge Malcom",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "harris-v--state-316-ga--141",
@@ -1218,8 +1776,14 @@
     "url": "/cases/harris-v--state-316-ga--141",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Kelley",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hare-krishna-roswell-hotel--llc-v--corsino-369-ga--app--166",
@@ -1231,8 +1795,14 @@
     "url": "/cases/hare-krishna-roswell-hotel--llc-v--corsino-369-ga--app--166",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "Prior",
+    "judges": "Judge Cuthpert",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "hamon-v---nell-315-ga--760",
@@ -1244,8 +1814,14 @@
     "url": "/cases/hamon-v---nell-315-ga--760",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Connell  each involved minor children, there is nothing in the language of those cases or the equity statutes themselves to suggest that only  minor  children may benefit from the equitable principles at issue here",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "guy-v--housing-authority-of-augusta-372-ga--app--325",
@@ -1257,8 +1833,14 @@
     "url": "/cases/guy-v--housing-authority-of-augusta-372-ga--app--325",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge McIntyre",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "girls-galore--inc--v--city-of-atlanta-2026-ga--app--lexis-128",
@@ -1270,8 +1852,14 @@
     "url": "/cases/girls-galore--inc--v--city-of-atlanta-2026-ga--app--lexis-128",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "PENDING",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "gates-v--state-317-ga--889",
@@ -1283,8 +1871,14 @@
     "url": "/cases/gates-v--state-317-ga--889",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Muldrew",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "ga--cvs-pharm---llc-v--carmichael-316-ga--718",
@@ -1296,8 +1890,14 @@
     "url": "/cases/ga--cvs-pharm---llc-v--carmichael-316-ga--718",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S22G0527",
+    "judges": "us, the verdict apportioning no fault to the intentional tortfeasor is not inconsistent because, when considered in conjunction with the instructions to the jury, the verdict is capable of a viable construction",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "fulton-county-bd--of-comm-rs-v--fulton-county-republican-party-two-cases-2026-ga--app--lexis-187",
@@ -1309,8 +1909,14 @@
     "url": "/cases/fulton-county-bd--of-comm-rs-v--fulton-county-republican-party-two-cases-2026-ga--app--lexis-187",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A26A0782",
+    "judges": "the Commissioners",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "frey-v--jesperson-366-ga--app--488",
@@ -1322,8 +1928,14 @@
     "url": "/cases/frey-v--jesperson-366-ga--app--488",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Clayton, Senior Judge",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "freeman-v--state-367-ga--app--57",
@@ -1335,8 +1947,14 @@
     "url": "/cases/freeman-v--state-367-ga--app--57",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Hamil",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "floyd-v--state-318-ga--312",
@@ -1348,8 +1966,14 @@
     "url": "/cases/floyd-v--state-318-ga--312",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Foster",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "fleureme-v--city-of-atlanta-2026-ga--app--lexis-37",
@@ -1361,8 +1985,14 @@
     "url": "/cases/fleureme-v--city-of-atlanta-2026-ga--app--lexis-37",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Richardson",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "eubanks-v--state-317-ga--563",
@@ -1374,8 +2004,14 @@
     "url": "/cases/eubanks-v--state-317-ga--563",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Dickinson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "drucker-v--morgan-371-ga--app--334",
@@ -1387,8 +2023,14 @@
     "url": "/cases/drucker-v--morgan-371-ga--app--334",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Coolidge",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "delaney-v--state-366-ga--app--707",
@@ -1400,8 +2042,14 @@
     "url": "/cases/delaney-v--state-366-ga--app--707",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Krause",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "davis-v--greensboro-estates--llc-366-ga--app--383",
@@ -1413,8 +2061,14 @@
     "url": "/cases/davis-v--greensboro-estates--llc-366-ga--app--383",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "S96C1599",
+    "judges": "Judge Petty",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "d--l--v--st--francis-health--llc-369-ga--app--314",
@@ -1426,8 +2080,14 @@
     "url": "/cases/d--l--v--st--francis-health--llc-369-ga--app--314",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Temesgen",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "csx-corp--v--oglesby-371-ga--app--782",
@@ -1439,8 +2099,14 @@
     "url": "/cases/csx-corp--v--oglesby-371-ga--app--782",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "1",
+    "judges": "Judge Chasteen",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "cornejo-v--allen-367-ga--app--618",
@@ -1452,8 +2118,14 @@
     "url": "/cases/cornejo-v--allen-367-ga--app--618",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lim",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "cohen-v--progressive-mt--ins--co--375-ga--app--487",
@@ -1465,8 +2137,14 @@
     "url": "/cases/cohen-v--progressive-mt--ins--co--375-ga--app--487",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Bearden",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "city-of-vidalia-v--johnson-375-ga--app--601",
@@ -1478,8 +2156,14 @@
     "url": "/cases/city-of-vidalia-v--johnson-375-ga--app--601",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Gailey",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "city-of-roswell-v--hernandez-flores-365-ga--app--849",
@@ -1491,8 +2175,14 @@
     "url": "/cases/city-of-roswell-v--hernandez-flores-365-ga--app--849",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Roth",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "city-of-milton-v--chang-2026-ga--lexis-86",
@@ -1504,8 +2194,14 @@
     "url": "/cases/city-of-milton-v--chang-2026-ga--lexis-86",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "PENDING",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "city-of-brookhaven-v--multiplex--llc-369-ga--app--9",
@@ -1517,8 +2213,14 @@
     "url": "/cases/city-of-brookhaven-v--multiplex--llc-369-ga--app--9",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Hamil",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "city-of-alpharetta-v--francis-366-ga--app--454",
@@ -1530,8 +2232,14 @@
     "url": "/cases/city-of-alpharetta-v--francis-366-ga--app--454",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Barwick",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "charles-v--state-315-ga--651",
@@ -1543,8 +2251,14 @@
     "url": "/cases/charles-v--state-315-ga--651",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Watkins",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "carter-v--wal-mart-stores-e---lp-2023-u-s--app--lexis-1244",
@@ -1556,8 +2270,14 @@
     "url": "/cases/carter-v--wal-mart-stores-e---lp-2023-u-s--app--lexis-1244",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-10174",
+    "judges": "WILSON, LUCK, and ANDERSON, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "carson-v--monsanto-co--72-f-4th-1261",
@@ -1569,8 +2289,14 @@
     "url": "/cases/carson-v--monsanto-co--72-f-4th-1261",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "21-10994",
+    "judges": "reaching the merits of a dispute",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "campbell-v--universal-city-dev--partners--ltd-72-f-4th-1245",
@@ -1582,8 +2308,14 @@
     "url": "/cases/campbell-v--universal-city-dev--partners--ltd-72-f-4th-1245",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-10646",
+    "judges": "PENDING",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "burnette-v--state-368-ga--app--184",
@@ -1595,8 +2327,14 @@
     "url": "/cases/burnette-v--state-368-ga--app--184",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Coursey, Senior Judge",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "buchanan-v--hannon-366-ga--app--769",
@@ -1608,8 +2346,14 @@
     "url": "/cases/buchanan-v--hannon-366-ga--app--769",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Guy",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "brown-v--warden-2023-u-s--app--lexis-34471",
@@ -1621,8 +2365,14 @@
     "url": "/cases/brown-v--warden-2023-u-s--app--lexis-34471",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "22-11201",
+    "judges": "ROSENBAUM, ABUDU, and ANDERSON, Circuit Judges",
     "disposition": "PENDING",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "brown-v--state-368-ga--app--747",
@@ -1634,8 +2384,14 @@
     "url": "/cases/brown-v--state-368-ga--app--747",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Sams",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "brown-v--state-367-ga--app--114",
@@ -1647,8 +2403,14 @@
     "url": "/cases/brown-v--state-367-ga--app--114",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Simpson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "brixmor-new-chastain-corners-sc--llc-v--james-367-ga--app--235",
@@ -1660,8 +2422,14 @@
     "url": "/cases/brixmor-new-chastain-corners-sc--llc-v--james-367-ga--app--235",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Cope",
     "disposition": "VACATED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "bray-v--watkins-317-ga--703",
@@ -1673,8 +2441,14 @@
     "url": "/cases/bray-v--watkins-317-ga--703",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "the question of duty, any such holding was overruled by our later decisional law",
     "disposition": "REMANDED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "brailsford-v--state-366-ga--app--331",
@@ -1686,8 +2460,14 @@
     "url": "/cases/brailsford-v--state-366-ga--app--331",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Sparks",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "bonilla-v--ventura-378-ga--app--299",
@@ -1699,8 +2479,14 @@
     "url": "/cases/bonilla-v--ventura-378-ga--app--299",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Smith",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "body-v--state-367-ga--app--506",
@@ -1712,8 +2498,14 @@
     "url": "/cases/body-v--state-367-ga--app--506",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge McBride",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "behl-v--state-315-ga--814",
@@ -1725,8 +2517,14 @@
     "url": "/cases/behl-v--state-315-ga--814",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Karpf",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "bcg-operations--llc-v--town-of-homer-366-ga--app--535",
@@ -1738,8 +2536,14 @@
     "url": "/cases/bcg-operations--llc-v--town-of-homer-366-ga--app--535",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "A22A1183",
+    "judges": "Judge Primm",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "ballinger-v--watkins-315-ga--369",
@@ -1751,8 +2555,14 @@
     "url": "/cases/ballinger-v--watkins-315-ga--369",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "S12H0816",
+    "judges": "Judge Thompson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "ball-rodriquez-v--progressive-premier-insurance-company-of-illinois-367-ga--app--481",
@@ -1764,8 +2574,14 @@
     "url": "/cases/ball-rodriquez-v--progressive-premier-insurance-company-of-illinois-367-ga--app--481",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Stephenson",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "baker-v--state-318-ga--431",
@@ -1777,8 +2593,14 @@
     "url": "/cases/baker-v--state-318-ga--431",
     "court": "SUPREME COURT OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Lumsden",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "arnold-v--liggins-368-ga--app--544",
@@ -1790,8 +2612,14 @@
     "url": "/cases/arnold-v--liggins-368-ga--app--544",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Baxter, Senior Judge",
     "disposition": "JUDGMENT AFFIRMED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "allred-v--progressive-cty--mut--ins--co--374-ga--app--876",
@@ -1803,8 +2631,14 @@
     "url": "/cases/allred-v--progressive-cty--mut--ins--co--374-ga--app--876",
     "court": "COURT OF APPEALS OF GEORGIA",
     "docketNumber": "PENDING",
+    "judges": "Judge Martinez",
     "disposition": "JUDGMENT REVERSED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   },
   {
     "id": "adams-v--sch--bd--of-st--johns-cnty--57-f-4th-791",
@@ -1816,7 +2650,13 @@
     "url": "/cases/adams-v--sch--bd--of-st--johns-cnty--57-f-4th-791",
     "court": "GEORGIA COURT OF APPEALS",
     "docketNumber": "18-13592",
+    "judges": "the district court or this Court",
     "disposition": "REMANDED",
-    "snippet": "Editorial summary pending review."
+    "summary": "Editorial summary pending review.",
+    "holding": "Holding pending review.",
+    "conclusion": "Conclusion pending review.",
+    "coreTerms": [
+      "PENDING"
+    ]
   }
 ]
