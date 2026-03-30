@@ -16,9 +16,7 @@ export default function ArchivePage() {
 
   const filtered = useMemo(() => {
     const lower = searchTerm.toLowerCase();
-    return allCases.filter(c => 
-      [c.title, c.citation, c.fullDate, ...(c.coreTerms || [])].join(' ').toLowerCase().includes(lower)
-    );
+    return allCases.filter(c => [c.title, c.citation, c.fullDate].join(' ').toLowerCase().includes(lower));
   }, [allCases, searchTerm]);
 
   const vol1 = useMemo(() => filtered.filter(c => ['2022', '2023'].includes(c.year)), [filtered]);
@@ -31,17 +29,9 @@ export default function ArchivePage() {
       <Banner />
       <main style={{ padding: '0 20px 80px', maxWidth: '1800px', margin: '0 auto' }}>
         <div style={PAGE_TITLE_BLOCK}><h1 style={{ ...T.pageTitle, margin: 0 }}>Archive</h1></div>
-
         <div style={{ marginBottom: '32px', maxWidth: '480px' }}>
-          <input 
-            type="text" 
-            placeholder="SEARCH RECORDS..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: '100%', padding: '12px 14px', border: `1px solid ${PALETTE.black}`, fontFamily: 'var(--font-mono)', fontSize: '11px' }} 
-          />
+          <input type="text" placeholder="SEARCH RECORDS..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ width: '100%', padding: '12px 14px', border: `1px solid ${PALETTE.black}`, fontFamily: 'var(--font-mono)', fontSize: '11px' }} />
         </div>
-
         <div style={{ paddingTop: '8px' }}>
           <FourResizablePanels
             col1={{ label: 'Roll-A · Volume IV', node: <VolumeBox label="Volume IV: 2026" cases={vol4} /> }}

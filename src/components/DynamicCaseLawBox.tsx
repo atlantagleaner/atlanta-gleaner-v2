@@ -4,11 +4,11 @@ import React from 'react'
 import { PALETTE, FONT, T, BOX_SHELL, ITEM_RULE } from '@/src/styles/tokens'
 
 function MetaRow({ label, value }: { label: string; value: string }) {
-  if (!value) return null
+  if (!value || value === "undefined") return null
   return (
-    <div style={{ position: 'relative', paddingTop: '6px', paddingBottom: '6px', paddingLeft: '128px', ...ITEM_RULE }}>
-      <span style={{ ...T.micro, position: 'absolute', left: 0, top: '6px', width: '120px' }}>{label}:</span>
-      <span style={{ ...FONT.sans, display: 'block', fontSize: '12px', lineHeight: 1.4 }}>{value}</span>
+    <div style={{ position: 'relative', paddingTop: '8px', paddingBottom: '8px', paddingLeft: '160px', ...ITEM_RULE }}>
+      <span style={{ ...T.micro, position: 'absolute', left: 0, top: '10px', width: '140px', fontWeight: 700 }}>{label.toUpperCase()}:</span>
+      <span style={{ ...FONT.sans, display: 'block', fontSize: '13px', lineHeight: 1.4 }}>{value}</span>
     </div>
   )
 }
@@ -19,30 +19,19 @@ export function DynamicCaseLawBox({ caseMeta, htmlContent }: { caseMeta: any, ht
   return (
     <div style={{ height: '100%', ...BOX_SHELL, border: `1px solid ${PALETTE.black}`, background: PALETTE.white }}>
       <div style={{ overflowY: 'auto', flex: 1 }}>
-        <div style={{ padding: '20px 20px 16px' }}>
-          <h3 style={{ ...FONT.serif, fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 700, lineHeight: 1.05 }}>
-            {caseMeta.title}
-          </h3>
+        <div style={{ padding: '24px 24px 20px' }}>
+          <h3 style={{ ...FONT.serif, fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.05 }}>{caseMeta.title}</h3>
         </div>
-
-        <div style={{ padding: '12px 20px', ...ITEM_RULE, background: PALETTE.warm || '#f9f9f9' }}>
-          <MetaRow label="Court" value="PENDING" />
+        <div style={{ padding: '16px 24px', background: '#F5F5F3', borderTop: `1px solid ${PALETTE.black}`, borderBottom: `1px solid ${PALETTE.black}` }}>
+          <MetaRow label="Court" value={caseMeta.court} />
           <MetaRow label="Date Decided" value={caseMeta.fullDate} />
           <MetaRow label="Citations" value={caseMeta.citation} />
-          <MetaRow label="Disposition" value="PENDING" />
+          <MetaRow label="Docket No" value={caseMeta.docketNumber} />
+          <MetaRow label="Disposition" value={caseMeta.disposition} />
         </div>
-
-        <div style={{ padding: '14px 20px', ...ITEM_RULE, background: PALETTE.warm || '#f9f9f9', marginTop: '12px' }}>
-          <p style={{ ...T.micro, margin: '0 0 8px 0', paddingBottom: '6px', ...ITEM_RULE }}>Case Summary</p>
-          <p style={{ ...T.prose, margin: 0, fontStyle: 'italic' }}>"{caseMeta.snippet}"</p>
-        </div>
-
-        <div style={{ padding: '20px' }}>
-          <h4 style={{ ...FONT.serif, fontSize: '24px', fontWeight: 700, borderBottom: '1px solid #eee', paddingBottom: '8px' }}>Opinion</h4>
-          <div 
-            style={{ ...T.prose, lineHeight: 1.72, marginTop: '20px' }}
-            dangerouslySetInnerHTML={{ __html: htmlContent }} 
-          />
+        <div style={{ padding: '32px 24px' }}>
+          <h4 style={{ ...FONT.serif, fontSize: '22px', fontWeight: 700, borderBottom: '1px solid #eee', paddingBottom: '12px', marginBottom: '24px' }}>Opinion</h4>
+          <div className="opinion-content" style={{ ...T.prose, color: PALETTE.black }} dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
       </div>
     </div>

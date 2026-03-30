@@ -1,26 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom Base Styles */
-@layer base {
-  body {
-    @apply bg-white text-black;
-  }
+/* 1. Spacing for verbatim paragraphs */
+.opinion-content p {
+  margin-bottom: 1.6em !important;
+  line-height: 1.75;
 }
 
-/* Base resets */
-*, ::before, ::after {
-  --tw-border-spacing-x: 0;
-  --tw-border-spacing-y: 0;
+/* 2. Indents for blockquotes */
+.opinion-content blockquote {
+  margin: 2em 0 2em 40px !important;
+  padding-left: 20px;
+  border-left: 2px solid #EEE;
+  font-style: italic;
 }
 
-/* Ensures text is selectable for copy-pasting, 
-  particularly inside your generated case law modules 
-*/
-.prose, .prose *, [class*="case-law"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
+/* 3. Bidirectional Footnote Styling (Word Native) */
+/* This makes the little numbers in the text look professional */
+.opinion-content sup a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  padding: 0 2px;
+}
+
+/* This styles the actual list of footnotes at the very bottom */
+.opinion-content ol {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #EEE;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.opinion-content li {
+  margin-bottom: 10px;
 }
