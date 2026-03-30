@@ -1,128 +1,120 @@
 /* --- ATLANTA GLEANER MASTER STYLES --- */
 
 :root {
-  /* I. THE DEFINITIVE PALETTE */
-  --color-warm-grey: #EEEDEB; /* Newsprint / Metadata */
-  --color-white: #FFFFFF;     /* Title / Opinion Backgrounds */
-  --color-black: #000000;     /* Typography / Lines / Borders */
-
-  /* II. THE THREE-SIZE SCALE */
+  --color-warm-grey: #EEEDEB;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
   --size-sm: 10px;
   --size-md: 14px;
-  
-  /* III. TYPOGRAPHY & FONT FAMILIES */
-  /* Ensure these are correctly loaded in your layout.tsx */
   --font-serif: 'Cormorant Garamond', serif;
   --font-sans: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
 
-/* BASE RESET */
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+* { box-sizing: border-box; padding: 0; margin: 0; }
 
 body {
-  background-color: #f5f5f5; /* Subtle environment contrast */
+  background-color: #f5f5f5;
   color: var(--color-black);
   font-family: var(--font-sans);
   font-size: var(--size-md);
-  font-weight: 500; /* Inter Medium as requested */
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
 }
 
-/* IV. AUTONOMOUS MODULE: OPINION CONTENT */
+/* CASE LAW BOX MODULE */
 
-.opinion-content {
-  font-family: var(--font-sans) !important;
-  font-size: var(--size-md) !important;
-  font-weight: 500 !important;
+.notice-banner {
+  background-color: var(--color-warm-grey);
+  font-family: var(--font-mono);
+  font-size: var(--size-sm);
+  text-transform: uppercase;
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  border: 1px solid var(--color-black);
+  line-height: 1.4;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-black);
+}
+
+.metadata-label {
+  font-family: var(--font-mono);
+  font-size: var(--size-sm);
+  text-transform: uppercase;
+  color: #666;
+}
+
+.metadata-value {
+  font-family: var(--font-sans);
+  font-size: var(--size-md);
+  font-weight: 600;
+}
+
+.holding-block {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-left: 6px solid var(--color-black);
+  padding: 16px 24px;
+  margin: 32px 0;
+  background-color: var(--color-white);
+  line-height: 1.3;
+}
+
+.opinion-container {
+  background: var(--color-white);
+  padding: 0;
+}
+
+.opinion-author {
+  font-family: var(--font-mono);
+  font-size: var(--size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.opinion-body {
+  font-family: var(--font-sans);
+  font-size: var(--size-md);
   line-height: 1.72;
-  color: var(--color-black);
 }
 
-/* Verbatim Paragraph Spacing */
-.opinion-content p {
-  margin-bottom: 1.4em !important;
-}
+.opinion-body p { margin-bottom: 1.4em; }
 
-/* Blockquote Indentation */
-.opinion-content blockquote {
-  margin: 2em 0 2em 40px !important;
+.opinion-body blockquote {
+  margin: 2em 0 2em 40px;
   padding-left: 20px;
   border-left: 2px solid var(--color-black);
   font-style: italic;
 }
 
-/* Bidirectional Footnote Markers - SIZE_SM (10px) */
-.opinion-content sup {
-  font-size: var(--size-sm) !important;
-  line-height: 0;
-  vertical-align: baseline;
-  position: relative;
-  top: -0.4em;
+.star-pagination {
+  color: #999;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  margin: 0 4px;
 }
 
-.opinion-content sup a {
-  text-decoration: none;
-  color: var(--color-black);
-  font-weight: 700;
-}
-
-/* Footnote List at Bottom - SIZE_SM (10px) */
-.opinion-content section[role="doc-footnotes"], 
-.opinion-content .footnotes {
+.footnote-list {
   margin-top: 48px;
   padding-top: 24px;
   border-top: 1px solid var(--color-black);
 }
 
-.opinion-content li[id^="fn"], 
-.opinion-content li[id^="footnote"] {
-  font-size: var(--size-sm) !important;
-  font-family: var(--font-sans) !important;
-  font-weight: 500;
-  line-height: 1.5;
-  margin-bottom: 8px;
-  list-style-type: decimal;
+.footnote-item {
+  font-size: var(--size-sm);
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-/* Bidirectional Back-links */
-.opinion-content li a[href^="#fnref"], 
-.opinion-content li a[rev="footnote"],
-.opinion-content li a.footnote-backref {
-  text-decoration: none;
-  color: var(--color-black);
-  font-weight: 700;
-  margin-left: 4px;
-}
-
-/* V. GLOBAL TYPOGRAPHY RULES */
-
-/* All Mono elements are UPPERCASE */
-.mono-upper, 
-[style*="font-family: var(--font-mono)"],
-header nav a {
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em;
-}
-
-/* Bold formatting for editorial emphasis */
-strong, b {
-  font-weight: 700;
-}
-
-/* Case Title Clamp Logic */
-h3.case-header {
-  font-family: var(--font-serif);
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  font-weight: 700;
-}
-
-/* Horizontal Rules */
-hr {
-  border: none;
-  border-top: 1px solid var(--color-black);
-}
+.footnote-marker { font-weight: 700; min-width: 15px; }
