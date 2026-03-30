@@ -53,7 +53,11 @@ function ResizeHandle({ onMouseDown }: { onMouseDown: () => void }) {
 }
 
 // ── 3. Drag Handle (For Desktop) ────────────────────────────────
-function DragBar({ label, onPointerDown, isDragging }: { label: string, onPointerDown: any, isDragging: boolean }) {
+function DragBar({ label, onPointerDown, isDragging }: { 
+  label: string, 
+  onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => void, 
+  isDragging: boolean 
+}) {
   return (
     <div onPointerDown={onPointerDown} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 10px', background: isDragging ? '#EEEDEB' : '#FFFFFF', borderBottom: '1px solid rgba(0,0,0,0.08)', cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', touchAction: 'none' }}>
       <span style={{ ...mono, fontSize: '9px', color: '#000000', textTransform: 'uppercase', letterSpacing: '0.18em' }}>{label}</span>
@@ -169,7 +173,11 @@ export function FourResizablePanels({ col1, col2, col3, col4 }: FourPanelsProps)
       {[0, 1, 2, 3].map((slot, idx) => (
         <React.Fragment key={slot}>
           <div ref={el => { colRefs.current[slot] = el }} style={{ width: `${widths[slot]}%`, display: 'flex', flexDirection: 'column' }}>
-            <DragBar label={panels[order[slot]].label} onPointerDown={e => startDrag(slot, e)} isDragging={dragSlot === slot} />
+            <DragBar 
+              label={panels[order[slot]].label} 
+              onPointerDown={(e: ReactPointerEvent<HTMLDivElement>) => startDrag(slot, e)} 
+              isDragging={dragSlot === slot} 
+            />
             {panels[order[slot]].node}
           </div>
           {idx < 3 && <ResizeHandle onMouseDown={() => { resizeDragging.current = idx }} />}
