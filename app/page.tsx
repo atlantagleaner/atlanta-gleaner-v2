@@ -1,40 +1,29 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import React from 'react';
 import { Banner } from '@/src/components/Banner';
 import { NewsBox } from '@/src/components/NewsBox';
-import { DynamicCaseLawBox } from '@/src/components/DynamicCaseLawBox';
+// 🛡️ Fixed: Importing the new component instead of the deleted one
+import CaseLawBox from '@/src/components/CaseLawBox'; 
 import { FarSideBox } from '@/src/components/FarSideBox';
 import { ResizablePanels } from '@/src/components/ResizablePanels';
+// 📊 Importing your fresh data
+import allCases from '@/src/data/cases.json';
 
-export default async function HomePage() {
-  // 1. Grab the latest entry from the index
-  const indexPath = path.join(process.cwd(), 'public', 'search-index.json');
-  const index = JSON.parse(await fs.readFile(indexPath, 'utf-8'));
-  const newest = index[0]; 
-
-  // 2. Load the HTML for that specific latest case
-  const htmlPath = path.join(process.cwd(), 'public', 'cases-data', `${newest.id}.html`);
-  const html = await fs.readFile(htmlPath, 'utf-8');
+export default function HomePage() {
+  // Grab the latest case (the first one in your JSON)
+  const featuredCase = allCases[0];
 
   return (
-    <>
+    <main className="min-h-screen bg-[#EEEDEB]">
       <Banner />
-      <div style={{ paddingTop: '24px' }}>
-        <ResizablePanels
-          left={{ 
-            label: 'Roll-A · News', 
-            node: <NewsBox key="news" /> 
-          }}
-          center={{ 
-            label: `Roll-B · Latest Case: ${newest?.title?.toUpperCase() || 'LATEST'}`, 
-            node: <DynamicCaseLawBox key="case" caseMeta={newest} htmlContent={html} /> 
-          }}
-          right={{ 
-            label: 'Roll-C · The Far Side', 
-            node: <FarSideBox key="farside" /> 
-          }}
-        />
-      </div>
-    </>
+      
+      {/* Using ResizablePanels to layout your homepage. 
+         We pass the featured case into the new CaseLawBox.
+      */}
+      <ResizablePanels 
+        leftPanel={<NewsBox />}
+        centerPanel={<CaseLawBox caseData={featuredCase} />}
+        rightPanel={<FarSideBox />}
+      />
+    </main>
   );
 }
