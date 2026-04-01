@@ -19,14 +19,15 @@ import type { CaseLaw }    from '@/src/data/types'
 const cases = casesRaw as CaseLaw[]
 
 export default function HomePage() {
-  // Sort by dateDecided, newest first
-  const sorted = [...cases].sort((a, b) => {
-    const da = new Date(a.dateDecided).getTime() || 0
-    const db = new Date(b.dateDecided).getTime() || 0
-    return db - da
-  })
-
-  const featured = sorted[0]
+  // Feature the Girls Galore case; fall back to newest if not found
+  const featured = cases.find((c) => c.title === 'Girls Galore, Inc. v. City of Atlanta') || (() => {
+    const sorted = [...cases].sort((a, b) => {
+      const da = new Date(a.dateDecided).getTime() || 0
+      const db = new Date(b.dateDecided).getTime() || 0
+      return db - da
+    })
+    return sorted[0]
+  })()
 
   return (
     <main style={{ minHeight: '100vh', background: PALETTE.warm }}>
