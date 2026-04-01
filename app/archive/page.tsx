@@ -70,7 +70,7 @@ const volumeToggle: CSSProperties = {
   width:          '100%',
   background:     PALETTE.black,
   border:         'none',
-  padding:        '14px 18px',
+  padding:        '16px 20px',
   display:        'flex',
   justifyContent: 'space-between',
   alignItems:     'center',
@@ -82,7 +82,7 @@ const monthToggle: CSSProperties = {
   width:          '100%',
   background:     'transparent',
   border:         'none',
-  padding:        '10px 18px',
+  padding:        '12px 20px',
   display:        'flex',
   justifyContent: 'space-between',
   alignItems:     'center',
@@ -113,24 +113,26 @@ function MonthShelf({
       >
         <span style={{
           ...T.micro,
-          color:    open ? PALETTE.black : 'rgba(0,0,0,0.50)',
-          fontSize: '9px',
+          color:         open ? PALETTE.black : 'rgba(0,0,0,0.55)',
+          fontSize:      '12px',
+          letterSpacing: '0.13em',
         }}>
           {month} {year}
           <span style={{
-            marginLeft: '8px',
+            marginLeft:    '10px',
             ...FONT.mono,
-            fontSize:   '9px',
-            fontWeight: 400,
-            color:      'rgba(0,0,0,0.35)',
+            fontSize:      '11px',
+            fontWeight:    400,
+            letterSpacing: '0.10em',
+            color:         'rgba(0,0,0,0.35)',
           }}>
             — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
           </span>
         </span>
         <span style={{
           ...FONT.mono,
-          fontSize:   '10px',
-          color:      'rgba(0,0,0,0.35)',
+          fontSize:   '11px',
+          color:      'rgba(0,0,0,0.30)',
           transition: 'transform 0.18s',
           display:    'inline-block',
           transform:  open ? 'rotate(90deg)' : 'rotate(0)',
@@ -150,8 +152,9 @@ function MonthShelf({
               {/* Case title */}
               <div className="case-archive-title" style={{
                 ...T.body,
+                fontSize:     '15px',
                 fontWeight:   500,
-                marginBottom: '3px',
+                marginBottom: '4px',
               }}>
                 {c.title}
               </div>
@@ -160,7 +163,7 @@ function MonthShelf({
                 ...T.micro,
                 fontWeight:    400,
                 letterSpacing: '0.10em',
-                fontSize:      '9px',
+                fontSize:      '11px',
               }}>
                 {[c.court, c.docketNumber].filter(Boolean).join(' · ')}
               </div>
@@ -221,26 +224,28 @@ function VolumeBox({
         style={volumeToggle}
         aria-expanded={open}
       >
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px' }}>
           <span style={{
             ...T.label,
-            color:      PALETTE.white,
-            lineHeight: 1,
+            color:         PALETTE.white,
+            fontSize:      '13px',
+            letterSpacing: '0.18em',
+            lineHeight:    1,
           }}>
             Volume {volume.roman}
           </span>
           <span style={{
             ...T.micro,
-            color:         'rgba(255,255,255,0.45)',
-            fontSize:      '9px',
-            letterSpacing: '0.14em',
+            color:         'rgba(255,255,255,0.50)',
+            fontSize:      '11px',
+            letterSpacing: '0.13em',
           }}>
             {yearSpanLabel}
           </span>
           <span style={{
             ...T.micro,
-            color:         'rgba(255,255,255,0.30)',
-            fontSize:      '9px',
+            color:         'rgba(255,255,255,0.35)',
+            fontSize:      '11px',
             letterSpacing: '0.10em',
             fontWeight:    400,
           }}>
@@ -249,8 +254,8 @@ function VolumeBox({
         </div>
         <span style={{
           ...FONT.mono,
-          fontSize:   '11px',
-          color:      'rgba(255,255,255,0.55)',
+          fontSize:   '12px',
+          color:      'rgba(255,255,255,0.50)',
           transition: 'transform 0.2s',
           display:    'inline-block',
           transform:  open ? 'rotate(90deg)' : 'rotate(0)',

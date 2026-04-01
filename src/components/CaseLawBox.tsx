@@ -59,11 +59,11 @@ function renderOpinionHtml(
  * Some slip opinions (particularly Court of Appeals) embed a second copy of
  * the metadata block — "By [Author]", case name, court, date, "Opinion by:",
  * and a standalone "Opinion" heading — before the actual text begins.
- * extractBodyHtml removes the *first* "Opinion" header; this removes any
+ * extractBodyHtml removes the *first* "Opinion" header; this strips any
  * remaining standalone "Opinion" paragraphs and everything before the last one.
  *
- * The last standalone "Opinion" paragraph is replaced with a styled T.label
- * marker so the word fits the Gleaner mono-uppercase aesthetic.
+ * The "Opinion" section heading is rendered by the JSX layer as a styled label,
+ * so we strip the HTML marker entirely here rather than replacing it.
  */
 function stripOpinionPreamble(html: string): string {
   // Match standalone "Opinion" in a block element (p or heading), optionally
@@ -79,11 +79,8 @@ function stripOpinionPreamble(html: string): string {
   if (matches.length === 0) return html
 
   // Strip everything up to and including the last standalone "Opinion" block.
-  // Replace it with a styled label so the word is present but minimal.
   const last = matches[matches.length - 1]
-  const after = html.slice(last.end)
-  const styledMarker = '<p class="opinion-section-header">Opinion</p>'
-  return styledMarker + after
+  return html.slice(last.end)
 }
 
 // ── Style constants ───────────────────────────────────────────────────────────
@@ -248,9 +245,7 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
         {noticeText && (
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Notice</span>
-            <span style={{ ...metaValue, fontStyle: 'italic', color: 'rgba(0,0,0,0.55)' }}>
-              {noticeText}
-            </span>
+            <span style={metaValue}>{noticeText}</span>
           </div>
         )}
       </section>
@@ -260,8 +255,9 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
 
       {/* ── 4. Editorial box (core terms + summary) ──────────────────────── */}
       <section style={{ ...warm, padding: '16px 24px', ...sectionBorder }}>
-        <div style={{ marginBottom: '14px' }}>
-          <div style={{ ...BOX_HEADER, marginBottom: '10px', display: 'block' }}>
+        <div style={{ marginBottom: '18px' }}>
+          {/* Sub-section label: no bottom border — spacing + uppercase mono is sufficient */}
+          <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
             Core Terms
           </div>
           {hasCoreTerms ? (
@@ -276,7 +272,7 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
         </div>
 
         <div>
-          <div style={{ ...BOX_HEADER, marginBottom: '10px', display: 'block' }}>
+          <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
             Case Summary
           </div>
           {hasSummary ? (
@@ -295,8 +291,27 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
       <section style={{
         ...white,
         padding:   '28px 24px 40px',
-        borderTop: '2px solid #000000',
+        ...sectionBorder,
       }}>
+
+        {/* Opinion section header — mono label + hairline rule */}
+        <div style={{
+          display:      'flex',
+          alignItems:   'center',
+          gap:          '14px',
+          marginBottom: '28px',
+        }}>
+          <span style={{
+            ...T.label,
+            color:         PALETTE.black,
+            letterSpacing: '0.22em',
+            flexShrink:    0,
+          }}>
+            Opinion
+          </span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.13)' }} />
+        </div>
+
         {/* Verbatim opinion body — preamble stripped, footnote anchors injected */}
         <div
           className="opinion-body"

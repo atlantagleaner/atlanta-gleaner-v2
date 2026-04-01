@@ -257,14 +257,21 @@ async function parseDocxFile(filename) {
     .filter(l => l.length > 0);
 
   // ── 2. Full HTML (for body + footnotes) ───────────────────────────────────
-  // styleMap instructs mammoth to preserve common block-quote DOCX styles as
-  // <blockquote> elements so the opinion renderer can indent them correctly.
+  // styleMap covers named paragraph styles used by various legal publishers.
+  // When documents arrive with properly-named blockquote styles, mammoth will
+  // emit <blockquote> tags which the .opinion-body CSS picks up automatically.
+  // NOTE: Westlaw-exported DOCXs use minor paragraph indentation (400 twips)
+  // on intro paragraphs only — not for quoted passages — so we cannot safely
+  // auto-detect blockquotes via XML indentation in this corpus.
   const blockquoteStyleMap = [
     "p[style-name='Block Text'] => blockquote:fresh",
     "p[style-name='Block Quote'] => blockquote:fresh",
     "p[style-name='BlockQuote'] => blockquote:fresh",
+    "p[style-name='Block Quotation'] => blockquote:fresh",
     "p[style-name='Quotation'] => blockquote:fresh",
     "p[style-name='Quote'] => blockquote:fresh",
+    "p[style-name='Quoted'] => blockquote:fresh",
+    "p[style-name='Excerpt'] => blockquote:fresh",
     "p[style-name='Indented'] => blockquote:fresh",
     "p[style-name='Body Text Indent'] => blockquote:fresh",
     "p[style-name='Body Text Indent 2'] => blockquote:fresh",
