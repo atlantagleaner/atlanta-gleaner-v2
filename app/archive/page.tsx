@@ -30,10 +30,10 @@ const cases = casesRaw as CaseLaw[]
 // ── Volume definitions ────────────────────────────────────────────────────────
 
 const VOLUMES = [
-  { number: 'I',   label: 'Volume I',   years: [2022, 2023], roman: 'I'   },
-  { number: 'II',  label: 'Volume II',  years: [2024],       roman: 'II'  },
-  { number: 'III', label: 'Volume III', years: [2025],       roman: 'III' },
   { number: 'IV',  label: 'Volume IV',  years: [2026, 2027, 2028, 2029, 2030], roman: 'IV' },
+  { number: 'III', label: 'Volume III', years: [2025],       roman: 'III' },
+  { number: 'II',  label: 'Volume II',  years: [2024],       roman: 'II'  },
+  { number: 'I',   label: 'Volume I',   years: [2022, 2023], roman: 'I'   },
 ]
 
 const MONTHS = [

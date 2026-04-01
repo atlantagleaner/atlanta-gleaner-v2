@@ -104,6 +104,65 @@ function stripOpinionPreamble(html: string): string {
   return html.slice(last.end)
 }
 
+// ── Blockquote detector & formatter ──────────────────────────────────────────
+
+/**
+ * Detect and wrap block quotations based on Bluebook formatting characteristics.
+ *
+ * Legal opinions use block quotations (per Bluebook standards):
+ *   - Indented block (visual separator)
+ *   - No quotation marks
+ *   - Same font and size
+ *   - Often preceded by case names (e.g., "Smith v. Jones,")
+ *   - Contain judicial language or statutes
+ *
+ * Since indentation is not preserved in HTML extraction, we use heuristics:
+ *   - Paragraphs consisting entirely of quoted material (all-caps case names, citations)
+ *   - Short standalone blocks that appear to be extracted quotations
+ *   - Paragraphs following citation patterns
+ *
+ * This is applied via CSS class 'legal-blockquote' which is styled in globals.css.
+ */
+function detectAndWrapBlockquotes(html: string): string {
+  // Match patterns that typically indicate blockquotes:
+  // 1. All-caps case name pattern: "CASE NAME v. OTHER,"
+  // 2. Statute citations: number followed by statute abbreviation
+  // 3. Judicial quotations: paragraphs starting with "The court" or similar
+  // 4. Short indented blocks after colons (typically introducing quotes)
+
+  // For now, wrap <p> tags that contain only citations, case names, or appear isolated
+  // Pattern: <p> containing ONLY uppercase text (potential case names/citations)
+  const upperCaseOnlyRe = /<p[^>]*>[\s]*([A-Z][A-Z\s.,;():'0-9]+)[\s]*<\/p>/g
+
+  let result = html
+  let m: RegExpExecArray | null
+
+  // Process matches in reverse to maintain indices
+  const matches: Array<{ index: number; end: number }> = []
+  while ((m = upperCaseOnlyRe.exec(html)) !== null) {
+    // Only mark as blockquote if it looks like a case name or statute citation
+    const text = m[1].trim()
+    if (
+      /\bv\.\s+/.test(text) || // Contains "v." (case name)
+      /\b(U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.)\b/.test(text) || // Citation
+      (/^[0-9]/.test(text) && /[A-Z]{2,}/.test(text)) // Statute pattern
+    ) {
+      matches.push({ index: m.index, end: m.index + m[0].length })
+    }
+  }
+
+  // Apply blockquote formatting to identified matches (in reverse order)
+  for (let i = matches.length - 1; i >= 0; i--) {
+    const match = matches[i]
+    const original = html.slice(match.index, match.end)
+    const wrapped = original
+      .replace(/<p([^>]*)>/, '<p$1 class="legal-blockquote">')
+    result = result.slice(0, match.index) + wrapped + result.slice(match.end)
+  }
+
+  return result
+}
+
 // ── Style constants ───────────────────────────────────────────────────────────
 
 const warm:  CSSProperties = { background: PALETTE.warm }
@@ -191,9 +250,10 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
   const fnDisplayMap: Record<string, number> = {}
   sortedFnKeys.forEach((key, i) => { fnDisplayMap[key] = i + 1 })
 
-  // Strip preamble, then inject footnote anchors
-  const strippedHtml      = stripOpinionPreamble(opinionText ?? '')
-  const renderedOpinionHtml = renderOpinionHtml(strippedHtml, footnotes, slug)
+  // Strip preamble, inject footnote anchors, then detect blockquotes
+  const strippedHtml        = stripOpinionPreamble(opinionText ?? '')
+  const withFootnotes       = renderOpinionHtml(strippedHtml, footnotes, slug)
+  const renderedOpinionHtml = detectAndWrapBlockquotes(withFootnotes)
 
   const hasCoreTerms = coreTerms && coreTerms.length > 0
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
@@ -202,8 +262,8 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
     <article style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      {/* Background matches the opinion text (white) per design spec.        */}
-      <header style={{ ...white, padding: '20px 24px 18px', ...sectionBorder }}>
+      {/* Modern minimalist design: generous whitespace around title         */}
+      <header style={{ ...white, padding: '40px 32px 36px', ...sectionBorder }}>
         <div style={{ ...BOX_HEADER, marginBottom: '14px', display: 'inline-block' }}>
           {label}
         </div>
@@ -315,9 +375,9 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
         ...sectionBorder,
       }}>
 
-        {/* Opinion section header — mono label (gray hairline rule removed per design) */}
+        {/* Opinion section header — mono label (single line space to opinion text) */}
         <div style={{
-          marginBottom: '28px',
+          marginBottom: '12px',
         }}>
           <span style={{
             ...T.label,

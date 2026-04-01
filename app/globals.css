@@ -111,6 +111,19 @@ body {
   margin: 2em 0 2em 24px;
 }
 
+/* Bluebook block quotation style — indented judicial quotes */
+.opinion-body .legal-blockquote {
+  margin-left: 2.5em;   /* 0.5" indent per Bluebook standard */
+  margin-right: 1em;
+  padding-left: 0;      /* No additional padding */
+  margin-top: 1.2em;    /* Extra space before */
+  margin-bottom: 1.2em; /* Extra space after */
+  line-height: 1.5;     /* Single spacing within block */
+  color: var(--palette-black);
+  font-style: normal;
+  border-left: none;
+}
+
 /* Styled "Opinion" section header — replaces repeated standalone Opinion para */
 .opinion-body .opinion-section-header {
   font-family: var(--font-mono);
