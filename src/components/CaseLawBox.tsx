@@ -360,39 +360,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         </div>
       </section>
 
-      {/* ── 5. Expand / Collapse bar ─────────────────────────────────────── */}
-      <button
-        className="ag-expand-bar"
-        onClick={() => setExpanded(v => !v)}
-        aria-expanded={expanded}
-        style={{
-          width:          '100%',
-          background:     PALETTE.white,
-          border:         'none',
-          borderTop:      '1px solid rgba(0,0,0,0.07)', // ITEM_RULE value
-          padding:        `${SPACING.md} ${SPACING.lg}`,
-          display:        'flex',
-          alignItems:     'center',
-          justifyContent: 'space-between',
-          cursor:         'pointer',
-          userSelect:     'none',
-        }}
-      >
-        <span style={{ ...T.label, color: PALETTE.black }}>
-          {expanded ? 'Collapse' : 'Read Opinion'}
-        </span>
-        <span style={{
-          ...T.label,
-          color:      PALETTE.black,
-          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
-          display:    'inline-block',
-          transform:  expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}>
-          ↓
-        </span>
-      </button>
-
-      {/* ── 6. Verbatim opinion ──────────────────────────────────────────── */}
+      {/* ── 5. Verbatim opinion ──────────────────────────────────────────── */}
       <section style={{
         ...white,
         overflow:   'hidden',
@@ -477,6 +445,38 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           </footer>
         )}
       </section>
+
+      {/* ── 6. Expand / Collapse bar (at the very end) ────────────────────── */}
+      <button
+        className="ag-expand-bar"
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        style={{
+          width:          '100%',
+          background:     PALETTE.white,
+          border:         'none',
+          borderTop:      '1px solid rgba(0,0,0,0.07)', // ITEM_RULE value
+          padding:        `${SPACING.md} ${SPACING.lg}`,
+          display:        'flex',
+          alignItems:     'center',
+          justifyContent: 'space-between',
+          cursor:         'pointer',
+          userSelect:     'none',
+        }}
+      >
+        <span style={{ ...T.label, color: PALETTE.black }}>
+          {expanded ? 'Collapse' : 'Read Opinion'}
+        </span>
+        <span style={{
+          ...T.label,
+          color:      PALETTE.black,
+          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
+          display:    'inline-block',
+          transform:  expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        }}>
+          ↓
+        </span>
+      </button>
 
     </article>
   )
