@@ -1,110 +1,330 @@
-import React from 'react';
-import allCases from '@/src/data/cases.json';
-import Link from 'next/link';
+'use client'
+// ─────────────────────────────────────────────────────────────────────────────
+// app/archive/page.tsx — Atlanta Gleaner Case Law Archive
+//
+// Four volume boxes, each an accordion. Inside each volume, months are
+// sub-accordions. Cases are listed under their month.
+//
+//   Volume I   · 2022–2023
+//   Volume II  · 2024
+//   Volume III · 2025
+//   Volume IV  · 2026 and beyond
+//
+// Aesthetic: IBM Plex Mono labels, warm off-white background, black borders,
+// minimal — consistent with the rest of the Gleaner design system.
+// ─────────────────────────────────────────────────────────────────────────────
 
-interface CaseRecord {
-  slug: string;
-  metadata: {
-    title: string;
-    dateDecided: string;
-    docketNo: string;
-    court: string;
-  };
-  summary: string;
+import React, { useState } from 'react'
+import Link from 'next/link'
+import type { CSSProperties } from 'react'
+import { Banner } from '@/src/components/Banner'
+import {
+  PALETTE, FONT, T, BOX_SHELL, BOX_HEADER,
+  BOX_PADDING, ITEM_RULE, PAGE_TITLE_BLOCK, PAGE_MAX_W,
+} from '@/src/styles/tokens'
+import casesRaw from '@/src/data/cases.json'
+import type { CaseLaw } from '@/src/data/types'
+
+const cases = casesRaw as CaseLaw[]
+
+// ── Volume definitions ────────────────────────────────────────────────────────
+
+const VOLUMES = [
+  { number: 'I',   label: 'Volume I',   years: [2022, 2023], roman: 'I'   },
+  { number: 'II',  label: 'Volume II',  years: [2024],       roman: 'II'  },
+  { number: 'III', label: 'Volume III', years: [2025],       roman: 'III' },
+  { number: 'IV',  label: 'Volume IV',  years: [2026, 2027, 2028, 2029, 2030], roman: 'IV' },
+]
+
+const MONTHS = [
+  'January','February','March','April','May','June',
+  'July','August','September','October','November','December',
+]
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function getYear(dateStr: string): number | null {
+  const d = new Date(dateStr)
+  return isNaN(d.getTime()) ? null : d.getFullYear()
 }
 
-interface Case {
-  slug: string;
-  title: string;
-  dateDecided: string;
-  docketNo: string;
-  court: string;
-  summary: string;
+function getMonth(dateStr: string): number | null {
+  const d = new Date(dateStr)
+  return isNaN(d.getTime()) ? null : d.getMonth() // 0-indexed
 }
 
-export default function ArchivePage() {
-  const cases = (allCases as CaseRecord[]).map((c) => ({
-    slug: c.slug,
-    title: c.metadata.title,
-    dateDecided: c.metadata.dateDecided,
-    docketNo: c.metadata.docketNo,
-    court: c.metadata.court,
-    summary: c.summary,
-  }));
+function yearLabel(years: number[]): string {
+  if (years.length === 1) return String(years[0])
+  return `${years[0]}–${years[years.length - 1]}`
+}
 
-  // Sort: Newest cases first
-  const sortedCases = [...cases].sort((a, b) => 
-    new Date(b.dateDecided).getTime() - new Date(a.dateDecided).getTime()
-  );
+// ── Style helpers ─────────────────────────────────────────────────────────────
 
-  const years = Array.from(new Set(sortedCases.map(c => new Date(c.dateDecided).getFullYear()))).sort((a, b) => b - a);
+const volumeShell: CSSProperties = {
+  ...BOX_SHELL,
+  marginBottom: '24px',
+  overflow:     'hidden',
+}
+
+const volumeToggle: CSSProperties = {
+  width:          '100%',
+  background:     PALETTE.black,
+  border:         'none',
+  padding:        '14px 18px',
+  display:        'flex',
+  justifyContent: 'space-between',
+  alignItems:     'center',
+  cursor:         'pointer',
+  textAlign:      'left',
+}
+
+const monthToggle: CSSProperties = {
+  width:          '100%',
+  background:     'transparent',
+  border:         'none',
+  padding:        '10px 18px',
+  display:        'flex',
+  justifyContent: 'space-between',
+  alignItems:     'center',
+  cursor:         'pointer',
+  textAlign:      'left',
+  ...ITEM_RULE,
+}
+
+// caseLink styling is handled by .case-archive-link CSS class in globals.css
+
+// ── Month sub-accordion ───────────────────────────────────────────────────────
+
+function MonthShelf({
+  month, year, monthCases,
+}: {
+  month:      string
+  year:       number
+  monthCases: CaseLaw[]
+}) {
+  const [open, setOpen] = useState(false)
 
   return (
-    <main className="max-w-[1600px] mx-auto p-8 bg-[#EEEDEB] min-h-screen text-[#000000]">
-      <header className="mb-12 border-b border-[#000000] pb-2 text-left">
-        <h1 className="font-mono text-3xl uppercase tracking-tighter">Archive</h1>
-      </header>
+    <div>
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={monthToggle}
+        aria-expanded={open}
+      >
+        <span style={{
+          ...T.micro,
+          color:    open ? PALETTE.black : 'rgba(0,0,0,0.50)',
+          fontSize: '9px',
+        }}>
+          {month} {year}
+          <span style={{
+            marginLeft: '8px',
+            ...FONT.mono,
+            fontSize:   '9px',
+            fontWeight: 400,
+            color:      'rgba(0,0,0,0.35)',
+          }}>
+            — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
+          </span>
+        </span>
+        <span style={{
+          ...FONT.mono,
+          fontSize:   '10px',
+          color:      'rgba(0,0,0,0.35)',
+          transition: 'transform 0.18s',
+          display:    'inline-block',
+          transform:  open ? 'rotate(90deg)' : 'rotate(0)',
+        }}>
+          ▶
+        </span>
+      </button>
 
-      <div className="space-y-16">
-        {years.length > 0 ? (
-          years.map(year => (
-            <section key={year} className="space-y-8">
-              <h2 className="font-mono text-xl border-b border-black/10 pb-1 text-gray-500">
-                VOLUME {year}
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10">
-                {[...Array(12)].map((_, i) => {
-                  const monthIndex = 11 - i;
-                  const monthName = new Date(0, monthIndex).toLocaleString('en-US', { month: 'long' });
-                  const casesInMonth = sortedCases.filter(c => {
-                    const d = new Date(c.dateDecided);
-                    return d.getFullYear() === year && d.getMonth() === monthIndex;
-                  });
-
-                  if (casesInMonth.length === 0) return null;
-
-                  return (
-                    <div key={monthName} className="space-y-4">
-                      <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-500">
-                        {monthName}
-                      </h3>
-                      <ul className="space-y-4">
-                        {casesInMonth.map(c => (
-                          <li key={c.slug}>
-                            {/* Upgraded Preview Card */}
-                            <Link href={`/cases/${c.slug}`} className="group block py-3 border-b border-black/10 transition-all hover:bg-white/50 -mx-2 px-2 rounded-sm">
-                              
-                              <div className="text-[14px] font-sans font-medium group-hover:bg-black group-hover:text-white px-1 inline-block transition-colors mb-1">
-                                {c.title}
-                              </div>
-                              
-                              <div className="text-[9px] uppercase tracking-wider opacity-60 mt-1 px-1 font-mono flex items-center gap-2">
-                                <span>{c.court}</span>
-                                <span>|</span>
-                                <span>{c.docketNo}</span>
-                              </div>
-
-                              <div className="text-[12px] font-sans text-gray-600 mt-2 px-1 line-clamp-2 leading-relaxed">
-                                {c.summary}
-                              </div>
-
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
+      {open && (
+        <div style={{ background: PALETTE.white }}>
+          {monthCases.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/cases/${c.slug}`}
+              className="case-archive-link"
+            >
+              {/* Case title */}
+              <div className="case-archive-title" style={{
+                ...T.body,
+                fontWeight:   500,
+                marginBottom: '3px',
+              }}>
+                {c.title}
               </div>
-            </section>
-          ))
-        ) : (
-          <div className="font-mono text-gray-400 uppercase tracking-widest text-center py-20">
-            [ No documents found in archive ]
-          </div>
-        )}
+              {/* Meta row */}
+              <div className="case-archive-meta" style={{
+                ...T.micro,
+                fontWeight:    400,
+                letterSpacing: '0.10em',
+                fontSize:      '9px',
+              }}>
+                {[c.court, c.docketNumber].filter(Boolean).join(' · ')}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Volume accordion ──────────────────────────────────────────────────────────
+
+function VolumeBox({
+  volume,
+  allCases,
+  defaultOpen,
+}: {
+  volume:      typeof VOLUMES[number]
+  allCases:    CaseLaw[]
+  defaultOpen: boolean
+}) {
+  const [open, setOpen] = useState(defaultOpen)
+
+  // Filter cases that belong to this volume's year range
+  const volumeCases = allCases.filter((c) => {
+    const y = getYear(c.dateDecided)
+    return y !== null && volume.years.includes(y)
+  })
+
+  // Collect months that have cases (newest first)
+  const monthsWithCases: Array<{ year: number; month: number; label: string; cases: CaseLaw[] }> = []
+
+  // Build list ordered newest → oldest
+  for (const year of [...volume.years].reverse()) {
+    for (let m = 11; m >= 0; m--) {
+      const mCases = volumeCases.filter((c) => {
+        const y = getYear(c.dateDecided)
+        const mo = getMonth(c.dateDecided)
+        return y === year && mo === m
+      })
+      if (mCases.length > 0) {
+        monthsWithCases.push({ year, month: m, label: MONTHS[m], cases: mCases })
+      }
+    }
+  }
+
+  // Year span description
+  const yearSpanLabel = volume.years.length === 1
+    ? String(volume.years[0])
+    : `${volume.years[0]}–${volume.years.filter(y => volumeCases.some(c => getYear(c.dateDecided) === y)).pop() ?? volume.years[volume.years.length - 1]}`
+
+  return (
+    <div style={volumeShell}>
+      {/* Volume header button */}
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={volumeToggle}
+        aria-expanded={open}
+      >
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+          <span style={{
+            ...FONT.serif,
+            fontSize:   'clamp(1rem, 2vw, 1.3rem)',
+            fontWeight: 700,
+            color:      PALETTE.white,
+            lineHeight: 1,
+          }}>
+            Volume {volume.roman}
+          </span>
+          <span style={{
+            ...T.micro,
+            color:         'rgba(255,255,255,0.45)',
+            fontSize:      '9px',
+            letterSpacing: '0.14em',
+          }}>
+            {yearSpanLabel}
+          </span>
+          <span style={{
+            ...T.micro,
+            color:         'rgba(255,255,255,0.30)',
+            fontSize:      '9px',
+            letterSpacing: '0.10em',
+            fontWeight:    400,
+          }}>
+            {volumeCases.length} {volumeCases.length === 1 ? 'opinion' : 'opinions'}
+          </span>
+        </div>
+        <span style={{
+          ...FONT.mono,
+          fontSize:   '11px',
+          color:      'rgba(255,255,255,0.55)',
+          transition: 'transform 0.2s',
+          display:    'inline-block',
+          transform:  open ? 'rotate(90deg)' : 'rotate(0)',
+        }}>
+          ▶
+        </span>
+      </button>
+
+      {/* Volume body */}
+      {open && (
+        <div style={{ background: PALETTE.warm }}>
+          {monthsWithCases.length === 0 ? (
+            <div style={{
+              ...T.micro,
+              color:   'rgba(0,0,0,0.30)',
+              padding: '16px 18px',
+            }}>
+              No opinions published yet.
+            </div>
+          ) : (
+            monthsWithCases.map(({ year, month, label, cases: mCases }) => (
+              <MonthShelf
+                key={`${year}-${month}`}
+                month={label}
+                year={year}
+                monthCases={mCases}
+              />
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+export default function ArchivePage() {
+  return (
+    <main style={{
+      minHeight:   '100vh',
+      background:  PALETTE.warm,
+      paddingBottom: '80px',
+    }}>
+      <Banner />
+
+      <div style={{
+        maxWidth: PAGE_MAX_W,
+        margin:   '0 auto',
+        padding:  '0 20px',
+      }}>
+
+        {/* Page title block */}
+        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
+          <h1 style={{ ...T.pageTitle, paddingTop: '20px' }}>
+            Case Law Archive
+          </h1>
+        </div>
+
+        {/* Volume boxes */}
+        <div style={{ maxWidth: '760px' }}>
+          {VOLUMES.map((volume, i) => (
+            <VolumeBox
+              key={volume.number}
+              volume={volume}
+              allCases={cases}
+              defaultOpen={i === VOLUMES.length - 1} // newest volume open by default
+            />
+          ))}
+        </div>
+
       </div>
     </main>
-  );
+  )
 }

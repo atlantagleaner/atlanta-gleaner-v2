@@ -138,3 +138,34 @@ body {
   font-size: 10px;
   font-weight: 700;
 }
+
+/* ── fn-ref: inline superscript footnote anchor ─────────────────────────────── */
+.fn-ref {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--palette-black);
+  text-decoration: none;
+}
+.fn-ref:hover {
+  text-decoration: underline;
+}
+
+/* ── Archive case links ───────────────────────────────────────────────────────── */
+a.case-archive-link {
+  display: block;
+  padding: 10px 24px;
+  text-decoration: none;
+  color: var(--palette-black);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  transition: background 0.1s;
+}
+a.case-archive-link:hover {
+  background: var(--palette-black);
+}
+a.case-archive-link:hover .case-archive-title {
+  color: var(--palette-white);
+}
+a.case-archive-link:hover .case-archive-meta {
+  color: rgba(255,255,255,0.45);
+}

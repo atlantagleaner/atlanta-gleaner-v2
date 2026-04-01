@@ -1,92 +1,363 @@
-const fs = require('fs').promises;
-const path = require('path');
+// ─────────────────────────────────────────────────────────────────────────────
+// Atlanta Gleaner — process-cases.js
+//
+// Reads every .docx file in raw-opinions/, parses each judicial opinion, and
+// writes src/data/cases.json in the CaseLaw interface format.
+//
+// Usage:  node scripts/process-cases.js
+//
+// Output shape matches src/data/types.ts → CaseLaw interface so every
+// consumer (archive page, case law pages, home page) reads the same structure.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const fs      = require('fs').promises;
+const path    = require('path');
 const mammoth = require('mammoth');
 
-// Paths specific to your local setup
-const RAW_DIR = "C:\\Users\\arjun\\Desktop\\Atlanta Gleaner Code\\atlanta-gleaner-v2\\raw-opinions";
-const OUTPUT_FILE = path.join(__dirname, '../src/data/cases.json');
+// ── Paths (cross-platform, relative to this script file) ─────────────────────
+const RAW_DIR     = path.resolve(__dirname, '..', 'raw-opinions');
+const OUTPUT_FILE = path.resolve(__dirname, '..', 'src', 'data', 'cases.json');
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Strip common trailing noise from a date string:
+ *   "December 30, 2022, Filed"  → "December 30, 2022"
+ *   "March 14, 2025"            → "March 14, 2025"
+ */
+function cleanDate(raw) {
+  return (raw || '')
+    .replace(/,?\s*(Filed|Decided|Issued|Announced)\s*$/i, '')
+    .replace(/\u00A0/g, ' ')
+    .trim();
+}
+
+/**
+ * Clean non-breaking spaces, excess whitespace from any string.
+ */
+function cleanStr(s) {
+  return (s || '').replace(/\u00A0/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Generate a URL-safe slug from a string.
+ * "Adams v. Sch. Bd. of St. Johns Cnty._57 F.4th 791.Docx"
+ *  → "adams-v-sch-bd-of-st-johns-cnty-57-f-4th-791"
+ */
+function toSlug(s) {
+  return s
+    .toLowerCase()
+    .replace(/\.docx?$/i, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Derive a short title: everything before the first comma or parenthesis.
+ * "Adams v. Sch. Bd. of St. Johns Cnty." → "Adams v. Sch. Bd."
+ * Uses the first two "v." words.
+ */
+function shortTitle(fullTitle) {
+  const parts = fullTitle.split(/\bv\.\s*/i);
+  if (parts.length < 2) return fullTitle;
+  const plaintiff = parts[0].trim().replace(/,.*$/, '').trim();
+  const defendant = parts[1].trim().split(/[,;(]/)[0].trim();
+  return `${plaintiff} v. ${defendant}`;
+}
+
+/**
+ * Strip all HTML tags from a string.
+ */
+function stripHtml(s) {
+  return (s || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\u00A0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Inject {fn:N} placeholder markers for every footnote reference in the body.
+ *
+ * Mammoth v1.x produces this structure for in-body footnote references:
+ *   <sup><sup><a href="#footnote-2" id="footnote-ref-2">[1]</a></sup>1</sup>
+ *
+ * The outer <sup> wraps an inner <sup>+<a>, followed by the display number.
+ * We capture the href index (N) and replace the whole thing with {fn:N}.
+ *
+ * Additional fallback patterns handle older or alternate mammoth output.
+ */
+function injectFnMarkers(html) {
+  // Primary pattern (mammoth 1.x) — nested sup with inner link + trailing digit
+  html = html.replace(
+    /<sup><sup><a[^>]*href="#footnote-(\d+)"[^>]*>.*?<\/a><\/sup>\d*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  // Fallback A — simple <sup><a href="#footnote-N">
+  html = html.replace(
+    /<sup>\s*<a[^>]*href="#footnote-(\d+)"[^>]*>.*?<\/a>\s*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  // Fallback B — id-based reference (some mammoth versions)
+  html = html.replace(
+    /<sup>\s*<a[^>]*id="footnote-ref-(\d+)"[^>]*>.*?<\/a>\s*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  // Fallback C — bare anchor with footnote ref id
+  html = html.replace(
+    /<a[^>]*id="footnote-ref-(\d+)"[^>]*>.*?<\/a>/gi,
+    '{fn:$1}'
+  );
+  return html;
+}
+
+/**
+ * Extract footnotes from mammoth HTML.
+ * Returns Record<string, string> — e.g. { '1': 'Footnote text here.', ... }
+ *
+ * Mammoth wraps footnotes in an <ol> at the end of the document.
+ * Each item: <li id="footnote-N"><p>...</p></li>
+ */
+function extractFootnotes(html) {
+  const footnotes = {};
+
+  // Scan for <li id="footnote-N"> items (works inside or outside an <ol>)
+  const itemRe = /<li[^>]*id="footnote-(\d+)"[^>]*>([\s\S]*?)<\/li>/gi;
+  let m;
+  while ((m = itemRe.exec(html)) !== null) {
+    const num     = m[1];
+    let   content = m[2];
+
+    // Remove mammoth back-link: <a href="#footnote-ref-N">↑</a>
+    content = content.replace(/<a[^>]*href="#footnote-ref-\d+"[^>]*>[\s\S]*?<\/a>/gi, '');
+    // Remove Bookmark anchors: <a id="Bookmark_fnpara_N"></a>
+    content = content.replace(/<a[^>]*id="Bookmark_[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '');
+    // Remove leading display-number superscript: <sup>1 </sup> or <sup>1</sup>
+    content = content.replace(/^[\s\S]*?<sup>\d+\s*<\/sup>/i, '');
+    // Strip remaining HTML and clean
+    content = stripHtml(content);
+    if (content) footnotes[num] = content;
+  }
+
+  return footnotes;
+}
+
+/**
+ * Remove the footnote <ol> block from the body HTML so it doesn't
+ * appear twice in the rendered opinion.
+ */
+function removeFootnoteList(html) {
+  // Remove any trailing <ol>...</ol> that contains footnote list items
+  html = html.replace(/<ol>[\s\S]*?<\/ol>\s*$/i, '');
+  // Also remove individual footnote anchors from the body (back-references)
+  html = html.replace(/<a[^>]*id="footnote-\d+"[^>]*><\/a>/gi, '');
+  return html;
+}
+
+/**
+ * Extract the opinion body HTML, splitting at the "Opinion" section header.
+ * Handles many variations mammoth produces.
+ */
+function extractBodyHtml(fullHtml) {
+  // Split at "Opinion" section — match common mammoth heading patterns
+  const splitterRe = /<(p|h[1-6])[^>]*>\s*(?:<strong>|<em>|<b>)?\s*Opinion\s*(?:<\/strong>|<\/em>|<\/b>)?\s*<\/(p|h[1-6])>/i;
+  const idx = fullHtml.search(splitterRe);
+  if (idx !== -1) {
+    return fullHtml.slice(idx).replace(splitterRe, '');
+  }
+  return fullHtml;
+}
+
+/**
+ * Remove boilerplate blocks that clutter the opinion body:
+ * Counsel, Judges, Prior History, End of Document, etc.
+ */
+function scrubBoilerplate(html) {
+  const patterns = [
+    /<p[^>]*>\s*(?:<strong>|<em>)?Counsel(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
+    /<p[^>]*>\s*(?:<strong>|<em>)?Judges(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
+    /<p[^>]*>\s*(?:<strong>|<em>)?Prior History(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
+    /<p[^>]*>\s*End of Document[\s\S]*?<\/p>/gi,
+    /<p[^>]*>\s*<\/p>/gi,  // empty paragraphs
+  ];
+  for (const re of patterns) {
+    html = html.replace(re, '');
+  }
+  return html.trim();
+}
+
+/**
+ * Mark star-pagination tokens like [**1], [***2] with a CSS class.
+ */
+function markStarPagination(html) {
+  return html.replace(/(\[(\*{2,3})\d+\])/g, '<span class="star-pagination">$1</span>');
+}
+
+// ── Main parser ───────────────────────────────────────────────────────────────
 
 async function parseDocxFile(filename) {
   const filePath = path.join(RAW_DIR, filename);
-  
-  const rawResult = await mammoth.extractRawText({ path: filePath });
-  const allLines = rawResult.value.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  
-  const htmlResult = await mammoth.convertToHtml({ path: filePath });
-  let fullHtml = htmlResult.value;
 
-  // 1. EXTRACT METADATA
-  const caseData = {
-    slug: filename.toLowerCase().replace(/\.docx?$/, '').replace(/[^a-z0-9]+/g, '-'),
-    noticeBanner: allLines.find(l => /^Notice:/i.test(l)) || "",
-    metadata: {
-      title: allLines[0] || '',
-      court: allLines[1] || '',
-      dateDecided: (allLines[2] || '').replace(/,\s*Decided/i, ''),
-      docketNo: (allLines[3] || '').replace(/\.$/, ''),
-      citations: allLines[5] || ''
-    },
-    holding: '',
-    opinionAuthor: '',
-    opinionBody: '',
-    footnotes: [],
-    summary: 'Summary pending...'
+  // ── 1. Raw text (for metadata extraction) ─────────────────────────────────
+  const rawResult  = await mammoth.extractRawText({ path: filePath });
+  const rawLines   = rawResult.value
+    .split('\n')
+    .map(l => cleanStr(l))
+    .filter(l => l.length > 0);
+
+  // ── 2. Full HTML (for body + footnotes) ───────────────────────────────────
+  const htmlResult = await mammoth.convertToHtml({ path: filePath });
+  const fullHtml   = htmlResult.value;
+
+  // ── 3. Metadata extraction from raw text lines ────────────────────────────
+  // Lines follow a predictable structure in Westlaw/Lexis slip opinions:
+  //   [0]  Case title
+  //   [1]  Court name
+  //   [2]  Date line ("June 29, 2023, Decided")
+  //   [3]  Docket number ("No. A23A0001." or "A23A0001")
+  //   ...  (various lines for history, prior history, etc.)
+  //   ...  "Notice: ..." if present
+  //   ...  "Judges: ..." block
+  //   ...  "Counsel: ..." block
+  //   ...  "Opinion by: ..." line
+
+  const meta = {
+    title:       cleanStr(rawLines[0] || ''),
+    court:       cleanStr(rawLines[1] || ''),
+    dateDecided: cleanDate(rawLines[2] || ''),
+    docketNo:    cleanStr((rawLines[3] || '').replace(/\.$/, '')),
+    citations:   '',
+    judges:      '',
+    disposition: '',
+    noticeText:  '',
   };
 
-  // 2. EXTRACT HOLDING & AUTHOR
-  allLines.forEach(l => {
-    if (/^Disposition:/i.test(l)) caseData.holding = l.replace(/^Disposition:/i, '').trim();
-    if (/^Opinion by:/i.test(l)) {
-      caseData.opinionAuthor = l.replace(/^Opinion by:/i, '')
-        .replace(/^(Judge|Justice|Presiding Judge|Chief Judge)\s+/i, '')
-        .replace(/\u00A0/g, ' ')
-        .trim()
-        .toUpperCase();
+  // Scan all lines for specific fields
+  for (const line of rawLines) {
+    const l = line.trim();
+
+    if (/^Notice:/i.test(l)) {
+      meta.noticeText = cleanStr(l.replace(/^Notice:\s*/i, ''));
     }
-  });
-
-  // 3. ROBUST BODY SPLITTING
-  // Targets "Opinion" in almost any tag or casing
-  const splitter = /<(p|h\d|strong|em)[^>]*>\s*(<strong>|<em>)?\s*Opinion\s*(<\/strong>|<\/em>)?\s*<\/(p|h\d|strong|em)>/i;
-  const parts = fullHtml.split(splitter);
-  let bodyHtml = parts.length > 1 ? parts[parts.length - 1] : fullHtml;
-
-  // 4. AGGRESSIVE CLEANING (Remove Counsel/Judges blocks that clutter the body)
-  const junkRegex = [
-    /<p[^>]*>Counsel:.*?<\/p>/is,
-    /<p[^>]*>Judges:.*?<\/p>/is,
-    /<p[^>]*>Prior History:.*?<\/p>/is,
-    /<p[^>]*>End of Document.*?<\/p>/is
-  ];
-  
-  junkRegex.forEach(regex => { bodyHtml = bodyHtml.replace(regex, ''); });
-
-  // 5. FOOTNOTE & STAR PAGINATION SYNC
-  const footnoteRegex = /<li id="footnote-(\d+)"><p>(.*?)<\/p><\/li>/g;
-  let match;
-  while ((match = footnoteRegex.exec(fullHtml)) !== null) {
-    caseData.footnotes.push({
-      marker: match[1],
-      content: match[2].replace(/<a href="#footnote-ref-\d+">.*?<\/a>\s*/g, '').trim()
-    });
+    if (/^Judges:/i.test(l)) {
+      meta.judges = cleanStr(l.replace(/^Judges:\s*/i, ''));
+    }
+    if (/^Disposition:/i.test(l)) {
+      meta.disposition = cleanStr(l.replace(/^Disposition:\s*/i, ''));
+    }
+    // Citations line often contains Reporter format (e.g. "57 F.4th 791")
+    if (/^\d+\s+[A-Z]/.test(l) && l.includes('.') && !meta.citations) {
+      meta.citations = cleanStr(l);
+    }
+    // Westlaw/Lexis combined citation strings
+    if (/LEXIS|WL\s+\d/.test(l) && !meta.citations) {
+      meta.citations = cleanStr(l);
+    }
   }
 
-  bodyHtml = bodyHtml.replace(/<ol><li id="footnote-.*<\/ol>/s, '');
-  bodyHtml = bodyHtml.replace(/(\[\*{2,3}\d+\])/g, '<span class="star-pagination">$1</span>');
-  
-  caseData.opinionBody = bodyHtml.trim();
+  // Citations also commonly appear in the filename after the underscore
+  const fileBaseName = filename.replace(/\.docx?$/i, '');
+  const fileCitation = fileBaseName.includes('_')
+    ? cleanStr(fileBaseName.split('_').slice(1).join(' '))
+    : '';
+  if (!meta.citations && fileCitation) {
+    meta.citations = fileCitation;
+  }
 
-  return caseData;
+  // ── 4. Opinion author ─────────────────────────────────────────────────────
+  let opinionAuthor = '';
+  for (const line of rawLines) {
+    if (/^Opinion by:/i.test(line)) {
+      opinionAuthor = cleanStr(
+        line
+          .replace(/^Opinion by:\s*/i, '')
+          .replace(/^(Judge|Justice|Presiding Judge|Chief Judge|Senior Judge)\s+/i, '')
+          .toUpperCase()
+      );
+      break;
+    }
+  }
+
+  // ── 5. Extract body HTML ───────────────────────────────────────────────────
+  let bodyHtml = extractBodyHtml(fullHtml);
+  bodyHtml     = scrubBoilerplate(bodyHtml);
+  bodyHtml     = removeFootnoteList(bodyHtml);
+  bodyHtml     = injectFnMarkers(bodyHtml);
+  bodyHtml     = markStarPagination(bodyHtml);
+
+  // ── 6. Extract footnotes ──────────────────────────────────────────────────
+  const footnotes = extractFootnotes(fullHtml);
+
+  // ── 7. Build the CaseLaw record ───────────────────────────────────────────
+  const slug = toSlug(filename);
+  const id   = slug;
+
+  return {
+    id,
+    slug,
+    title:          meta.title,
+    shortTitle:     shortTitle(meta.title),
+    court:          meta.court,
+    docketNumber:   meta.docketNo,
+    dateDecided:    meta.dateDecided,
+    citations:      meta.citations,
+    judges:         meta.judges,
+    disposition:    meta.disposition,
+    coreTerms:      [],
+    summary:        'Summary pending.',
+    holdingBold:    '',
+    conclusionText: '',
+    opinionAuthor,
+    opinionText:    bodyHtml,   // HTML with {fn:N} inline markers
+    footnotes,                  // Record<string, string>
+    publishedAt:    new Date().toISOString().slice(0, 10),
+    noticeText:     meta.noticeText,
+  };
 }
+
+// ── Entry point ───────────────────────────────────────────────────────────────
 
 async function run() {
   try {
-    const outputDir = path.dirname(OUTPUT_FILE);
-    await fs.mkdir(outputDir, { recursive: true });
-    const files = (await fs.readdir(RAW_DIR)).filter(f => f.toLowerCase().endsWith('.docx'));
-    const cases = await Promise.all(files.map(file => parseDocxFile(file)));
-    await fs.writeFile(OUTPUT_FILE, JSON.stringify(cases, null, 2));
-    console.log(`\n🎉 SUCCESS: ${cases.length} cases cleaned for www.atlantagleaner.com`);
-  } catch (err) { console.error("❌ Error:", err.message); }
+    await fs.mkdir(path.dirname(OUTPUT_FILE), { recursive: true });
+
+    const files = (await fs.readdir(RAW_DIR))
+      .filter(f => /\.docx?$/i.test(f))
+      .sort();
+
+    console.log(`\nProcessing ${files.length} opinion files…\n`);
+
+    const results = [];
+    let ok = 0;
+    let errors = 0;
+
+    for (const file of files) {
+      try {
+        process.stdout.write(`  [+] ${file.slice(0, 72)}\r`);
+        const caseData = await parseDocxFile(file);
+        results.push(caseData);
+        ok++;
+      } catch (err) {
+        console.error(`\n  [!] FAILED: ${file}\n      ${err.message}`);
+        errors++;
+      }
+    }
+
+    // Sort newest-first by date
+    results.sort((a, b) => {
+      const da = new Date(a.dateDecided).getTime() || 0;
+      const db = new Date(b.dateDecided).getTime() || 0;
+      return db - da;
+    });
+
+    await fs.writeFile(OUTPUT_FILE, JSON.stringify(results, null, 2), 'utf8');
+
+    console.log(`\n\n✓ SUCCESS — ${ok} cases written to src/data/cases.json`);
+    if (errors) console.warn(`  ⚠ ${errors} files failed (see above)`);
+  } catch (err) {
+    console.error('\n✗ Fatal error:', err.message);
+    process.exit(1);
+  }
 }
+
 run();
