@@ -23,7 +23,7 @@ const transformCaseData = (caseLaw: CaseLaw): CaseData => ({
   opinionAuthor: caseLaw.opinionAuthor,
   opinionBody: caseLaw.opinionText,
   summary: caseLaw.summary,
-  footnotes: Object.entries(caseLaw.footnotes).map(([marker, content]) => ({
+  footnotes: Object.entries(caseLaw.footnotes ?? {}).map(([marker, content]) => ({
     marker,
     content,
   })),
