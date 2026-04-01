@@ -108,7 +108,18 @@ body {
   font-style: italic;
   border-left: 3px solid var(--palette-black);
   padding-left: 16px;
-  margin: 2em 0;
+  margin: 2em 0 2em 24px;
+}
+
+/* Styled "Opinion" section header — replaces repeated standalone Opinion para */
+.opinion-body .opinion-section-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin: 0 0 4px 0;
+  color: var(--palette-black);
 }
 
 .star-pagination {

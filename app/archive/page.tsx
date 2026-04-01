@@ -223,9 +223,7 @@ function VolumeBox({
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
           <span style={{
-            ...FONT.serif,
-            fontSize:   'clamp(1rem, 2vw, 1.3rem)',
-            fontWeight: 700,
+            ...T.label,
             color:      PALETTE.white,
             lineHeight: 1,
           }}>

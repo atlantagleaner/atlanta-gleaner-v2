@@ -2,12 +2,12 @@
 // CaseLawBox — Atlanta Gleaner
 //
 // Renders one judicial opinion with full fidelity:
-//   1. Notice banner        (warm, left-border accent)
-//   2. Case title banner    (warm, serif title)
-//   3. Metadata box         (greyed warm surface)
-//   4. White spacer
-//   5. Editorial box        (greyed warm surface — core terms + summary, pending)
-//   6. Verbatim opinion     (white, HTML body, bidirectional footnotes)
+//   1. Case title banner    (white, serif title + "Notable Decisions" label)
+//   2. Metadata box         (warm surface — court, docket, date, judges,
+//                            disposition, and notice if present)
+//   3. White spacer
+//   4. Editorial box        (warm surface — core terms + summary)
+//   5. Verbatim opinion     (white, HTML body, bidirectional footnotes)
 //
 // Accepts the CaseLaw interface directly (src/data/types.ts).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -33,7 +33,6 @@ function renderOpinionHtml(
 ): string {
   if (!footnotes || Object.keys(footnotes).length === 0) return opinionText
 
-  // Build display-number map: sorted key → sequential number starting at 1
   const sortedKeys = Object.keys(footnotes).sort((a, b) => parseInt(a) - parseInt(b))
   const displayMap: Record<string, number> = {}
   sortedKeys.forEach((key, i) => { displayMap[key] = i + 1 })
@@ -52,9 +51,44 @@ function renderOpinionHtml(
   })
 }
 
+// ── Preamble stripper ─────────────────────────────────────────────────────────
+
+/**
+ * Strip repeated metadata preamble from the opinion body HTML.
+ *
+ * Some slip opinions (particularly Court of Appeals) embed a second copy of
+ * the metadata block — "By [Author]", case name, court, date, "Opinion by:",
+ * and a standalone "Opinion" heading — before the actual text begins.
+ * extractBodyHtml removes the *first* "Opinion" header; this removes any
+ * remaining standalone "Opinion" paragraphs and everything before the last one.
+ *
+ * The last standalone "Opinion" paragraph is replaced with a styled T.label
+ * marker so the word fits the Gleaner mono-uppercase aesthetic.
+ */
+function stripOpinionPreamble(html: string): string {
+  // Match standalone "Opinion" in a block element (p or heading), optionally
+  // wrapped in bold/em/strong tags — but NOT "Opinion by:" lines.
+  const re = /<(p|h[1-6])[^>]*>\s*(?:<(?:strong|em|b)>)?\s*Opinion\s*(?:<\/(?:strong|em|b)>)?\s*<\/(p|h[1-6])>/gi
+
+  const matches: Array<{ index: number; end: number }> = []
+  let m: RegExpExecArray | null
+  while ((m = re.exec(html)) !== null) {
+    matches.push({ index: m.index, end: m.index + m[0].length })
+  }
+
+  if (matches.length === 0) return html
+
+  // Strip everything up to and including the last standalone "Opinion" block.
+  // Replace it with a styled label so the word is present but minimal.
+  const last = matches[matches.length - 1]
+  const after = html.slice(last.end)
+  const styledMarker = '<p class="opinion-section-header">Opinion</p>'
+  return styledMarker + after
+}
+
 // ── Style constants ───────────────────────────────────────────────────────────
 
-const warm: CSSProperties = { background: PALETTE.warm }
+const warm:  CSSProperties = { background: PALETTE.warm }
 const white: CSSProperties = { background: PALETTE.white }
 
 const sectionBorder: CSSProperties = {
@@ -62,12 +96,12 @@ const sectionBorder: CSSProperties = {
 }
 
 const metadataRow: CSSProperties = {
-  display:       'grid',
+  display:             'grid',
   gridTemplateColumns: '110px 1fr',
-  gap:           '0',
+  gap:                 '0',
   ...ITEM_RULE,
-  padding:       '7px 0',
-  alignItems:    'baseline',
+  padding:             '7px 0',
+  alignItems:          'baseline',
 }
 
 const metaLabel: CSSProperties = {
@@ -86,24 +120,24 @@ const metaValue: CSSProperties = {
 
 const termChip: CSSProperties = {
   ...T.micro,
-  background:   PALETTE.black,
-  color:        PALETTE.white,
-  padding:      '2px 8px',
+  background:    PALETTE.black,
+  color:         PALETTE.white,
+  padding:       '2px 8px',
   letterSpacing: '0.10em',
-  lineHeight:   '18px',
-  display:      'inline-block',
-  marginRight:  '5px',
-  marginBottom: '5px',
+  lineHeight:    '18px',
+  display:       'inline-block',
+  marginRight:   '5px',
+  marginBottom:  '5px',
 }
 
 const pendingChip: CSSProperties = {
   ...T.micro,
-  background:   'rgba(0,0,0,0.09)',
-  color:        'rgba(0,0,0,0.35)',
-  padding:      '2px 10px',
+  background:    'rgba(0,0,0,0.09)',
+  color:         'rgba(0,0,0,0.35)',
+  padding:       '2px 10px',
   letterSpacing: '0.10em',
-  lineHeight:   '18px',
-  display:      'inline-block',
+  lineHeight:    '18px',
+  display:       'inline-block',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -111,11 +145,11 @@ const pendingChip: CSSProperties = {
 interface CaseLawBoxProps {
   /** Full CaseLaw record (from cases.json / types.ts) */
   caseData: CaseLaw
-  /** Label shown in the header tab — defaults to "Opinion" */
+  /** Label shown in the header tab — defaults to "Notable Decisions" */
   label?: string
 }
 
-export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxProps) {
+export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: CaseLawBoxProps) {
   if (!caseData) return null
 
   const {
@@ -135,40 +169,26 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
     noticeText,
   } = caseData
 
-  // Sort footnote keys for rendering
   const sortedFnKeys = Object.keys(footnotes ?? {}).sort((a, b) => parseInt(a) - parseInt(b))
   const fnDisplayMap: Record<string, number> = {}
   sortedFnKeys.forEach((key, i) => { fnDisplayMap[key] = i + 1 })
 
-  const renderedOpinionHtml = renderOpinionHtml(opinionText ?? '', footnotes, slug)
+  // Strip preamble, then inject footnote anchors
+  const strippedHtml      = stripOpinionPreamble(opinionText ?? '')
+  const renderedOpinionHtml = renderOpinionHtml(strippedHtml, footnotes, slug)
+
   const hasCoreTerms = coreTerms && coreTerms.length > 0
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
 
   return (
     <article style={{ ...BOX_SHELL, width: '100%' }}>
 
-      {/* ── 1. Notice banner ─────────────────────────────────────────────── */}
-      {noticeText && (
-        <div style={{
-          ...warm,
-          borderLeft:    '3px solid #000000',
-          padding:       '10px 14px',
-          ...T.micro,
-          fontWeight:    400,
-          letterSpacing: '0.10em',
-          lineHeight:    1.5,
-        }}>
-          {noticeText}
-        </div>
-      )}
-
-      {/* ── 2. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...warm, padding: '20px 24px 18px', ...sectionBorder }}>
-        {/* Section label */}
+      {/* ── 1. Case title banner ──────────────────────────────────────────── */}
+      {/* Background matches the opinion text (white) per design spec.        */}
+      <header style={{ ...white, padding: '20px 24px 18px', ...sectionBorder }}>
         <div style={{ ...BOX_HEADER, marginBottom: '14px', display: 'inline-block' }}>
           {label}
         </div>
-        {/* Case title */}
         <h1 style={{
           ...FONT.serif,
           fontSize:      'clamp(1.4rem, 3.2vw, 2.2rem)',
@@ -182,12 +202,8 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
         </h1>
       </header>
 
-      {/* ── 3. Metadata box ──────────────────────────────────────────────── */}
-      <section style={{
-        ...warm,
-        padding:    '16px 24px',
-        ...sectionBorder,
-      }}>
+      {/* ── 2. Metadata box ──────────────────────────────────────────────── */}
+      <section style={{ ...warm, padding: '16px 24px', ...sectionBorder }}>
         {court && (
           <div style={metadataRow}>
             <span style={metaLabel}>Court</span>
@@ -213,7 +229,11 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
           </div>
         )}
         {judges && (
-          <div style={{ ...metadataRow, marginTop: '6px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.07)', borderBottom: 'none' }}>
+          <div style={{
+            ...metadataRow,
+            marginTop: '6px', paddingTop: '8px',
+            borderTop: '1px solid rgba(0,0,0,0.07)', borderBottom: 'none',
+          }}>
             <span style={metaLabel}>Judges</span>
             <span style={metaValue}>{judges}</span>
           </div>
@@ -224,18 +244,22 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
             <span style={metaValue}>{disposition}</span>
           </div>
         )}
+        {/* Notice text lives in metadata, below disposition */}
+        {noticeText && (
+          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+            <span style={metaLabel}>Notice</span>
+            <span style={{ ...metaValue, fontStyle: 'italic', color: 'rgba(0,0,0,0.55)' }}>
+              {noticeText}
+            </span>
+          </div>
+        )}
       </section>
 
-      {/* ── 4. White spacer ──────────────────────────────────────────────── */}
+      {/* ── 3. White spacer ──────────────────────────────────────────────── */}
       <div style={{ ...white, height: '16px', ...sectionBorder }} />
 
-      {/* ── 5. Editorial box (core terms + summary) ──────────────────────── */}
-      <section style={{
-        ...warm,
-        padding:    '16px 24px',
-        ...sectionBorder,
-      }}>
-        {/* Core terms */}
+      {/* ── 4. Editorial box (core terms + summary) ──────────────────────── */}
+      <section style={{ ...warm, padding: '16px 24px', ...sectionBorder }}>
         <div style={{ marginBottom: '14px' }}>
           <div style={{ ...BOX_HEADER, marginBottom: '10px', display: 'block' }}>
             Core Terms
@@ -251,7 +275,6 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
           )}
         </div>
 
-        {/* Case summary */}
         <div>
           <div style={{ ...BOX_HEADER, marginBottom: '10px', display: 'block' }}>
             Case Summary
@@ -268,36 +291,13 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
         </div>
       </section>
 
-      {/* ── 6. Verbatim opinion ──────────────────────────────────────────── */}
+      {/* ── 5. Verbatim opinion ──────────────────────────────────────────── */}
       <section style={{
         ...white,
-        padding:    '28px 24px 40px',
-        borderTop:  '2px solid #000000',
+        padding:   '28px 24px 40px',
+        borderTop: '2px solid #000000',
       }}>
-        {/* Opinion header */}
-        <h2 style={{
-          ...FONT.serif,
-          fontSize:   '22px',
-          fontWeight: 700,
-          margin:     '0 0 12px 0',
-          color:      PALETTE.black,
-        }}>
-          Opinion
-        </h2>
-
-        {/* Author line */}
-        {opinionAuthor && (
-          <div style={{
-            ...T.label,
-            color:        PALETTE.black,
-            marginBottom: '20px',
-            display:      'block',
-          }}>
-            By {opinionAuthor}
-          </div>
-        )}
-
-        {/* Verbatim opinion body */}
+        {/* Verbatim opinion body — preamble stripped, footnote anchors injected */}
         <div
           className="opinion-body"
           dangerouslySetInnerHTML={{ __html: renderedOpinionHtml }}
@@ -321,15 +321,14 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
                   key={key}
                   id={`${slug}-fn-${key}`}
                   style={{
-                    display:      'flex',
-                    gap:          '12px',
-                    marginBottom: '10px',
-                    alignItems:   'baseline',
+                    display:       'flex',
+                    gap:           '12px',
+                    marginBottom:  '10px',
+                    alignItems:    'baseline',
                     ...ITEM_RULE,
                     paddingBottom: '10px',
                   }}
                 >
-                  {/* Back-link superscript */}
                   <a
                     href={`#${slug}-ref-${key}`}
                     style={{
@@ -346,7 +345,6 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
                   >
                     {displayNum}↑
                   </a>
-                  {/* Footnote text */}
                   <span style={{
                     ...FONT.sans,
                     fontSize:   '12px',
@@ -366,5 +364,4 @@ export default function CaseLawBox({ caseData, label = 'Opinion' }: CaseLawBoxPr
   )
 }
 
-// Named export for pages that import by name
 export type { CaseLawBoxProps }

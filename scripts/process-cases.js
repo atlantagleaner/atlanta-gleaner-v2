@@ -206,7 +206,22 @@ async function parseDocxFile(filename) {
     .filter(l => l.length > 0);
 
   // ── 2. Full HTML (for body + footnotes) ───────────────────────────────────
-  const htmlResult = await mammoth.convertToHtml({ path: filePath });
+  // styleMap instructs mammoth to preserve common block-quote DOCX styles as
+  // <blockquote> elements so the opinion renderer can indent them correctly.
+  const blockquoteStyleMap = [
+    "p[style-name='Block Text'] => blockquote:fresh",
+    "p[style-name='Block Quote'] => blockquote:fresh",
+    "p[style-name='BlockQuote'] => blockquote:fresh",
+    "p[style-name='Quotation'] => blockquote:fresh",
+    "p[style-name='Quote'] => blockquote:fresh",
+    "p[style-name='Indented'] => blockquote:fresh",
+    "p[style-name='Body Text Indent'] => blockquote:fresh",
+    "p[style-name='Body Text Indent 2'] => blockquote:fresh",
+  ];
+  const htmlResult = await mammoth.convertToHtml(
+    { path: filePath },
+    { styleMap: blockquoteStyleMap }
+  );
   const fullHtml   = htmlResult.value;
 
   // ── 3. Metadata extraction from raw text lines ────────────────────────────

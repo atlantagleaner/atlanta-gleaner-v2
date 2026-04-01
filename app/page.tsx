@@ -36,8 +36,8 @@ export default function HomePage() {
           node:  <NewsBox />,
         }}
         center={{
-          label: 'Featured Opinion',
-          node:  <CaseLawBox caseData={featured} label="Featured Opinion" />,
+          label: 'Notable Decisions',
+          node:  <CaseLawBox caseData={featured} label="Notable Decisions" />,
         }}
         right={{
           label: 'The Far Side',
