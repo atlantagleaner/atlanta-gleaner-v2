@@ -1,18 +1,21 @@
+'use client'
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CaseLawBox — Atlanta Gleaner
 //
 // Renders one judicial opinion with full fidelity:
-//   1. Case title banner    (white, serif title + "Notable Decisions" label)
+//   1. Case title banner    (white, serif title + "Case Law Updates" label)
 //   2. Metadata box         (warm surface — court, docket, date, judges,
 //                            disposition, and notice if present)
 //   3. White spacer
 //   4. Editorial box        (warm surface — core terms + summary)
-//   5. Verbatim opinion     (white, HTML body, bidirectional footnotes)
+//   5. Expand/collapse bar  (collapsed by default — opinion hidden)
+//   6. Verbatim opinion     (white, HTML body, bidirectional footnotes)
 //
 // Accepts the CaseLaw interface directly (src/data/types.ts).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { CSSProperties } from 'react'
 import {
   PALETTE, FONT, T,
@@ -227,6 +230,7 @@ interface CaseLawBoxProps {
 }
 
 export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: CaseLawBoxProps) {
+  const [expanded, setExpanded] = useState(false)
   if (!caseData) return null
 
   const {
@@ -262,16 +266,15 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     <article style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      {/* Double padding for modern minimalist design with generous whitespace */}
-      <header style={{ ...white, padding: '80px 64px 72px', ...sectionBorder }}>
-        <div style={{ ...BOX_HEADER, marginBottom: '14px', display: 'inline-block' }}>
+      <header style={{ ...white, padding: '20px 16px 16px', ...sectionBorder }}>
+        <div style={{ ...BOX_HEADER, marginBottom: '12px' }}>
           {label}
         </div>
         <h1 style={{
           ...FONT.serif,
-          fontSize:      'clamp(1.6rem, 3.5vw, 2.8rem)',
+          fontSize:      'clamp(1.1rem, 2.6vw, 1.75rem)',
           fontWeight:    700,
-          lineHeight:    1.08,
+          lineHeight:    1.12,
           letterSpacing: '-0.01em',
           margin:        0,
           color:         PALETTE.black,
@@ -368,10 +371,50 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         </div>
       </section>
 
-      {/* ── 5. Verbatim opinion ──────────────────────────────────────────── */}
+      {/* ── 5. Expand / Collapse bar ─────────────────────────────────────── */}
+      <button
+        className="ag-expand-bar"
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        style={{
+          width:          '100%',
+          background:     PALETTE.white,
+          border:         'none',
+          borderTop:      '2px solid rgba(0,0,0,0.10)',
+          padding:        '11px 16px',
+          display:        'flex',
+          alignItems:     'center',
+          justifyContent: 'space-between',
+          cursor:         'pointer',
+          userSelect:     'none',
+        }}
+      >
+        <span style={{
+          ...T.label,
+          color:         PALETTE.black,
+          letterSpacing: '0.18em',
+        }}>
+          {expanded ? 'Collapse' : 'Read Opinion'}
+        </span>
+        <span style={{
+          ...T.label,
+          color:      PALETTE.black,
+          fontSize:   '12px',
+          transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
+          display:    'inline-block',
+          transform:  expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        }}>
+          ↓
+        </span>
+      </button>
+
+      {/* ── 6. Verbatim opinion ──────────────────────────────────────────── */}
       <section style={{
         ...white,
-        padding:   '28px 24px 40px',
+        overflow:   'hidden',
+        maxHeight:  expanded ? '99999px' : '0',
+        transition: expanded ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out',
+        padding:    expanded ? '28px 24px 40px' : '0 24px',
         ...sectionBorder,
       }}>
 

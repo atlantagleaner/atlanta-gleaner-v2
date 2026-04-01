@@ -17,7 +17,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const pathname    = usePathname()
   const [open, setOpen] = useState(false)
   const [now, setNow] = useState<Date | null>(null)
-  const navRef      = useRef<HTMLElement>(null)
+  const navRef      = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -58,8 +58,24 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .ag-plus-icon--open { transform: rotate(45deg); }
+
+        /* Wrapper is the positioning context for the dropdown */
+        .ag-nav-wrapper {
+          position: relative;
+          z-index: 200;
+          background: ${PALETTE.white};
+        }
+        /* Sticky on mobile only — wrapper sticks, dropdown travels with it */
+        @media (max-width: 767px) {
+          .ag-nav-wrapper { position: sticky; top: 0; }
+        }
+
         .ag-dropdown {
-          position: fixed; top: 48px; left: 0; right: 0; z-index: 190;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          z-index: 10;
           background: ${PALETTE.white};
           border-bottom: 1px solid rgba(0,0,0,0.10);
           transform-origin: top center;
@@ -69,14 +85,12 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         .ag-dropdown--closed { transform: scaleY(0); opacity: 0; pointer-events: none; visibility: hidden; }
         .ag-dropdown-link { transition: background 0.1s; }
         .ag-dropdown-link:hover { background: ${PALETTE.warm} !important; }
-        /* Sticky nav on mobile only */
         @media (max-width: 767px) {
-          .ag-nav { position: sticky !important; top: 0 !important; }
           .ag-dropdown-link { padding: 16px 20px !important; }
         }
         @media (min-width: 768px) {
           .ag-dropdown {
-            left: auto; right: 16px; width: 160px; top: 52px;
+            left: auto; right: 16px; width: 160px;
             border-radius: 2px; border: 1px solid rgba(0,0,0,0.12);
             box-shadow: 0 4px 16px rgba(0,0,0,0.10);
           }
@@ -84,65 +98,67 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         }
       `}} />
 
-      <nav ref={navRef} className="ag-nav" style={{
-        position: 'relative', zIndex: 200,
-        background: PALETTE.white,
-        borderBottom: '1px solid rgba(0,0,0,0.10)',
-        minHeight: showDatetime ? '64px' : '48px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 20px',
-      }}>
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          {showDatetime ? (
-            <>
-              <div style={{ ...T.site, color: PALETTE.black, fontSize: SIZE_SM }}>
-                {dateStr}
-              </div>
-              <div style={{ ...T.nav, color: PALETTE.black, fontSize: SIZE_SM, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>
-                {timeStr}
-              </div>
-            </>
-          ) : (
-            <span style={{ ...T.site, color: PALETTE.black }}>
-              The Atlanta Gleaner
-            </span>
-          )}
-        </Link>
+      {/* Wrapper provides the stacking context — dropdown positions relative to this */}
+      <div ref={navRef} className="ag-nav-wrapper">
+        <nav className="ag-nav" style={{
+          background: PALETTE.white,
+          borderBottom: '1px solid rgba(0,0,0,0.10)',
+          minHeight: showDatetime ? '64px' : '48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 20px',
+        }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {showDatetime ? (
+              <>
+                <div style={{ ...T.site, color: PALETTE.black, fontSize: SIZE_SM }}>
+                  {dateStr}
+                </div>
+                <div style={{ ...T.nav, color: PALETTE.black, fontSize: SIZE_SM, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>
+                  {timeStr}
+                </div>
+              </>
+            ) : (
+              <span style={{ ...T.site, color: PALETTE.black }}>
+                The Atlanta Gleaner
+              </span>
+            )}
+          </Link>
 
-        <button
-          className="ag-plus-btn"
-          onClick={() => setOpen(v => !v)}
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            padding: '4px 8px', color: PALETTE.black,
-            fontSize: '24px', fontWeight: 300, lineHeight: 1,
-            display: 'flex', alignItems: 'center',
-          }}
-        >
-          <span className={`ag-plus-icon${open ? ' ag-plus-icon--open' : ''}`}>+</span>
-        </button>
-      </nav>
+          <button
+            className="ag-plus-btn"
+            onClick={() => setOpen(v => !v)}
+            aria-label="Toggle navigation"
+            aria-expanded={open}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: '4px 8px', color: PALETTE.black,
+              fontSize: '24px', fontWeight: 300, lineHeight: 1,
+              display: 'flex', alignItems: 'center',
+            }}
+          >
+            <span className={`ag-plus-icon${open ? ' ag-plus-icon--open' : ''}`}>+</span>
+          </button>
+        </nav>
 
-      <div ref={dropdownRef} className={`ag-dropdown${open ? '' : ' ag-dropdown--closed'}`} aria-hidden={!open}>
-        {NAV_LINKS.map(({ label, href }) => {
-          const active = pathname === href
-          return (
-            <Link key={href} href={href} className="ag-dropdown-link" onClick={() => setOpen(false)}
-              style={{
-                ...T.nav,
-                display: 'block',
-                fontWeight: active ? 700 : 500,
-                color: PALETTE.black,
-                textDecoration: 'none',
-                borderBottom: '1px solid rgba(0,0,0,0.07)',
-              }}
-            >
-              {label}
-            </Link>
-          )
-        })}
+        <div ref={dropdownRef} className={`ag-dropdown${open ? '' : ' ag-dropdown--closed'}`} aria-hidden={!open}>
+          {NAV_LINKS.map(({ label, href }) => {
+            const active = pathname === href
+            return (
+              <Link key={href} href={href} className="ag-dropdown-link" onClick={() => setOpen(false)}
+                style={{
+                  ...T.nav,
+                  display: 'block',
+                  fontWeight: active ? 700 : 500,
+                  color: PALETTE.black,
+                  textDecoration: 'none',
+                  borderBottom: '1px solid rgba(0,0,0,0.07)',
+                }}
+              >
+                {label}
+              </Link>
+            )
+          })}
+        </div>
       </div>
     </>
   )
