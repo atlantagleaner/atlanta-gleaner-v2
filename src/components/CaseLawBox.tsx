@@ -51,29 +51,50 @@ function renderOpinionHtml(
   })
 }
 
-// ── Preamble stripper ─────────────────────────────────────────────────────────
+// ── Metadata stripper ────────────────────────────────────────────────────────
 
 /**
- * Strip repeated metadata preamble from the opinion body HTML.
+ * Strip embedded metadata and preamble blocks from the opinion body HTML.
  *
- * Some slip opinions (particularly Court of Appeals) embed a second copy of
- * the metadata block — "By [Author]", case name, court, date, "Opinion by:",
- * and a standalone "Opinion" heading — before the actual text begins.
- * extractBodyHtml removes the *first* "Opinion" header; this strips any
- * remaining standalone "Opinion" paragraphs and everything before the last one.
+ * Slip opinions (especially from Court of Appeals) often include a second copy
+ * of the complete metadata block within the opinion HTML itself:
+ *   - Court information (e.g., "Court of Appeals of Georgia, First Division")
+ *   - Date decided (e.g., "March 10, 2026, Decided")
+ *   - Docket numbers and citations
+ *   - Reporter citations
+ *   - Case name (often in ALL CAPS)
+ *   - Judge/author information (e.g., "Opinion by: BARNES")
+ *   - Notice text (e.g., "UNCORRECTED AND SUBJECT TO REVISION")
+ *   - Disposition (e.g., "Judgment reversed")
+ *   - Standalone "Opinion" heading
  *
- * The "Opinion" section heading is rendered by the JSX layer as a styled label,
- * so we strip the HTML marker entirely here rather than replacing it.
+ * All of this is already displayed in the Metadata and Editorial sections
+ * of the CaseLawBox JSX. This function strips it from the opinion body
+ * so it doesn't appear twice, leaving only the actual opinion text.
+ *
+ * Strategy: Find the last standalone "Opinion" block, then strip everything
+ * before it. This removes all preamble while preserving the actual text.
  */
 function stripOpinionPreamble(html: string): string {
   // Match standalone "Opinion" in a block element (p or heading), optionally
-  // wrapped in bold/em/strong tags — but NOT "Opinion by:" lines.
-  const re = /<(p|h[1-6])[^>]*>\s*(?:<(?:strong|em|b)>)?\s*Opinion\s*(?:<\/(?:strong|em|b)>)?\s*<\/(p|h[1-6])>/gi
+  // wrapped in bold/em/strong tags — but NOT "Opinion by:" or "Opinion:" lines.
+  // Uses negative lookbehind to exclude "by " or ":" immediately before Opinion
+  const opinionHeaderRe = /<(p|h[1-6])[^>]*>(?:[^<]*?(?:<[^>]+>)*)*?\s*(?:Opinion)(?:\s*(?:by:|by))?[\s\S]*?<\/(p|h[1-6])>/gi
 
-  const matches: Array<{ index: number; end: number }> = []
+  // Simpler approach: find all block elements and look for ones containing standalone "Opinion"
+  const blockRe = /<(p|h[1-6])[^>]*>([^<]*(?:<(?!p|h[1-6])[^>]*>[^<]*)*)<\/(p|h[1-6])>/gi
+
+  const matches: Array<{ index: number; end: number; text: string }> = []
   let m: RegExpExecArray | null
-  while ((m = re.exec(html)) !== null) {
-    matches.push({ index: m.index, end: m.index + m[0].length })
+
+  while ((m = blockRe.exec(html)) !== null) {
+    const content = m[0]
+    const text = m[2].replace(/<[^>]+>/g, '').trim()
+
+    // Match "Opinion" as a standalone line (not "Opinion by:" or "Opinion:" as part of metadata)
+    if (/^\s*Opinion\s*$/i.test(text) || /^\s*<[^>]*>\s*Opinion\s*<\/[^>]*>\s*$/i.test(content)) {
+      matches.push({ index: m.index, end: m.index + content.length, text })
+    }
   }
 
   if (matches.length === 0) return html
@@ -294,22 +315,17 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
         ...sectionBorder,
       }}>
 
-        {/* Opinion section header — mono label + hairline rule */}
+        {/* Opinion section header — mono label (gray hairline rule removed per design) */}
         <div style={{
-          display:      'flex',
-          alignItems:   'center',
-          gap:          '14px',
           marginBottom: '28px',
         }}>
           <span style={{
             ...T.label,
             color:         PALETTE.black,
             letterSpacing: '0.22em',
-            flexShrink:    0,
           }}>
             Opinion
           </span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.13)' }} />
         </div>
 
         {/* Verbatim opinion body — preamble stripped, footnote anchors injected */}
