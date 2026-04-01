@@ -156,30 +156,81 @@ function removeFootnoteList(html) {
 
 /**
  * Extract the opinion body HTML, splitting at the "Opinion" section header.
- * Handles many variations mammoth produces.
+ *
+ * Westlaw/Lexis slip opinions use a Bookmark anchor before the section label:
+ *   <p><a id="Opinion"></a><strong>Opinion</strong></p>
+ *
+ * Plain mammoth output may produce simpler variants:
+ *   <p>Opinion</p>  or  <p><strong>Opinion</strong></p>
+ *
+ * We match ALL variants and take the content after the LAST occurrence,
+ * because some documents embed a full metadata preamble after the first
+ * "Opinion" marker before repeating the label before the actual text.
+ *
+ * The regex must NOT match "Opinion by:" lines (the colon distinguishes them).
  */
 function extractBodyHtml(fullHtml) {
-  // Split at "Opinion" section — match common mammoth heading patterns
-  const splitterRe = /<(p|h[1-6])[^>]*>\s*(?:<strong>|<em>|<b>)?\s*Opinion\s*(?:<\/strong>|<\/em>|<\/b>)?\s*<\/(p|h[1-6])>/i;
-  const idx = fullHtml.search(splitterRe);
-  if (idx !== -1) {
-    return fullHtml.slice(idx).replace(splitterRe, '');
+  // Handles: optional bookmark anchor, optional strong/em/b wrapper.
+  // Negative lookahead (?!\s*(?:by|By)) prevents matching "Opinion by:".
+  const splitterRe = /<(p|h[1-6])[^>]*>(?:<a[^>]*><\/a>)?\s*(?:<(?:strong|em|b)>)?\s*Opinion(?!\s*(?:by|By|:))[\s\S]*?(?:<\/(?:strong|em|b)>)?\s*<\/(p|h[1-6])>/g;
+
+  let lastMatch = null;
+  let m;
+  // Find the LAST occurrence so preamble duplicates are discarded
+  while ((m = splitterRe.exec(fullHtml)) !== null) {
+    // Confirm the match contains only "Opinion" (no extra text after)
+    const inner = m[0].replace(/<[^>]*>/g, '').trim();
+    if (/^Opinion$/i.test(inner)) {
+      lastMatch = m;
+    }
   }
+
+  if (lastMatch) {
+    return fullHtml.slice(lastMatch.index + lastMatch[0].length);
+  }
+
+  // Last-resort fallback: split on the last <a id="Opinion"> anchor
+  const anchorIdx = fullHtml.lastIndexOf('<a id="Opinion">');
+  if (anchorIdx !== -1) {
+    // Find the closing </p> of that paragraph and start after it
+    const closeP = fullHtml.indexOf('</p>', anchorIdx);
+    if (closeP !== -1) return fullHtml.slice(closeP + 4);
+  }
+
   return fullHtml;
 }
 
 /**
- * Remove boilerplate blocks that clutter the opinion body:
- * Counsel, Judges, Prior History, End of Document, etc.
+ * Remove boilerplate blocks that clutter the opinion body.
+ * Handles both plain and Westlaw/Lexis Bookmark-anchor formats:
+ *   Plain:   <p><strong>Judges:</strong> …</p>
+ *   Lexis:   <p><a id="Judges"></a><strong>Judges:</strong> …</p>
  */
 function scrubBoilerplate(html) {
+  // Helper: build a pattern that matches a section label (with or without anchor)
+  function sectionPat(label) {
+    return new RegExp(
+      `<p[^>]*>(?:<a[^>]*><\\/a>)?\\s*(?:<(?:strong|em|b)>)?${label}(?:<\\/(?:strong|em|b)>)?[\\s\\S]*?<\\/p>`,
+      'gi'
+    );
+  }
+
   const patterns = [
-    /<p[^>]*>\s*(?:<strong>|<em>)?Counsel(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
-    /<p[^>]*>\s*(?:<strong>|<em>)?Judges(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
-    /<p[^>]*>\s*(?:<strong>|<em>)?Prior History(?:<\/strong>|<\/em>)?:[\s\S]*?<\/p>/gi,
+    sectionPat('Counsel:'),
+    sectionPat('Judges:'),
+    sectionPat('Opinion\\s+by:'),
+    sectionPat('Prior History:'),
+    sectionPat('Disposition:'),
+    sectionPat('Notice:'),
+    sectionPat('Reporter'),   // bare "Reporter" heading
+    // All-caps duplicate case name (e.g. "FULTON COUNTY BOARD OF COMMISSIONERS v. …")
+    /<p[^>]*>[A-Z][A-Z\s,.'()]+v\.[A-Z\s,.'()]+<\/p>/g,
+    // End-of-document markers
     /<p[^>]*>\s*End of Document[\s\S]*?<\/p>/gi,
-    /<p[^>]*>\s*<\/p>/gi,  // empty paragraphs
+    // Empty paragraphs with only anchors / whitespace
+    /<p[^>]*>(?:<a[^>]*><\/a>)?\s*<\/p>/gi,
   ];
+
   for (const re of patterns) {
     html = html.replace(re, '');
   }
