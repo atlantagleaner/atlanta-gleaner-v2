@@ -19,7 +19,7 @@ import React, { useState } from 'react'
 import type { CSSProperties } from 'react'
 import {
   PALETTE, FONT, T,
-  BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE,
+  BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
 } from '@/src/styles/tokens'
 import type { CaseLaw } from '@/src/data/types'
 
@@ -172,7 +172,7 @@ const warm:  CSSProperties = { background: PALETTE.warm }
 const white: CSSProperties = { background: PALETTE.white }
 
 const sectionBorder: CSSProperties = {
-  borderTop: '1px solid rgba(0,0,0,0.08)',
+  borderTop: '1px solid rgba(0,0,0,0.07)', // aligned with ITEM_RULE
 }
 
 const metadataRow: CSSProperties = {
@@ -180,7 +180,7 @@ const metadataRow: CSSProperties = {
   gridTemplateColumns: '110px 1fr',
   gap:                 '0',
   ...ITEM_RULE,
-  padding:             '7px 0',
+  padding:             `${SPACING.sm} 0`,
   alignItems:          'baseline',
 }
 
@@ -191,33 +191,30 @@ const metaLabel: CSSProperties = {
 }
 
 const metaValue: CSSProperties = {
-  ...FONT.sans,
-  fontSize:   '12px',
+  ...T.prose,               // SIZE_MD (14px), consistent with body copy
   fontWeight: 400,
   lineHeight: 1.4,
   color:      PALETTE.black,
 }
 
 const termChip: CSSProperties = {
-  ...T.micro,
-  background:    PALETTE.black,
-  color:         PALETTE.white,
-  padding:       '2px 8px',
-  letterSpacing: '0.10em',
-  lineHeight:    '18px',
-  display:       'inline-block',
-  marginRight:   '5px',
-  marginBottom:  '5px',
+  ...T.micro,               // letterSpacing 0.12em from token
+  background:   PALETTE.black,
+  color:        PALETTE.white,
+  padding:      `2px ${SPACING.sm}`,
+  lineHeight:   '18px',
+  display:      'inline-block',
+  marginRight:  SPACING.xs,
+  marginBottom: SPACING.xs,
 }
 
 const pendingChip: CSSProperties = {
   ...T.micro,
-  background:    'rgba(0,0,0,0.09)',
-  color:         'rgba(0,0,0,0.35)',
-  padding:       '2px 10px',
-  letterSpacing: '0.10em',
-  lineHeight:    '18px',
-  display:       'inline-block',
+  background:   'rgba(0,0,0,0.09)',
+  color:        'rgba(0,0,0,0.35)',
+  padding:      `2px ${SPACING.md}`,
+  lineHeight:   '18px',
+  display:      'inline-block',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -270,21 +267,13 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         <div style={{ ...BOX_HEADER, marginBottom: '12px' }}>
           {label}
         </div>
-        <h1 style={{
-          ...FONT.serif,
-          fontSize:      'clamp(1.1rem, 2.6vw, 1.75rem)',
-          fontWeight:    700,
-          lineHeight:    1.12,
-          letterSpacing: '-0.01em',
-          margin:        0,
-          color:         PALETTE.black,
-        }}>
+        <h1 style={{ ...T.heading, margin: 0, color: PALETTE.black }}>
           {title}
         </h1>
       </header>
 
       {/* ── 2. Metadata box ──────────────────────────────────────────────── */}
-      <section style={{ ...warm, padding: '16px 24px', ...sectionBorder }}>
+      <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
         {court && (
           <div style={metadataRow}>
             <span style={metaLabel}>Court</span>
@@ -338,8 +327,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       <div style={{ ...white, height: '16px', ...sectionBorder }} />
 
       {/* ── 4. Editorial box (core terms + summary) ──────────────────────── */}
-      <section style={{ ...warm, padding: '16px 24px', ...sectionBorder }}>
-        <div style={{ marginBottom: '18px' }}>
+      <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
+        <div style={{ marginBottom: SPACING.xl }}>
           {/* Sub-section label: no bottom border — spacing + uppercase mono is sufficient */}
           <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
             Core Terms
@@ -380,8 +369,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           width:          '100%',
           background:     PALETTE.white,
           border:         'none',
-          borderTop:      '2px solid rgba(0,0,0,0.10)',
-          padding:        '11px 16px',
+          borderTop:      '1px solid rgba(0,0,0,0.07)', // ITEM_RULE value
+          padding:        `${SPACING.md} ${SPACING.lg}`,
           display:        'flex',
           alignItems:     'center',
           justifyContent: 'space-between',
@@ -389,18 +378,13 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           userSelect:     'none',
         }}
       >
-        <span style={{
-          ...T.label,
-          color:         PALETTE.black,
-          letterSpacing: '0.18em',
-        }}>
+        <span style={{ ...T.label, color: PALETTE.black }}>
           {expanded ? 'Collapse' : 'Read Opinion'}
         </span>
         <span style={{
           ...T.label,
           color:      PALETTE.black,
-          fontSize:   '12px',
-          transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
+          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
           display:    'inline-block',
           transform:  expanded ? 'rotate(180deg)' : 'rotate(0deg)',
         }}>
@@ -412,7 +396,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       <section style={{
         ...white,
         overflow:   'hidden',
-        maxHeight:  expanded ? '99999px' : '180px',
+        maxHeight:  expanded ? '99999px' : '420px',
         transition: expanded ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out',
         padding:    '28px 24px 40px',
         ...sectionBorder,

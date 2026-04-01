@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { notFound } from 'next/navigation'
+import { PALETTE }         from '@/src/styles/tokens'
 import { Banner }          from '@/src/components/Banner'
 import { NewsBox }         from '@/src/components/NewsBox'
 import CaseLawBox          from '@/src/components/CaseLawBox'
@@ -66,7 +67,7 @@ export default async function CaseLawPage({
   if (!caseData) notFound()
 
   return (
-    <main className="min-h-screen bg-[#EEEDEB]">
+    <main style={{ minHeight: '100vh', background: PALETTE.warm }}>
       <Banner />
       <ResizablePanels
         left={{

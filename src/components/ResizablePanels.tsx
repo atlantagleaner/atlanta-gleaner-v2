@@ -5,8 +5,8 @@ import {
   type ReactNode, type CSSProperties, type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { flushSync } from 'react-dom'
+import { FONT, T, PALETTE, SIZE_SM, SPACING, ANIMATION, Z_INDEX, PAGE_MAX_W } from '@/src/styles/tokens'
 
-const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" }
 const MIN_PCT = 16
 const MAX_PCT = 62
 
@@ -17,22 +17,23 @@ interface ResizablePanelsProps { left: Panel; center: Panel; right: Panel }
 function MobilePanel({ label, children }: { label: string; children: ReactNode }) {
   const [open, setOpen] = useState(true)
   return (
-    <div style={{ marginBottom: '12px' }}>
+    <div style={{ marginBottom: SPACING.md }}>
       <button onClick={() => setOpen(v => !v)} style={{
-        width: '100%', background: '#000000', border: 'none',
-        padding: '10px 14px', display: 'flex',
+        width: '100%', background: PALETTE.black, border: 'none',
+        padding: `${SPACING.md} ${SPACING.lg}`, display: 'flex',
         justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
       }}>
-        <span style={{ ...mono, fontSize: '9px', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.22em' }}>
+        <span style={{ ...T.nav, color: PALETTE.white }}>
           {label}
         </span>
         <span style={{
-          ...mono, fontSize: '11px', color: '#FFFFFF',
-          transition: 'transform 0.2s', display: 'inline-block',
+          ...T.label, color: PALETTE.white,
+          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
+          display: 'inline-block',
           transform: open ? 'rotate(90deg)' : 'rotate(0)',
         }}>▶</span>
       </button>
-      <div style={{ overflow: 'hidden', maxHeight: open ? '9999px' : '0', transition: 'max-height 0.3s ease' }}>
+      <div style={{ overflow: 'hidden', maxHeight: open ? '99999px' : '0', transition: `max-height ${ANIMATION.base} ${ANIMATION.ease}` }}>
         {children}
       </div>
     </div>
@@ -50,8 +51,8 @@ function ResizeHandle({ onMouseDown }: { onMouseDown: () => void }) {
       title="Drag to resize"
       style={{
         width: hovered ? '6px' : '4px', cursor: 'col-resize', flexShrink: 0,
-        background: hovered ? '#000000' : '#EEEDEB',
-        transition: 'all 0.15s', alignSelf: 'stretch', position: 'relative', userSelect: 'none',
+        background: hovered ? PALETTE.black : PALETTE.warm,
+        transition: `all ${ANIMATION.fast} ${ANIMATION.ease}`, alignSelf: 'stretch', position: 'relative', userSelect: 'none',
       }}
     >
       <div style={{
@@ -77,26 +78,26 @@ function DragBar({ label, onPointerDown, isDragging }: {
     <div
       onPointerDown={onPointerDown}
       style={{
-        display: 'flex', alignItems: 'center', gap: '8px',
-        padding: '5px 10px',
-        background: isDragging ? '#EEEDEB' : '#FFFFFF',
-        borderBottom: '1px solid rgba(0,0,0,0.08)',
+        display: 'flex', alignItems: 'center', gap: SPACING.sm,
+        padding: `${SPACING.sm} ${SPACING.md}`,
+        background: isDragging ? PALETTE.warm : PALETTE.white,
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
         cursor: isDragging ? 'grabbing' : 'grab',
         userSelect: 'none',
         touchAction: 'none',
-        transition: 'background 0.12s',
+        transition: `background ${ANIMATION.fast} ${ANIMATION.ease}`,
       }}
     >
       <div style={{ display: 'flex', gap: '3px', opacity: 0.4 }}>
         {[0,1].map(col => (
           <div key={col} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {[0,1,2].map(row => (
-              <div key={row} style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#000' }} />
+              <div key={row} style={{ width: '3px', height: '3px', borderRadius: '50%', background: PALETTE.black }} />
             ))}
           </div>
         ))}
       </div>
-      <span style={{ ...mono, fontSize: '9px', color: '#000000', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+      <span style={{ ...T.label, color: PALETTE.black }}>
         {label}
       </span>
     </div>
@@ -233,7 +234,7 @@ export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
         if (dragCol) {
           dragCol.style.transition = 'none'
           dragCol.style.transform  = `translate(${newDx}px, ${dy}px) rotate(-0.3deg) scale(1.01)`
-          dragCol.style.zIndex     = '10'
+          dragCol.style.zIndex     = String(Z_INDEX.DROPDOWN)
           dragCol.style.boxShadow  = '0 20px 56px rgba(0,0,0,0.18), 0 4px 14px rgba(0,0,0,0.10)'
           dragCol.style.position   = 'relative'
         }
@@ -290,7 +291,7 @@ export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
     const col = colRefs.current[slot]
     if (col) {
       col.style.position  = 'relative'
-      col.style.zIndex    = '10'
+      col.style.zIndex    = String(Z_INDEX.DROPDOWN)
       col.style.transition = 'box-shadow 0.12s'
       col.style.boxShadow = '0 20px 56px rgba(0,0,0,0.18), 0 4px 14px rgba(0,0,0,0.10)'
     }
@@ -316,8 +317,8 @@ export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
       ref={containerRef}
       style={{
         display: 'flex', flexDirection: 'row',
-        width: '100%', padding: '0 20px 60px',
-        maxWidth: '1600px', margin: '0 auto',
+        width: '100%', padding: `0 ${SPACING.lg} ${SPACING.xxxl}`,
+        maxWidth: PAGE_MAX_W, margin: '0 auto',
         userSelect: 'none', boxSizing: 'border-box',
         cursor: dragSlot !== null ? 'grabbing' : 'auto',
       }}

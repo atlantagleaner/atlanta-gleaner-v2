@@ -7,6 +7,10 @@
  * PALETTE          3 colors — white, warm, black
  * FONT             3 typefaces — mono, serif, sans
  * T                Named type styles composed from FONT + size/weight/tracking
+ * SPACING          8-step scale — xs(4) sm(8) md(12) lg(16) xl(24) xxl(32) xxxl(48) xxxxl(64)
+ * Z_INDEX          Stacking layer registry — DROPDOWN, NAV, MODAL
+ * ANIMATION        Duration + easing pairs
+ * BREAKPOINT       Responsive breakpoint values
  * BOX_SHELL        The border + background every content box shares
  * BOX_HEADER       The section-title rule used inside every box
  * BOX_PADDING      Standard inner padding for box content areas
@@ -150,6 +154,19 @@ export const T: Record<string, CSSProperties> = {
   },
 
   /**
+   * heading · responsive clamp, Cormorant Garamond bold
+   * Used for: case law box title — large serif case names
+   * Second exception to three-size rule: editorial display, not body text.
+   */
+  heading: {
+    ...FONT.serif,
+    fontSize:      'clamp(1.1rem, 2.6vw, 1.75rem)',
+    fontWeight:    700,
+    lineHeight:    1.12,
+    letterSpacing: '-0.01em',
+  },
+
+  /**
    * display · responsive clamp, Cormorant Garamond
    * Used for: banner masthead only — "The Atlanta Gleaner."
    * Exception to three-size rule: this is branding, not content text.
@@ -178,6 +195,53 @@ export const T: Record<string, CSSProperties> = {
 }
 
 
+// ─── Spacing scale ────────────────────────────────────────────────────────────
+// 8-step scale. All padding, margin, gap values should come from here.
+// Use BOX_PADDING ('16px 14px') for standard box inner padding.
+
+export const SPACING = {
+  xs:    '4px',
+  sm:    '8px',
+  md:    '12px',
+  lg:    '16px',   // = BOX_PADDING horizontal
+  xl:    '24px',
+  xxl:   '32px',
+  xxxl:  '48px',
+  xxxxl: '64px',
+} as const
+
+
+// ─── Z-index registry ─────────────────────────────────────────────────────────
+// Every z-index on the site must come from here.
+
+export const Z_INDEX = {
+  DROPDOWN: 10,
+  NAV:      200,
+  MODAL:    300,
+} as const
+
+
+// ─── Animation ────────────────────────────────────────────────────────────────
+// Two durations, two easings — covers all transitions on the site.
+
+export const ANIMATION = {
+  fast:    '150ms',
+  base:    '250ms',
+  /** Standard material ease — UI interactions (hover, fade) */
+  ease:    'cubic-bezier(0.4, 0, 0.2, 1)',
+  /** Snappy decelerate — element entering the screen */
+  snap:    'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+} as const
+
+
+// ─── Breakpoints ──────────────────────────────────────────────────────────────
+
+export const BREAKPOINT = {
+  /** Mobile-first threshold: < mobile = single column stacked layout */
+  mobile: 768,
+} as const
+
+
 // ─── Box architecture ─────────────────────────────────────────────────────────
 // Every content box on the site shares these four primitives.
 // Change one value here and every box on every page updates.
@@ -201,8 +265,7 @@ export const BOX_SHELL: CSSProperties = {
 export const BOX_HEADER: CSSProperties = {
   ...T.label,
   color:         '#000000',
-  borderBottom:  '2px solid #000000',
-  paddingBottom: '7px',
+  paddingBottom: '0px',
   margin:        '0 0 14px 0',
 }
 

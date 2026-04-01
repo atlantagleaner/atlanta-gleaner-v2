@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PALETTE, T } from '@/src/styles/tokens'
+import { PALETTE, T, SPACING } from '@/src/styles/tokens'
 
 const WIKIPEDIA_FALLBACK =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/George_Washington_Statue_Federal_Hall_NYC.jpg/400px-George_Washington_Statue_Federal_Hall_NYC.jpg'
@@ -24,11 +24,9 @@ export function Banner() {
         The Atlanta Gleaner.
       </h1>
       <p style={{
-        ...T.nav,
-        fontSize: '16px',
-        letterSpacing: '0.30em',
+        ...T.nav,          // SIZE_SM (10px), letterSpacing 0.22em — on-token
         color: PALETTE.black,
-        margin: '0 0 28px 0',
+        margin: `0 0 ${SPACING.xxl} 0`,
         textAlign: 'center',
       }}>
         Testing Testing Testing
