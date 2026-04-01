@@ -226,7 +226,7 @@ interface CaseLawBoxProps {
   label?: string
 }
 
-export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: CaseLawBoxProps) {
+export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: CaseLawBoxProps) {
   if (!caseData) return null
 
   const {
@@ -262,8 +262,8 @@ export default function CaseLawBox({ caseData, label = 'Notable Decisions' }: Ca
     <article style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      {/* Modern minimalist design: generous whitespace around title         */}
-      <header style={{ ...white, padding: '40px 32px 36px', ...sectionBorder }}>
+      {/* Double padding for modern minimalist design with generous whitespace */}
+      <header style={{ ...white, padding: '80px 64px 72px', ...sectionBorder }}>
         <div style={{ ...BOX_HEADER, marginBottom: '14px', display: 'inline-block' }}>
           {label}
         </div>
