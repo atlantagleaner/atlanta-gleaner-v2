@@ -269,7 +269,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         </div>
         <h1 style={{
           ...FONT.serif,
-          fontSize:      'clamp(1.4rem, 3.2vw, 2.2rem)',
+          fontSize:      'clamp(1.6rem, 3.5vw, 2.8rem)',
           fontWeight:    700,
           lineHeight:    1.08,
           letterSpacing: '-0.01em',
