@@ -7,19 +7,23 @@
 //     Center: CaseLawBox (this case)
 //     Right:  FarSideBox
 //
-// Static generation: all slugs from cases.json pre-rendered at build time.
+// Next.js 15+ note: `params` is a Promise — must be awaited in both
+// generateMetadata and the page component.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { notFound } from 'next/navigation'
-import { Banner }         from '@/src/components/Banner'
-import { NewsBox }        from '@/src/components/NewsBox'
-import CaseLawBox         from '@/src/components/CaseLawBox'
-import { FarSideBox }     from '@/src/components/FarSideBox'
+import { Banner }          from '@/src/components/Banner'
+import { NewsBox }         from '@/src/components/NewsBox'
+import CaseLawBox          from '@/src/components/CaseLawBox'
+import { FarSideBox }      from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
-import casesRaw           from '@/src/data/cases.json'
-import type { CaseLaw }   from '@/src/data/types'
+import casesRaw            from '@/src/data/cases.json'
+import type { CaseLaw }    from '@/src/data/types'
 
 const cases = casesRaw as CaseLaw[]
+
+// Prevent 404s for slugs not in generateStaticParams at runtime
+export const dynamicParams = false
 
 // ── Static params (build-time pre-rendering) ─────────────────────────────────
 
@@ -29,8 +33,13 @@ export async function generateStaticParams() {
 
 // ── Per-page metadata ─────────────────────────────────────────────────────────
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const c = cases.find((x) => x.slug === params.slug)
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const c = cases.find((x) => x.slug === slug)
   if (!c) return {}
   return {
     title:       `${c.title} — The Atlanta Gleaner`,
@@ -47,8 +56,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 // ── Page component ────────────────────────────────────────────────────────────
 
-export default function CaseLawPage({ params }: { params: { slug: string } }) {
-  const caseData = cases.find((c) => c.slug === params.slug)
+export default async function CaseLawPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const caseData = cases.find((c) => c.slug === slug)
   if (!caseData) notFound()
 
   return (
