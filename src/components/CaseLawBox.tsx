@@ -22,7 +22,7 @@ export default function CaseLawBox({ caseData }: { caseData: CaseData }) {
   if (!caseData) return null;
 
   return (
-    <article className="w-full max-w-[1600px] bg-white border border-black/10 shadow-sm mx-auto">
+    <article className="w-full bg-white mx-auto" style={{ border: '1px solid rgba(0,0,0,0.18)' }}>
       
       {/* 1. THE NOTICE BANNER (Rule #4) */}
       {caseData.noticeBanner && (

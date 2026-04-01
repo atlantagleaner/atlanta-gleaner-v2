@@ -1,28 +1,19 @@
 'use client'
 
 import React from 'react'
-import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER } from '@/src/styles/tokens'
+import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER, BOX_PADDING } from '@/src/styles/tokens'
 
 export function FarSideBox() {
   return (
-    <div style={{ 
-      ...BOX_SHELL, 
-      height: 'fit-content', // Forces the box to wrap strictly around content
-      border: `1px solid ${PALETTE.black}`, 
-      display: 'flex', 
-      flexDirection: 'column', 
-      background: PALETTE.white 
-    }}>
-      
-      {/* 1. Header Bar */}
-      <div style={{ padding: '12px 16px', background: PALETTE.black }}>
-        <h2 style={{ ...BOX_HEADER, color: PALETTE.white, margin: 0 }}>
+    <div style={{ ...BOX_SHELL, height: 'fit-content' }}>
+
+      {/* Content Area — BOX_PADDING wraps everything, header label sits at top */}
+      <div style={{ padding: BOX_PADDING, display: 'flex', flexDirection: 'column' }}>
+
+        {/* 1. Header Label (matches BOX_HEADER pattern: label style + 2px black underline) */}
+        <h2 style={{ ...BOX_HEADER }}>
           Roll-C · The Far Side
         </h2>
-      </div>
-
-      {/* 2. Content Area */}
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
         
         <h3 style={{ ...FONT.sans, fontSize: '14px', fontWeight: 900, letterSpacing: '0.1em', margin: '0 0 8px 0', color: PALETTE.black }}>
           THE FAR SIDE
