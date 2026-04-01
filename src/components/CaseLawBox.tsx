@@ -260,7 +260,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
 
   return (
-    <article style={{ ...BOX_SHELL, width: '100%' }}>
+    <article id="case-law-box" style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
       <header style={{ ...white, padding: '20px 14px 32px', ...sectionBorder }}>
@@ -364,7 +364,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       <section style={{
         ...white,
         overflow:   'hidden',
-        maxHeight:  expanded ? '99999px' : '420px',
+        maxHeight:  expanded ? '99999px' : '840px',
         transition: expanded ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out',
         padding:    '28px 24px 40px',
         ...sectionBorder,

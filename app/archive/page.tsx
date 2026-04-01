@@ -146,7 +146,7 @@ function MonthShelf({
           {monthCases.map((c) => (
             <Link
               key={c.slug}
-              href={`/cases/${c.slug}`}
+              href={`/cases/${c.slug}#case-law-box`}
               className="case-archive-link"
             >
               {/* Case title */}
@@ -322,7 +322,7 @@ export default function ArchivePage() {
               key={volume.number}
               volume={volume}
               allCases={cases}
-              defaultOpen={i === VOLUMES.length - 1} // newest volume open by default
+              defaultOpen={i === 0} // Volume IV (newest) open by default
             />
           ))}
         </div>
