@@ -102,26 +102,24 @@ body {
 
 .opinion-body p { margin-bottom: 1.1em; }
 
+/*
+ * Bluebook block quotation — judicial opinions (OCGA, statutes, case quotes)
+ *   - Same font and size as surrounding body text (no italic, no serif shift)
+ *   - 0.5" left indent (≈ 2.5em at 14px base)
+ *   - Single-spaced inside (line-height 1.55 vs body 1.72)
+ *   - Extra vertical space before and after (1.4em)
+ *   - No quotation marks, no left border
+ */
 .opinion-body blockquote {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  font-style: italic;
-  border-left: 3px solid var(--palette-black);
-  padding-left: 16px;
-  margin: 2em 0 2em 24px;
-}
-
-/* Bluebook block quotation style — indented judicial quotes */
-.opinion-body .legal-blockquote {
-  margin-left: 2.5em;   /* 0.5" indent per Bluebook standard */
-  margin-right: 1em;
-  padding-left: 0;      /* No additional padding */
-  margin-top: 1.2em;    /* Extra space before */
-  margin-bottom: 1.2em; /* Extra space after */
-  line-height: 1.5;     /* Single spacing within block */
-  color: var(--palette-black);
+  font-family: var(--font-sans);
+  font-size: 14px;
   font-style: normal;
-  border-left: none;
+  font-weight: 400;
+  line-height: 1.55;
+  margin: 1.4em 0 1.4em 2.5em;
+  padding: 0;
+  border: none;
+  color: var(--palette-black);
 }
 
 /* Styled "Opinion" section header — replaces repeated standalone Opinion para */

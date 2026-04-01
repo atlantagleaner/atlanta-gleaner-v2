@@ -13,6 +13,7 @@
 const fs      = require('fs').promises;
 const path    = require('path');
 const mammoth = require('mammoth');
+const JSZip   = require('jszip');
 
 // ── Paths (cross-platform, relative to this script file) ─────────────────────
 const RAW_DIR     = path.resolve(__dirname, '..', 'raw-opinions');
@@ -225,8 +226,8 @@ function scrubBoilerplate(html) {
     sectionPat('Reporter'),   // bare "Reporter" heading
     // All-caps duplicate case name (e.g. "FULTON COUNTY BOARD OF COMMISSIONERS v. …")
     /<p[^>]*>[A-Z][A-Z\s,.'()]+v\.[A-Z\s,.'()]+<\/p>/g,
-    // End-of-document markers
-    /<p[^>]*>\s*End of Document[\s\S]*?<\/p>/gi,
+    // End-of-document markers — matches both <p> and <blockquote>, with optional inner tags
+    /<(?:p|blockquote)[^>]*>(?:<[^>]+>)*\s*End of Document[\s\S]*?<\/(?:p|blockquote)>/gi,
     // Empty paragraphs with only anchors / whitespace
     /<p[^>]*>(?:<a[^>]*><\/a>)?\s*<\/p>/gi,
   ];
@@ -244,6 +245,68 @@ function markStarPagination(html) {
   return html.replace(/(\[(\*{2,3})\d+\])/g, '<span class="star-pagination">$1</span>');
 }
 
+// ── Blockquote injector ───────────────────────────────────────────────────────
+
+/**
+ * Read the DOCX buffer, inspect the Word XML for paragraphs with meaningful
+ * left indentation (≥ 200 twips ≈ 0.14"), and inject a named paragraph style
+ * "BlockQuote" onto those paragraphs before mammoth processes the file.
+ *
+ * Bluebook block quotations use a 0.5" left indent (720 twips). Westlaw and
+ * Lexis slip opinions use 400 twips (≈ 0.28"). Both are well above the 200-
+ * twip threshold used here.
+ *
+ * Because mammoth maps paragraph style names to HTML via the styleMap, tagging
+ * these paragraphs as "BlockQuote" in the XML means mammoth will emit
+ * <blockquote> elements without any post-processing guesswork.
+ *
+ * Returns: a Buffer of the modified DOCX, suitable for passing to mammoth.
+ */
+async function injectBlockquoteStyles(filePath) {
+  const raw   = await fs.readFile(filePath);
+  const zip   = await JSZip.loadAsync(raw);
+  const docFile = zip.file('word/document.xml');
+  if (!docFile) return raw;
+
+  // ── 1. Inject "BlockQuote" style definition into styles.xml ─────────────────
+  const stylesFile = zip.file('word/styles.xml');
+  if (stylesFile) {
+    let stylesXml = await stylesFile.async('string');
+    if (!stylesXml.includes('w:styleId="BlockQuote"')) {
+      const blockquoteStyleDef = `<w:style w:type="paragraph" w:styleId="BlockQuote"><w:name w:val="BlockQuote"/><w:basedOn w:val="Normal"/></w:style>`;
+      stylesXml = stylesXml.replace('</w:styles>', blockquoteStyleDef + '</w:styles>');
+      zip.file('word/styles.xml', stylesXml);
+    }
+  }
+
+  // ── 2. Tag indented paragraphs in document.xml with the BlockQuote style ────
+  let xml = await docFile.async('string');
+
+  xml = xml.replace(/<w:p[ >]([\s\S]*?)<\/w:p>/g, (para) => {
+    const indMatch = para.match(/<w:ind[^/]*\bw:left="(\d+)"/);
+    if (!indMatch) return para;
+    if (parseInt(indMatch[1], 10) < 200) return para;
+
+    // If paragraph already has a non-Normal style, leave it alone
+    const styleMatch = para.match(/<w:pStyle\s+w:val="([^"]+)"/);
+    if (styleMatch && styleMatch[1] !== 'Normal') return para;
+
+    if (styleMatch) {
+      // Replace existing Normal style reference
+      return para.replace(/<w:pStyle\s+w:val="[^"]*"/, '<w:pStyle w:val="BlockQuote"');
+    } else if (para.includes('<w:pPr>')) {
+      return para.replace('<w:pPr>', '<w:pPr><w:pStyle w:val="BlockQuote"/>');
+    } else if (/<w:pPr\s/.test(para)) {
+      return para.replace(/<w:pPr\s/, '<w:pPr ').replace(/<w:pPr ([^>]*)>/, '<w:pPr $1><w:pStyle w:val="BlockQuote"/>');
+    } else {
+      return para.replace(/^<w:p([ >])/, '<w:p$1<w:pPr><w:pStyle w:val="BlockQuote"/></w:pPr>');
+    }
+  });
+
+  zip.file('word/document.xml', xml);
+  return zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
+}
+
 // ── Main parser ───────────────────────────────────────────────────────────────
 
 async function parseDocxFile(filename) {
@@ -257,12 +320,16 @@ async function parseDocxFile(filename) {
     .filter(l => l.length > 0);
 
   // ── 2. Full HTML (for body + footnotes) ───────────────────────────────────
-  // Basic styleMap for standard elements. Named blockquote styles are stripped
-  // and handled at the display layer instead.
-  const blockquoteStyleMap = [];
+  // Pre-process the DOCX buffer: find indented paragraphs in the Word XML and
+  // inject the "BlockQuote" named style so mammoth emits <blockquote> tags.
+  const modifiedBuffer = await injectBlockquoteStyles(filePath);
+
+  const styleMap = [
+    "p[style-name='BlockQuote'] => blockquote:fresh",
+  ];
   const htmlResult = await mammoth.convertToHtml(
-    { path: filePath },
-    { styleMap: blockquoteStyleMap }
+    { buffer: modifiedBuffer },
+    { styleMap }
   );
   const fullHtml   = htmlResult.value;
 
