@@ -1,16 +1,38 @@
 import React from 'react';
 import { Banner } from '@/src/components/Banner';
 import { NewsBox } from '@/src/components/NewsBox';
-import CaseLawBox, { CaseData } from '@/src/components/CaseLawBox'; 
+import CaseLawBox, { CaseData } from '@/src/components/CaseLawBox';
 import { FarSideBox } from '@/src/components/FarSideBox';
 import { ResizablePanels } from '@/src/components/ResizablePanels';
-import allCases from '@/src/data/cases.json';
+import { CASES } from '@/src/data/cases';
+import type { CaseLaw } from '@/src/data/types';
 
-// Cast the JSON to our CaseData interface for total type safety
-const cases = allCases as CaseData[];
+// Transform CaseLaw data format to CaseData format expected by CaseLawBox
+const transformCaseData = (caseLaw: CaseLaw): CaseData => ({
+  slug: caseLaw.slug,
+  noticeBanner: caseLaw.noticeText,
+  metadata: {
+    title: caseLaw.title,
+    court: caseLaw.court,
+    dateDecided: caseLaw.dateDecided,
+    docketNo: caseLaw.docketNumber,
+    citations: caseLaw.citations,
+    judges: caseLaw.judges,
+  },
+  holding: caseLaw.holdingBold,
+  opinionAuthor: caseLaw.opinionAuthor,
+  opinionBody: caseLaw.opinionText,
+  summary: caseLaw.summary,
+  footnotes: Object.entries(caseLaw.footnotes).map(([marker, content]) => ({
+    marker,
+    content,
+  })),
+});
+
+const cases: CaseData[] = CASES.map(transformCaseData);
 
 export default function HomePage() {
-  // Sort cases by dateDecided (assuming YYYY-MM-DD format or similar)
+  // Sort cases by dateDecided (newest first)
   // before picking the featured case
   const sortedCases = [...cases].sort(
     (a, b) =>
