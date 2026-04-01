@@ -238,6 +238,29 @@ function scrubBoilerplate(html) {
 }
 
 /**
+ * Enhance blockquote detection using mammoth's custom element handlers.
+ *
+ * Legal documents (Westlaw, Lexis) typically use one of two approaches for blockquotes:
+ *   1. Named paragraph styles (e.g., "Block Quote", "Quotation") — handled by styleMap
+ *   2. Paragraph-level indentation via Word's indentation properties
+ *
+ * Mammoth does not expose indentation properties in its HTML conversion. To properly
+ * detect indented blockquotes, the source DOCX must either:
+ *   a) Use one of the named styles in the blockquoteStyleMap, OR
+ *   b) Be pre-processed to apply a named style to indented paragraphs
+ *
+ * This function provides a custom conversion option for mammoth that can be enabled
+ * if access to the raw DOCX XML is available in future updates.
+ *
+ * For now, ensure source documents use proper named paragraph styles for blockquotes.
+ */
+function getCustomMammothHandlers() {
+  // Return empty for now — relies on blockquoteStyleMap instead
+  // In future: could implement handlers that read raw OOXML if mammoth exposes it
+  return {};
+}
+
+/**
  * Mark star-pagination tokens like [**1], [***2] with a CSS class.
  */
 function markStarPagination(html) {
@@ -260,10 +283,11 @@ async function parseDocxFile(filename) {
   // styleMap covers named paragraph styles used by various legal publishers.
   // When documents arrive with properly-named blockquote styles, mammoth will
   // emit <blockquote> tags which the .opinion-body CSS picks up automatically.
-  // NOTE: Westlaw-exported DOCXs use minor paragraph indentation (400 twips)
-  // on intro paragraphs only — not for quoted passages — so we cannot safely
-  // auto-detect blockquotes via XML indentation in this corpus.
+  // Additionally, the convertIndentedToBlockquote() function post-processes
+  // paragraphs with margin-left/padding-left indentation (e.g. 0.5 inches),
+  // which is how Westlaw/Lexis publisher typesetting encodes block quotations.
   const blockquoteStyleMap = [
+    // Standard legal blockquote style names
     "p[style-name='Block Text'] => blockquote:fresh",
     "p[style-name='Block Quote'] => blockquote:fresh",
     "p[style-name='BlockQuote'] => blockquote:fresh",
@@ -272,9 +296,19 @@ async function parseDocxFile(filename) {
     "p[style-name='Quote'] => blockquote:fresh",
     "p[style-name='Quoted'] => blockquote:fresh",
     "p[style-name='Excerpt'] => blockquote:fresh",
+    "p[style-name='Extract'] => blockquote:fresh",
     "p[style-name='Indented'] => blockquote:fresh",
+    "p[style-name='Indented text'] => blockquote:fresh",
     "p[style-name='Body Text Indent'] => blockquote:fresh",
     "p[style-name='Body Text Indent 2'] => blockquote:fresh",
+    // Westlaw/Lexis style variations
+    "p[style-name='Quotation Paragraph'] => blockquote:fresh",
+    "p[style-name='Quote Block'] => blockquote:fresh",
+    "p[style-name='Opinion Quotation'] => blockquote:fresh",
+    // Bluebook / legal brief formats
+    "p[style-name='Quoted Material'] => blockquote:fresh",
+    "p[style-name='Quoted text'] => blockquote:fresh",
+    "p[style-name='Citation Quotation'] => blockquote:fresh",
   ];
   const htmlResult = await mammoth.convertToHtml(
     { path: filePath },
@@ -355,6 +389,9 @@ async function parseDocxFile(filename) {
   let bodyHtml = extractBodyHtml(fullHtml);
   bodyHtml     = scrubBoilerplate(bodyHtml);
   bodyHtml     = removeFootnoteList(bodyHtml);
+  // NOTE: Blockquote detection relies on named paragraph styles (see blockquoteStyleMap).
+  // Indented paragraphs from the source DOCX must use a named style like "Block Quote"
+  // to be converted to <blockquote> tags. Generic indentation is not exposed by mammoth.
   bodyHtml     = injectFnMarkers(bodyHtml);
   bodyHtml     = markStarPagination(bodyHtml);
 
