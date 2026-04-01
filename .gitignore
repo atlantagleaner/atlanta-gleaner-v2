@@ -3,5 +3,11 @@ node_modules/
 .env*
 *.log
 .claude/
+tmp/
+.openclaw/
+next-env.d.ts
+tsconfig.tsbuildinfo
+public/search-index.json
+pilot-review.html
 
 .vercel
