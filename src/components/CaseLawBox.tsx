@@ -266,7 +266,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     <article style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...white, padding: '20px 16px 16px', ...sectionBorder }}>
+      <header style={{ ...white, padding: '20px 14px 32px', ...sectionBorder }}>
         <div style={{ ...BOX_HEADER, marginBottom: '12px' }}>
           {label}
         </div>
@@ -412,9 +412,9 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       <section style={{
         ...white,
         overflow:   'hidden',
-        maxHeight:  expanded ? '99999px' : '0',
+        maxHeight:  expanded ? '99999px' : '180px',
         transition: expanded ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out',
-        padding:    expanded ? '28px 24px 40px' : '0 24px',
+        padding:    '28px 24px 40px',
         ...sectionBorder,
       }}>
 

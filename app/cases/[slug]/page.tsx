@@ -74,8 +74,8 @@ export default async function CaseLawPage({
           node:  <NewsBox />,
         }}
         center={{
-          label: 'Opinion',
-          node:  <CaseLawBox caseData={caseData!} label="Opinion" />,
+          label: 'Case Law Updates',
+          node:  <CaseLawBox caseData={caseData!} />,
         }}
         right={{
           label: 'Astrology',
