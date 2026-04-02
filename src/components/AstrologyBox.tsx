@@ -42,4 +42,8 @@ export function AstrologyBox() {
             }
           `}</style>
         </div>
-        {/* END ASTROLOGY.COM FREE ASTROL
+        {/* END ASTROLOGY.COM FREE ASTROLOGY CODE */}
+      </div>
+    </div>
+  )
+}

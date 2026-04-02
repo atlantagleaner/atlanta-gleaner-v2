@@ -67,4 +67,9 @@ export function Banner() {
           objectPosition: 'center top',
           cursor:         'pointer',
           opacity:        logoHover ? 0.82 : 1,
-          transition:     'opacity 0
+          transition:     'opacity 0.15s',
+        }}
+      />
+    </header>
+  )
+}
