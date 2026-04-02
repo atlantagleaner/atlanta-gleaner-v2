@@ -5,7 +5,7 @@
 //   Banner → NavBar (from root layout) → ResizablePanels
 //     Left:   NewsBox (live news feed)
 //     Center: CaseLawBox (this case)
-//     Right:  AstrologyBox
+//     Right:  FarSideBox
 //
 // Next.js 15+ note: `params` is a Promise — must be awaited in both
 // generateMetadata and the page component.
@@ -16,7 +16,7 @@ import { PALETTE }         from '@/src/styles/tokens'
 import { Banner }          from '@/src/components/Banner'
 import { NewsBox }         from '@/src/components/NewsBox'
 import CaseLawBox          from '@/src/components/CaseLawBox'
-import { AstrologyBox }    from '@/src/components/AstrologyBox'
+import { FarSideBox }      from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
 import casesRaw            from '@/src/data/cases.json'
 import type { CaseLaw }    from '@/src/data/types'
@@ -79,8 +79,8 @@ export default async function CaseLawPage({
           node:  <CaseLawBox caseData={caseData!} />,
         }}
         right={{
-          label: 'Astrology',
-          node:  <AstrologyBox />,
+          label: 'The Far Side',
+          node:  <FarSideBox />,
         }}
       />
     </main>
