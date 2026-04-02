@@ -85,8 +85,8 @@ function LoadingSkeleton() {
     <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
       {Array.from({ length: 8 }).map((_, i) => (
         <li key={i} style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
-          <div style={{ height: '14px', width: `${60 + (i % 3) * 15}%`, background: 'rgba(0,0,0,0.07)', marginBottom: SPACING.sm }} />
-          <div style={{ height: '10px', width: '30%', background: 'rgba(0,0,0,0.05)' }} />
+          <div style={{ height: '14px', width: `${60 + (i % 3) * 15}%`, background: 'var(--palette-rule)', marginBottom: SPACING.sm }} />
+          <div style={{ height: '10px', width: '30%', background: 'var(--palette-rule-sm)' }} />
         </li>
       ))}
     </ul>

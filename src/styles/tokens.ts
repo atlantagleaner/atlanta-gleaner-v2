@@ -22,14 +22,40 @@ import type { CSSProperties } from 'react'
 
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
+// All values are CSS custom properties so theme cycling works site-wide.
+// Theme definitions live in app/globals.css on [data-theme="..."].
 
 export const PALETTE = {
-  /** Pure white — box backgrounds, portrait mat */
-  white: '#FFFFFF',
-  /** Warm off-white — page background, subtle surface fills */
-  warm:  '#EEEDEB',
-  /** Black — all text, borders, icons, rules */
-  black: '#000000',
+  /** Box backgrounds, portrait mat */
+  white: 'var(--palette-white)',
+  /** Page background, subtle surface fills */
+  warm:  'var(--palette-warm)',
+  /** All text, borders, icons, rules */
+  black: 'var(--palette-black)',
+} as const
+
+/**
+ * PALETTE_CSS — CSS var strings for derived opacity/tint values.
+ * Use these wherever you'd normally write a hardcoded rgba(0,0,0,0.N).
+ * Each maps to a theme-aware custom property in globals.css.
+ */
+export const PALETTE_CSS = {
+  /** 0.18-opacity border — BOX_SHELL, cards */
+  border:  'var(--palette-border)',
+  /** 0.07-opacity hairline — ITEM_RULE, DragBar */
+  rule:    'var(--palette-rule)',
+  /** 0.05-opacity hairline — lightest dividers */
+  ruleSm:  'var(--palette-rule-sm)',
+  /** 0.10-opacity rule — nav borders */
+  ruleMd:  'var(--palette-rule-md)',
+  /** 0.14-opacity rule — page title block */
+  ruleLg:  'var(--palette-rule-lg)',
+  /** 0.45-opacity — metadata label text */
+  meta:    'var(--palette-meta)',
+  /** 0.35-opacity — muted/pending text */
+  muted:   'var(--palette-muted)',
+  /** 0.09-opacity — subtle chip backgrounds */
+  subtle:  'var(--palette-subtle)',
 } as const
 
 
@@ -156,11 +182,11 @@ export const T: Record<string, CSSProperties> = {
   /**
    * heading · responsive clamp, Cormorant Garamond bold
    * Used for: case law box title — large serif case names
-   * Second exception to three-size rule: editorial display, not body text.
+   * Sized at 50% of display (banner masthead) for visual hierarchy.
    */
   heading: {
     ...FONT.serif,
-    fontSize:      'clamp(1.1rem, 2.6vw, 1.75rem)',
+    fontSize:      'clamp(1.5rem, 9vw, 4.5rem)',
     fontWeight:    700,
     lineHeight:    1.12,
     letterSpacing: '-0.01em',
@@ -251,8 +277,8 @@ export const BREAKPOINT = {
  * Provides border, white background, and flex column layout.
  */
 export const BOX_SHELL: CSSProperties = {
-  border:        '1px solid rgba(0,0,0,0.18)',
-  background:    '#FFFFFF',
+  border:        '1px solid var(--palette-border)',
+  background:    'var(--palette-white)',
   height:        'fit-content',
   display:       'flex',
   flexDirection: 'column',
@@ -264,7 +290,7 @@ export const BOX_SHELL: CSSProperties = {
  */
 export const BOX_HEADER: CSSProperties = {
   ...T.label,
-  color:         '#000000',
+  color:         'var(--palette-black)',
   paddingBottom: '0px',
   margin:        '0 0 14px 0',
 }
@@ -279,7 +305,7 @@ export const BOX_PADDING = '16px 14px'
  * ITEM_RULE — thin divider between rows / list items inside a box.
  */
 export const ITEM_RULE: CSSProperties = {
-  borderBottom: '1px solid rgba(0,0,0,0.07)',
+  borderBottom: '1px solid var(--palette-rule)',
 }
 
 
@@ -291,7 +317,7 @@ export const ITEM_RULE: CSSProperties = {
  * Apply to a container div; place T.pageTitle content inside.
  */
 export const PAGE_TITLE_BLOCK: CSSProperties = {
-  borderBottom: '1px solid rgba(0,0,0,0.14)',
+  borderBottom: '1px solid var(--palette-rule-lg)',
   padding:      '0 0 16px',
   margin:       '0 0 28px 0',
 }

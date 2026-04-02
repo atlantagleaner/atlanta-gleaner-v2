@@ -77,7 +77,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           right: 0;
           z-index: 10;
           background: ${PALETTE.white};
-          border-bottom: 1px solid rgba(0,0,0,0.10);
+          border-bottom: 1px solid var(--palette-rule-md);
           transform-origin: top center;
           transition: transform 0.24s cubic-bezier(0.4,0,0.2,1),
                       opacity   0.20s cubic-bezier(0.4,0,0.2,1);
@@ -91,8 +91,8 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         @media (min-width: 768px) {
           .ag-dropdown {
             left: auto; right: 16px; width: 160px;
-            border-radius: 2px; border: 1px solid rgba(0,0,0,0.12);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            border-radius: 2px; border: 1px solid var(--palette-border);
+            box-shadow: 0 4px 16px var(--palette-rule-md);
           }
           .ag-dropdown-link { padding: 11px 14px !important; }
         }
@@ -102,7 +102,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
       <div ref={navRef} className="ag-nav-wrapper">
         <nav className="ag-nav" style={{
           background: PALETTE.white,
-          borderBottom: '1px solid rgba(0,0,0,0.10)',
+          borderBottom: '1px solid var(--palette-rule-md)',
           minHeight: showDatetime ? '64px' : '48px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 20px',
@@ -151,7 +151,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
                   fontWeight: active ? 700 : 500,
                   color: PALETTE.black,
                   textDecoration: 'none',
-                  borderBottom: '1px solid rgba(0,0,0,0.07)',
+                  borderBottom: '1px solid var(--palette-rule)',
                 }}
               >
                 {label}

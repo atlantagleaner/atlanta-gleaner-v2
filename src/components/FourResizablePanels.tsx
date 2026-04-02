@@ -16,25 +16,25 @@ function MobilePanel({ label, children }: { label: string; children: ReactNode }
   return (
     <div style={{ marginBottom: '12px' }}>
       <button onClick={() => setOpen(v => !v)} style={{
-        width: '100%', background: '#000000', border: 'none',
+        width: '100%', background: 'var(--palette-black)', border: 'none',
         padding: '10px 14px', display: 'flex',
         justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
       }}>
-        <span style={{ ...mono, fontSize: '9px', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.22em' }}>
+        <span style={{ ...mono, fontSize: '9px', color: 'var(--palette-white)', textTransform: 'uppercase', letterSpacing: '0.22em' }}>
           {label}
         </span>
         <span style={{
-          ...mono, fontSize: '11px', color: '#FFFFFF',
+          ...mono, fontSize: '11px', color: 'var(--palette-white)',
           transition: 'transform 0.2s', display: 'inline-block',
           transform: open ? 'rotate(90deg)' : 'rotate(0)',
         }}>▶</span>
       </button>
-      <div style={{ 
-        overflow: 'hidden', 
-        maxHeight: open ? '9999px' : '0', 
+      <div style={{
+        overflow: 'hidden',
+        maxHeight: open ? '9999px' : '0',
         transition: 'max-height 0.3s ease',
-        background: '#fff',
-        border: '1px solid #eee'
+        background: 'var(--palette-white)',
+        border: '1px solid var(--palette-rule-md)'
       }}>
         {children}
       </div>
@@ -47,7 +47,7 @@ function ResizeHandle({ onMouseDown }: { onMouseDown: () => void }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div onMouseDown={onMouseDown} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ width: hovered ? '6px' : '4px', cursor: 'col-resize', flexShrink: 0, background: hovered ? '#000000' : '#EEEDEB', transition: 'all 0.15s', alignSelf: 'stretch', position: 'relative', userSelect: 'none' }}>
+      style={{ width: hovered ? '6px' : '4px', cursor: 'col-resize', flexShrink: 0, background: hovered ? 'var(--palette-black)' : 'var(--palette-warm)', transition: 'all 0.15s', alignSelf: 'stretch', position: 'relative', userSelect: 'none' }}>
     </div>
   )
 }
@@ -59,8 +59,8 @@ function DragBar({ label, onPointerDown, isDragging }: {
   isDragging: boolean 
 }) {
   return (
-    <div onPointerDown={onPointerDown} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 10px', background: isDragging ? '#EEEDEB' : '#FFFFFF', borderBottom: '1px solid rgba(0,0,0,0.08)', cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', touchAction: 'none' }}>
-      <span style={{ ...mono, fontSize: '9px', color: '#000000', textTransform: 'uppercase', letterSpacing: '0.18em' }}>{label}</span>
+    <div onPointerDown={onPointerDown} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 10px', background: isDragging ? 'var(--palette-warm)' : 'var(--palette-white)', borderBottom: '1px solid var(--palette-rule-md)', cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', touchAction: 'none' }}>
+      <span style={{ ...mono, fontSize: '9px', color: 'var(--palette-black)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>{label}</span>
     </div>
   )
 }

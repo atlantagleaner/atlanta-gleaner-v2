@@ -1,12 +1,91 @@
 /* --- ATLANTA GLEANER: DESIGN TOKEN ALIGNMENT --- */
 
+/* ── Default palette ──────────────────────────────────────────────────────── */
 :root {
+  /* Core three */
   --palette-white: #FFFFFF;
-  --palette-warm: #EEEDEB;
+  --palette-warm:  #EEEDEB;
   --palette-black: #000000;
+
+  /* Derived opacity values (black-based) */
+  --palette-border:   rgba(0,0,0,0.18);
+  --palette-rule:     rgba(0,0,0,0.07);
+  --palette-rule-sm:  rgba(0,0,0,0.05);
+  --palette-rule-md:  rgba(0,0,0,0.10);
+  --palette-rule-lg:  rgba(0,0,0,0.14);
+  --palette-meta:     rgba(0,0,0,0.45);
+  --palette-muted:    rgba(0,0,0,0.35);
+  --palette-subtle:   rgba(0,0,0,0.09);
+
   --font-serif: 'Cormorant Garamond', serif;
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans:  'Inter', sans-serif;
+  --font-mono:  'IBM Plex Mono', monospace;
+}
+
+/* ── Classical palette (Acropolis) ────────────────────────────────────────── */
+/*    Cream parchment boxes · sandy warm page · charcoal text                 */
+/*    Dark maroon border accents from the Acropolis color study               */
+[data-theme="classical"] {
+  --palette-white: #F5EFE0;   /* cream parchment — box surfaces               */
+  --palette-warm:  #CDB89A;   /* sandy warm — page background                 */
+  --palette-black: #1A1210;   /* warm charcoal — all text                     */
+
+  --palette-border:   rgba(92,31,21,0.22);
+  --palette-rule:     rgba(92,31,21,0.12);
+  --palette-rule-sm:  rgba(92,31,21,0.07);
+  --palette-rule-md:  rgba(92,31,21,0.15);
+  --palette-rule-lg:  rgba(92,31,21,0.18);
+  --palette-meta:     rgba(26,18,16,0.48);
+  --palette-muted:    rgba(26,18,16,0.35);
+  --palette-subtle:   rgba(92,31,21,0.08);
+}
+
+/* Image treatment — warm sepia tint on Washington */
+[data-theme="classical"] img[alt="George Washington Statue at Federal Hall"] {
+  filter: sepia(25%) brightness(1.04);
+}
+
+/* ── Matrix palette ───────────────────────────────────────────────────────── */
+/*    Black terminal · dark panel surfaces · Matrix green (#00FF41) text      */
+[data-theme="matrix"] {
+  --palette-white: #0D1117;   /* dark panel — box surfaces                    */
+  --palette-warm:  #000000;   /* pure black — page background                 */
+  --palette-black: #00FF41;   /* Matrix green — all text + borders            */
+
+  --palette-border:   rgba(0,255,65,0.25);
+  --palette-rule:     rgba(0,255,65,0.12);
+  --palette-rule-sm:  rgba(0,255,65,0.07);
+  --palette-rule-md:  rgba(0,255,65,0.15);
+  --palette-rule-lg:  rgba(0,255,65,0.18);
+  --palette-meta:     rgba(0,255,65,0.60);
+  --palette-muted:    rgba(0,255,65,0.40);
+  --palette-subtle:   rgba(0,255,65,0.10);
+}
+
+/* Green glow on the masthead title */
+[data-theme="matrix"] h1 {
+  text-shadow: 0 0 32px rgba(0,255,65,0.45), 0 0 8px rgba(0,255,65,0.25) !important;
+}
+
+/* Green tint + CRT feel on Washington */
+[data-theme="matrix"] img[alt="George Washington Statue at Federal Hall"] {
+  filter: grayscale(100%) brightness(0.35) sepia(100%) hue-rotate(80deg) saturate(500%);
+}
+
+/* Subtle CRT scanline overlay — full viewport, pointer-events off */
+[data-theme="matrix"] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.06) 3px,
+    rgba(0,0,0,0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
 }
 
 body {
@@ -54,7 +133,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #666;
+  color: var(--palette-meta);
 }
 
 .metadata-value {
@@ -137,14 +216,14 @@ body {
 .star-pagination {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: #999;
+  color: var(--palette-muted);
   margin-right: 6px;
 }
 
 .footnote-list {
   margin-top: 64px;
   padding-top: 32px;
-  border-top: 1px solid rgba(0,0,0,0.1);
+  border-top: 1px solid var(--palette-rule-md);
 }
 
 .footnote-item {
@@ -180,7 +259,7 @@ a.case-archive-link {
   padding: 13px 24px;
   text-decoration: none;
   color: var(--palette-black);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--palette-rule-sm);
   transition: background 0.1s;
 }
 a.case-archive-link:hover {

@@ -5,7 +5,7 @@ import {
   type ReactNode, type CSSProperties, type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { flushSync } from 'react-dom'
-import { FONT, T, PALETTE, SIZE_SM, SPACING, ANIMATION, Z_INDEX, PAGE_MAX_W } from '@/src/styles/tokens'
+import { FONT, T, PALETTE, PALETTE_CSS, SIZE_SM, SPACING, ANIMATION, Z_INDEX, PAGE_MAX_W } from '@/src/styles/tokens'
 
 const MIN_PCT = 16
 const MAX_PCT = 62
@@ -61,7 +61,7 @@ function ResizeHandle({ onMouseDown }: { onMouseDown: () => void }) {
         display: 'flex', flexDirection: 'column', gap: '4px',
       }}>
         {[0,1,2].map(i => (
-          <div key={i} style={{ width: '2px', height: '2px', borderRadius: '50%', background: '#000000' }} />
+          <div key={i} style={{ width: '2px', height: '2px', borderRadius: '50%', background: PALETTE.black }} />
         ))}
       </div>
     </div>
@@ -81,7 +81,7 @@ function DragBar({ label, onPointerDown, isDragging }: {
         display: 'flex', alignItems: 'center', gap: SPACING.sm,
         padding: `${SPACING.sm} ${SPACING.md}`,
         background: isDragging ? PALETTE.warm : PALETTE.white,
-        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        borderBottom: '1px solid var(--palette-rule)',
         cursor: isDragging ? 'grabbing' : 'grab',
         userSelect: 'none',
         touchAction: 'none',

@@ -18,7 +18,7 @@
 import React, { useState } from 'react'
 import type { CSSProperties } from 'react'
 import {
-  PALETTE, FONT, T,
+  PALETTE, PALETTE_CSS, FONT, T,
   BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
 } from '@/src/styles/tokens'
 import type { CaseLaw } from '@/src/data/types'
@@ -172,7 +172,7 @@ const warm:  CSSProperties = { background: PALETTE.warm }
 const white: CSSProperties = { background: PALETTE.white }
 
 const sectionBorder: CSSProperties = {
-  borderTop: '1px solid rgba(0,0,0,0.07)', // aligned with ITEM_RULE
+  borderTop: `1px solid var(--palette-rule)`,
 }
 
 const metadataRow: CSSProperties = {
@@ -186,7 +186,7 @@ const metadataRow: CSSProperties = {
 
 const metaLabel: CSSProperties = {
   ...T.micro,
-  color:    'rgba(0,0,0,0.45)',
+  color:    PALETTE_CSS.meta,
   minWidth: '110px',
 }
 
@@ -210,8 +210,8 @@ const termChip: CSSProperties = {
 
 const pendingChip: CSSProperties = {
   ...T.micro,
-  background:   'rgba(0,0,0,0.09)',
-  color:        'rgba(0,0,0,0.35)',
+  background:   PALETTE_CSS.subtle,
+  color:        PALETTE_CSS.muted,
   padding:      `2px ${SPACING.md}`,
   lineHeight:   '18px',
   display:      'inline-block',
@@ -263,7 +263,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     <article id="case-law-box" style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...white, padding: '20px 14px 32px', ...sectionBorder }}>
+      <header style={{ ...white, padding: '20px 14px 64px', ...sectionBorder }}>
         <div style={{ ...BOX_HEADER, marginBottom: '12px' }}>
           {label}
         </div>
@@ -302,7 +302,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={{
             ...metadataRow,
             marginTop: '6px', paddingTop: '8px',
-            borderTop: '1px solid rgba(0,0,0,0.07)', borderBottom: 'none',
+            borderTop: `1px solid var(--palette-rule)`, borderBottom: 'none',
           }}>
             <span style={metaLabel}>Judges</span>
             <span style={metaValue}>{judges}</span>
@@ -353,7 +353,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               {summary}
             </p>
           ) : (
-            <p style={{ ...T.prose, margin: 0, color: 'rgba(0,0,0,0.35)', fontStyle: 'italic' }}>
+            <p style={{ ...T.prose, margin: 0, color: PALETTE_CSS.muted, fontStyle: 'italic' }}>
               Summary pending.
             </p>
           )}
@@ -363,9 +363,10 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       {/* ── 5. Verbatim opinion ──────────────────────────────────────────── */}
       <section style={{
         ...white,
+        position:   'relative',
         overflow:   'hidden',
-        maxHeight:  expanded ? '99999px' : '840px',
-        transition: expanded ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out',
+        maxHeight:  expanded ? '8000px' : '840px',
+        transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
         padding:    '28px 24px 40px',
         ...sectionBorder,
       }}>
@@ -394,7 +395,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <footer style={{
             marginTop:  '56px',
             paddingTop: '24px',
-            borderTop:  '1px solid rgba(0,0,0,0.12)',
+            borderTop:  '1px solid var(--palette-rule-md)',
           }}>
             <div style={{ ...BOX_HEADER, marginBottom: '16px', display: 'block' }}>
               Footnotes
@@ -444,9 +445,24 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             })}
           </footer>
         )}
+        {/* ── Fade-out scrim — only visible when collapsed ────────────────── */}
+        <div
+          aria-hidden="true"
+          style={{
+            position:      'absolute',
+            bottom:        0,
+            left:          0,
+            right:         0,
+            height:        '90px',
+            background:    'linear-gradient(to bottom, transparent, var(--palette-white))',
+            pointerEvents: 'none',
+            opacity:       expanded ? 0 : 1,
+            transition:    `opacity ${expanded ? '0.1s' : '0.25s'} ${ANIMATION.ease}`,
+          }}
+        />
       </section>
 
-      {/* ── 6. Expand / Collapse bar (at the very end) ────────────────────── */}
+      {/* ── 6. Expand / Collapse bar ──────────────────────────────────────── */}
       <button
         className="ag-expand-bar"
         onClick={() => setExpanded(v => !v)}
@@ -455,13 +471,16 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           width:          '100%',
           background:     PALETTE.white,
           border:         'none',
-          borderTop:      '1px solid rgba(0,0,0,0.07)', // ITEM_RULE value
+          // Only show a separator border once the text is fully expanded —
+          // when collapsed the gradient flows seamlessly into the button area.
+          borderTop:      expanded ? '1px solid var(--palette-rule)' : 'none',
           padding:        `${SPACING.md} ${SPACING.lg}`,
           display:        'flex',
           alignItems:     'center',
           justifyContent: 'space-between',
           cursor:         'pointer',
           userSelect:     'none',
+          transition:     `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
         }}
       >
         <span style={{ ...T.label, color: PALETTE.black }}>

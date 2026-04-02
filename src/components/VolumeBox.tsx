@@ -42,7 +42,7 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
 
       <div style={{ overflowY: 'auto', flex: 1, background: PALETTE.white }}>
         {Object.entries(groupedCases).map(([month, monthCases]) => (
-          <div key={month} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+          <div key={month} style={{ borderBottom: '1px solid var(--palette-rule-md)' }}>
             <button 
               onClick={() => setOpenMonth(openMonth === month ? null : month)}
               style={{
