@@ -264,11 +264,25 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     <article id="case-law-box" style={{ ...BOX_SHELL, width: '100%' }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...white, padding: '20px 14px 64px', ...sectionBorder }}>
-        <div style={{ ...BOX_HEADER, marginBottom: '12px' }}>
+      <header style={{ ...white, padding: '12px 16px', borderBottom: '1px solid #e5e7eb' }}>
+        <div style={{
+          fontSize:      '11px',
+          fontWeight:    700,
+          letterSpacing: '0.5px',
+          textTransform: 'uppercase',
+          color:         '#6b7280',
+          marginBottom:  '8px',
+        }}>
           {label}
         </div>
-        <h1 style={{ ...T.heading, margin: 0, color: PALETTE.black }}>
+        <h1 style={{
+          fontFamily: 'inherit',
+          fontSize:   '24px',
+          fontWeight: 400,
+          lineHeight: 1.25,
+          color:      '#111827',
+          margin:     0,
+        }}>
           {title}
         </h1>
       </header>
