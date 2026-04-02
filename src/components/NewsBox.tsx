@@ -140,4 +140,12 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
           {!loading && !error && (
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {items.map((item, i) => (
-                <NewsItemRow key={item.url
+                <NewsItemRow key={item.url} item={item} />
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -236,4 +236,15 @@ export function FilmFrame({ children, style }: FilmFrameProps) {
             <path
               key={i}
               d={h.d}
- 
+              stroke="rgba(12,8,2,1)"
+              strokeWidth={h.width}
+              fill="none"
+              opacity={h.opacity}
+              strokeLinecap="round"
+            />
+          ))}
+        </svg>
+      )}
+    </div>
+  )
+}

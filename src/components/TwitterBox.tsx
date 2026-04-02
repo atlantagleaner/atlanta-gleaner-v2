@@ -64,4 +64,9 @@ export function TwitterBox() {
 
         {/* Footer action */}
         <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0, marginTop: '2px' }}>
-          [ X timeline
+          [ X timeline integration pending ]
+        </p>
+      </div>
+    </div>
+  )
+}

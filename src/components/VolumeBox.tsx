@@ -68,4 +68,10 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
                   </div>
                 ))}
               </div>
-   
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

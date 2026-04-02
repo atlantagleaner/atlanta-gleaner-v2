@@ -483,4 +483,13 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           transition:     `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
         }}
       >
-        <span 
+        <span style={{ ...T.label, color: PALETTE.black }}>
+          {expanded ? 'Collapse' : 'Read Opinion'}
+        </span>
+        <span style={{ ...T.label, color: PALETTE.black, opacity: 0.45 }}>
+          {expanded ? '↑' : '↓'}
+        </span>
+      </button>
+    </article>
+  )
+}
