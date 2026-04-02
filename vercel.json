@@ -4,3 +4,5 @@
       "path": "/api/cron/refresh-news",
       "schedule": "0 5 * * *"
     }
+  ]
+}
