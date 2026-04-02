@@ -115,4 +115,5 @@ export const SCORING = {
   ],
   deprioritize: [
     'nfl standings', 'nba standings', 'mlb standings', 'box score',
-    '
+  ],
+}
