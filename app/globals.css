@@ -272,10 +272,4 @@ a.case-archive-link:hover .case-archive-meta {
   color: rgba(255,255,255,0.45);
 }
 
-/* ── Case Law expand / collapse bar ──────────────────────────────────────── */
-button.ag-expand-bar {
-  transition: background 0.12s;
-}
-button.ag-expand-bar:hover {
-  background: var(--palette-warm) !important;
-}
+/* ── Case Law expan

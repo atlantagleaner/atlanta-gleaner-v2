@@ -151,15 +151,4 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
                   fontWeight: active ? 700 : 500,
                   color: PALETTE.black,
                   textDecoration: 'none',
-                  borderBottom: '1px solid var(--palette-rule)',
-                }}
-              >
-                {label}
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-    </>
-  )
-}
+                  borderBottom: '1px solid var(--palette-rule)'

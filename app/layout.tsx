@@ -29,7 +29,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AnalogShell>
           {children}
         </AnalogShell>
-      </body>
-    </html>
-  )
-}
+ 

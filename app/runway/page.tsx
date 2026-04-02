@@ -92,10 +92,4 @@ export default function RunwayPage() {
 
       {/* Video grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
-        {VIDEOS.map(v => <VideoSlot key={v.id} {...v} />)}
-      </div>
-
-      </div>
-    </>
-  )
-}
+      

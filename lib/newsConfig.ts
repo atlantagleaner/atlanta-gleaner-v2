@@ -115,7 +115,4 @@ export const SCORING = {
   ],
   deprioritize: [
     'nfl standings', 'nba standings', 'mlb standings', 'box score',
-    'dow jones', 's&p 500', 'nasdaq', 'celebrity wedding',
-    'grammy award', 'oscar nominations', 'box office',
-  ],
-};
+    '

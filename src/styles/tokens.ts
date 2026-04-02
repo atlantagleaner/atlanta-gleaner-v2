@@ -368,9 +368,4 @@ export const PAGE_TITLE_BLOCK: CSSProperties = {
 //   Footnote list:    T.micro back-link number + FONT.sans 12px text · lineHeight 1.55
 //
 // ── DATA ENTRY PROTOCOL ───────────────────────────────────────────────────────
-//   When entering a new opinion into src/data/cases.ts:
-//   1. Copy the text verbatim from the official slip opinion PDF.
-//   2. Replace each footnote reference mark with {fn:N}.
-//   3. Enter the corresponding footnote text in the footnotes Record.
-//   4. Set noticeText if the slip opinion carries an asterisk notice.
-//   5. Verify the full text against the slip opinion before committing.
+//   When entering a new op

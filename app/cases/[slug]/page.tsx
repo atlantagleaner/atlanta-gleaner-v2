@@ -79,10 +79,4 @@ export default async function CaseLawPage({
           node:  <CaseLawBox caseData={caseData!} />,
         }}
         right={{
-          label: 'Astrology',
-          node:  <AstrologyBox />,
-        }}
-      />
-    </main>
-  )
-}
+          label: 'Astr

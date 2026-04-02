@@ -125,11 +125,4 @@ async function main() {
     try {
       await splitDocxFile(filePath, outputDir, file);
     } catch (err) {
-      console.error(`Error processing ${file}:`, err.message);
-    }
-  }
-  
-  console.log(`\n✓ All cases extracted to: ${outputDir}`);
-}
-
-main().catch(console.error);
+      console.error(`Error processing ${fi

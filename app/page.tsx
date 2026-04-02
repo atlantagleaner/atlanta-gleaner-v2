@@ -43,9 +43,4 @@ export default function HomePage() {
         }}
         right={{
           label: 'Astrology',
-          node:  <AstrologyBox />,
-        }}
-      />
-    </main>
-  )
-}
+          node:  <AstrologyB

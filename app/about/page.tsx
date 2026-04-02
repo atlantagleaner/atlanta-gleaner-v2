@@ -75,11 +75,4 @@ export default function AboutPage() {
         <p style={{ ...mono, fontSize: '9px', color: '#aaa', lineHeight: 1.6, margin: '12px 0 0', letterSpacing: '0.04em' }}>
           Case opinions republished on this site are public records. Summaries and editorial commentary are
           original work. Comic panels are republished for editorial and archival purposes. This site is not
-          affiliated with any court, law firm, or government body.
-        </p>
-
-      </div>
-      </div>
-    </>
-  )
-}
+          affiliated with any court, law fir

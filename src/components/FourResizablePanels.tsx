@@ -178,11 +178,4 @@ export function FourResizablePanels({ col1, col2, col3, col4 }: FourPanelsProps)
               onPointerDown={(e: ReactPointerEvent<HTMLDivElement>) => startDrag(slot, e)} 
               isDragging={dragSlot === slot} 
             />
-            {panels[order[slot]].node}
-          </div>
-          {idx < 3 && <ResizeHandle onMouseDown={() => { resizeDragging.current = idx }} />}
-        </React.Fragment>
-      ))}
-    </div>
-  )
-}
+            {panels[o

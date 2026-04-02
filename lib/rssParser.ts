@@ -143,11 +143,4 @@ function decodeEntities(str: string): string {
 function isValidUrl(url: string): boolean {
   if (!url) return false;
   if (url.startsWith('#')) return false;
-  if (url.startsWith('javascript:')) return false;
-  try {
-    const u = new URL(url);
-    return u.protocol === 'http:' || u.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
+  if (url.startsWith('javascript:')) ret

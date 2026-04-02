@@ -7,4 +7,4 @@
   4. Run `git push`.
   5. Run `vercel --prod`.
 - Always check `git status` before performing any git actions.
-- If a build fails on Vercel, read the logs using `vercel logs` and suggest a fix.
+- If a build fails on Vercel, read the logs using `vercel logs` and sugges

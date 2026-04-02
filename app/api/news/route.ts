@@ -68,9 +68,4 @@ export async function GET() {
     return NextResponse.json(
       {
         items: [],
-        error: 'Edge Config unavailable. Check EDGE_CONFIG environment variable.',
-      },
-      { status: 503 }
-    );
-  }
-}
+        error: 'Edge Config unavailable. Check EDGE_CONFI

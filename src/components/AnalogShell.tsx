@@ -7,6 +7,4 @@ export function AnalogShell({ children }: { children: ReactNode }) {
   return (
     <div style={{ minHeight: '100vh', width: '100%', background: PALETTE.warm }}>
       {children}
-    </div>
-  )
-}
+    </di

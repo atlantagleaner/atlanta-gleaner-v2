@@ -34,8 +34,4 @@ export function DateClock() {
           fontVariantNumeric: 'tabular-nums',
         }}>
           {timeStr}
-        </span>
-      </div>
-    </div>
-  )
-}
+        </

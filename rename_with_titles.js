@@ -64,7 +64,4 @@ async function main() {
     }
   }
   
-  console.log(`\n✓ Renamed ${renamed} files`);
-}
-
-main().catch(console.error);
+  console.log(`

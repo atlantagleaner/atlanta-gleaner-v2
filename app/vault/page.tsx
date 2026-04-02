@@ -152,11 +152,4 @@ export default function VaultPage() {
       </div>
 
       {/* Shopify notice */}
-      <p style={{ ...mono, fontSize: '9px', color: '#bbb', textAlign: 'center', marginTop: '40px', letterSpacing: '0.08em' }}>
-        Secure checkout via Shopify · Ships 3–5 business days · Atlanta, GA
-      </p>
-
-      </div>
-    </>
-  )
-}
+      <p style={{ ...mono, fontSize: '9px', color: '#bbb', textAlign: 'center', marginTop: '

@@ -483,22 +483,4 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           transition:     `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
         }}
       >
-        <span style={{ ...T.label, color: PALETTE.black }}>
-          {expanded ? 'Collapse' : 'Read Opinion'}
-        </span>
-        <span style={{
-          ...T.label,
-          color:      PALETTE.black,
-          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
-          display:    'inline-block',
-          transform:  expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}>
-          ↓
-        </span>
-      </button>
-
-    </article>
-  )
-}
-
-export type { CaseLawBoxProps }
+        <span 

@@ -469,19 +469,4 @@ async function run() {
 
     // Sort newest-first by date
     results.sort((a, b) => {
-      const da = new Date(a.dateDecided).getTime() || 0;
-      const db = new Date(b.dateDecided).getTime() || 0;
-      return db - da;
-    });
-
-    await fs.writeFile(OUTPUT_FILE, JSON.stringify(results, null, 2), 'utf8');
-
-    console.log(`\n\n✓ SUCCESS — ${ok} cases written to src/data/cases.json`);
-    if (errors) console.warn(`  ⚠ ${errors} files failed (see above)`);
-  } catch (err) {
-    console.error('\n✗ Fatal error:', err.message);
-    process.exit(1);
-  }
-}
-
-run();
+      const da = n

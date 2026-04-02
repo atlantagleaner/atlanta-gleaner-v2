@@ -40,8 +40,3 @@ async function main() {
       console.log(`    Cases found: ${eodCount + 1}\n`);
     } catch (e) {
       console.log(`    Error: ${e.message}\n`);
-    }
-  }
-}
-
-main().catch(console.error);

@@ -43,8 +43,4 @@ async function testFeeds() {
  if (failed === 0) {
  console.log('🎉 SUCCESS: Zero broken links detected!');
  } else {
- console.log(`🚨 ALERT: ${failed} feeds failed validation. Please update newsConfig.ts.`);
- }
-}
-
-testFeeds();
+ console.log(`🚨 ALERT: ${failed} feeds failed validation. Please

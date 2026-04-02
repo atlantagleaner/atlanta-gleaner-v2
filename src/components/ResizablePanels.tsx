@@ -344,12 +344,4 @@ export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
       <ResizeHandle onMouseDown={() => { resizeDragging.current = 'right' }} />
 
       <div
-        ref={el => { colRefs.current[2] = el }}
-        style={{ width: `${widths[2]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
-      >
-        <DragBar label={panels[order[2]].label} onPointerDown={e => startDrag(2, e)} isDragging={dragSlot === 2} />
-        {panels[order[2]].node}
-      </div>
-    </div>
-  )
-}
+        
