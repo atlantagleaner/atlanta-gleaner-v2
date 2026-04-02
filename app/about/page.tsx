@@ -1,84 +1,82 @@
-import { type CSSProperties } from 'react'
 import { Banner } from '@/src/components/Banner'
+import {
+  FONT, T, PALETTE, PALETTE_CSS, SPACING,
+  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK,
+} from '@/src/styles/tokens'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // About — editorial mission and site information
 // ─────────────────────────────────────────────────────────────────────────────
 
-const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" }
-const serif: CSSProperties = { fontFamily: "'Cormorant Garamond', serif" }
-const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" }
-
 export default function AboutPage() {
   return (
     <>
       <Banner />
-      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
-        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
-          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+      <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
+        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
+          <h1 style={{ ...T.pageTitle, paddingTop: SPACING.xl, color: PALETTE.black, margin: 0 }}>
             About
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '680px', margin: '0 auto', padding: '0 24px 80px' }}>
+      <div style={{ maxWidth: '680px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
 
-      {/* Body copy */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.xl }}>
 
-        <p style={{ ...sans, fontSize: '16px', lineHeight: 1.75, color: '#222', margin: 0 }}>
-          <strong>The Atlanta Gleaner</strong> is an independent publication focused on Georgia case law
-          and legal news. It exists to make the output of Georgia&rsquo;s courts readable — digestible by
-          anyone with an interest in the law, not just attorneys.
-        </p>
-
-        <p style={{ ...sans, fontSize: '16px', lineHeight: 1.75, color: '#444', margin: 0 }}>
-          Each edition centers on a recently decided opinion from a Georgia court.
-          The opinion is republished with a plain-language summary and editorial framing.
-          The news index tracks ongoing legal and political developments in the state.
-        </p>
-
-        <div style={{ borderLeft: '3px solid #000', paddingLeft: '16px', margin: '8px 0' }}>
-          <p style={{ ...serif, fontSize: '22px', fontStyle: 'italic', fontWeight: 600, color: '#000', margin: 0, lineHeight: 1.45 }}>
-            &ldquo;The law is a public record. It should read like one.&rdquo;
+          <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
+            <strong>The Atlanta Gleaner</strong> is an independent publication focused on Georgia case law
+            and legal news. It exists to make the output of Georgia&rsquo;s courts readable — digestible by
+            anyone with an interest in the law, not just attorneys.
           </p>
-        </div>
 
-        <p style={{ ...sans, fontSize: '16px', lineHeight: 1.75, color: '#444', margin: 0 }}>
-          The comics section posts selections from The Far Side and other strips as archival found objects.
-          The Runway is an occasional music column. The Vault sells goods.
-        </p>
-
-        <p style={{ ...sans, fontSize: '16px', lineHeight: 1.75, color: '#444', margin: 0 }}>
-          The Atlanta Gleaner is edited by George Washington. It is published from Atlanta, Georgia.
-        </p>
-
-        {/* Masthead block */}
-        <div style={{ marginTop: '20px', border: '1px solid rgba(0,0,0,0.12)', background: '#fff', padding: '20px 22px' }}>
-          <p style={{ ...mono, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.18em', color: '#aaa', margin: '0 0 12px', borderBottom: '1px solid rgba(0,0,0,0.07)', paddingBottom: '8px' }}>
-            Masthead
+          <p style={{ ...T.prose, color: PALETTE.black, opacity: 0.75, margin: 0 }}>
+            Each edition centers on a recently decided opinion from a Georgia court.
+            The opinion is republished with a plain-language summary and editorial framing.
+            The news index tracks ongoing legal and political developments in the state.
           </p>
-          {[
-            ['Editor',       'George Washington'],
-            ['Publication',  'The Atlanta Gleaner'],
-            ['Founded',      '2024'],
-            ['Location',     'Atlanta, Georgia'],
-            ['Contact',      'atlantagleaner@gmail.com'],
-          ].map(([label, value]) => (
-            <div key={label} style={{ display: 'flex', gap: '16px', padding: '5px 0', borderBottom: '1px solid rgba(0,0,0,0.05)', flexWrap: 'wrap' }}>
-              <span style={{ ...mono, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', minWidth: '100px' }}>{label}:</span>
-              <span style={{ ...sans, fontSize: '13px', color: '#333' }}>{value}</span>
-            </div>
-          ))}
+
+          <div style={{ borderLeft: `3px solid ${PALETTE.black}`, paddingLeft: SPACING.lg, margin: `${SPACING.sm} 0` }}>
+            <p style={{ ...FONT.serif, fontSize: SIZE_LG, fontStyle: 'italic', fontWeight: 600, color: PALETTE.black, margin: 0, lineHeight: 1.45 }}>
+              &ldquo;The law is a public record. It should read like one.&rdquo;
+            </p>
+          </div>
+
+          <p style={{ ...T.prose, color: PALETTE.black, opacity: 0.75, margin: 0 }}>
+            The comics section posts selections from The Far Side and other strips as archival found objects.
+            The Runway is an occasional music column. The Vault sells goods.
+          </p>
+
+          <p style={{ ...T.prose, color: PALETTE.black, opacity: 0.75, margin: 0 }}>
+            The Atlanta Gleaner is edited by George Washington. It is published from Atlanta, Georgia.
+          </p>
+
+          {/* Masthead block */}
+          <div style={{ marginTop: SPACING.xl, border: `1px solid ${PALETTE_CSS.ruleMd}`, background: PALETTE.white, padding: `${SPACING.xl} ${SPACING.xxl}` }}>
+            <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: `0 0 ${SPACING.md}`, borderBottom: `1px solid ${PALETTE_CSS.rule}`, paddingBottom: SPACING.sm }}>
+              Masthead
+            </p>
+            {[
+              ['Editor',       'George Washington'],
+              ['Publication',  'The Atlanta Gleaner'],
+              ['Founded',      '2024'],
+              ['Location',     'Atlanta, Georgia'],
+              ['Contact',      'atlantagleaner@gmail.com'],
+            ].map(([label, value]) => (
+              <div key={label} style={{ display: 'flex', gap: SPACING.lg, padding: `${SPACING.xs} 0`, borderBottom: `1px solid ${PALETTE_CSS.ruleSm}`, flexWrap: 'wrap' }}>
+                <span style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, minWidth: '100px' }}>{label}:</span>
+                <span style={{ ...T.prose, color: PALETTE.black }}>{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Legal notice */}
+          <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.35, lineHeight: 1.6, margin: `${SPACING.md} 0 0` }}>
+            Case opinions republished on this site are public records. Summaries and editorial commentary are
+            original work. Comic panels are republished for editorial and archival purposes. This site is not
+            affiliated with any court, law firm, or government body.
+          </p>
+
         </div>
-
-        {/* Legal notice */}
-        <p style={{ ...mono, fontSize: '9px', color: '#aaa', lineHeight: 1.6, margin: '12px 0 0', letterSpacing: '0.04em' }}>
-          Case opinions republished on this site are public records. Summaries and editorial commentary are
-          original work. Comic panels are republished for editorial and archival purposes. This site is not
-          affiliated with any court, law firm, or government body.
-        </p>
-
-      </div>
       </div>
     </>
   )

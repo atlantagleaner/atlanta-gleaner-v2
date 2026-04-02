@@ -6,12 +6,12 @@
 // Future: Google Ads conversion tracking via gtag
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import { Banner } from '@/src/components/Banner'
-
-const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" }
-const serif: CSSProperties = { fontFamily: "'Cormorant Garamond', serif" }
-const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" }
+import {
+  FONT, T, PALETTE, PALETTE_CSS, SPACING,
+  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK, ANIMATION,
+} from '@/src/styles/tokens'
 
 // Future: Shopify Storefront API products query
 const PRODUCTS = [
@@ -48,20 +48,20 @@ function ProductCard({ name, description, price, imageUrl, shopifyUrl, tag }: ty
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div style={{ border: '1px solid rgba(0,0,0,0.15)', background: '#fff' }}>
+    <div style={{ border: `1px solid ${PALETTE_CSS.border}`, background: PALETTE.white }}>
       {/* Header */}
       <div style={{
-        background: '#111',
-        padding: '7px 14px',
-        display: 'flex',
+        background:     PALETTE.black,
+        padding:        `${SPACING.sm} ${SPACING.lg}`,
+        display:        'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems:     'center',
       }}>
-        <span style={{ ...mono, fontSize: '9px', color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.22em' }}>
+        <span style={{ ...T.nav, color: PALETTE.white }}>
           Vault · Item
         </span>
         {tag && (
-          <span style={{ ...mono, fontSize: '8px', color: '#fbbf24', letterSpacing: '0.12em', fontWeight: 700 }}>
+          <span style={{ ...FONT.mono, fontSize: SIZE_SM, color: PALETTE.white, letterSpacing: '0.12em', fontWeight: 700 }}>
             {tag}
           </span>
         )}
@@ -77,33 +77,33 @@ function ProductCard({ name, description, price, imageUrl, shopifyUrl, tag }: ty
         />
       ) : (
         <div style={{
-          aspectRatio: '1/1',
-          background: '#f5f5f5',
-          display: 'flex',
-          flexDirection: 'column',
+          aspectRatio:    '1/1',
+          background:     PALETTE.warm,
+          display:        'flex',
+          flexDirection:  'column',
           justifyContent: 'center',
-          alignItems: 'center',
-          gap: '10px',
-          borderBottom: '1px solid rgba(0,0,0,0.07)',
+          alignItems:     'center',
+          gap:            SPACING.sm,
+          borderBottom:   `1px solid ${PALETTE_CSS.rule}`,
         }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '32px', color: '#ccc' }} strokeWidth="1" strokeLinecap="square">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '32px', color: PALETTE.black, opacity: 0.25 }} strokeWidth="1" strokeLinecap="square">
             <rect x="3" y="3" width="18" height="18" />
             <line x1="3" y1="9" x2="21" y2="9" />
             <line x1="9" y1="21" x2="9" y2="9" />
           </svg>
-          <p style={{ ...mono, fontSize: '9px', color: '#ccc', textTransform: 'uppercase', letterSpacing: '0.12em', margin: 0 }}>
+          <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.35, margin: 0 }}>
             [ Product Image Pending ]
           </p>
         </div>
       )}
 
       {/* Info */}
-      <div style={{ padding: '16px' }}>
-        <p style={{ ...serif, fontSize: '19px', fontWeight: 600, color: '#000', margin: '0 0 4px' }}>{name}</p>
-        <p style={{ ...sans, fontSize: '13px', color: '#666', margin: '0 0 12px', lineHeight: 1.5 }}>{description}</p>
+      <div style={{ padding: SPACING.lg }}>
+        <p style={{ ...FONT.serif, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.black, margin: `0 0 ${SPACING.xs}` }}>{name}</p>
+        <p style={{ ...T.body, color: PALETTE.black, opacity: 0.65, margin: `0 0 ${SPACING.md}`, lineHeight: 1.5 }}>{description}</p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ ...mono, fontSize: '14px', fontWeight: 700, color: '#000', letterSpacing: '0.06em' }}>
+          <span style={{ ...FONT.mono, fontSize: SIZE_MD, fontWeight: 700, color: PALETTE.black, letterSpacing: '0.06em' }}>
             {price}
           </span>
           <a
@@ -111,18 +111,18 @@ function ProductCard({ name, description, price, imageUrl, shopifyUrl, tag }: ty
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={{
-              ...mono,
-              fontSize: '9px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-              fontWeight: 700,
-              padding: '8px 14px',
-              border: '2px solid #000',
-              background: hovered ? '#000' : 'transparent',
-              color: hovered ? '#F7F2EA' : '#000',
+              ...FONT.mono,
+              fontSize:       SIZE_SM,
+              textTransform:  'uppercase',
+              letterSpacing:  '0.18em',
+              fontWeight:     700,
+              padding:        `${SPACING.sm} ${SPACING.lg}`,
+              border:         `2px solid ${PALETTE.black}`,
+              background:     hovered ? PALETTE.black : 'transparent',
+              color:          hovered ? PALETTE.warm : PALETTE.black,
               textDecoration: 'none',
-              transition: 'all 0.15s',
-              display: 'inline-block',
+              transition:     `all ${ANIMATION.fast} ${ANIMATION.ease}`,
+              display:        'inline-block',
             }}
           >
             Buy Now
@@ -137,25 +137,21 @@ export default function VaultPage() {
   return (
     <>
       <Banner />
-      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
-        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
-          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+      <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
+        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
+          <h1 style={{ ...T.pageTitle, paddingTop: SPACING.xl, color: PALETTE.black, margin: 0 }}>
             Vault
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px 80px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: SPACING.xl }}>
+          {PRODUCTS.map(p => <ProductCard key={p.id} {...p} />)}
+        </div>
 
-      {/* Product grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-        {PRODUCTS.map(p => <ProductCard key={p.id} {...p} />)}
-      </div>
-
-      {/* Shopify notice */}
-      <p style={{ ...mono, fontSize: '9px', color: '#bbb', textAlign: 'center', marginTop: '40px', letterSpacing: '0.08em' }}>
-        Secure checkout via Shopify · Ships 3–5 business days · Atlanta, GA
-      </p>
-
+        <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.35, textAlign: 'center', marginTop: SPACING.xxxl }}>
+          Secure checkout via Shopify · Ships 3–5 business days · Atlanta, GA
+        </p>
       </div>
     </>
   )

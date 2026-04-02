@@ -6,7 +6,9 @@
 // or a server-side fetched tweet list via the X API.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { PALETTE, FONT, T, BOX_SHELL, BOX_HEADER, ITEM_RULE } from '@/src/styles/tokens'
+import {
+  PALETTE, T, BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING,
+} from '@/src/styles/tokens'
 
 const SAMPLE_TWEETS = [
   {
@@ -28,44 +30,35 @@ const SAMPLE_TWEETS = [
 
 export function TwitterBox() {
   return (
-    <div style={{ ...BOX_SHELL, height: 'auto' }}>
-      {/* Header — BOX_HEADER */}
-      <h2 style={{ ...BOX_HEADER, padding: '8px 14px', margin: 0 }}>
-        Live Feed · X / Twitter
-      </h2>
+    <div style={{ ...BOX_SHELL }}>
+      <div style={{ padding: BOX_PADDING }}>
+        <h2 style={{ ...BOX_HEADER }}>
+          Live Feed · X / Twitter
+        </h2>
 
-      {/* Tweet list */}
-      <div style={{ padding: '14px 14px 18px', display: 'flex', flexDirection: 'column', gap: '0' }}>
-        {SAMPLE_TWEETS.map((tweet, i) => (
-          <div key={i} style={{
-            ...ITEM_RULE,
-            paddingBottom: '16px',
-            marginBottom:  '16px',
-            display:       'flex',
-            flexDirection: 'column',
-            gap:           '6px',
-          }}>
-            {/* Handle + time — T.micro */}
-            <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.55, margin: 0 }}>
-              {tweet.handle} · {tweet.time}
-            </p>
-            {/* Tweet body — 13px sans */}
-            <p style={{
-              ...FONT.sans,
-              fontSize:   '13px',
-              lineHeight: 1.55,
-              color:      PALETTE.black,
-              margin:     0,
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {SAMPLE_TWEETS.map((tweet, i) => (
+            <div key={i} style={{
+              ...ITEM_RULE,
+              paddingBottom: SPACING.lg,
+              marginBottom:  SPACING.lg,
+              display:       'flex',
+              flexDirection: 'column',
+              gap:           SPACING.sm,
             }}>
-              {tweet.text}
-            </p>
-          </div>
-        ))}
+              <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.55, margin: 0 }}>
+                {tweet.handle} · {tweet.time}
+              </p>
+              <p style={{ ...T.body, color: PALETTE.black, margin: 0 }}>
+                {tweet.text}
+              </p>
+            </div>
+          ))}
 
-        {/* Footer action */}
-        <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0, marginTop: '2px' }}>
-          [ X timeline integration pending ]
-        </p>
+          <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0 }}>
+            [ X timeline integration pending ]
+          </p>
+        </div>
       </div>
     </div>
   )

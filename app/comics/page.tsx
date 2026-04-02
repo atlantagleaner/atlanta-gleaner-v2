@@ -1,14 +1,13 @@
-import { type CSSProperties } from 'react'
 import { Banner } from '@/src/components/Banner'
+import {
+  FONT, T, PALETTE, PALETTE_CSS, SPACING,
+  SIZE_SM, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK,
+} from '@/src/styles/tokens'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Comics — comic panels displayed like framed art in a gallery
 // Future: fetch from Supabase `comics` table with imageUrl, caption, date
 // ─────────────────────────────────────────────────────────────────────────────
-
-const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" }
-const serif: CSSProperties = { fontFamily: "'Cormorant Garamond', serif" }
-const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
 // Future: replace with Supabase fetch
 const COMICS = [
@@ -24,59 +23,59 @@ const COMICS = [
 
 function ComicFrame({ series, caption, imageUrl, publishedAt, frameNo }: typeof COMICS[0]) {
   return (
-    <div style={{ border: '1px solid rgba(0,0,0,0.15)', background: '#fff' }}>
+    <div style={{ border: `1px solid ${PALETTE_CSS.border}`, background: PALETTE.white }}>
       {/* Header */}
       <div style={{
-        background: '#111',
-        padding: '7px 14px',
-        display: 'flex',
+        background:     PALETTE.black,
+        padding:        `${SPACING.sm} ${SPACING.lg}`,
+        display:        'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems:     'center',
       }}>
-        <span style={{ ...mono, fontSize: '9px', color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.22em' }}>
+        <span style={{ ...T.nav, color: PALETTE.white }}>
           {series}
         </span>
-        <span style={{ ...mono, fontSize: '9px', color: '#444', letterSpacing: '0.08em' }}>
+        <span style={{ ...FONT.mono, fontSize: SIZE_SM, color: PALETTE.white, opacity: 0.45, letterSpacing: '0.08em' }}>
           FRAME:{frameNo}
         </span>
       </div>
 
       {/* Frame label */}
-      <div style={{ background: 'rgba(0,0,0,0.025)', padding: '3px 14px', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
-        <span style={{ ...mono, fontSize: '9px', color: '#bbb' }}>▶ {frameNo} · {publishedAt}</span>
+      <div style={{ background: PALETTE.warm, padding: `${SPACING.xs} ${SPACING.lg}`, borderBottom: `1px solid ${PALETTE_CSS.rule}` }}>
+        <span style={{ ...T.micro, color: PALETTE.black, opacity: 0.45 }}>▶ {frameNo} · {publishedAt}</span>
       </div>
 
       {/* Image area — museum-style with wide white mat */}
-      <div style={{ padding: '28px', background: '#fafafa' }}>
+      <div style={{ padding: SPACING.xl, background: PALETTE.warm }}>
         {imageUrl ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={imageUrl}
             alt={caption || series}
             style={{
-              width: '100%',
+              width:   '100%',
               display: 'block',
-              border: '1px solid rgba(0,0,0,0.08)',
-              filter: 'grayscale(15%) contrast(1.05)',
+              border:  `1px solid ${PALETTE_CSS.rule}`,
+              filter:  'grayscale(15%) contrast(1.05)',
             }}
           />
         ) : (
           <div style={{
-            aspectRatio: '4/3',
-            border: '1px solid rgba(0,0,0,0.08)',
-            display: 'flex',
-            flexDirection: 'column',
+            aspectRatio:    '4/3',
+            border:         `1px solid ${PALETTE_CSS.rule}`,
+            display:        'flex',
+            flexDirection:  'column',
             justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            background: '#f5f5f5',
+            alignItems:     'center',
+            gap:            SPACING.sm,
+            background:     PALETTE.white,
           }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '32px', color: '#ccc' }} strokeWidth="1" strokeLinecap="square">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '32px', color: PALETTE.black, opacity: 0.25 }} strokeWidth="1" strokeLinecap="square">
               <rect x="2" y="2" width="20" height="20" />
               <circle cx="8" cy="8" r="2" />
               <polyline points="22 15 17 10 5 22" />
             </svg>
-            <p style={{ ...mono, fontSize: '9px', color: '#ccc', textTransform: 'uppercase', letterSpacing: '0.12em', margin: 0 }}>
+            <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.35, margin: 0 }}>
               [ Awaiting Scan ]
             </p>
           </div>
@@ -85,14 +84,11 @@ function ComicFrame({ series, caption, imageUrl, publishedAt, frameNo }: typeof 
 
       {/* Caption — museum label style */}
       {caption && (
-        <div style={{
-          padding: '12px 20px 18px',
-          borderTop: '1px solid rgba(0,0,0,0.07)',
-        }}>
-          <p style={{ ...serif, fontSize: '15px', fontStyle: 'italic', fontWeight: 600, color: '#333', margin: 0, lineHeight: 1.55 }}>
+        <div style={{ padding: `${SPACING.md} ${SPACING.xl} ${SPACING.lg}`, borderTop: `1px solid ${PALETTE_CSS.rule}` }}>
+          <p style={{ ...T.caption, color: PALETTE.black, margin: 0 }}>
             {caption}
           </p>
-          <p style={{ ...mono, fontSize: '9px', color: '#bbb', margin: '6px 0 0', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: `${SPACING.sm} 0 0` }}>
             {series} · {publishedAt}
           </p>
         </div>
@@ -105,20 +101,17 @@ export default function ComicsPage() {
   return (
     <>
       <Banner />
-      <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 20px' }}>
-        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.10)', paddingBottom: '24px', marginBottom: '28px' }}>
-          <h1 style={{ ...mono, fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.10em', lineHeight: 1, color: '#0A0A0A', margin: 0 }}>
+      <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
+        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
+          <h1 style={{ ...T.pageTitle, paddingTop: SPACING.xl, color: PALETTE.black, margin: 0 }}>
             Comics
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 80px' }}>
-
-      {/* Masonry-style grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-        {COMICS.map(c => <ComicFrame key={c.id} {...c} />)}
-      </div>
-
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: SPACING.xl }}>
+          {COMICS.map(c => <ComicFrame key={c.id} {...c} />)}
+        </div>
       </div>
     </>
   )

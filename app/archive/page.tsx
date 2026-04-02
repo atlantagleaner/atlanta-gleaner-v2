@@ -19,8 +19,9 @@ import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { Banner } from '@/src/components/Banner'
 import {
-  PALETTE, FONT, T, BOX_SHELL, BOX_HEADER,
-  BOX_PADDING, ITEM_RULE, PAGE_TITLE_BLOCK, PAGE_MAX_W,
+  PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL, BOX_HEADER,
+  BOX_PADDING, ITEM_RULE, SPACING, SIZE_SM, SIZE_MD,
+  PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION,
 } from '@/src/styles/tokens'
 import casesRaw from '@/src/data/cases.json'
 import type { CaseLaw } from '@/src/data/types'
@@ -62,7 +63,7 @@ function yearLabel(years: number[]): string {
 
 const volumeShell: CSSProperties = {
   ...BOX_SHELL,
-  marginBottom: '24px',
+  marginBottom: SPACING.xl,
   overflow:     'hidden',
 }
 
@@ -70,7 +71,7 @@ const volumeToggle: CSSProperties = {
   width:          '100%',
   background:     PALETTE.black,
   border:         'none',
-  padding:        '16px 20px',
+  padding:        `${SPACING.lg} ${SPACING.lg}`,
   display:        'flex',
   justifyContent: 'space-between',
   alignItems:     'center',
@@ -82,7 +83,7 @@ const monthToggle: CSSProperties = {
   width:          '100%',
   background:     'transparent',
   border:         'none',
-  padding:        '12px 20px',
+  padding:        `${SPACING.md} ${SPACING.lg}`,
   display:        'flex',
   justifyContent: 'space-between',
   alignItems:     'center',
@@ -113,27 +114,25 @@ function MonthShelf({
       >
         <span style={{
           ...T.micro,
-          color:         open ? PALETTE.black : 'rgba(0,0,0,0.55)',
-          fontSize:      '12px',
-          letterSpacing: '0.13em',
+          color:         open ? PALETTE.black : PALETTE_CSS.meta,
         }}>
           {month} {year}
           <span style={{
-            marginLeft:    '10px',
+            marginLeft:    SPACING.sm,
             ...FONT.mono,
-            fontSize:      '11px',
+            fontSize:      SIZE_SM,
             fontWeight:    400,
             letterSpacing: '0.10em',
-            color:         'rgba(0,0,0,0.35)',
+            color:         PALETTE_CSS.muted,
           }}>
             — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
           </span>
         </span>
         <span style={{
           ...FONT.mono,
-          fontSize:   '11px',
-          color:      'rgba(0,0,0,0.30)',
-          transition: 'transform 0.18s',
+          fontSize:   SIZE_SM,
+          color:      PALETTE_CSS.muted,
+          transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}`,
           display:    'inline-block',
           transform:  open ? 'rotate(90deg)' : 'rotate(0)',
         }}>
@@ -152,9 +151,7 @@ function MonthShelf({
               {/* Case title */}
               <div className="case-archive-title" style={{
                 ...T.body,
-                fontSize:     '15px',
-                fontWeight:   500,
-                marginBottom: '4px',
+                marginBottom: SPACING.xs,
               }}>
                 {c.title}
               </div>
@@ -163,7 +160,6 @@ function MonthShelf({
                 ...T.micro,
                 fontWeight:    400,
                 letterSpacing: '0.10em',
-                fontSize:      '11px',
               }}>
                 {[c.court, c.docketNumber].filter(Boolean).join(' · ')}
               </div>
@@ -224,39 +220,23 @@ function VolumeBox({
         style={volumeToggle}
         aria-expanded={open}
       >
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px' }}>
-          <span style={{
-            ...T.label,
-            color:         PALETTE.white,
-            fontSize:      '13px',
-            letterSpacing: '0.18em',
-            lineHeight:    1,
-          }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: SPACING.lg }}>
+          <span style={{ ...T.label, color: PALETTE.white, lineHeight: 1 }}>
             Volume {volume.roman}
           </span>
-          <span style={{
-            ...T.micro,
-            color:         'rgba(255,255,255,0.50)',
-            fontSize:      '11px',
-            letterSpacing: '0.13em',
-          }}>
+          <span style={{ ...T.micro, color: PALETTE.white, opacity: 0.5 }}>
             {yearSpanLabel}
           </span>
-          <span style={{
-            ...T.micro,
-            color:         'rgba(255,255,255,0.35)',
-            fontSize:      '11px',
-            letterSpacing: '0.10em',
-            fontWeight:    400,
-          }}>
+          <span style={{ ...T.micro, color: PALETTE.white, opacity: 0.35, fontWeight: 400 }}>
             {volumeCases.length} {volumeCases.length === 1 ? 'opinion' : 'opinions'}
           </span>
         </div>
         <span style={{
           ...FONT.mono,
-          fontSize:   '12px',
-          color:      'rgba(255,255,255,0.50)',
-          transition: 'transform 0.2s',
+          fontSize:   SIZE_SM,
+          color:      PALETTE.white,
+          opacity:    0.5,
+          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
           display:    'inline-block',
           transform:  open ? 'rotate(90deg)' : 'rotate(0)',
         }}>
@@ -270,8 +250,8 @@ function VolumeBox({
           {monthsWithCases.length === 0 ? (
             <div style={{
               ...T.micro,
-              color:   'rgba(0,0,0,0.30)',
-              padding: '16px 18px',
+              color:   PALETTE_CSS.muted,
+              padding: `${SPACING.lg} ${SPACING.lg}`,
             }}>
               No opinions published yet.
             </div>
@@ -305,7 +285,7 @@ export default function ArchivePage() {
       <div style={{
         maxWidth: PAGE_MAX_W,
         margin:   '0 auto',
-        padding:  '0 20px',
+        padding:  `0 ${SPACING.lg}`,
       }}>
 
         {/* Page title block */}
