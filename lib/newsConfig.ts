@@ -1,177 +1,121 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — News Engine Configuration
+// Atlanta Gleaner — News Engine Configuration (Serper-only Edition)
+// ─────────────────────────────────────────────────────────────────────────────
+// All news is fetched via Serper (Google Search API). No RSS feeds.
+// The cron job at 5:00 AM UTC (midnight ET) runs these queries once per day
+// and writes results to Edge Config. The /api/news route serves only from cache.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const SOURCES = {
+export type SerperEndpoint = 'news' | 'search' | 'videos';
 
-  // ── SCIENCE PINS (slots 1–5, always filled first) ────────────────────────────────────────
-  // Note: YouTube RSS feeds are blocked by Vercel's outbound proxy.
-  // Replaced with podcast RSS feeds hosted on open CDNs.
+export interface SearchQuery {
+  q: string;
+  endpoint: SerperEndpoint;
+  num: number;
+}
 
+// ── Search Queries ─────────────────────────────────────────────────────────────
+// Designed to surface diverse, high-quality content across science, local,
+// international, and oddball categories.
+
+export const SEARCH_QUERIES: Record<string, SearchQuery> = {
+
+  // SLOT 1 — Always: StarTalk (Neil deGrasse Tyson)
   starTalk: {
-    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCvNQn5Ld87p4F8o5WbU1Vaw',
-    type: 'science_pin',
-    label: 'StarTalk',
-    pinSlots: 2,
+    q: 'StarTalk Neil deGrasse Tyson latest episode',
+    endpoint: 'videos',
+    num: 3,
   },
 
+  // SLOT 2 — Always: PBS Space Time
   pbsSpaceTime: {
-    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC7pgm_sM7zG7tL_C1b84L-g',
-    type: 'science_pin',
-    label: 'PBS Space Time',
-    pinSlots: 1,
+    q: 'PBS Space Time latest episode',
+    endpoint: 'videos',
+    num: 3,
   },
 
-  pbsNova: {
-    // NOVA Now podcast feed (PRX-hosted, publicly accessible)
-    url: 'https://www.pbs.org/wgbh/nova/podcast/rss',
-    type: 'science_nova',
-    label: 'PBS NOVA',
-    pinSlots: 1,
-    maxAgeDays: 30,
+  // SLOTS 3-4 — Science bonus: overflow from above or adjacent science channels
+  scienceBonus: {
+    q: '"PBS Nova" OR Kurzgesagt OR Veritasium OR "Closer to Truth" OR "Isaac Arthur" science new episode',
+    endpoint: 'videos',
+    num: 4,
   },
 
-  wsbTV: {
-    url: 'https://www.wsbtv.com/arc/outboundfeeds/rss/category/news/local/',
-    type: 'local_tv_pin',
-    label: 'WSB-TV News',
-    pinSlots: 2,
+  // SLOTS 5-10 — Local Atlanta/Georgia: TV stations first (guaranteed fresh), then general
+  atlantaTV: {
+    q: 'site:wsbtv.com OR site:atlantanewsfirst.com breaking news today',
+    endpoint: 'news',
+    num: 6,
   },
 
-  atlantaNewsFirst: {
-    url: 'https://www.atlantanewsfirst.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory',
-    type: 'local_tv_pin',
-    label: 'Atlanta News First',
-    pinSlots: 2,
+  atlantaDeep: {
+    q: 'Atlanta Georgia court law politics community housing crime local news',
+    endpoint: 'news',
+    num: 10,
   },
 
-  // ── NEWS POOL (scored + Letterman guarantee) ─────────────────────────────────
-
-  georgiaRecorder: {
-    url: 'https://georgiarecorder.com/feed/',
-    type: 'news',
-    label: 'Georgia Recorder',
-    sourceBonus: 5,
-    maxPerSource: 2,
+  // Mixed into local pool — national/CNN
+  national: {
+    q: 'site:cnn.com OR site:nbcnews.com OR site:pbsnewshour.org top news today',
+    endpoint: 'news',
+    num: 5,
   },
 
-  roughDraft: {
-    url: 'https://roughdraftatlanta.com/feed/',
-    type: 'news',
-    label: 'Rough Draft Atlanta',
-    sourceBonus: 5,
-    maxPerSource: 2,
+  // SLOTS 11-13 — International / deep dives: long-form, unusual, thoughtful
+  international: {
+    q: 'site:aeon.co OR site:nautil.us OR site:restofworld.org OR site:foreignpolicy.com OR site:theatlantic.com international depth',
+    endpoint: 'search',
+    num: 6,
   },
 
-  atlantaVoice: {
-    url: 'https://theatlantavoice.com/feed',
-    type: 'news',
-    label: 'The Atlanta Voice',
-    sourceBonus: 5,
-    maxPerSource: 2,
-  },
-
-  canopyAtlanta: {
-    url: 'https://canopyatlanta.org/feed',
-    type: 'news',
-    label: 'Canopy Atlanta',
-    sourceBonus: 8,
-    maxPerSource: 2,
-  },
-
-  atlantaMagazine: {
-    url: 'https://atlantamagazine.com/feed',
-    type: 'news',
-    label: 'Atlanta Magazine',
-    sourceBonus: 3,
-    maxPerSource: 1,
-  },
-
-  cnn: {
-    url: 'https://rss.cnn.com/rss/cnn_topstories.rss',
-    type: 'news',
-    label: 'CNN',
-    sourceBonus: 0,
-    maxPerSource: 1,
-  },
-
-  pbsNewsHour: {
-    url: 'https://www.pbs.org/newshour/feeds/rss/headlines',
-    type: 'news',
-    label: 'PBS NewsHour',
-    sourceBonus: 2,
-    maxPerSource: 1,
+  // SLOTS 14-15 — Letterman: quirky, oddball, funny-strange
+  letterman: {
+    q: '"waffle house" OR "feral hog" OR alligator OR bizarre OR "claims to have" OR "police say" OR inexplicably weird funny news Georgia Florida',
+    endpoint: 'news',
+    num: 5,
   },
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Scoring Rules
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Slot Targets ──────────────────────────────────────────────────────────────
+// How many items to fill per category. Total = 15.
+
+export const SLOT_TARGETS = {
+  sciencePin:   2,   // Slots 1-2:   StarTalk + PBS Space Time (hard guarantee)
+  scienceBonus: 2,   // Slots 3-4:   Extra science videos
+  local:        6,   // Slots 5-10:  Atlanta/Georgia local + national
+  international: 3,  // Slots 11-13: International deep dives
+  letterman:    2,   // Slots 14-15: Quirky/Letterman stories
+  total:        15,
+};
+
+// ── Scoring Keywords ──────────────────────────────────────────────────────────
+// Applied to local/national pool to rank stories before filling slots 5-10.
 
 export const SCORING = {
-
   tier1: [
     'georgia law', 'georgia legislature', 'general assembly', 'georgia supreme court',
     'georgia court of appeals', '11th circuit', 'fulton county court', 'georgia bill',
     'governor signs', 'governor kemp', 'indictment', 'settlement', 'verdict',
     'lawsuit filed', 'georgia governor', 'state senate', 'state house',
   ],
-
   tier2: [
     'atlanta', 'georgia', 'savannah', 'macon', 'augusta', 'fayette',
     'peachtree city', 'gwinnett', 'cobb county', 'dekalb', 'fulton',
     'albany', 'columbus', 'rome, georgia', 'athens, georgia', 'valdosta',
-    'brunswick', 'jekyll island',
   ],
-
   tier3: [
     'wrongful death', 'premises liability', 'malpractice', 'sovereign immunity',
-    'motion to suppress', 'civil rights', 'fourth amendment', 'first amendment',
-    'due process', 'class action', 'injunction', 'attorney general',
-    'habeas corpus', 'qualified immunity', 'statute of limitations',
-    'claims against the city', 'ante-litem',
+    'civil rights', 'fourth amendment', 'first amendment', 'due process',
+    'class action', 'injunction', 'attorney general', 'habeas corpus',
+    'qualified immunity', 'statute of limitations',
   ],
-
   caribbean: [
     'jamaica', 'barbados', 'trinidad', 'bahamas', 'haiti',
     'caribbean', 'caricom', 'cayman', 'antigua', 'belize',
-    'barbuda', 'grenada', 'st. kitts', 'montserrat', 'dominica',
   ],
-
-  science: [
-    'quantum', 'astrophysics', 'space telescope', 'nasa', 'black hole',
-    'dark matter', 'particle physics', 'cosmology', 'exoplanet',
-    'milky way', 'galaxy', 'universe', 'big bang', 'supernova',
-  ],
-
-  letterman: [
-    'waffle house', 'dunkin', 'waffle', 'dollar general', 'gas station',
-    'parking lot', 'fast food', 'walmart', 'alligator', 'snake', 'python',
-    'bear', 'feral hog', 'feral pig', 'teleport', 'claims to have',
-    'somehow', 'inexplicably', 'accidentally', 'mistakenly',
-    'odd couple', 'man bites', 'bites officer', 'unusual suspect',
-    'police say', 'neighbors say', 'witnesses say', 'bizarre',
-  ],
-
   deprioritize: [
     'nfl standings', 'nba standings', 'mlb standings', 'box score',
     'dow jones', 's&p 500', 'nasdaq', 'celebrity wedding',
     'grammy award', 'oscar nominations', 'box office',
   ],
-
-  recencyBonus: {
-    within12Hours: 10,
-    within24Hours: 5,
-  },
-};
-
-export const SLOT_CONFIG = {
-  total: 12,
-  starTalk: 2,
-  pbsSpaceTime: 1,
-  pbsNova: 1,
-  wsbTv: 2,
-  atlantaNewsFirst: 2,
-  letterman: 2,
-  news: 2,
 };
