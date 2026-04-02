@@ -179,4 +179,7 @@ export function getCaseBySlug(slug: string): CaseLaw | undefined {
 }
 
 /** Lightweight index for the Archive page and generateStaticParams. */
-export const ALL_CASES: Pick<CaseLaw, 'id' | 'slug' | 'title' | 'court' | 'dateDecided' | 'docketNumber' |
+export const ALL_CASES: Pick<CaseLaw, 'id' | 'slug' | 'title' | 'court' | 'dateDecided' | 'docketNumber' | 'citations'>[] =
+  CASES.map(({ id, slug, title, court, dateDecided, docketNumber, citations }) => ({
+    id, slug, title, court, dateDecided, docketNumber, citations,
+  }))

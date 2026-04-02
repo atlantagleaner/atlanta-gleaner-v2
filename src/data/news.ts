@@ -73,4 +73,8 @@ export const NEWS_ITEMS: NewsItem[] = [
   {
     id: '9',
     title: 'Top US FEMA official claims to have teleported to a Waffle House in Rome, Georgia',
-    s
+    source: 'AP News',
+    url: '#',
+    publishedAt: '2026-03-16',
+  },
+]

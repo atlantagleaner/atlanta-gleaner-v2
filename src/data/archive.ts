@@ -796,4 +796,10 @@ export const ARCHIVE_DATA: Volume[] = [
             title:    "Ramos v. Owens",
             citation: "366 Ga. App. 216 *; 881 S.E.2d 464 **; 2022 Ga. App. LEXIS 539 ***; 2022 WL 17088528",
             tags:     "",
-            url:      "/cases/ra
+            url:      "/cases/ramos-v-owens",
+          },
+        ],
+      },
+    ],
+  },
+]

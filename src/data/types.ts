@@ -24,4 +24,5 @@ export interface CaseLaw {
   footnotes?:     Record<string, string> // { '1': 'footnote text', ... }
                                       // bidirectional: body {fn:N} <-> footnote list
   publishedAt:    string              // ISO date — when republished on this site
-  noticeText?:    string              // e.g. "THIS OPI
+  noticeText?:    string              // e.g. "THIS OPINION IS UNCORRECTED AND SUBJECT TO REVISION"
+}
