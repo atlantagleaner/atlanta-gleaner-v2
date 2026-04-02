@@ -12,8 +12,9 @@
 //   2. Replace each footnote reference mark with {fn:N}.
 //   3. Enter the corresponding footnote text in the footnotes Record.
 //   4. Set noticeText if the slip opinion carries an asterisk notice.
-//   5. Verify the full text against the slip opinion before committing.
-//   6. Update archive.ts with the case's entry in its volume/month.
+//   5. Set priorHistory from the "Prior History:" line in the slip opinion.
+//   6. Verify the full text against the slip opinion before committing.
+//   7. Update archive.ts with the case's entry in its volume/month.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type { CaseLaw } from './types'

@@ -245,6 +245,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     opinionText,
     footnotes,
     noticeText,
+    priorHistory,
   } = caseData
 
   const sortedFnKeys = Object.keys(footnotes ?? {}).sort((a, b) => parseInt(a) - parseInt(b))
@@ -296,6 +297,12 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={{ ...metadataRow, borderBottom: 'none' }}>
             <span style={metaLabel}>Citations</span>
             <span style={metaValue}>{citations}</span>
+          </div>
+        )}
+        {priorHistory && (
+          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+            <span style={metaLabel}>Prior History</span>
+            <span style={metaValue}>{priorHistory}</span>
           </div>
         )}
         {judges && (

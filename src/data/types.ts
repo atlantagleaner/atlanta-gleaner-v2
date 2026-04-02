@@ -25,4 +25,5 @@ export interface CaseLaw {
                                       // bidirectional: body {fn:N} <-> footnote list
   publishedAt:    string              // ISO date — when republished on this site
   noticeText?:    string              // e.g. "THIS OPINION IS UNCORRECTED AND SUBJECT TO REVISION"
+  priorHistory?:  string              // e.g. "Motor vehicle accident. Fulton State Court. Before Judge Baxter."
 }
