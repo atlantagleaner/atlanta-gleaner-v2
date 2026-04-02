@@ -316,4 +316,18 @@ export default function ArchivePage() {
         </div>
 
         {/* Volume boxes */}
-        <div style={{ maxWidth: '7
+        <div style={{ maxWidth: '760px' }}>
+          {VOLUMES.map((volume, i) => (
+            <VolumeBox
+              key={volume.number}
+              volume={volume}
+              allCases={cases}
+              defaultOpen={i === 0} // Volume IV (newest) open by default
+            />
+          ))}
+        </div>
+
+      </div>
+    </main>
+  )
+}

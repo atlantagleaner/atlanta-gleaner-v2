@@ -115,4 +115,11 @@ export default function ComicsPage() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 80px' }}>
 
       {/* Masonry-style grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+        {COMICS.map(c => <ComicFrame key={c.id} {...c} />)}
+      </div>
+
+      </div>
+    </>
+  )
+}

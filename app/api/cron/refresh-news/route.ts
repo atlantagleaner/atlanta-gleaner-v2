@@ -244,4 +244,12 @@ export async function GET(request: Request) {
         local:         items.filter(i => i.slot === 'news').length,
         international: items.filter(i => i.slot === 'news-international').length,
         letterman:     items.filter(i => i.slot === 'letterman').length,
-      }
+      },
+    });
+
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[cron/refresh-news] Error:', message);
+    return Response.json({ ok: false, error: message }, { status: 500 });
+  }
+}
