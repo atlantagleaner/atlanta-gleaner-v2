@@ -31,7 +31,7 @@ import type { CaseLaw, Party, Counsel, CounselStructured } from '@/src/data/type
  */
 function renderOpinionHtml(
   opinionText: string,
-  footnotes: Record<string, string> | undefined,
+  footnotes: Record<string, string | undefined> | undefined,
   slug: string,
 ): string {
   if (!footnotes || Object.keys(footnotes).length === 0) return opinionText
