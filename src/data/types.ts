@@ -26,6 +26,19 @@ export interface Counsel {
 }
 
 /**
+ * Counsel data as stored in JSON (structured format)
+ */
+export interface CounselStructured {
+  raw:     string                     // Raw text representation
+  format?: string                     // Format type (optional)
+  entries: Array<{                    // Array of counsel entries
+    attorneys:  string[]              // List of attorney names
+    law_firm?:  string | null         // Law firm (optional or null)
+    represents: string                // Position: "Appellant", "Appellee", etc.
+  }>
+}
+
+/**
  * Block quotation from opinion text
  * Extracted by detecting indentation and source context.
  */
@@ -110,7 +123,7 @@ export interface CaseLaw {
   // ─────────────────────────────────────────────────────────────────────────
 
   parties?:                 Party[]           // Parties to the case (appellant, appellee, etc.)
-  counsel?:                 Counsel[]         // Attorneys representing parties
+  counsel?:                 CounselStructured // Attorneys representing parties (structured format from JSON)
   block_quotes?:            BlockQuote[]      // Block quotations detected in opinion
   footnotes_detailed?:      FootnoteDetail[]  // Structured footnote data
   disposition_structured?:  DispositionStructured // Parsed disposition type & text

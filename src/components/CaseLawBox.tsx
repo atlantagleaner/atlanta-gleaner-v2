@@ -21,7 +21,7 @@ import {
   PALETTE, PALETTE_CSS, FONT, T,
   BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
 } from '@/src/styles/tokens'
-import type { CaseLaw, Party, Counsel } from '@/src/data/types'
+import type { CaseLaw, Party, Counsel, CounselStructured } from '@/src/data/types'
 
 // ── Bidirectional footnote renderer ──────────────────────────────────────────
 
@@ -364,7 +364,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       </section>
 
       {/* ── 2b. Parties & Counsel section ─────────────────────────────────── */}
-      {(parties && parties.length > 0) || (counsel && counsel.length > 0) ? (
+      {(parties && parties.length > 0) || (counsel && counsel.entries && counsel.entries.length > 0) ? (
         <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
           {/* Parties subsection */}
           {parties && parties.length > 0 && (
@@ -384,19 +384,19 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           )}
 
           {/* Counsel subsection */}
-          {counsel && counsel.length > 0 && (
+          {counsel && counsel.entries && counsel.entries.length > 0 && (
             <div>
               <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
                 Counsel
               </div>
               <div>
-                {counsel.map((atty: Counsel, idx: number) => (
+                {counsel.entries.map((entry, idx: number) => (
                   <div key={idx} style={{ ...T.prose, marginBottom: SPACING.sm, color: PALETTE.black }}>
-                    <strong>{atty.attorney_name}</strong>
-                    {atty.law_firm && (
-                      <span style={{ color: PALETTE_CSS.muted }}>, {atty.law_firm}</span>
+                    <strong>{entry.attorneys.join(', ')}</strong>
+                    {entry.law_firm && (
+                      <span style={{ color: PALETTE_CSS.muted }}>, {entry.law_firm}</span>
                     )}
-                    <span style={{ color: PALETTE_CSS.muted }}> (for {atty.represents})</span>
+                    <span style={{ color: PALETTE_CSS.muted }}> (for {entry.represents})</span>
                   </div>
                 ))}
               </div>
