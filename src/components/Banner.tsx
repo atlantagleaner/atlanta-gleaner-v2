@@ -32,8 +32,8 @@ export function Banner() {
   return (
     <header style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      minHeight: '600px',
-      padding: '113px 24px 83px',
+      minHeight: 'clamp(320px, 100vh - 200px, 600px)',
+      padding: 'clamp(40px, 12vw, 113px) 24px clamp(30px, 8vw, 83px)',
     }}>
       <h1 style={{
         ...T.display,
