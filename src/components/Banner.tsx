@@ -37,7 +37,7 @@ export function Banner() {
     }}>
       <h1 style={{
         ...T.display,
-        fontSize: 'clamp(2.93rem, 14.3vw, 7.8rem)',
+        fontSize: 'clamp(3.22rem, 15.73vw, 8.58rem)',
         color: PALETTE.black,
         margin: '0 0 12px 0',
         textAlign: 'center',
