@@ -35,7 +35,7 @@
 /*    Centralized theme controller: src/styles/themes.ts                       */
 [data-theme="classical"] {
   --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
-  --palette-warm:  #dfd7ce;   /* pale taupe — page background, borders        */
+  --palette-warm:  #F6F0E2;   /* soft taupe — page background, borders        */
   --palette-black: #000000;   /* pure black — all text                        */
   --palette-accent: #A9C2C6;  /* dusty blue — footer, hover, buttons          */
   --palette-hover-bg: #A9C2C6; /* dusty blue — interactive hover states       */
