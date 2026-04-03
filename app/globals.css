@@ -31,6 +31,7 @@
   --palette-warm:  #B59F85;   /* antique sand/tan — page background, borders  */
   --palette-black: #4A1E15;   /* deep espresso/dark umber — all text          */
   --palette-accent: #A9C2C6;  /* muted slate/dusty blue — footer, hover, buttons */
+  --palette-hover-bg: #BCCEDC; /* pale slate — interactive hover states       */
 
   --palette-border:   rgba(74,30,21,0.18);
   --palette-rule:     rgba(74,30,21,0.07);
@@ -40,6 +41,20 @@
   --palette-meta:     rgba(74,30,21,0.45);
   --palette-muted:    rgba(74,30,21,0.35);
   --palette-subtle:   rgba(74,30,21,0.09);
+}
+
+/* Classical theme hover states — pale slate backgrounds with black text */
+[data-theme="classical"] a.case-archive-link:hover {
+  background: var(--palette-hover-bg);
+}
+[data-theme="classical"] a.case-archive-link:hover .case-archive-title,
+[data-theme="classical"] a.case-archive-link:hover .case-archive-meta {
+  color: var(--palette-black);
+}
+
+[data-theme="classical"] .ag-dropdown-link:hover {
+  background: var(--palette-hover-bg) !important;
+  color: var(--palette-black);
 }
 
 /* Image treatment — warm vintage tint on Washington */
@@ -95,6 +110,20 @@ body {
   background-color: var(--palette-warm);
   color: var(--palette-black);
   -webkit-font-smoothing: antialiased;
+}
+
+/* ── Badge component — used for tags, labels, core terms ─────────────────── */
+.badge {
+  display: inline-block;
+  background-color: var(--palette-accent);
+  color: var(--palette-black);
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 /* OPINION ARCHITECTURE - FIDELITY SPEC */
