@@ -34,11 +34,11 @@
 /*    Pure black · Pure white · Dark charcoal · Soft gray                      */
 /*    Centralized theme controller: src/styles/themes.ts                       */
 [data-theme="classical"] {
-  --palette-white: #FFFFFF;   /* pure white — box surfaces, main background   */
-  --palette-warm:  #E0E0E0;   /* soft gray — page background, borders         */
+  --palette-white: #E0E0E0;   /* soft gray — box surfaces, main background   */
+  --palette-warm:  #FFFFFF;   /* pure white — page background, borders         */
   --palette-black: #000000;   /* jet black — all text, headers, borders       */
   --palette-accent: #333333;  /* dark charcoal — footer, hover, buttons       */
-  --palette-hover-bg: #E0E0E0; /* soft gray — interactive hover states        */
+  --palette-hover-bg: #FFFFFF; /* pure white — interactive hover states        */
 
   --palette-border:   rgba(0,0,0,0.18);
   --palette-rule:     rgba(0,0,0,0.07);

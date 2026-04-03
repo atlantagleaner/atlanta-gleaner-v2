@@ -49,8 +49,8 @@ export const THEMES = {
      * Core palette colors — heritage/vintage theme
      */
     palette: {
-      white:     '#FFFFFF',
-      warm:      '#E0E0E0',
+      white:     '#E0E0E0',
+      warm:      '#FFFFFF',
       black:     '#000000',
       accent:    '#333333',
     },
@@ -68,16 +68,16 @@ export const THEMES = {
       subtle:    'rgba(0,0,0,0.09)',
     },
     /**
-     * Interactive state colors — soft gray hover with dark charcoal text
+     * Interactive state colors — pure white hover with dark charcoal text
      */
     interactive: {
-      newsBoxHoverBg:     '#E0E0E0',
+      newsBoxHoverBg:     '#FFFFFF',
       newsBoxHoverText:   '#333333',
-      volumeBoxHoverBg:   '#E0E0E0',
+      volumeBoxHoverBg:   '#FFFFFF',
       volumeBoxHoverText: '#333333',
-      volumeBoxBorder:    '#E0E0E0',
+      volumeBoxBorder:    '#FFFFFF',
       volumeBoxCitation:  '#333333',
-      caseLawGradientFade: '#E0E0E0',
+      caseLawGradientFade: '#FFFFFF',
     },
   },
 

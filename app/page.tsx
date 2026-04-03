@@ -45,7 +45,7 @@ export default function HomePage() {
           label: 'The Far Side',
           node:  <FarSideBox />,
         }}
-        mobileInitialOpen={{ 0: false, 1: true, 2: false }}
+        mobileInitialOpen={{ 0: true, 1: true, 2: false }}
         mobileOrder={[2, 0, 1]}
       />
     </main>
