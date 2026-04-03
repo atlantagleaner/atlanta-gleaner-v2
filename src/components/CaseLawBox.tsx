@@ -312,31 +312,25 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           </div>
         )}
         {citations && (
-          <div style={{ ...metadataRow, borderBottom: 'none' }}>
-            <span style={metaLabel}>Citations</span>
+          <div style={metadataRow}>
+            <span style={metaLabel}>Reporter</span>
             <span style={metaValue}>{citations}</span>
           </div>
         )}
         {priorHistory && (
-          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+          <div style={metadataRow}>
             <span style={metaLabel}>Prior History</span>
             <span style={metaValue}>{priorHistory}</span>
           </div>
         )}
         {judges && (
-          <div style={{
-            ...metadataRow,
-            marginTop: priorHistory ? '2px' : '6px',
-            paddingTop: priorHistory ? '0px' : '8px',
-            borderTop: !priorHistory ? `1px solid var(--palette-rule)` : 'none',
-            borderBottom: 'none',
-          }}>
+          <div style={metadataRow}>
             <span style={metaLabel}>Judges</span>
             <span style={metaValue}>{judges}</span>
           </div>
         )}
         {disposition && (
-          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+          <div style={metadataRow}>
             <span style={metaLabel}>Disposition</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {disposition_structured?.disposition_type && (
