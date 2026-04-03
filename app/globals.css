@@ -31,29 +31,29 @@
 }
 
 /* ── Classical palette (Vintage) ──────────────────────────────────────────── */
-/*    Deep Espresso text · Ivory boxes · Soft Sand page · Dusty Blue accents  */
+/*    Pure black text · Ivory boxes · Pale taupe page · Dusty Blue accents    */
 /*    Centralized theme controller: src/styles/themes.ts                       */
 [data-theme="classical"] {
   --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
-  --palette-warm:  #EED3B5;   /* soft sand — page background, borders         */
-  --palette-black: #4A1E15;   /* deep espresso/dark umber — all text          */
+  --palette-warm:  #dfd7ce;   /* pale taupe — page background, borders        */
+  --palette-black: #000000;   /* pure black — all text                        */
   --palette-accent: #A9C2C6;  /* dusty blue — footer, hover, buttons          */
   --palette-hover-bg: #A9C2C6; /* dusty blue — interactive hover states       */
 
-  --palette-border:   rgba(74,30,21,0.18);
-  --palette-rule:     rgba(74,30,21,0.07);
-  --palette-rule-sm:  rgba(74,30,21,0.05);
-  --palette-rule-md:  rgba(74,30,21,0.10);
-  --palette-rule-lg:  rgba(74,30,21,0.14);
-  --palette-meta:     rgba(74,30,21,0.45);
-  --palette-muted:    rgba(74,30,21,0.35);
-  --palette-subtle:   rgba(74,30,21,0.09);
+  --palette-border:   rgba(0,0,0,0.18);
+  --palette-rule:     rgba(0,0,0,0.07);
+  --palette-rule-sm:  rgba(0,0,0,0.05);
+  --palette-rule-md:  rgba(0,0,0,0.10);
+  --palette-rule-lg:  rgba(0,0,0,0.14);
+  --palette-meta:     rgba(0,0,0,0.45);
+  --palette-muted:    rgba(0,0,0,0.35);
+  --palette-subtle:   rgba(0,0,0,0.09);
 
   /* Interactive state colors */
   --interactive-hover-bg: #A9C2C6;
   --interactive-hover-text: #000000;
   --interactive-border: #A9C2C6;
-  --interactive-citation: #4A1E15;
+  --interactive-citation: #000000;
   --interactive-gradient-fade: #A9C2C6;
 }
 
