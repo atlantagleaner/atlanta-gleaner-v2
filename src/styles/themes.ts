@@ -50,22 +50,22 @@ export const THEMES = {
      */
     palette: {
       white:     '#F5F2E1',
-      warm:      '#EED3B5',
-      black:     '#4A1E15',
+      warm:      '#dfd7ce',
+      black:     '#000000',
       accent:    '#A9C2C6',
     },
     /**
-     * Opacity-based derived colors (espresso-based)
+     * Opacity-based derived colors (black-based)
      */
     opacity: {
-      border:    'rgba(74,30,21,0.18)',
-      rule:      'rgba(74,30,21,0.07)',
-      ruleSm:    'rgba(74,30,21,0.05)',
-      ruleMd:    'rgba(74,30,21,0.10)',
-      ruleLg:    'rgba(74,30,21,0.14)',
-      meta:      'rgba(74,30,21,0.45)',
-      muted:     'rgba(74,30,21,0.35)',
-      subtle:    'rgba(74,30,21,0.09)',
+      border:    'rgba(0,0,0,0.18)',
+      rule:      'rgba(0,0,0,0.07)',
+      ruleSm:    'rgba(0,0,0,0.05)',
+      ruleMd:    'rgba(0,0,0,0.10)',
+      ruleLg:    'rgba(0,0,0,0.14)',
+      meta:      'rgba(0,0,0,0.45)',
+      muted:     'rgba(0,0,0,0.35)',
+      subtle:    'rgba(0,0,0,0.09)',
     },
     /**
      * Interactive state colors — dusty blue hover with black text
@@ -76,7 +76,7 @@ export const THEMES = {
       volumeBoxHoverBg:   '#A9C2C6',
       volumeBoxHoverText: '#000000',
       volumeBoxBorder:    '#A9C2C6',
-      volumeBoxCitation:  '#4A1E15',
+      volumeBoxCitation:  '#000000',
       caseLawGradientFade: '#A9C2C6',
     },
   },
