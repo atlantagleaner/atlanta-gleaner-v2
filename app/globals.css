@@ -31,14 +31,14 @@
 }
 
 /* ── Classical palette (Vintage) ──────────────────────────────────────────── */
-/*    Pure black text · Ivory boxes · Pale taupe page · Dusty Blue accents    */
+/*    Pure black · Pure white · Dark charcoal · Soft gray                      */
 /*    Centralized theme controller: src/styles/themes.ts                       */
 [data-theme="classical"] {
-  --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
-  --palette-warm:  #F6F0E2;   /* soft taupe — page background, borders        */
-  --palette-black: #000000;   /* pure black — all text                        */
-  --palette-accent: #A9C2C6;  /* dusty blue — footer, hover, buttons          */
-  --palette-hover-bg: #A9C2C6; /* dusty blue — interactive hover states       */
+  --palette-white: #FFFFFF;   /* pure white — box surfaces, main background   */
+  --palette-warm:  #E0E0E0;   /* soft gray — page background, borders         */
+  --palette-black: #000000;   /* jet black — all text, headers, borders       */
+  --palette-accent: #333333;  /* dark charcoal — footer, hover, buttons       */
+  --palette-hover-bg: #E0E0E0; /* soft gray — interactive hover states        */
 
   --palette-border:   rgba(0,0,0,0.18);
   --palette-rule:     rgba(0,0,0,0.07);
@@ -50,11 +50,11 @@
   --palette-subtle:   rgba(0,0,0,0.09);
 
   /* Interactive state colors */
-  --interactive-hover-bg: #A9C2C6;
-  --interactive-hover-text: #000000;
-  --interactive-border: #A9C2C6;
-  --interactive-citation: #000000;
-  --interactive-gradient-fade: #A9C2C6;
+  --interactive-hover-bg: #E0E0E0;
+  --interactive-hover-text: #333333;
+  --interactive-border: #E0E0E0;
+  --interactive-citation: #333333;
+  --interactive-gradient-fade: #E0E0E0;
 }
 
 /* Classical theme hover states — pale slate backgrounds with black text */
