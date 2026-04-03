@@ -6,6 +6,7 @@
   --palette-white: #FFFFFF;
   --palette-warm:  #EEEDEB;
   --palette-black: #000000;
+  --palette-accent: #666666;  /* neutral accent for default theme */
 
   /* Derived opacity values (black-based) */
   --palette-border:   rgba(0,0,0,0.18);
@@ -23,21 +24,22 @@
 }
 
 /* ── Classical palette (Vintage) ──────────────────────────────────────────── */
-/*    Ivory boxes · Antique Sand page · Muted Slate text                     */
+/*    Deep Espresso text · Ivory boxes · Antique Sand page · Slate accents    */
 /*    Custom heritage color palette from user specification                    */
 [data-theme="classical"] {
   --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
-  --palette-warm:  #B59F85;   /* antique sand/tan — page background           */
-  --palette-black: #A9C2C6;   /* muted slate/dusty blue — all text            */
+  --palette-warm:  #B59F85;   /* antique sand/tan — page background, borders  */
+  --palette-black: #4A1E15;   /* deep espresso/dark umber — all text          */
+  --palette-accent: #A9C2C6;  /* muted slate/dusty blue — footer, hover, buttons */
 
-  --palette-border:   rgba(169,194,198,0.18);
-  --palette-rule:     rgba(169,194,198,0.07);
-  --palette-rule-sm:  rgba(169,194,198,0.05);
-  --palette-rule-md:  rgba(169,194,198,0.10);
-  --palette-rule-lg:  rgba(169,194,198,0.14);
-  --palette-meta:     rgba(169,194,198,0.45);
-  --palette-muted:    rgba(169,194,198,0.35);
-  --palette-subtle:   rgba(169,194,198,0.09);
+  --palette-border:   rgba(74,30,21,0.18);
+  --palette-rule:     rgba(74,30,21,0.07);
+  --palette-rule-sm:  rgba(74,30,21,0.05);
+  --palette-rule-md:  rgba(74,30,21,0.10);
+  --palette-rule-lg:  rgba(74,30,21,0.14);
+  --palette-meta:     rgba(74,30,21,0.45);
+  --palette-muted:    rgba(74,30,21,0.35);
+  --palette-subtle:   rgba(74,30,21,0.09);
 }
 
 /* Image treatment — warm vintage tint on Washington */
@@ -51,6 +53,7 @@
   --palette-white: #0D1117;   /* dark panel — box surfaces                    */
   --palette-warm:  #000000;   /* pure black — page background                 */
   --palette-black: #00FF41;   /* Matrix green — all text + borders            */
+  --palette-accent: #00FF41;  /* matrix green — accent matches primary        */
 
   --palette-border:   rgba(0,255,65,0.25);
   --palette-rule:     rgba(0,255,65,0.12);

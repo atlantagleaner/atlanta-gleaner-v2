@@ -31,11 +31,13 @@ export function Banner() {
 
   return (
     <header style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      minHeight: '600px',
       padding: '113px 24px 83px',
     }}>
       <h1 style={{
         ...T.display,
+        fontSize: 'clamp(4.5rem, 22vw, 12rem)',
         color: PALETTE.black,
         margin: '0 0 12px 0',
         textAlign: 'center',
@@ -43,14 +45,39 @@ export function Banner() {
       }}>
         The Atlanta Gleaner.
       </h1>
-      <p style={{
-        ...T.nav,
-        color: PALETTE.black,
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: SPACING.sm,
         margin: `0 0 ${SPACING.xxl} 0`,
-        textAlign: 'center',
       }}>
-        Testing Testing Testing
-      </p>
+        <p style={{
+          ...T.nav,
+          fontSize: 'clamp(1.2rem, 3.5vw, 1.8rem)',
+          color: PALETTE.black,
+          margin: 0,
+          textAlign: 'center',
+        }}>
+          Legal News & Georgia Case Law Updates
+        </p>
+        <p style={{
+          ...T.nav,
+          fontSize: 'clamp(1.2rem, 3.5vw, 1.8rem)',
+          color: PALETTE.black,
+          margin: 0,
+          textAlign: 'center',
+        }}>
+          Edited By George Washington
+        </p>
+        <p style={{
+          ...T.nav,
+          fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
+          color: PALETTE.black,
+          margin: 0,
+          textAlign: 'center',
+        }}>
+          (Testing in progress)
+        </p>
+      </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc}
