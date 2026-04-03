@@ -339,7 +339,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Disposition</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {disposition_structured?.type && (
+              {disposition_structured?.disposition_type && (
                 <span style={{
                   ...T.micro,
                   background: PALETTE.black,
@@ -348,7 +348,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   lineHeight: '18px',
                   borderRadius: '2px',
                 }}>
-                  {disposition_structured.type}
+                  {disposition_structured.disposition_type}
                 </span>
               )}
               <span style={metaValue}>{disposition}</span>

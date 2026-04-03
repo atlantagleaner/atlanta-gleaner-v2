@@ -66,8 +66,10 @@ export interface FootnoteDetail {
  * Extracted and classified by the parser.
  */
 export interface DispositionStructured {
-  type:   string                      // "AFFIRM", "REVERSE", "REMAND", "VACATE", "DISMISS", "UNKNOWN"
-  text:   string                      // Full disposition text
+  disposition_type:     string        // "AFFIRM", "REVERSE", "REMAND", "VACATE", "DISMISS", "UNKNOWN"
+  disposition_text:     string        // Full disposition text
+  disposition_action?:  string        // Action taken (e.g., "reversed", "affirmed")
+  remand_instructions?: string | null // Specific remand instructions if applicable
 }
 
 /**
