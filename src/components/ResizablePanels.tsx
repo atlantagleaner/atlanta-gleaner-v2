@@ -11,11 +11,17 @@ const MIN_PCT = 16
 const MAX_PCT = 62
 
 interface Panel { label: string; node: ReactNode }
-interface ResizablePanelsProps { left: Panel; center: Panel; right: Panel }
+interface ResizablePanelsProps {
+  left: Panel
+  center: Panel
+  right: Panel
+  mobileInitialOpen?: Record<number, boolean>
+  mobileOrder?: number[]
+}
 
 // ── Mobile accordion ──────────────────────────────────────────────────────────
-function MobilePanel({ label, children }: { label: string; children: ReactNode }) {
-  const [open, setOpen] = useState(true)
+function MobilePanel({ label, children, initialOpen = true }: { label: string; children: ReactNode; initialOpen?: boolean }) {
+  const [open, setOpen] = useState(initialOpen)
   return (
     <div style={{ marginBottom: SPACING.md }}>
       <button onClick={() => setOpen(v => !v)} style={{
@@ -105,7 +111,7 @@ function DragBar({ label, onPointerDown, isDragging }: {
 }
 
 // ── Main component ─────────────────────────────────────────────────────────────
-export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
+export function ResizablePanels({ left, center, right, mobileInitialOpen, mobileOrder }: ResizablePanelsProps) {
   const panels = [left, center, right]
 
   const [widths,   setWidths]   = useState([24, 50, 26])
@@ -302,10 +308,11 @@ export function ResizablePanels({ left, center, right }: ResizablePanelsProps) {
 
   // ── Mobile ───────────────────────────────────────────────────────────────────
   if (isMobile) {
+    const finalOrder = mobileOrder ?? [0, 1, 2]
     return (
       <div style={{ padding: '0 12px 48px' }}>
-        {order.map(idx => (
-          <MobilePanel key={idx} label={panels[idx].label}>{panels[idx].node}</MobilePanel>
+        {finalOrder.map(idx => (
+          <MobilePanel key={idx} label={panels[idx].label} initialOpen={mobileInitialOpen?.[idx] ?? true}>{panels[idx].node}</MobilePanel>
         ))}
       </div>
     )

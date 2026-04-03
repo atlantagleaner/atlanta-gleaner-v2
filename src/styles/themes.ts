@@ -50,7 +50,7 @@ export const THEMES = {
      */
     palette: {
       white:     '#F5F2E1',
-      warm:      '#dfd7ce',
+      warm:      '#F6F0E2',
       black:     '#000000',
       accent:    '#A9C2C6',
     },

@@ -18,6 +18,7 @@ import { NewsBox }         from '@/src/components/NewsBox'
 import CaseLawBox          from '@/src/components/CaseLawBox'
 import { FarSideBox }      from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
+import { CasePageLayout }  from '@/src/components/CasePageLayout'
 import casesRaw            from '@/src/data/cases.json'
 import type { CaseLaw }    from '@/src/data/types'
 
@@ -67,22 +68,26 @@ export default async function CaseLawPage({
   if (!caseData) notFound()
 
   return (
-    <main style={{ minHeight: '100vh', background: PALETTE.warm }}>
-      <Banner />
-      <ResizablePanels
-        left={{
-          label: 'Latest News',
-          node:  <NewsBox />,
-        }}
-        center={{
-          label: 'Case Law Updates',
-          node:  <CaseLawBox caseData={caseData!} />,
-        }}
-        right={{
-          label: 'The Far Side',
-          node:  <FarSideBox />,
-        }}
-      />
-    </main>
+    <CasePageLayout>
+      <main style={{ minHeight: '100vh', background: PALETTE.warm }}>
+        <Banner />
+        <ResizablePanels
+          left={{
+            label: 'Latest News',
+            node:  <NewsBox />,
+          }}
+          center={{
+            label: 'Case Law Updates',
+            node:  <CaseLawBox caseData={caseData!} />,
+          }}
+          right={{
+            label: 'The Far Side',
+            node:  <FarSideBox />,
+          }}
+          mobileInitialOpen={{ 0: false, 1: true, 2: false }}
+          mobileOrder={[2, 0, 1]}
+        />
+      </main>
+    </CasePageLayout>
   )
 }
