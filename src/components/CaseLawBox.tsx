@@ -21,7 +21,7 @@ import {
   PALETTE, PALETTE_CSS, FONT, T,
   BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
 } from '@/src/styles/tokens'
-import type { CaseLaw } from '@/src/data/types'
+import type { CaseLaw, Party, Counsel } from '@/src/data/types'
 
 // ── Bidirectional footnote renderer ──────────────────────────────────────────
 
@@ -239,6 +239,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     citations,
     judges,
     disposition,
+    disposition_structured,
     coreTerms,
     summary,
     opinionAuthor,
@@ -246,6 +247,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     footnotes,
     noticeText,
     priorHistory,
+    parties,
+    counsel,
   } = caseData
 
   const sortedFnKeys = Object.keys(footnotes ?? {}).sort((a, b) => parseInt(a) - parseInt(b))
@@ -325,7 +328,21 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         {disposition && (
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Disposition</span>
-            <span style={metaValue}>{disposition}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {disposition_structured?.type && (
+                <span style={{
+                  ...T.micro,
+                  background: PALETTE.black,
+                  color: PALETTE.white,
+                  padding: `2px 8px`,
+                  lineHeight: '18px',
+                  borderRadius: '2px',
+                }}>
+                  {disposition_structured.type}
+                </span>
+              )}
+              <span style={metaValue}>{disposition}</span>
+            </div>
           </div>
         )}
         {/* Notice text lives in metadata, below disposition */}
@@ -336,6 +353,48 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           </div>
         )}
       </section>
+
+      {/* ── 2b. Parties & Counsel section ─────────────────────────────────── */}
+      {(parties && parties.length > 0) || (counsel && counsel.length > 0) ? (
+        <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
+          {/* Parties subsection */}
+          {parties && parties.length > 0 && (
+            <div style={{ marginBottom: SPACING.xl }}>
+              <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
+                Parties
+              </div>
+              <div>
+                {parties.map((party: Party, idx: number) => (
+                  <div key={idx} style={{ ...T.prose, marginBottom: SPACING.sm, color: PALETTE.black }}>
+                    <strong>{party.name}</strong>
+                    <span style={{ color: PALETTE_CSS.muted }}> — {party.position}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Counsel subsection */}
+          {counsel && counsel.length > 0 && (
+            <div>
+              <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
+                Counsel
+              </div>
+              <div>
+                {counsel.map((atty: Counsel, idx: number) => (
+                  <div key={idx} style={{ ...T.prose, marginBottom: SPACING.sm, color: PALETTE.black }}>
+                    <strong>{atty.attorney_name}</strong>
+                    {atty.law_firm && (
+                      <span style={{ color: PALETTE_CSS.muted }}>, {atty.law_firm}</span>
+                    )}
+                    <span style={{ color: PALETTE_CSS.muted }}> (for {atty.represents})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      ) : null}
 
       {/* ── 3. White spacer ──────────────────────────────────────────────── */}
       <div style={{ ...white, height: '16px', ...sectionBorder }} />

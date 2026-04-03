@@ -9,3 +9,11 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 public/search-index.json
 pilot-review.html
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
