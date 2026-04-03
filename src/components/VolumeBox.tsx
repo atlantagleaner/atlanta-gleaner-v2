@@ -43,25 +43,25 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
       <div style={{ overflowY: 'auto', flex: 1, background: PALETTE.white }}>
         {Object.entries(groupedCases).map(([month, monthCases]) => (
           <div key={month} style={{ borderBottom: '1px solid var(--palette-rule-md)' }}>
-            <button 
+            <button
               onClick={() => setOpenMonth(openMonth === month ? null : month)}
               style={{
                 width: '100%', padding: '14px 16px', display: 'flex', justifyContent: 'space-between',
-                background: openMonth === month ? '#F7F7F7' : 'transparent', border: 'none',
+                background: openMonth === month ? 'var(--interactive-hover-bg)' : 'transparent', border: 'none',
                 cursor: 'pointer', textAlign: 'left'
               }}
             >
-              <span style={{ ...T.micro, fontWeight: 700, letterSpacing: '0.12em', color: PALETTE.black }}>{month.toUpperCase()}</span>
+              <span style={{ ...T.micro, fontWeight: 700, letterSpacing: '0.12em', color: 'var(--interactive-hover-text)' }}>{month.toUpperCase()}</span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '14px' }}>{openMonth === month ? '−' : '+'}</span>
             </button>
 
             {openMonth === month && (
               <div style={{ padding: '0 16px 16px' }}>
                 {monthCases.map(c => (
-                  <div key={c.id} style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0' }}>
+                  <div key={c.id} style={{ padding: '16px 0', borderBottom: `1px solid var(--interactive-border)` }}>
                     <Link href={c.url} style={{ textDecoration: 'none', color: PALETTE.black, display: 'block' }}>
                       <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 4px 0', fontWeight: 700 }}>{c.title}</h4>
-                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#666', margin: '0' }}>
+                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--interactive-citation)', margin: '0' }}>
                         {c.citation} · {c.fullDate}
                       </p>
                     </Link>

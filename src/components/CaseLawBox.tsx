@@ -537,7 +537,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             left:          0,
             right:         0,
             height:        '90px',
-            background:    'linear-gradient(to bottom, transparent, var(--palette-white))',
+            background:    'linear-gradient(to bottom, transparent, var(--interactive-gradient-fade))',
             pointerEvents: 'none',
             opacity:       expanded ? 0 : 1,
             transition:    `opacity ${expanded ? '0.1s' : '0.25s'} ${ANIMATION.ease}`,

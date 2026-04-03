@@ -48,8 +48,8 @@ function NewsItemRow({ item }: { item: NewsItem }) {
         <p
           style={{
             ...T.body,
-            color:           hovered ? PALETTE.white : PALETTE.black,
-            backgroundColor: hovered ? PALETTE.black : 'transparent',
+            color:           hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
+            backgroundColor: hovered ? 'var(--interactive-hover-bg)' : 'transparent',
             padding:         hovered ? `2px ${SPACING.xs}` : '2px 0',
             textDecoration:  'none',
             transition:      `all ${ANIMATION.fast} ${ANIMATION.ease}`,

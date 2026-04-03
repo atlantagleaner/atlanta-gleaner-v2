@@ -18,20 +18,27 @@
   --palette-muted:    rgba(0,0,0,0.35);
   --palette-subtle:   rgba(0,0,0,0.09);
 
+  /* Interactive state colors */
+  --interactive-hover-bg: #EEEDEB;
+  --interactive-hover-text: #FFFFFF;
+  --interactive-border: #f0f0f0;
+  --interactive-citation: #666;
+  --interactive-gradient-fade: #EEEDEB;
+
   --font-serif: 'Cormorant Garamond', serif;
   --font-sans:  'Inter', sans-serif;
   --font-mono:  'IBM Plex Mono', monospace;
 }
 
 /* ── Classical palette (Vintage) ──────────────────────────────────────────── */
-/*    Deep Espresso text · Ivory boxes · Antique Sand page · Slate accents    */
-/*    Custom heritage color palette from user specification                    */
+/*    Deep Espresso text · Ivory boxes · Soft Sand page · Dusty Blue accents  */
+/*    Centralized theme controller: src/styles/themes.ts                       */
 [data-theme="classical"] {
   --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
-  --palette-warm:  #B59F85;   /* antique sand/tan — page background, borders  */
+  --palette-warm:  #EED3B5;   /* soft sand — page background, borders         */
   --palette-black: #4A1E15;   /* deep espresso/dark umber — all text          */
-  --palette-accent: #A9C2C6;  /* muted slate/dusty blue — footer, hover, buttons */
-  --palette-hover-bg: #BCCEDC; /* pale slate — interactive hover states       */
+  --palette-accent: #A9C2C6;  /* dusty blue — footer, hover, buttons          */
+  --palette-hover-bg: #A9C2C6; /* dusty blue — interactive hover states       */
 
   --palette-border:   rgba(74,30,21,0.18);
   --palette-rule:     rgba(74,30,21,0.07);
@@ -41,6 +48,13 @@
   --palette-meta:     rgba(74,30,21,0.45);
   --palette-muted:    rgba(74,30,21,0.35);
   --palette-subtle:   rgba(74,30,21,0.09);
+
+  /* Interactive state colors */
+  --interactive-hover-bg: #A9C2C6;
+  --interactive-hover-text: #000000;
+  --interactive-border: #A9C2C6;
+  --interactive-citation: #4A1E15;
+  --interactive-gradient-fade: #A9C2C6;
 }
 
 /* Classical theme hover states — pale slate backgrounds with black text */
@@ -78,6 +92,13 @@
   --palette-meta:     rgba(0,255,65,0.60);
   --palette-muted:    rgba(0,255,65,0.40);
   --palette-subtle:   rgba(0,255,65,0.10);
+
+  /* Interactive state colors */
+  --interactive-hover-bg: #00FF41;
+  --interactive-hover-text: #00FF41;
+  --interactive-border: #f0f0f0;
+  --interactive-citation: #666;
+  --interactive-gradient-fade: #000000;
 }
 
 /* Green glow on the masthead title */
