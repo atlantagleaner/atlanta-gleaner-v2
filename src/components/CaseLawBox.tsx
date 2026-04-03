@@ -182,6 +182,7 @@ const metadataRow: CSSProperties = {
   ...ITEM_RULE,
   padding:             `${SPACING.sm} 0`,
   alignItems:          'baseline',
+  userSelect:          'text',
 }
 
 const metaLabel: CSSProperties = {
@@ -264,13 +265,20 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
 
   return (
-    <article id="case-law-box" style={{ ...BOX_SHELL, width: '100%' }}>
+    <article id="case-law-box" style={{
+      ...BOX_SHELL,
+      width: '100%',
+      borderLeft: `1px solid var(--palette-border)`,
+      borderRight: `1px solid var(--palette-border)`,
+      borderTop: `1px solid var(--palette-border)`,
+      borderBottom: `1px solid var(--palette-border)`,
+      boxSizing: 'border-box',
+      overflow: 'visible',
+      userSelect: 'text',
+    }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
       <header style={{ ...white, padding: BOX_PADDING, borderBottom: `1px solid ${PALETTE_CSS.border}` }}>
-        <div style={{ ...BOX_HEADER }}>
-          {label}
-        </div>
         <h1 style={{
           ...FONT.serif,
           fontSize:   'clamp(1.6rem, 3.5vw, 2.6rem)',
@@ -318,8 +326,10 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         {judges && (
           <div style={{
             ...metadataRow,
-            marginTop: '6px', paddingTop: '8px',
-            borderTop: `1px solid var(--palette-rule)`, borderBottom: 'none',
+            marginTop: priorHistory ? '2px' : '6px',
+            paddingTop: priorHistory ? '0px' : '8px',
+            borderTop: !priorHistory ? `1px solid var(--palette-rule)` : 'none',
+            borderBottom: 'none',
           }}>
             <span style={metaLabel}>Judges</span>
             <span style={metaValue}>{judges}</span>
@@ -345,7 +355,6 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             </div>
           </div>
         )}
-        {/* Notice text lives in metadata, below disposition */}
         {noticeText && (
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Notice</span>
@@ -442,6 +451,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
         padding:    '28px 24px 40px',
         ...sectionBorder,
+        userSelect: 'text',
       }}>
 
         {/* Opinion section header — mono label (single line space to opinion text) */}

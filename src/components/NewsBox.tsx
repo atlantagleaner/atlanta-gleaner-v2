@@ -129,7 +129,7 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
     <div style={{ height: 'fit-content', ...style }}>
       <div style={BOX_SHELL}>
         <div style={{ padding: BOX_PADDING }}>
-          <h2 style={BOX_HEADER}>News Index</h2>
+          <h2 style={BOX_HEADER}>Testing... testing... testing...</h2>
 
           {loading && <LoadingSkeleton />}
 

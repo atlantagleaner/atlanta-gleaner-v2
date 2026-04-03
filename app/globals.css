@@ -22,27 +22,27 @@
   --font-mono:  'IBM Plex Mono', monospace;
 }
 
-/* ── Classical palette (Acropolis) ────────────────────────────────────────── */
-/*    Cream parchment boxes · sandy warm page · charcoal text                 */
-/*    Dark maroon border accents from the Acropolis color study               */
+/* ── Classical palette (Vintage) ──────────────────────────────────────────── */
+/*    Ivory boxes · Antique Sand page · Muted Slate text                     */
+/*    Custom heritage color palette from user specification                    */
 [data-theme="classical"] {
-  --palette-white: #F5EFE0;   /* cream parchment — box surfaces               */
-  --palette-warm:  #CDB89A;   /* sandy warm — page background                 */
-  --palette-black: #1A1210;   /* warm charcoal — all text                     */
+  --palette-white: #F5F2E1;   /* ivory/off-white — box surfaces               */
+  --palette-warm:  #B59F85;   /* antique sand/tan — page background           */
+  --palette-black: #A9C2C6;   /* muted slate/dusty blue — all text            */
 
-  --palette-border:   rgba(92,31,21,0.22);
-  --palette-rule:     rgba(92,31,21,0.12);
-  --palette-rule-sm:  rgba(92,31,21,0.07);
-  --palette-rule-md:  rgba(92,31,21,0.15);
-  --palette-rule-lg:  rgba(92,31,21,0.18);
-  --palette-meta:     rgba(26,18,16,0.48);
-  --palette-muted:    rgba(26,18,16,0.35);
-  --palette-subtle:   rgba(92,31,21,0.08);
+  --palette-border:   rgba(169,194,198,0.18);
+  --palette-rule:     rgba(169,194,198,0.07);
+  --palette-rule-sm:  rgba(169,194,198,0.05);
+  --palette-rule-md:  rgba(169,194,198,0.10);
+  --palette-rule-lg:  rgba(169,194,198,0.14);
+  --palette-meta:     rgba(169,194,198,0.45);
+  --palette-muted:    rgba(169,194,198,0.35);
+  --palette-subtle:   rgba(169,194,198,0.09);
 }
 
-/* Image treatment — warm sepia tint on Washington */
+/* Image treatment — warm vintage tint on Washington */
 [data-theme="classical"] img[alt="George Washington Statue at Federal Hall"] {
-  filter: sepia(25%) brightness(1.04);
+  filter: sepia(20%) brightness(1.02) saturate(0.85);
 }
 
 /* ── Matrix palette ───────────────────────────────────────────────────────── */

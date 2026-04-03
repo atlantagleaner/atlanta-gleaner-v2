@@ -161,7 +161,7 @@ function MonthShelf({
                 fontWeight:    400,
                 letterSpacing: '0.10em',
               }}>
-                {[c.court, c.docketNumber].filter(Boolean).join(' · ')}
+                {[c.court, c.docketNumber, c.publishedAt].filter(Boolean).join(' · ')}
               </div>
             </Link>
           ))}
