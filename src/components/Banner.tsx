@@ -37,7 +37,7 @@ export function Banner() {
     }}>
       <h1 style={{
         ...T.display,
-        fontSize: 'clamp(4.5rem, 22vw, 12rem)',
+        fontSize: 'clamp(2.93rem, 14.3vw, 7.8rem)',
         color: PALETTE.black,
         margin: '0 0 12px 0',
         textAlign: 'center',
@@ -52,7 +52,7 @@ export function Banner() {
       }}>
         <p style={{
           ...T.nav,
-          fontSize: 'clamp(1.2rem, 3.5vw, 1.8rem)',
+          fontSize: 'clamp(0.78rem, 2.28vw, 1.17rem)',
           color: PALETTE.black,
           margin: 0,
           textAlign: 'center',
@@ -61,7 +61,7 @@ export function Banner() {
         </p>
         <p style={{
           ...T.nav,
-          fontSize: 'clamp(1.2rem, 3.5vw, 1.8rem)',
+          fontSize: 'clamp(0.78rem, 2.28vw, 1.17rem)',
           color: PALETTE.black,
           margin: 0,
           textAlign: 'center',
