@@ -51,6 +51,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: `
+        /* Plus button icon and animations */
         .ag-plus-btn { transition: opacity 0.15s; }
         .ag-plus-btn:hover { opacity: 0.5; }
         .ag-plus-icon {
@@ -59,17 +60,18 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         }
         .ag-plus-icon--open { transform: rotate(45deg); }
 
-        /* Wrapper is the positioning context for the dropdown */
+        /* Wrapper: positioning context, sticky on mobile */
         .ag-nav-wrapper {
           position: relative;
           z-index: 200;
           background: ${PALETTE.white};
+          border-bottom: 1px solid var(--palette-rule-md);
         }
-        /* Sticky on mobile only — wrapper sticks, dropdown travels with it */
         @media (max-width: 767px) {
           .ag-nav-wrapper { position: sticky; top: 0; }
         }
 
+        /* Dropdown menu */
         .ag-dropdown {
           position: absolute;
           top: 100%;
@@ -79,12 +81,18 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           background: ${PALETTE.white};
           border-bottom: 1px solid var(--palette-rule-md);
           transform-origin: top center;
-          transition: transform 0.24s cubic-bezier(0.4,0,0.2,1),
-                      opacity   0.20s cubic-bezier(0.4,0,0.2,1);
+          transition: transform 0.24s cubic-bezier(0.4,0,0.2,1), opacity 0.20s cubic-bezier(0.4,0,0.2,1);
         }
         .ag-dropdown--closed { transform: scaleY(0); opacity: 0; pointer-events: none; visibility: hidden; }
-        .ag-dropdown-link { transition: background 0.1s; }
+
+        .ag-dropdown-link {
+          transition: background 0.1s;
+          display: block;
+          text-decoration: none;
+          border-bottom: 1px solid var(--palette-rule);
+        }
         .ag-dropdown-link:hover { background: ${PALETTE.warm} !important; }
+
         @media (max-width: 767px) {
           .ag-dropdown-link { padding: 16px 20px !important; }
         }
@@ -101,8 +109,6 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
       {/* Wrapper provides the stacking context — dropdown positions relative to this */}
       <div ref={navRef} className="ag-nav-wrapper">
         <nav className="ag-nav" style={{
-          background: PALETTE.white,
-          borderBottom: '1px solid var(--palette-rule-md)',
           minHeight: showDatetime ? '64px' : '48px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 20px',
@@ -147,11 +153,8 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
               <Link key={href} href={href} className="ag-dropdown-link" onClick={() => setOpen(false)}
                 style={{
                   ...T.nav,
-                  display: 'block',
                   fontWeight: active ? 700 : 500,
                   color: PALETTE.black,
-                  textDecoration: 'none',
-                  borderBottom: '1px solid var(--palette-rule)',
                 }}
               >
                 {label}

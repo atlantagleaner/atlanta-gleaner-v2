@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           fetchPriority="high"
         />
       </head>
-      <body>
+      <body style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <NavBar />
         <AnalogShell>
           {children}

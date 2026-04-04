@@ -5,7 +5,7 @@ import { PALETTE } from '@/src/styles/tokens'
 
 export function AnalogShell({ children }: { children: ReactNode }) {
   return (
-    <div style={{ minHeight: '100vh', width: '100%', background: PALETTE.warm }}>
+    <div style={{ flex: 1, overflow: 'auto', background: PALETTE.warm }}>
       {children}
     </div>
   )
