@@ -46,8 +46,18 @@ export function Banner() {
         The Atlanta Gleaner.
       </h1>
       <style>{`
-        @media (max-width: 640px) {
-          .tagline { max-width: 240px; }
+        @media (max-width: 768px) {
+          .tagline {
+            max-width: 260px;
+            word-break: break-word;
+            margin: 0 auto;
+            display: block;
+          }
+        }
+        @media (min-width: 769px) {
+          .tagline {
+            max-width: 100%;
+          }
         }
       `}</style>
       <div style={{
