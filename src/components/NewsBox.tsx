@@ -47,11 +47,6 @@ function NewsItemRow({ item }: { item: NewsItem }) {
   if (isSpotify) mediaLabel = ' • Spotify';
   else if (isYouTube) mediaLabel = ' • YouTube';
 
-  // Format date cleanly (e.g., "Mar 24")
-  const dateString = item.publishedAt
-    ? ` • ${new Date(item.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}`
-    : '';
-
   return (
     <li style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
       <a
@@ -88,9 +83,9 @@ function NewsItemRow({ item }: { item: NewsItem }) {
           {item.title}
         </p>
 
-        {/* Updated Metadata Line */}
+        {/* Metadata Line */}
         <p style={{ ...T.micro, color: PALETTE.black, marginTop: SPACING.xs, marginBottom: 0 }}>
-          {item.source}{mediaLabel}{dateString}
+          {item.source}{mediaLabel}
         </p>
 
       </a>
