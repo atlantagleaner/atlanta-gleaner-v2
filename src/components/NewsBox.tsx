@@ -77,7 +77,7 @@ function NewsItemRow({ item }: { item: NewsItem }) {
             <span
               style={{
                 ...T.micro,
-                color:         hovered ? PALETTE.white : PALETTE.black,
+                color:         hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
                 marginRight:   SPACING.xs,
                 verticalAlign: 'middle',
               }}
