@@ -67,7 +67,7 @@ export function Banner() {
       }}>
         <p className="tagline" style={{
           ...T.nav,
-          fontSize: 'clamp(0.78rem, 2.28vw, 1.17rem)',
+          fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
           color: PALETTE.black,
           margin: 0,
           textAlign: 'center',
@@ -76,7 +76,7 @@ export function Banner() {
         </p>
         <p style={{
           ...T.nav,
-          fontSize: 'clamp(0.78rem, 2.28vw, 1.17rem)',
+          fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
           color: PALETTE.black,
           margin: 0,
           textAlign: 'center',
