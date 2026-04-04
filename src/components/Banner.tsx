@@ -45,27 +45,12 @@ export function Banner() {
       }}>
         The Atlanta Gleaner.
       </h1>
-      <style>{`
-        @media (max-width: 768px) {
-          .tagline {
-            max-width: 205px;
-            word-break: break-word;
-            margin: 0 auto;
-            display: block;
-          }
-        }
-        @media (min-width: 769px) {
-          .tagline {
-            max-width: 100%;
-          }
-        }
-      `}</style>
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         gap: SPACING.sm,
         margin: `0 0 ${SPACING.xxl} 0`,
       }}>
-        <p className="tagline" style={{
+        <p style={{
           ...T.nav,
           fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
           color: PALETTE.black,
