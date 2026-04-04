@@ -1,8 +1,10 @@
 'use client';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — NewsBox Component (Live RSS Edition)
+// Atlanta Gleaner — NewsBox Component (Serper Search Edition)
 // ─────────────────────────────────────────────────────────────────────────────
+// Fetches live news via Serper, served from Edge Config cache (refreshed daily).
+// Includes intelligent slot-based scoring and multi-source aggregation.
 
 import { useState, useEffect } from 'react';
 import {
@@ -18,15 +20,17 @@ interface NewsItem {
   publishedAt: string;
   score: number;
   slot: string;
+  type?: 'video' | 'text';
 }
 
 // ── Slot type badges ────────────────────────────────────────────────────────────
 
 const SLOT_BADGE: Record<string, { label: string } | null> = {
-  science_pin:  { label: '▶' },
-  science_nova: { label: '◉' },
-  letterman:    { label: '★' },
-  news:         null,
+  science_pin:      { label: '▶' },
+  science_nova:     { label: '◉' },
+  letterman:        { label: '★' },
+  news:             null,
+  'news-international': null,
 };
 
 // ── Individual news item ────────────────────────────────────────────────────────
@@ -34,6 +38,19 @@ const SLOT_BADGE: Record<string, { label: string } | null> = {
 function NewsItemRow({ item }: { item: NewsItem }) {
   const [hovered, setHovered] = useState(false);
   const badge = SLOT_BADGE[item.slot] || null;
+
+  // Determine media label (Spotify or YouTube)
+  const isSpotify = item.url.includes('spotify.com');
+  const isYouTube = item.type === 'video' || item.url.includes('youtube.com');
+
+  let mediaLabel = '';
+  if (isSpotify) mediaLabel = ' • Spotify';
+  else if (isYouTube) mediaLabel = ' • YouTube';
+
+  // Format date cleanly (e.g., "Mar 24")
+  const dateString = item.publishedAt
+    ? ` • ${new Date(item.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}`
+    : '';
 
   return (
     <li style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
@@ -70,9 +87,12 @@ function NewsItemRow({ item }: { item: NewsItem }) {
           )}
           {item.title}
         </p>
+
+        {/* Updated Metadata Line */}
         <p style={{ ...T.micro, color: PALETTE.black, marginTop: SPACING.xs, marginBottom: 0 }}>
-          {item.source}
+          {item.source}{mediaLabel}{dateString}
         </p>
+
       </a>
     </li>
   );
@@ -129,7 +149,7 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
     <div style={{ height: 'fit-content', ...style }}>
       <div style={BOX_SHELL}>
         <div style={{ padding: BOX_PADDING }}>
-          <h2 style={BOX_HEADER}>Testing... testing... testing...</h2>
+          <h2 style={BOX_HEADER}>News Index</h2>
 
           {loading && <LoadingSkeleton />}
 
@@ -139,7 +159,7 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
 
           {!loading && !error && (
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-              {items.map((item, i) => (
+              {items.map((item) => (
                 <NewsItemRow key={item.url} item={item} />
               ))}
             </ul>
