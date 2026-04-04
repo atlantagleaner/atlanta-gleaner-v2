@@ -33,6 +33,20 @@ const SLOT_BADGE: Record<string, { label: string } | null> = {
   'news-international': null,
 };
 
+// ── Item styles (extracted to prevent re-allocation on render) ────────────────
+
+const ITEM_CONTAINER_STYLE = { ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md };
+
+const LINK_STYLE = { textDecoration: 'none', display: 'block' as const };
+
+const BADGE_STYLE = { ...T.micro, marginRight: SPACING.xs, verticalAlign: 'middle' as const };
+
+const META_STYLE = { ...T.micro, color: PALETTE.black, marginTop: SPACING.xs, marginBottom: 0 };
+
+const LOADING_CONTAINER_STYLE = { listStyle: 'none' as const, padding: 0, margin: 0 };
+
+const ITEMS_LIST_STYLE = { listStyle: 'none' as const, padding: 0, margin: 0 };
+
 // ── Individual news item ────────────────────────────────────────────────────────
 
 function NewsItemRow({ item }: { item: NewsItem }) {
@@ -48,14 +62,14 @@ function NewsItemRow({ item }: { item: NewsItem }) {
   else if (isYouTube) mediaLabel = ' • YouTube';
 
   return (
-    <li style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
+    <li style={ITEM_CONTAINER_STYLE}>
       <a
         href={item.url}
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        style={{ textDecoration: 'none', display: 'block' }}
+        style={LINK_STYLE}
       >
         <p
           style={{
@@ -71,10 +85,8 @@ function NewsItemRow({ item }: { item: NewsItem }) {
           {badge && (
             <span
               style={{
-                ...T.micro,
-                color:         hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
-                marginRight:   SPACING.xs,
-                verticalAlign: 'middle',
+                ...BADGE_STYLE,
+                color: hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
               }}
             >
               {badge.label}
@@ -84,7 +96,7 @@ function NewsItemRow({ item }: { item: NewsItem }) {
         </p>
 
         {/* Metadata Line */}
-        <p style={{ ...T.micro, color: PALETTE.black, marginTop: SPACING.xs, marginBottom: 0 }}>
+        <p style={META_STYLE}>
           {item.source}{mediaLabel}
         </p>
 
@@ -97,9 +109,9 @@ function NewsItemRow({ item }: { item: NewsItem }) {
 
 function LoadingSkeleton() {
   return (
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+    <ul style={LOADING_CONTAINER_STYLE}>
       {Array.from({ length: 8 }).map((_, i) => (
-        <li key={i} style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
+        <li key={i} style={ITEM_CONTAINER_STYLE}>
           <div style={{ height: '14px', width: `${60 + (i % 3) * 15}%`, background: 'var(--palette-rule)', marginBottom: SPACING.sm }} />
           <div style={{ height: '10px', width: '30%', background: 'var(--palette-rule-sm)' }} />
         </li>
@@ -153,7 +165,7 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
           )}
 
           {!loading && !error && (
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            <ul style={ITEMS_LIST_STYLE}>
               {items.map((item) => (
                 <NewsItemRow key={item.url} item={item} />
               ))}

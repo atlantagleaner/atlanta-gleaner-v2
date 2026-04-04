@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { PALETTE, T, SPACING } from '@/src/styles/tokens'
+import { useState, useRef, useEffect } from 'react'
+import { PALETTE, T, SPACING, BREAKPOINT } from '@/src/styles/tokens'
 
 const WIKIPEDIA_FALLBACK =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/George_Washington_Statue_Federal_Hall_NYC.jpg/400px-George_Washington_Statue_Federal_Hall_NYC.jpg'
@@ -13,10 +13,27 @@ const WIKIPEDIA_FALLBACK =
 const THEMES = ['default', 'classical', 'matrix'] as const
 type Theme = typeof THEMES[number]
 
+const TAGLINE_STYLE = {
+  ...T.nav,
+  fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
+  color: PALETTE.black,
+  margin: 0,
+  textAlign: 'center' as const,
+}
+
 export function Banner() {
   const [imgSrc,    setImgSrc]    = useState('/washington.png')
   const [logoHover, setLogoHover] = useState(false)
+  const [isMobile,  setIsMobile]  = useState(false)
   const themeIdx = useRef(0)
+
+  // Detect mobile breakpoint
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < BREAKPOINT.mobile)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   function cycleTheme() {
     themeIdx.current = (themeIdx.current + 1) % THEMES.length
@@ -50,15 +67,14 @@ export function Banner() {
         gap: SPACING.sm,
         margin: `0 0 ${SPACING.xxl} 0`,
       }}>
-        <p style={{
-          ...T.nav,
-          fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
-          color: PALETTE.black,
-          margin: 0,
-          textAlign: 'center',
-        }}>
-          Legal News & Georgia Case Law Updates
-        </p>
+        {isMobile ? (
+          <>
+            <p style={TAGLINE_STYLE}>Legal News &</p>
+            <p style={TAGLINE_STYLE}>Georgia Case Law Updates</p>
+          </>
+        ) : (
+          <p style={TAGLINE_STYLE}>Legal News & Georgia Case Law Updates</p>
+        )}
         <p style={{
           ...T.nav,
           fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
