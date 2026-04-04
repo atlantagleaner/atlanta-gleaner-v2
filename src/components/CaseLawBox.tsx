@@ -166,6 +166,41 @@ function detectAndWrapBlockquotes(html: string): string {
   return result
 }
 
+// ── Counsel formatter ───────────────────────────────────────────────────────
+
+/**
+ * Format counsel data as a single readable string.
+ * Format: "Attorney Name, Law Firm (for Position); Attorney Name, Law Firm (for Position)"
+ */
+function formatCounselData(counsel: CounselStructured): string {
+  if (!counsel.entries || counsel.entries.length === 0) return ''
+
+  return counsel.entries
+    .map((entry) => {
+      const attorneys = entry.attorneys.join(', ')
+      const firm = entry.law_firm ? `, ${entry.law_firm}` : ''
+      return `${attorneys}${firm} (for ${entry.represents})`
+    })
+    .join('; ')
+}
+
+/**
+ * Truncate text to approximately 2 lines (estimate ~90 chars per line at prose size).
+ * Returns the truncated string and whether it was truncated.
+ */
+function truncateToTwoLines(text: string, charLimit: number = 180): { text: string; truncated: boolean } {
+  if (text.length <= charLimit) {
+    return { text, truncated: false }
+  }
+  // Truncate and add ellipsis, but try to break at a word boundary
+  let truncated = text.slice(0, charLimit)
+  const lastSpace = truncated.lastIndexOf(' ')
+  if (lastSpace > charLimit * 0.8) {
+    truncated = truncated.slice(0, lastSpace)
+  }
+  return { text: truncated + '…', truncated: true }
+}
+
 // ── Style constants ───────────────────────────────────────────────────────────
 
 const warm:  CSSProperties = { background: PALETTE.warm }
@@ -218,6 +253,32 @@ const pendingChip: CSSProperties = {
   display:      'inline-block',
 }
 
+const counselValueContainer: CSSProperties = {
+  display:      'flex',
+  alignItems:   'flex-start',
+  gap:          '8px',
+  width:        '100%',
+}
+
+const counselChevron: CSSProperties = {
+  ...T.prose,
+  color:        PALETTE.black,
+  flexShrink:   0,
+  cursor:       'pointer',
+  userSelect:   'none',
+  lineHeight:   1.4,
+  transition:   `transform ${ANIMATION.base} ${ANIMATION.ease}`,
+}
+
+const counselValue: CSSProperties = {
+  ...T.prose,
+  fontWeight:   400,
+  lineHeight:   1.4,
+  color:        PALETTE.black,
+  flex:         1,
+  wordBreak:    'break-word',
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface CaseLawBoxProps {
@@ -229,6 +290,7 @@ interface CaseLawBoxProps {
 
 export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: CaseLawBoxProps) {
   const [expanded, setExpanded] = useState(false)
+  const [counselExpanded, setCounselExpanded] = useState(false)
   if (!caseData) return null
 
   const {
@@ -350,54 +412,44 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           </div>
         )}
         {noticeText && (
-          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+          <div style={metadataRow}>
             <span style={metaLabel}>Notice</span>
             <span style={metaValue}>{noticeText}</span>
           </div>
         )}
+        {counsel && counsel.entries && counsel.entries.length > 0 && (
+          <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
+            <span style={metaLabel}>Counsel</span>
+            <div style={counselValueContainer}>
+              <button
+                onClick={() => setCounselExpanded(!counselExpanded)}
+                style={{
+                  ...counselChevron,
+                  transform: counselExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  background: 'none',
+                  border: 'none',
+                  padding: '0',
+                  margin: '0',
+                  lineHeight: 1.4,
+                  fontSize: '14px',
+                }}
+                aria-expanded={counselExpanded}
+                aria-label="Toggle counsel details"
+              >
+                ↓
+              </button>
+              <span style={counselValue}>
+                {(() => {
+                  const fullText = formatCounselData(counsel)
+                  const { text, truncated } = truncateToTwoLines(fullText)
+                  return counselExpanded ? fullText : text
+                })()}
+              </span>
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* ── 2b. Parties & Counsel section ─────────────────────────────────── */}
-      {(parties && parties.length > 0) || (counsel && counsel.entries && counsel.entries.length > 0) ? (
-        <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
-          {/* Parties subsection */}
-          {parties && parties.length > 0 && (
-            <div style={{ marginBottom: SPACING.xl }}>
-              <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
-                Parties
-              </div>
-              <div>
-                {parties.map((party: Party, idx: number) => (
-                  <div key={idx} style={{ ...T.prose, marginBottom: SPACING.sm, color: PALETTE.black }}>
-                    <strong>{party.name}</strong>
-                    <span style={{ color: PALETTE_CSS.muted }}> — {party.position}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Counsel subsection */}
-          {counsel && counsel.entries && counsel.entries.length > 0 && (
-            <div>
-              <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
-                Counsel
-              </div>
-              <div>
-                {counsel.entries.map((entry, idx: number) => (
-                  <div key={idx} style={{ ...T.prose, marginBottom: SPACING.sm, color: PALETTE.black }}>
-                    <strong>{entry.attorneys.join(', ')}</strong>
-                    {entry.law_firm && (
-                      <span style={{ color: PALETTE_CSS.muted }}>, {entry.law_firm}</span>
-                    )}
-                    <span style={{ color: PALETTE_CSS.muted }}> (for {entry.represents})</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
-      ) : null}
 
       {/* ── 3. White spacer ──────────────────────────────────────────────── */}
       <div style={{ ...white, height: '16px', ...sectionBorder }} />
