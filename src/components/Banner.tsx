@@ -48,7 +48,7 @@ export function Banner() {
       <style>{`
         @media (max-width: 768px) {
           .tagline {
-            max-width: 160px;
+            max-width: 205px;
             word-break: break-word;
             margin: 0 auto;
             display: block;
