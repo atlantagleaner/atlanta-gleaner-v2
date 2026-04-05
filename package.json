@@ -13,6 +13,7 @@
     "@vercel/blob": "^0.23.4",
     "@vercel/edge-config": "^1.4.3",
     "cheerio": "^1.0.0-rc.12",
+    "fuse.js": "^7.3.0",
     "mammoth": "^1.12.0",
     "next": "^16.2.1",
     "react": "^18",

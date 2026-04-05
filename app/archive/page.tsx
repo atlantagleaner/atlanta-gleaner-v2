@@ -14,10 +14,12 @@
 // minimal — consistent with the rest of the Gleaner design system.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
+import { SearchInput } from '@/src/components/common/SearchInput'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL, BOX_HEADER,
   BOX_PADDING, ITEM_RULE, SPACING, SIZE_SM, SIZE_MD,
@@ -271,9 +273,67 @@ function VolumeBox({
   )
 }
 
+// ── Search setup ──────────────────────────────────────────────────────────────
+
+interface SearchableCase {
+  id: string
+  slug: string
+  title: string
+  court: string
+  docketNumber: string
+  judges?: string
+  disposition?: string
+  summary?: string
+  coreTerms?: string
+}
+
+function buildSearchableCase(c: CaseLaw): SearchableCase {
+  return {
+    id: c.id,
+    slug: c.slug,
+    title: c.title,
+    court: c.court,
+    docketNumber: c.docketNumber,
+    judges: c.judges || '',
+    disposition: c.disposition || '',
+    summary: c.summary || '',
+    coreTerms: c.coreTerms?.join(' ') || '',
+  }
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ArchivePage() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Build and search with Fuse.js
+  const { filteredCases, resultCount } = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return { filteredCases: cases, resultCount: cases.length }
+    }
+
+    const searchableData = cases.map(buildSearchableCase)
+    const fuse = new Fuse(searchableData, {
+      keys: [
+        { name: 'title', weight: 0.4 },
+        { name: 'docketNumber', weight: 0.3 },
+        { name: 'coreTerms', weight: 0.3 },
+        { name: 'court', weight: 0.2 },
+        { name: 'judges', weight: 0.15 },
+        { name: 'summary', weight: 0.15 },
+        { name: 'disposition', weight: 0.1 },
+      ],
+      threshold: 0.4, // Allows typos/variations
+      includeScore: true,
+    })
+
+    const results = fuse.search(searchQuery)
+    const resultSlugs = new Set(results.map((r) => r.item.slug))
+    const matched = cases.filter((c) => resultSlugs.has(c.slug))
+
+    return { filteredCases: matched, resultCount: matched.length }
+  }, [searchQuery])
+
   return (
     <main style={{
       minHeight:   '100vh',
@@ -295,13 +355,23 @@ export default function ArchivePage() {
           </h1>
         </div>
 
+        {/* Search box */}
+        <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            resultCount={resultCount}
+            noResults={searchQuery.trim().length > 0 && resultCount === 0}
+          />
+        </div>
+
         {/* Volume boxes */}
         <div style={{ maxWidth: '760px' }}>
           {VOLUMES.map((volume, i) => (
             <VolumeBox
               key={volume.number}
               volume={volume}
-              allCases={cases}
+              allCases={filteredCases}
               defaultOpen={i === 0} // Volume IV (newest) open by default
             />
           ))}
