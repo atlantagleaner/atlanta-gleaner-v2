@@ -1,178 +1,303 @@
-'use client';
+'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — NewsBox Component (Serper Search Edition)
+// Atlanta Gleaner — NewsBox (Mirror Proxy Edition)
 // ─────────────────────────────────────────────────────────────────────────────
-// Fetches live news via Serper, served from Edge Config cache (refreshed daily).
-// Includes intelligent slot-based scoring and multi-source aggregation.
+// Fetches the 15-item news feed from /api/news (Edge Config, no Serper calls
+// on the client). Each item expands via a Radix UI Accordion.
+//
+// On expand:
+//   • Video items  → MirrorViewer renders a clean YouTube embed immediately.
+//   • Text items   → gleanArticle() checks the 24-hour Vercel Blob cache.
+//                    Cache hit  → instant drawer (no spinner).
+//                    Cache miss → "Gleaning original source…" skeleton while
+//                                 the proxy fetches and Cheerio cleans the HTML.
+//
+// Design: all styling via tokens.ts — no new CSS classes.
+// ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition, useCallback } from 'react'
+import * as Accordion from '@radix-ui/react-accordion'
 import {
-  PALETTE, T, BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
-} from '@/src/styles/tokens';
+  PALETTE, PALETTE_CSS, T,
+  BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
+} from '@/src/styles/tokens'
+import { gleanArticle }         from '@/app/actions/glean'
+import type { GleanResult }     from '@/app/actions/glean'
+import { MirrorViewer }         from '@/src/components/News/MirrorViewer'
 
-// ── Types ───────────────────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface NewsItem {
-  title: string;
-  url: string;
-  source: string;
-  publishedAt: string;
-  score: number;
-  slot: string;
-  type?: 'video' | 'text';
+  title:       string
+  url:         string
+  source:      string
+  publishedAt: string
+  score:       number
+  slot:        string
+  type?:       'video' | 'text'
 }
 
-// ── Slot type badges ────────────────────────────────────────────────────────────
+type DrawerState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'done'; result: GleanResult }
+  | { status: 'error'; message: string }
 
-const SLOT_BADGE: Record<string, { label: string } | null> = {
-  science_pin:      { label: '▶' },
-  science_nova:     { label: '◉' },
-  letterman:        { label: '★' },
-  news:             null,
+// ── Slot badges ───────────────────────────────────────────────────────────────
+
+const SLOT_BADGE: Record<string, string | null> = {
+  science_pin:          '▶',
+  science_nova:         '◉',
+  letterman:            '★',
+  news:                 null,
   'news-international': null,
-};
+}
 
-// ── Item styles (extracted to prevent re-allocation on render) ────────────────
+// ── Mirror Drawer ─────────────────────────────────────────────────────────────
+// Mounts when an accordion item opens. Fires gleanArticle immediately.
+// Video items resolve synchronously (no network); text items may show a brief
+// loading skeleton on cache-miss.
 
-const ITEM_CONTAINER_STYLE = { ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md };
+function MirrorDrawer({ item }: { item: NewsItem }) {
+  const [drawer, setDrawer]   = useState<DrawerState>({ status: 'idle' })
+  const [, startTransition]   = useTransition()
 
-const LINK_STYLE = { textDecoration: 'none', display: 'block' as const };
+  useEffect(() => {
+    setDrawer({ status: 'loading' })
+    startTransition(async () => {
+      const result = await gleanArticle(item.url, {
+        title:  item.title,
+        source: item.source,
+        type:   item.type,
+      })
+      if ('error' in result) {
+        setDrawer({ status: 'error', message: result.error })
+      } else {
+        setDrawer({ status: 'done', result })
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.url])
 
-const BADGE_STYLE = { ...T.micro, marginRight: SPACING.xs, verticalAlign: 'middle' as const };
+  // ── Loading ────────────────────────────────────────────────────────────────
+  if (drawer.status === 'idle' || drawer.status === 'loading') {
+    return (
+      <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
+        <p style={{
+          ...T.micro,
+          color:        PALETTE_CSS.muted,
+          margin:       `0 0 ${SPACING.md}`,
+          animation:    `gleaner-pulse 1.6s ease-in-out infinite`,
+        }}>
+          Gleaning original source…
+        </p>
+        {/* Skeleton bars */}
+        {[65, 45, 55].map((w, i) => (
+          <div key={i} style={{
+            height:       '10px',
+            width:        `${w}%`,
+            background:   'var(--palette-rule)',
+            marginBottom: SPACING.sm,
+            borderRadius: '2px',
+          }} />
+        ))}
+      </div>
+    )
+  }
 
-const META_STYLE = { ...T.micro, color: PALETTE.black, marginTop: SPACING.xs, marginBottom: 0 };
+  // ── Error ──────────────────────────────────────────────────────────────────
+  if (drawer.status === 'error') {
+    return (
+      <div style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
+        <p style={{ ...T.micro, color: PALETTE_CSS.muted, margin: 0 }}>
+          Could not mirror article.{' '}
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: PALETTE.black, textUnderlineOffset: '2px' }}
+          >
+            Open directly →
+          </a>
+        </p>
+      </div>
+    )
+  }
 
-const LOADING_CONTAINER_STYLE = { listStyle: 'none' as const, padding: 0, margin: 0 };
+  // ── Result ─────────────────────────────────────────────────────────────────
+  return <MirrorViewer result={drawer.result} />
+}
 
-const ITEMS_LIST_STYLE = { listStyle: 'none' as const, padding: 0, margin: 0 };
+// ── Individual accordion item ─────────────────────────────────────────────────
 
-// ── Individual news item ────────────────────────────────────────────────────────
+function NewsAccordionItem({ item }: { item: NewsItem }) {
+  const [open, setOpen] = useState(false)
 
-function NewsItemRow({ item }: { item: NewsItem }) {
-  const [hovered, setHovered] = useState(false);
-  const badge = SLOT_BADGE[item.slot] || null;
+  const badge      = SLOT_BADGE[item.slot] ?? null
+  const isYouTube  = item.type === 'video' || item.url.includes('youtube.com')
+  const isSpotify  = item.url.includes('spotify.com')
+  const mediaLabel = isYouTube ? ' · YouTube' : isSpotify ? ' · Spotify' : ''
 
-  // Determine media label (Spotify or YouTube)
-  const isSpotify = item.url.includes('spotify.com');
-  const isYouTube = item.type === 'video' || item.url.includes('youtube.com');
-
-  let mediaLabel = '';
-  if (isSpotify) mediaLabel = ' • Spotify';
-  else if (isYouTube) mediaLabel = ' • YouTube';
+  const handleChange = useCallback((val: string) => {
+    setOpen(val === item.url)
+  }, [item.url])
 
   return (
-    <li style={ITEM_CONTAINER_STYLE}>
-      <a
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={LINK_STYLE}
+    <Accordion.Root
+      type="single"
+      collapsible
+      onValueChange={handleChange}
+      style={{ width: '100%' }}
+    >
+      <Accordion.Item
+        value={item.url}
+        style={{ ...ITEM_RULE, paddingBottom: 0, marginBottom: 0 }}
       >
-        <p
-          style={{
-            ...T.body,
-            color:           hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
-            backgroundColor: hovered ? 'var(--interactive-hover-bg)' : 'transparent',
-            padding:         hovered ? `2px ${SPACING.xs}` : '2px 0',
-            textDecoration:  'none',
-            transition:      `all ${ANIMATION.fast} ${ANIMATION.ease}`,
-            margin:          0,
-          }}
-        >
-          {badge && (
+        {/* ── Trigger ─────────────────────────────────────────────────────── */}
+        <Accordion.Header style={{ margin: 0 }}>
+          <Accordion.Trigger
+            style={{
+              width:          '100%',
+              background:     'none',
+              border:         'none',
+              padding:        `${SPACING.md} 0`,
+              cursor:         'pointer',
+              textAlign:      'left',
+              display:        'flex',
+              alignItems:     'flex-start',
+              justifyContent: 'space-between',
+              gap:            SPACING.sm,
+            }}
+          >
+            <span>
+              <span style={{
+                ...T.body,
+                color:      open ? 'var(--interactive-hover-text, #000)' : PALETTE.black,
+                display:    'block',
+                transition: `color ${ANIMATION.fast} ${ANIMATION.ease}`,
+              }}>
+                {badge && (
+                  <span style={{ ...T.micro, marginRight: SPACING.xs, verticalAlign: 'middle' }}>
+                    {badge}
+                  </span>
+                )}
+                {item.title}
+              </span>
+              <span style={{
+                ...T.micro,
+                color:     PALETTE_CSS.meta,
+                display:   'block',
+                marginTop: SPACING.xs,
+              }}>
+                {item.source}{mediaLabel}
+              </span>
+            </span>
+
+            {/* Chevron */}
             <span
+              aria-hidden="true"
               style={{
-                ...BADGE_STYLE,
-                color: hovered ? 'var(--interactive-hover-text)' : PALETTE.black,
+                ...T.micro,
+                color:      PALETTE_CSS.meta,
+                flexShrink: 0,
+                marginTop:  '2px',
+                display:    'inline-block',
+                transform:  open ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
               }}
             >
-              {badge.label}
+              ↓
             </span>
-          )}
-          {item.title}
-        </p>
+          </Accordion.Trigger>
+        </Accordion.Header>
 
-        {/* Metadata Line */}
-        <p style={META_STYLE}>
-          {item.source}{mediaLabel}
-        </p>
-
-      </a>
-    </li>
-  );
+        {/* ── Content ─────────────────────────────────────────────────────── */}
+        <Accordion.Content className="gleaner-accordion-content">
+          <div style={{ paddingBottom: SPACING.sm }}>
+            {open && <MirrorDrawer item={item} />}
+          </div>
+        </Accordion.Content>
+      </Accordion.Item>
+    </Accordion.Root>
+  )
 }
 
-// ── Loading skeleton ────────────────────────────────────────────────────────────
+// ── Loading skeleton ───────────────────────────────────────────────────────────
 
 function LoadingSkeleton() {
   return (
-    <ul style={LOADING_CONTAINER_STYLE}>
+    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
       {Array.from({ length: 8 }).map((_, i) => (
-        <li key={i} style={ITEM_CONTAINER_STYLE}>
+        <li key={i} style={{ ...ITEM_RULE, paddingBottom: SPACING.md, marginBottom: SPACING.md }}>
           <div style={{ height: '14px', width: `${60 + (i % 3) * 15}%`, background: 'var(--palette-rule)', marginBottom: SPACING.sm }} />
           <div style={{ height: '10px', width: '30%', background: 'var(--palette-rule-sm)' }} />
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
-// ── Main NewsBox component ─────────────────────────────────────────────────────────
+// ── Main NewsBox ───────────────────────────────────────────────────────────────
 
 export function NewsBox({ style }: { style?: React.CSSProperties }) {
-  const [items, setItems] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [items, setItems]     = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState<string | null>(null)
 
   useEffect(() => {
-    let cancelled = false;
-
+    let cancelled = false
     async function load() {
       try {
-        const res = await fetch('/api/news');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const res = await fetch('/api/news')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
         if (!cancelled) {
-          setItems(data.items || []);
-          setLoading(false);
+          setItems(data.items || [])
+          setLoading(false)
         }
-      } catch (err: any) {
-        console.error('[NewsBox] fetch error:', err);
+      } catch {
         if (!cancelled) {
-          setError('News unavailable');
-          setLoading(false);
+          setError('News unavailable')
+          setLoading(false)
         }
       }
     }
-
-    load();
-    return () => { cancelled = true; };
-  }, []);
+    load()
+    return () => { cancelled = true }
+  }, [])
 
   return (
-    <div style={{ height: 'fit-content', ...style }}>
-      <div style={BOX_SHELL}>
-        <div style={{ padding: BOX_PADDING }}>
-          <h2 style={BOX_HEADER}>News Index</h2>
+    <>
+      {/* Pulse animation for cache-miss loading state */}
+      <style>{`
+        @keyframes gleaner-pulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.4; }
+        }
+      `}</style>
 
-          {loading && <LoadingSkeleton />}
+      <div style={{ height: 'fit-content', ...style }}>
+        <div style={BOX_SHELL}>
+          <div style={{ padding: BOX_PADDING }}>
+            <h2 style={BOX_HEADER}>News Index</h2>
 
-          {error && !loading && (
-            <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>{error}</p>
-          )}
+            {loading && <LoadingSkeleton />}
 
-          {!loading && !error && (
-            <ul style={ITEMS_LIST_STYLE}>
-              {items.map((item) => (
-                <NewsItemRow key={item.url} item={item} />
-              ))}
-            </ul>
-          )}
+            {error && !loading && (
+              <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>{error}</p>
+            )}
+
+            {!loading && !error && (
+              <div>
+                {items.map((item) => (
+                  <NewsAccordionItem key={item.url} item={item} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
