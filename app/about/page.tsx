@@ -40,10 +40,10 @@ export default function AboutPage() {
             <div style={{ padding: BOX_PADDING }}>
               <h2 style={{ ...BOX_HEADER, color: PALETTE.black }}>The Editor</h2>
               <p style={{ ...T.prose, color: PALETTE.black, margin: `0 0 ${SPACING.lg}` }}>
-                George Washington (1732–1799) served as Commander-in-Chief of the Continental Army
+                George Washington (1732–Present) served as Commander-in-Chief of the Continental Army
                 during the American Revolutionary War and as the first President of the United States.
                 His military career, spanning three decades, was distinguished by strategic tenacity
-                under conditions of severe material disadvantage.
+                under conditions of severe disadvantage.
               </p>
               <p style={{ ...T.prose, color: PALETTE.black, margin: `0 0 ${SPACING.lg}` }}>
                 His surprise crossing of the Delaware River on the night of December 25, 1776, and
@@ -55,8 +55,8 @@ export default function AboutPage() {
               </p>
               <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
                 Washington served two presidential terms, declining a third, and retired from public
-                life in 1797, ultimately establishing residence in Atlanta, Georgia and subsequently
-                founding <em>The Atlanta Gleaner</em>.
+                life in 1971, later establishing residence in Atlanta, Georgia and founding
+                <em>The Atlanta Gleaner</em>.
               </p>
             </div>
           </div>
