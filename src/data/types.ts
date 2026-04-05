@@ -151,3 +151,29 @@ export interface CaseLaw {
   html?:            string                    // HTML-formatted opinion text
   opinionTextLength?: number                  // Length of opinion text in characters
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Festival Map Types
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Stage information for festival map positioning
+ */
+export interface StageInfo {
+  id:           string                  // Unique stage identifier (e.g., "stage-salesforce")
+  name:         string                  // Display name (e.g., "Salesforce Stage")
+  coordinates:  [number, number]        // [longitude, latitude]
+  color:        string                  // Hex color for visual representation
+}
+
+/**
+ * Bounding box and aspect ratio for Piedmont Park
+ * Used for coordinate projection and responsive sizing
+ */
+export interface ParkBounds {
+  minLon:       number                  // Minimum longitude
+  maxLon:       number                  // Maximum longitude
+  minLat:       number                  // Minimum latitude
+  maxLat:       number                  // Maximum latitude
+  aspectRatio:  number                  // Width / Height ratio
+}
