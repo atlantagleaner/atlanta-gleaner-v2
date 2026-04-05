@@ -1,14 +1,11 @@
-'use client'
-
 import { Banner } from '@/src/components/Banner'
-import { FestivalMapContainer } from '@/src/components/Runway/FestivalMapContainer'
 import {
   FONT, T, PALETTE, PALETTE_CSS, SPACING,
   SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK,
 } from '@/src/styles/tokens'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Runway — embedded YouTube music videos mapped to festival stages
+// Runway — embedded YouTube music videos
 // Future: fetch video list from Supabase `runway_videos` table
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -101,61 +98,6 @@ function VideoSlot({ title, artist, youtubeId }: typeof VIDEOS[0]) {
   )
 }
 
-// Video component renderer for festival map
-function MapVideoComponent(video: typeof VIDEOS[0]) {
-  return (
-    <div style={{ border: `1px solid ${PALETTE_CSS.border}`, background: PALETTE.white, width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <div style={{
-        background:     PALETTE.black,
-        padding:        `${SPACING.sm} ${SPACING.md}`,
-        display:        'flex',
-        justifyContent: 'space-between',
-        alignItems:     'center',
-      }}>
-        <span style={{ ...T.nav, color: PALETTE.white, fontSize: SIZE_SM }}>
-          Track
-        </span>
-        <span style={{ ...FONT.mono, fontSize: '0.6rem', color: PALETTE.white, opacity: 0.45 }}>▶</span>
-      </div>
-
-      {/* Video */}
-      <div style={{ aspectRatio: '16/9', background: PALETTE.black, flexGrow: 1 }}>
-        {video.youtubeId ? (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-          />
-        ) : (
-          <div style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: SPACING.md,
-          }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '24px', color: PALETTE.black, opacity: 0.25 }} strokeWidth="1">
-              <circle cx="12" cy="12" r="10" />
-              <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none" />
-            </svg>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div style={{ padding: `${SPACING.md} ${SPACING.md}`, background: PALETTE.black }}>
-        <p style={{ ...T.micro, fontSize: '0.65rem', fontWeight: 600, color: PALETTE.white, margin: `0 0 ${SPACING.xs} 0` }}>{video.title}</p>
-        <p style={{ ...T.micro, fontSize: '0.6rem', color: PALETTE.white, opacity: 0.45, margin: 0 }}>{video.artist}</p>
-      </div>
-    </div>
-  )
-}
-
 export default function RunwayPage() {
   return (
     <>
@@ -167,18 +109,13 @@ export default function RunwayPage() {
           </h1>
         </div>
       </div>
-
-      {/* Festival map with video positioning */}
-      <FestivalMapContainer
-        videos={VIDEOS}
-        videoComponent={MapVideoComponent}
-      />
-
-      {/* Original grid layout below map for backward compatibility */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 767px) {
           .ag-runway-grid {
-            display: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: ${SPACING.xl};
+            padding: 0 ${SPACING.lg};
           }
         }
         @media (min-width: 768px) {
