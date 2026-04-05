@@ -391,35 +391,39 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={metadataRow}>
             <button
               onClick={() => setShowPagination(!showPagination)}
-              style={{
+              style={showPagination ? {
+                ...T.micro,
+                background: PALETTE.black,
+                color: PALETTE.white,
+                border: 'none',
+                padding: `2px ${SPACING.sm}`,
+                cursor: 'pointer',
+                minWidth: 'auto',
+                lineHeight: '18px',
+                transition: 'background 0.2s ease',
+              } : {
                 ...metaLabel,
                 background: 'none',
                 border: 'none',
                 padding: '0',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
                 transition: 'opacity 0.15s ease',
                 minWidth: '110px',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.opacity = '0.65'
+                if (!showPagination) {
+                  (e.currentTarget as HTMLButtonElement).style.opacity = '0.65'
+                }
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.opacity = '1'
+                if (!showPagination) {
+                  (e.currentTarget as HTMLButtonElement).style.opacity = '1'
+                }
               }}
               aria-label="Toggle pagination markers"
+              aria-pressed={showPagination}
             >
               REPORTER
-              <span style={{
-                display: 'inline-block',
-                transition: 'transform 0.2s ease',
-                fontSize: '10px',
-                transform: showPagination ? 'rotate(180deg)' : 'rotate(0deg)',
-              }}>
-                ↓
-              </span>
             </button>
             <span style={metaValue}>{citations}</span>
           </div>
