@@ -391,25 +391,22 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={metadataRow}>
             <button
               onClick={() => setShowPagination(!showPagination)}
-              style={showPagination ? {
-                ...T.micro,
-                background: PALETTE.black,
-                color: PALETTE.white,
+              style={{
+                ...(showPagination ? {
+                  ...T.micro,
+                  background: PALETTE.black,
+                  color: PALETTE.white,
+                  padding: `2px ${SPACING.sm}`,
+                  transition: 'background 0.2s ease',
+                } : {
+                  ...metaLabel,
+                  background: 'none',
+                  transition: 'opacity 0.15s ease',
+                }),
                 border: 'none',
-                padding: `2px ${SPACING.sm}`,
                 cursor: 'pointer',
-                minWidth: 'auto',
-                display: 'inline',
-                transition: 'background 0.2s ease',
-              } : {
-                ...metaLabel,
-                background: 'none',
-                border: 'none',
-                padding: '0',
-                cursor: 'pointer',
-                display: 'inline',
-                transition: 'opacity 0.15s ease',
-                minWidth: '110px',
+                lineHeight: 1,
+                verticalAlign: 'baseline',
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
