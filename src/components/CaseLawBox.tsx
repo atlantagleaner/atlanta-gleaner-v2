@@ -22,6 +22,7 @@ import {
   BOX_SHELL, BOX_HEADER, BOX_PADDING, ITEM_RULE, SPACING, ANIMATION,
 } from '@/src/styles/tokens'
 import type { CaseLaw, Party, Counsel, CounselStructured } from '@/src/data/types'
+import { MetadataRow } from '@/src/components/common'
 
 // ── Bidirectional footnote renderer ──────────────────────────────────────────
 
@@ -421,24 +422,9 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
 
       {/* ── 2. Metadata box ──────────────────────────────────────────────── */}
       <section style={{ ...warm, padding: BOX_PADDING, ...sectionBorder }}>
-        {court && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Court</span>
-            <span style={metaValue}>{court}</span>
-          </div>
-        )}
-        {docketNumber && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Docket No.</span>
-            <span style={metaValue}>{docketNumber}</span>
-          </div>
-        )}
-        {dateDecided && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Decided</span>
-            <span style={metaValue}>{dateDecided}</span>
-          </div>
-        )}
+        {court && <MetadataRow label="Court" value={court} />}
+        {docketNumber && <MetadataRow label="Docket No." value={docketNumber} />}
+        {dateDecided && <MetadataRow label="Decided" value={dateDecided} />}
         {citations && (
           <div style={metadataRow}>
             <button
@@ -482,24 +468,11 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             <span style={metaValue}>{citations}</span>
           </div>
         )}
-        {priorHistory && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Prior History</span>
-            <span style={metaValue}>{priorHistory}</span>
-          </div>
-        )}
+        {priorHistory && <MetadataRow label="Prior History" value={priorHistory} />}
         {subsequent_history && subsequent_history.length > 0 && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Subsequent History</span>
-            <span style={metaValue}>{formatSubsequentHistory(subsequent_history)}</span>
-          </div>
+          <MetadataRow label="Subsequent History" value={formatSubsequentHistory(subsequent_history)} />
         )}
-        {judges && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Judges</span>
-            <span style={metaValue}>{judges}</span>
-          </div>
-        )}
+        {judges && <MetadataRow label="Judges" value={judges} />}
         {disposition && (
           <div style={metadataRow}>
             <span style={metaLabel}>Disposition</span>
@@ -520,12 +493,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             </div>
           </div>
         )}
-        {noticeText && (
-          <div style={metadataRow}>
-            <span style={metaLabel}>Notice</span>
-            <span style={metaValue}>{noticeText}</span>
-          </div>
-        )}
+        {noticeText && <MetadataRow label="Notice" value={noticeText} />}
         {counsel && counsel.entries && counsel.entries.length > 0 && (
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Counsel</span>

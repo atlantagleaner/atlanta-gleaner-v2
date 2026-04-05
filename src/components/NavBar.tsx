@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { PALETTE, T, SIZE_SM } from '@/src/styles/tokens'
+import { useDateTime } from '@/src/hooks'
 
 const NAV_LINKS = [
   { label: 'Archive', href: '/archive' },
@@ -16,27 +17,14 @@ const NAV_LINKS = [
 export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const pathname    = usePathname()
   const [open, setOpen] = useState(false)
-  const [now, setNow] = useState<Date | null>(null)
+  const { dateStr: defaultDateStr, timeStr: defaultTimeStr, now } = useDateTime(publishedDate)
   const navRef      = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    setNow(new Date())
-    const id = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(id)
-  }, [])
-
   // Show date/time on all pages (today's date unless publishedDate provided for case pages)
   const showDatetime = now
-  const dateStr = now
-    ? (publishedDate
-        ? new Date(publishedDate + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-        : now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-      )
-    : ''
-  const timeStr = now
-    ? now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })
-    : ''
+  const dateStr = defaultDateStr
+  const timeStr = defaultTimeStr
 
   useEffect(() => {
     if (!open) return

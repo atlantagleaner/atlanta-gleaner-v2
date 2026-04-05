@@ -1,21 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { BOX_SHELL } from '@/src/styles/tokens'
+import { useThemeDetection } from '@/src/hooks'
 
 export function FarSideBox() {
-  const [isMatrixTheme, setIsMatrixTheme] = useState(false)
-
-  useEffect(() => {
-    const html = document.documentElement
-    const checkTheme = () => {
-      setIsMatrixTheme(html.dataset.theme === 'matrix')
-    }
-    checkTheme()
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] })
-    return () => observer.disconnect()
-  }, [])
+  const isMatrixTheme = useThemeDetection('matrix')
 
   return (
     <div style={{ ...BOX_SHELL, height: 'fit-content' }}>

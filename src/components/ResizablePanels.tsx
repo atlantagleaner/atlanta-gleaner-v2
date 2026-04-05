@@ -1,11 +1,13 @@
 'use client'
 
-import {
-  useState, useRef, useEffect, useCallback,
-  type ReactNode, type CSSProperties, type PointerEvent as ReactPointerEvent,
+import React, {
+  useState, useRef, useCallback, useEffect,
+  type ReactNode, type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { flushSync } from 'react-dom'
-import { FONT, T, PALETTE, PALETTE_CSS, SIZE_SM, SPACING, ANIMATION, Z_INDEX, PAGE_MAX_W } from '@/src/styles/tokens'
+import { SPACING, ANIMATION, Z_INDEX, PAGE_MAX_W, PALETTE } from '@/src/styles/tokens'
+import { useMobileDetect } from '@/src/hooks'
+import { MobilePanel, ResizeHandle, DragBar } from '@/src/components/common'
 
 const MIN_PCT = 16
 const MAX_PCT = 62
@@ -19,104 +21,13 @@ interface ResizablePanelsProps {
   mobileOrder?: number[]
 }
 
-// ── Mobile accordion ──────────────────────────────────────────────────────────
-function MobilePanel({ label, children, initialOpen = true }: { label: string; children: ReactNode; initialOpen?: boolean }) {
-  const [open, setOpen] = useState(initialOpen)
-  return (
-    <div style={{ marginBottom: SPACING.md }}>
-      <button onClick={() => setOpen(v => !v)} style={{
-        width: '100%', background: PALETTE.black, border: 'none',
-        padding: `${SPACING.md} ${SPACING.lg}`, display: 'flex',
-        justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
-      }}>
-        <span style={{ ...T.nav, color: PALETTE.white }}>
-          {label}
-        </span>
-        <span style={{
-          ...T.label, color: PALETTE.white,
-          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
-          display: 'inline-block',
-          transform: open ? 'rotate(90deg)' : 'rotate(0)',
-        }}>▶</span>
-      </button>
-      <div style={{ overflow: 'hidden', maxHeight: open ? '99999px' : '0', transition: `max-height ${ANIMATION.base} ${ANIMATION.ease}` }}>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-// ── Resize handle ─────────────────────────────────────────────────────────────
-function ResizeHandle({ onMouseDown }: { onMouseDown: () => void }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <div
-      onMouseDown={onMouseDown}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      title="Drag to resize"
-      style={{
-        width: hovered ? '6px' : '4px', cursor: 'col-resize', flexShrink: 0,
-        background: hovered ? PALETTE.black : PALETTE.warm,
-        transition: `all ${ANIMATION.fast} ${ANIMATION.ease}`, alignSelf: 'stretch', position: 'relative', userSelect: 'none',
-      }}
-    >
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%,-50%)',
-        display: 'flex', flexDirection: 'column', gap: '4px',
-      }}>
-        {[0,1,2].map(i => (
-          <div key={i} style={{ width: '2px', height: '2px', borderRadius: '50%', background: PALETTE.black }} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ── Drag handle bar ───────────────────────────────────────────────────────────
-function DragBar({ label, onPointerDown, isDragging }: {
-  label: string
-  onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => void
-  isDragging: boolean
-}) {
-  return (
-    <div
-      onPointerDown={onPointerDown}
-      style={{
-        display: 'flex', alignItems: 'center', gap: SPACING.sm,
-        padding: `${SPACING.sm} ${SPACING.md}`,
-        background: isDragging ? PALETTE.warm : PALETTE.white,
-        borderBottom: '1px solid var(--palette-rule)',
-        cursor: isDragging ? 'grabbing' : 'grab',
-        userSelect: 'none',
-        touchAction: 'none',
-        transition: `background ${ANIMATION.fast} ${ANIMATION.ease}`,
-      }}
-    >
-      <div style={{ display: 'flex', gap: '3px', opacity: 0.4 }}>
-        {[0,1].map(col => (
-          <div key={col} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-            {[0,1,2].map(row => (
-              <div key={row} style={{ width: '3px', height: '3px', borderRadius: '50%', background: PALETTE.black }} />
-            ))}
-          </div>
-        ))}
-      </div>
-      <span style={{ ...T.label, color: PALETTE.black }}>
-        {label}
-      </span>
-    </div>
-  )
-}
-
-// ── Main component ─────────────────────────────────────────────────────────────
+// ── Main component ─────────────────────────────────────────────────────────
 export function ResizablePanels({ left, center, right, mobileInitialOpen, mobileOrder }: ResizablePanelsProps) {
   const panels = [left, center, right]
+  const isMobile = useMobileDetect(768)
 
   const [widths,   setWidths]   = useState([24, 50, 26])
   const [order,    setOrder]    = useState([0, 1, 2])
-  const [isMobile, setIsMobile] = useState(false)
   const [dragSlot, setDragSlot] = useState<number | null>(null)
 
   const containerRef   = useRef<HTMLDivElement>(null)
@@ -128,16 +39,8 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
   const dragSlotRef    = useRef<number | null>(null)
   const dragStartX     = useRef(0)
   const dragStartY     = useRef(0)
-  const dragAdjX       = useRef(0)          // accumulated offset correction after each swap
+  const dragAdjX       = useRef(0)
   const naturalLefts   = useRef<number[]>([0, 0, 0])
-
-  // Mobile detection
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   // Column resize
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -162,7 +65,8 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
 
   const stopResize = useCallback(() => { resizeDragging.current = null }, [])
 
-  useEffect(() => {
+  // Resize listeners
+  const setupResizeListeners = useCallback(() => {
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup',   stopResize)
     return () => {
@@ -171,8 +75,8 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
     }
   }, [handleMouseMove, stopResize])
 
-  // ── Pointer drag listeners (mounted once, use refs for all mutable state) ──
-  useEffect(() => {
+  // Pointer drag listeners (mounted once, use refs for all mutable state)
+  const setupDragListeners = useCallback(() => {
     function onMove(e: PointerEvent) {
       if (!isDraggingRef.current) return
       const slot = dragSlotRef.current
@@ -183,10 +87,8 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
       const dx = e.clientX - dragStartX.current - dragAdjX.current
       const dy = e.clientY - dragStartY.current
 
-      // Move the real column — no ghost, all content inside travels with it
       col.style.transform = `translate(${dx}px, ${dy}px) rotate(-0.3deg) scale(1.01)`
 
-      // Check if the column's visual centre has crossed another column's midpoint
       const rect        = col.getBoundingClientRect()
       const visualCentre = rect.left + rect.width / 2
 
@@ -202,17 +104,13 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
 
         if (!crossed) continue
 
-        // ── Swap ─────────────────────────────────────────────────────────────
         const naturalS = naturalLefts.current[slot]
         const naturalI = naturalLefts.current[i]
 
-        // Recalculate the drag offset so the column stays visually continuous
-        // after its "home" container changes from slot → i
         dragAdjX.current += (naturalI - naturalS)
         const newDx = e.clientX - dragStartX.current - dragAdjX.current
         dragSlotRef.current = i
 
-        // Commit the order change synchronously so colRefs reflect new content
         flushSync(() => {
           setOrder(prev => {
             const next = [...prev]
@@ -222,20 +120,15 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
           setDragSlot(i)
         })
 
-        // After re-render: `colRefs.current[slot]` now holds the displaced column.
-        // Its current transform (~translate(dx,dy)) puts it visually near naturalI.
-        // Animate it sliding back to its natural position (translateX 0).
         const displaced = colRefs.current[slot]
         if (displaced) {
           displaced.style.transition = 'transform 0.22s cubic-bezier(0.25,0.46,0.45,0.94)'
           requestAnimationFrame(() => {
             if (displaced) displaced.style.transform = 'none'
           })
-          // Clean up transition after animation so resize etc. work cleanly
           setTimeout(() => { if (displaced) displaced.style.transition = '' }, 240)
         }
 
-        // `colRefs.current[i]` is now the dragged column — apply the corrected transform
         const dragCol = colRefs.current[i]
         if (dragCol) {
           dragCol.style.transition = 'none'
@@ -257,7 +150,6 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
       if (slot !== null) {
         const col = colRefs.current[slot]
         if (col) {
-          // Snap back to natural position with a short ease
           col.style.transition = 'transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.2s'
           col.style.transform  = 'none'
           col.style.boxShadow  = ''
@@ -279,13 +171,22 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup',   onUp)
     }
-  }, []) // mounted once — all state accessed through refs
+  }, [])
 
-  // ── Start drag ───────────────────────────────────────────────────────────────
+  // Mount listeners on client
+  useEffect(() => {
+    const cleanupResize = setupResizeListeners()
+    const cleanupDrag = setupDragListeners()
+    return () => {
+      cleanupResize()
+      cleanupDrag()
+    }
+  }, [setupResizeListeners, setupDragListeners])
+
+  // ── Start drag ───────────────────────────────────────────────────────────
   const startDrag = useCallback((slot: number, e: ReactPointerEvent<HTMLDivElement>) => {
     if (resizeDragging.current || isDraggingRef.current) return
 
-    // Snapshot natural column positions before any transforms are applied
     naturalLefts.current = colRefs.current.map(c => c?.getBoundingClientRect().left ?? 0)
 
     dragSlotRef.current  = slot
@@ -306,19 +207,21 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
     e.preventDefault()
   }, [])
 
-  // ── Mobile ───────────────────────────────────────────────────────────────────
+  // ── Mobile ───────────────────────────────────────────────────────────────
   if (isMobile) {
     const finalOrder = mobileOrder ?? [0, 1, 2]
     return (
       <div style={{ padding: '0 12px 48px' }}>
         {finalOrder.map(idx => (
-          <MobilePanel key={idx} label={panels[idx].label} initialOpen={mobileInitialOpen?.[idx] ?? true}>{panels[idx].node}</MobilePanel>
+          <MobilePanel key={idx} label={panels[idx].label} initialOpen={mobileInitialOpen?.[idx] ?? true}>
+            {panels[idx].node}
+          </MobilePanel>
         ))}
       </div>
     )
   }
 
-  // ── Desktop ──────────────────────────────────────────────────────────────────
+  // ── Desktop ──────────────────────────────────────────────────────────────
   return (
     <div
       ref={containerRef}

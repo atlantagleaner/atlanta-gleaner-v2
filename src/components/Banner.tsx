@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { PALETTE, T, SPACING, BREAKPOINT } from '@/src/styles/tokens'
+import { useState, useRef } from 'react'
+import { PALETTE, T, SPACING } from '@/src/styles/tokens'
+import { useMobileDetect } from '@/src/hooks'
 
 const WIKIPEDIA_FALLBACK =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/George_Washington_Statue_Federal_Hall_NYC.jpg/400px-George_Washington_Statue_Federal_Hall_NYC.jpg'
@@ -24,16 +25,8 @@ const TAGLINE_STYLE = {
 export function Banner() {
   const [imgSrc,    setImgSrc]    = useState('/washington.png')
   const [logoHover, setLogoHover] = useState(false)
-  const [isMobile,  setIsMobile]  = useState(false)
+  const isMobile = useMobileDetect(768)
   const themeIdx = useRef(0)
-
-  // Detect mobile breakpoint
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < BREAKPOINT.mobile)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   function cycleTheme() {
     themeIdx.current = (themeIdx.current + 1) % THEMES.length
