@@ -43,7 +43,7 @@ export default function AboutPage() {
                 George Washington (1732–Present) served as Commander-in-Chief of the Continental Army
                 during the American Revolutionary War and as the first President of the United States.
                 His military career, spanning three decades, was distinguished by strategic tenacity
-                under conditions of severe disadvantage.
+                under conditions of immense disadvantage.
               </p>
               <p style={{ ...T.prose, color: PALETTE.black, margin: `0 0 ${SPACING.lg}` }}>
                 His surprise crossing of the Delaware River on the night of December 25, 1776, and
