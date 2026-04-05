@@ -371,7 +371,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...white, paddingTop: '3rem', paddingBottom: '2rem', paddingLeft: '14px', paddingRight: '14px', borderBottom: `1px solid ${PALETTE_CSS.border}` }}>
+      <header style={{ ...white, paddingTop: '16px', paddingBottom: '16px', paddingLeft: '14px', paddingRight: '14px', borderBottom: `1px solid ${PALETTE_CSS.border}` }}>
         <h1 style={{
           ...FONT.serif,
           display: 'flex',
