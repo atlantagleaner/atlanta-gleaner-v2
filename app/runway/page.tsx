@@ -90,8 +90,8 @@ function VideoSlot({ title, artist, youtubeId }: typeof VIDEOS[0]) {
         </div>
       )}
 
-      <div style={{ padding: `${SPACING.lg} ${SPACING.lg}` }}>
-        <p style={{ ...FONT.serif, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.black, margin: `0 0 ${SPACING.xs}` }}>{title}</p>
+      <div style={{ padding: `${SPACING.xl} ${SPACING.xl}` }}>
+        <p style={{ ...T.micro, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.black, margin: `0 0 ${SPACING.sm}` }}>{title}</p>
         <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0 }}>{artist}</p>
       </div>
     </div>
@@ -114,41 +114,37 @@ export default function RunwayPage() {
           .ag-runway-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: ${SPACING.lg};
+            gap: ${SPACING.xl};
+            padding: 0 ${SPACING.lg};
           }
         }
         @media (min-width: 768px) {
           .ag-runway-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: ${SPACING.lg};
-            max-width: 1000px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: ${SPACING.xxxxl};
+            max-width: 1100px;
             margin: 0 auto;
+            padding: 0 ${SPACING.lg};
           }
           .ag-runway-item:nth-child(1) {
-            grid-column: 1 / 2;
-            transform: translateY(0px) rotate(-2deg);
+            transform: translateY(0px);
           }
           .ag-runway-item:nth-child(2) {
-            grid-column: 2 / 3;
-            transform: translateY(40px) rotate(1.5deg);
+            transform: translateY(60px);
           }
           .ag-runway-item:nth-child(3) {
-            grid-column: 3 / 4;
-            transform: translateY(-30px) rotate(-1deg);
+            transform: translateY(-40px);
           }
           .ag-runway-item:nth-child(4) {
-            grid-column: 1 / 2;
-            transform: translateY(-20px) rotate(1.2deg);
+            transform: translateY(80px);
           }
           .ag-runway-item:nth-child(5) {
-            grid-column: 2 / 4;
-            max-width: 380px;
-            transform: translateY(50px) rotate(-0.8deg);
+            transform: translateY(-20px);
           }
         }
       `}} />
-      <div style={{ padding: `0 ${SPACING.lg} ${SPACING.xxxxl}` }}>
+      <div style={{ padding: `0 0 ${SPACING.xxxxl}` }}>
         <div className="ag-runway-grid">
           {VIDEOS.map(v => (
             <div key={v.id} className="ag-runway-item" style={{ transition: 'transform 0.3s ease' }}>
