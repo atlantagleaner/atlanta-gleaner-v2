@@ -397,16 +397,20 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   background: PALETTE.black,
                   color: PALETTE.white,
                   padding: `2px ${SPACING.sm}`,
+                  margin: '0',
                   transition: 'background 0.2s ease',
                 } : {
                   ...metaLabel,
                   background: 'none',
+                  padding: '0',
+                  margin: '0',
                   transition: 'opacity 0.15s ease',
                 }),
                 border: 'none',
                 cursor: 'pointer',
-                lineHeight: 1,
+                lineHeight: '1',
                 verticalAlign: 'baseline',
+                textAlign: 'left',
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
