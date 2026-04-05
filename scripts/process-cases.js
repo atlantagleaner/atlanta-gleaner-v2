@@ -140,12 +140,19 @@ function parseRawLines(rawText) {
   const sections = {};
   let currentSection = null;
 
-  // Header: lines 0-3 are fixed positions
+  // Header: lines 0-5 are fixed positions
+  // Line 0: Title
+  // Line 1: Court
+  // Line 2: Decision date
+  // Line 3: Docket number
+  // Line 4: "Reporter" label
+  // Line 5: Reporter citation (volume reporter page, LEXIS, WL, etc.)
   sections._header = {
     title:   cleanStr(lines[0] || ''),
     court:   cleanStr(lines[1] || ''),
     dateRaw: cleanStr(lines[2] || ''),
     docket:  cleanStr((lines[3] || '').replace(/\.$/, '')),
+    citations: cleanStr((lines[5] || '').replace(/\.$/, '')),
   };
 
   // Process remaining lines
@@ -1102,9 +1109,8 @@ async function parseDocxFile(filename) {
   const docket   = parseDocket(hdr.docket);
 
   // ── 4. Citation line ──────────────────────────────────────────────────────
-  const citationLine = sections['Reporter']
-    ? cleanStr(sections['Reporter'][0] || '')
-    : '';
+  // Reporter citations are in the header (line 4), not as a section label
+  const citationLine = hdr.citations || '';
   const reporterCitations = parseCitationLine(citationLine);
 
   // ── 5. Formal case name ───────────────────────────────────────────────────
