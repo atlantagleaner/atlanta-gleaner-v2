@@ -278,6 +278,11 @@ body {
   font-size: 10px;
   color: var(--palette-muted);
   margin-right: 6px;
+  display: none;
+}
+
+.opinion-body.show-pagination .star-pagination {
+  display: inline;
 }
 
 .footnote-list {

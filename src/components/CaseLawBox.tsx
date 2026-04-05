@@ -303,6 +303,7 @@ interface CaseLawBoxProps {
 export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: CaseLawBoxProps) {
   const [expanded, setExpanded] = useState(false)
   const [counselExpanded, setCounselExpanded] = useState(false)
+  const [showPagination, setShowPagination] = useState(false)
   if (!caseData) return null
 
   const {
@@ -388,7 +389,38 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         )}
         {citations && (
           <div style={metadataRow}>
-            <span style={metaLabel}>Reporter</span>
+            <button
+              onClick={() => setShowPagination(!showPagination)}
+              style={{
+                ...metaLabel,
+                background: 'none',
+                border: 'none',
+                padding: '0',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'opacity 0.15s ease',
+                minWidth: '110px',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.opacity = '0.65'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.opacity = '1'
+              }}
+              aria-label="Toggle pagination markers"
+            >
+              REPORTER
+              <span style={{
+                display: 'inline-block',
+                transition: 'transform 0.2s ease',
+                fontSize: '10px',
+                transform: showPagination ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}>
+                ↓
+              </span>
+            </button>
             <span style={metaValue}>{citations}</span>
           </div>
         )}
@@ -534,7 +566,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
 
         {/* Verbatim opinion body — preamble stripped, footnote anchors injected */}
         <div
-          className="opinion-body"
+          className={`opinion-body ${showPagination ? 'show-pagination' : ''}`}
           dangerouslySetInnerHTML={{ __html: renderedOpinionHtml }}
         />
 
