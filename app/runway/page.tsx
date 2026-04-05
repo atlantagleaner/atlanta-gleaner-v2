@@ -13,14 +13,37 @@ import {
 const VIDEOS = [
   {
     id: 'v1',
-    title: 'Runway — Slot 01',
-    artist: 'Coming Soon',
-    youtubeId: null as string | null,
-    note: 'First track posting — stay tuned.',
+    title: 'Over The Ice',
+    artist: 'The Field',
+    youtubeId: 'FQxEVhyvA0I',
+  },
+  {
+    id: 'v2',
+    title: 'Everyday',
+    artist: 'The Field',
+    youtubeId: 'hvDt7XFhwHg',
+  },
+  {
+    id: 'v3',
+    title: 'A Paw in My Face',
+    artist: 'The Field',
+    youtubeId: '-jfRsIoTC4c',
+  },
+  {
+    id: 'v4',
+    title: 'Is This Power',
+    artist: 'The Field',
+    youtubeId: 'YVNqWZPqxDE',
+  },
+  {
+    id: 'v5',
+    title: 'Everybody\'s Got to Learn Sometime',
+    artist: 'The Field',
+    youtubeId: 'jmWA7if9ESs',
   },
 ]
 
-function VideoSlot({ title, artist, youtubeId, note }: typeof VIDEOS[0]) {
+function VideoSlot({ title, artist, youtubeId }: typeof VIDEOS[0]) {
   return (
     <div style={{ border: `1px solid ${PALETTE_CSS.border}`, background: PALETTE.white }}>
       {/* Header */}
@@ -69,8 +92,7 @@ function VideoSlot({ title, artist, youtubeId, note }: typeof VIDEOS[0]) {
 
       <div style={{ padding: `${SPACING.lg} ${SPACING.lg}` }}>
         <p style={{ ...FONT.serif, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.black, margin: `0 0 ${SPACING.xs}` }}>{title}</p>
-        <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: `0 0 ${SPACING.sm}` }}>{artist}</p>
-        {note && <p style={{ ...T.body, color: PALETTE.black, opacity: 0.65, margin: 0 }}>{note}</p>}
+        <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0 }}>{artist}</p>
       </div>
     </div>
   )
@@ -87,9 +109,52 @@ export default function RunwayPage() {
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: SPACING.lg }}>
-          {VIDEOS.map(v => <VideoSlot key={v.id} {...v} />)}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 767px) {
+          .ag-runway-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: ${SPACING.lg};
+          }
+        }
+        @media (min-width: 768px) {
+          .ag-runway-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: ${SPACING.lg};
+            max-width: 1000px;
+            margin: 0 auto;
+          }
+          .ag-runway-item:nth-child(1) {
+            grid-column: 1 / 2;
+            transform: translateY(0px) rotate(-2deg);
+          }
+          .ag-runway-item:nth-child(2) {
+            grid-column: 2 / 3;
+            transform: translateY(40px) rotate(1.5deg);
+          }
+          .ag-runway-item:nth-child(3) {
+            grid-column: 3 / 4;
+            transform: translateY(-30px) rotate(-1deg);
+          }
+          .ag-runway-item:nth-child(4) {
+            grid-column: 1 / 2;
+            transform: translateY(-20px) rotate(1.2deg);
+          }
+          .ag-runway-item:nth-child(5) {
+            grid-column: 2 / 4;
+            max-width: 380px;
+            transform: translateY(50px) rotate(-0.8deg);
+          }
+        }
+      `}} />
+      <div style={{ padding: `0 ${SPACING.lg} ${SPACING.xxxxl}` }}>
+        <div className="ag-runway-grid">
+          {VIDEOS.map(v => (
+            <div key={v.id} className="ag-runway-item" style={{ transition: 'transform 0.3s ease' }}>
+              <VideoSlot {...v} />
+            </div>
+          ))}
         </div>
       </div>
     </>
