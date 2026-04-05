@@ -1019,10 +1019,10 @@ function scrubBoilerplate(html) {
 
 /**
  * Wrap star-pagination tokens in a span for CSS styling.
- * Includes surrounding spaces (one before, two after) so they hide/show with the marker.
+ * Includes all preceding whitespace and two trailing spaces so they hide/show with the marker.
  */
 function markStarPagination(html) {
-  return html.replace(/( )?(\[(\*{1,3})\d+\])  /g, '<span class="star-pagination">$1$2  </span>');
+  return html.replace(/(\s*)(\[(\*{1,3})\d+\])(\s{2})/g, '<span class="star-pagination">$1$2$4</span>');
 }
 
 // ══════════════════════════════════════════════════════════════════════════════

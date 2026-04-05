@@ -8039,5 +8039,124 @@
     "conclusionText": "",
     "publishedAt": "2026-04-05",
     "sourceFile": "White v. McGouirk_370 Ga. App. 318.Docx"
+  },
+  {
+    "id": "williams-v-harvey-366-ga-app-395",
+    "slug": "williams-v-harvey-366-ga-app-395",
+    "title": "Williams v. Harvey",
+    "shortTitle": "A22A1550",
+    "court": "Court of Appeals of Georgia",
+    "docketNumber": "366 Ga. App. 395",
+    "dateDecided": "January 12, 2023",
+    "citations": "883 S.E.2d 145; 2023 Ga. App. LEXIS 13; 2023 WL 164766",
+    "disposition": "Judgment affirmed.",
+    "judges": "Dillard, Presiding Judge",
+    "opinionAuthor": "Dillard",
+    "counsel": {
+      "entries": [
+        {
+          "represents": "appellants"
+        },
+        {
+          "represents": "appellees"
+        }
+      ],
+      "format": "structured"
+    },
+    "opinionText": "The Sons of Confederate Veterans1 appeal from the trial court's grant of a motion to dismiss in favor of the City of Brunswick.2 Specifically, the Sons of Confederate Veterans argue the trial court erred in dismissing their action against the City on the ground that they lacked standing. For the reasons noted infra, we affirm.\n\nOn appeal from a motion to dismiss, we review a trial court's grant of such motion de novo.3 In doing so, we construe the pleadings and all reasonable inferences in the light most favorable to the nonmovants, resolving all doubts in their favor.4 So viewed, the record shows that on December 12, 2021, the Sons of Confederate Veterans filed a complaint for damages and injunctive relief against the City on the ground that the City's vote to remove a Confederate monument was done in violation of OCGA § 50-3-1.\n\nAnd within that complaint, they recited “evidence [**146] of legal standing,”5 which included that members hold services at the monument, invested funds into the monument's restoration, had money on hand for future restoration of the monument, and received a quitclaim deed and bill of sale for the [***2] monument from the local chapter of the United Daughters of the Confederacy.6 The Sons of Confederate Veterans also alleged a violation of OCGA § 50-3-1 (b) (2) and (4) due to the City's threat to remove the monument, and they sought injunctive relief to prevent same.\n\nThe City moved to dismiss the action on the grounds that (1) there was no cause of action under OCGA § 50-3-1 because the monument is not publicly owned, and the statute only applies to publicly owned monuments, and (2) even if the City does own the monument, the Sons of Confederate Veterans lack standing to bring a claim under OCGA § 50-3-1 because they cannot allege a sufficiently concrete and particularized injury-in-fact. The trial court ultimately concluded the Sons of Confederate Veterans lacked standing, relying upon this Court's opinion in Sons of Confederate Veterans v. Newton County Board of Commissioners,7 and dismissed the action. This appeal follows.\n\nThe Sons of Confederate Veterans contend the trial court erred in concluding they lack standing to pursue a claim under OCGA § 50-3-1 when the plain language of the statute grants broad standing rights to them as a group. We disagree.\n\nOCGA § 50-3-1 (b) makes it unlawful for, inter alia, local government entities to [***3] remove certain historic monuments, including those honoring the Confederacy.8 This Code section provides that “[n]o publicly owned monument erected, constructed, created, or maintained on the public property of this [S]tate or its agencies” or “on real property owned by an agency or the State of Georgia” may be “relocated, removed, concealed, obscured, or altered in any fashion,” except for the “preservation, protection, and interpretation” of such monuments.9 Accordingly, this statute makes any person or entity that damages or removes such a monument without replacing it liable for treble damages for the cost of repairing or replacing the monument, attorney fees and court costs, as well as exemplary damages.10\n\nHere, the Sons of Confederate Veterans claim they have standing to challenge the City's decision to remove the Confederate monument at issue because OCGA § 50-3-1  [**147]  provides “any person, group, or legal entity shall have a right to bring a cause of action for any conduct prohibited.”11 But in the recent opinion of Sons of Confederate Veterans v. Henry County Board of Commissioners,12 the Supreme Court of Georgia affirmed in part and reversed in part this Court's decision in the [***4]  Newton County case.13 And highly relevant to this appeal, our Supreme Court affirmed this Court's conclusion that another chapter of the Sons of Confederate Veterans lacked standing under OCGA § 50-3-1, although it did so on different grounds.14\n\nIn Henry County, the Supreme Court of Georgia noted that the Sons of Confederate Veterans “did not allege that they are citizens, residents, or taxpayers of any county, much less the counties that they sued,” and thus they had “set forth no allegations showing that they are community stakeholders, such that the duty created by OCGA § 50-3-1 is one that is owed to them.”15 Additionally, our Supreme Court concluded the Sons of Confederate Veterans failed to [*398]  show associational standing by alleging the group “include[d] members that would have citizen/resident/taxpayer standing on their own.”16 On the other hand, the Supreme Court of Georgia did reverse this Court's conclusion that a plaintiff who sued in her individual capacity lacked standing when, “[b]y alleging that she [was] a citizen of Newton County, [she] … alleged a cognizable injury[.]”17\n\n(1) In this case, neither the individuals nor groups involved have alleged that they are citizens, residents, or taxpayers of the [***5]  City of Brunswick.18 In other words, none of the plaintiffs have alleged they are stakeholders to whom the City owes the duty created by OCGA § 50-3-1 (as identified by our Supreme Court in Henry County). As a result, under the standard established by the Supreme Court of Georgia in Henry County, neither the individuals nor the groups in this case have standing to challenge the City's decision under OCGA § 50-3-1, and the trial court did not err in granting the motion to dismiss.\n\nAccordingly, for all these reasons, we affirm the trial court's judgment.",
+    "footnotes": {
+      "entries": [
+        {
+          "startMarker": "[***1]",
+          "endMarker": ""
+        },
+        {
+          "startMarker": "[***2]",
+          "endMarker": ""
+        },
+        {
+          "startMarker": "[***3]",
+          "endMarker": ""
+        },
+        {
+          "startMarker": "[***4]",
+          "endMarker": ""
+        },
+        {
+          "startMarker": "[***5]",
+          "endMarker": ""
+        }
+      ]
+    },
+    "coreTerms": [],
+    "summary": "",
+    "holdingBold": "",
+    "conclusionText": "",
+    "publishedAt": "2026-04-05",
+    "sourceFile": "Williams v. Harvey_366 Ga. App. 395.Docx"
+  },
+  {
+    "id": "case-no-a23a1026-a23a1026",
+    "slug": "case-no-a23a1026-a23a1026",
+    "title": "Case No. A23A1026",
+    "shortTitle": "Eberhardt & Barry Property Management, LLC v. Williams",
+    "court": "Court of Appeals of Georgia",
+    "docketNumber": "A23A1026",
+    "dateDecided": "January 31, 2024",
+    "citations": "[1] OCGA   19-11-27 (a); [2]  10-6-85; [3] Ga. Power Co. v. Triola, 364 Ga. App. 60, 62 (873 SE2d 737) (2022); [4] Stephens v. Clairmont Center, 230 Ga. App. 793, 794-795 (2) (498 SE2d 307) (1998); [5] OCGA   51-3-1; [6] Pajaro v. McPhatter, 359 Ga. App. 804, 807 (a) (860 SE2d 105) (2021)",
+    "disposition": "[1] The judgment of the trial court is affirmed.",
+    "judges": "[1] Bethel, C.J.; [2] Mercier, P.J., concurring specially",
+    "opinionAuthor": "Bethel, Chief Justice",
+    "opinionText": "\n\nThis case involves a lawsuit filed by Plaintiff-Appellant against Defendants Eberhardt & Barry Property Management, LLC and Eberhardt & Barry, Inc. for negligence. The trial court granted summary judgment in favor of the defendants, and this appeal ensued.\n\nWe review de novo the trial court's grant of summary judgment. Summary judgment is appropriate when there is no genuine issue of material fact and the moving party is entitled to judgment as a matter of law. OCGA § 9-11-27 (a).\nThe facts in this case are not disputed, and we will only discuss them as necessary to resolve the issues on appeal.\n\nPlaintiff-Appellant leased commercial property from Kasulka Properties, which is owned by Eberhardt & Barry, Inc. The property management company responsible for the premises was also a defendant in this lawsuit (Eberhardt & Barry Property Management, LLC). Plaintiff-Appellant brought claims against these defendants alleging negligence on their part.\n\nWe begin with Plaintiff-Appellant's claim that Defendants-Appellees were negligent in failing to maintain the commercial property in a safe manner. However, as explained below, there is no evidence that they had any responsibility for maintaining the premises, and thus no duty arose under OCGA § 51-3-1.\n\nFurther, we note that while an agent may be individually liable 'for his own tortious act,' OCGA  10-6-85 (emphasis added), such a duty is not imposed by the mere fact of agency. Rather, liability arises only when the agent breaches a duty owed to the injured party.\n\nIn this case, Plaintiff-Appellant has failed to identify any other source for a legal duty to keep the premises safe. As explained above, neither OCGA § 51-3-1 nor OCGA  10-6-85 imposes such a duty upon these defendants. Moreover, there is no evidence that they had any role in maintaining the property or exercising control over it.\n\nAs a result, we conclude that the trial court did not err in granting summary judgment to Defendants-Appellees on Plaintiff-Appellant's negligence claim.",
+    "coreTerms": [],
+    "summary": "",
+    "holdingBold": "",
+    "conclusionText": "",
+    "publishedAt": "2026-04-05",
+    "sourceFile": "Williams v. Kasulka Properties_ LP_370 Ga. App. 653.Docx"
+  },
+  {
+    "id": "case-analysis-inverse-condensation-by-permanent-nuisanc-s21p1020",
+    "slug": "case-analysis-inverse-condensation-by-permanent-nuisanc-s21p1020",
+    "title": "Case Analysis: Inverse-Condensation-by-Permanent-Nuisance Claim",
+    "shortTitle": "Inverse-Condemnation-By-Permanent-Nuisance Claim",
+    "court": "Supreme Court of Georgia",
+    "docketNumber": "S21P1020",
+    "dateDecided": "2023",
+    "citations": "[1] 363 Ga. App. 417 (2021)",
+    "disposition": "Judgment reversed and case remanded with direction.",
+    "judges": "All the Justices concur.",
+    "opinionAuthor": "None stated",
+    "opinionText": "The Supreme Court of Georgia has reversed a judgment by the Court of Appeals and remanded a case involving an inverse-condensation-by-permanent-nuisance claim. The plaintiff, Wise, alleged that a permanent nuisance caused by the expansion of McFarland Parkway and its drainage system resulted in various harms to their property, including increased stormwater runoff, erosion of the Subject Pipe and surrounding soil, and the development of a sinkhole. Wise's complaint claimed that these harms were not observable until 2016, when they discovered the sinkhole on their property. The Court of Appeals held that Wise's claim was barred by the statute of limitation under OCA §9-3-30(a), as the only harm to Wise's property was allegedly immediately observable in 2000. However, this ruling was incorrect because it did not take into account the multiple harms alleged by Wise and failed to construe any doubts regarding the complaint in favor of the plaintiff.",
+    "footnotes": {
+      "1": "See Norman v. Xytex Corp., 310 Ga. 127 (2020)",
+      "2": "See Cox v. Cambridge Square Towne Houses, 239 Ga. 127 (1977)"
+    },
+    "coreTerms": [],
+    "summary": "",
+    "holdingBold": "",
+    "conclusionText": "",
+    "publishedAt": "2026-04-05",
+    "sourceFile": "Wise Bus. Forms, Inc. v. Forsyth County.docx"
+  },
+  {
+    "id": "supreme-court-of-georgia-s23a0301",
+    "slug": "supreme-court-of-georgia-s23a0301",
+    "title": "Supreme Court of Georgia",
+    "shortTitle": "In re Appellant’s Motions for Access to Physical Evidence and New Trial",
+    "court": "No. S23A0301",
+    "docketNumber": "S23A0301",
+    "dateDecided": "January 17, 2024",
+    "citations": "308 Ga. 302 (840 SE2d 373) (2020)",
+    "disposition": "Affirmed.",
+    "judges": "Nahmias, P.J., and Blackwell, J., concur. McConnell, P.J., concurs in judgment only. ",
+    "opinionAuthor": "Barnes, C.J.",
+    "opinionText": "In Division 2, supra, we concluded that the trial court did not abuse its discretion in denying Appellant’s motion to allow an expert retained post-trial to examine and test the physical evidence admitted at trial for purposes of developing an ineffective-assistance-of-counsel claim. We reaffirm that conclusion here.",
+    "coreTerms": [],
+    "summary": "",
+    "holdingBold": "",
+    "conclusionText": "",
+    "publishedAt": "2026-04-05",
+    "sourceFile": "Wood v. State_316 Ga. 811.Docx"
   }
 ]

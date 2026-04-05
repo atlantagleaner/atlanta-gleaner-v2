@@ -399,7 +399,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                 padding: `2px ${SPACING.sm}`,
                 cursor: 'pointer',
                 minWidth: 'auto',
-                lineHeight: '18px',
+                display: 'inline',
                 transition: 'background 0.2s ease',
               } : {
                 ...metaLabel,
@@ -407,6 +407,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                 border: 'none',
                 padding: '0',
                 cursor: 'pointer',
+                display: 'inline',
                 transition: 'opacity 0.15s ease',
                 minWidth: '110px',
               }}
