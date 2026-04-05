@@ -201,6 +201,18 @@ function truncateToTwoLines(text: string, charLimit: number = 180): { text: stri
   return { text: truncated + '…', truncated: true }
 }
 
+/**
+ * Format subsequent history array into a single string.
+ * Each entry is separated by semicolons.
+ */
+function formatSubsequentHistory(history: Array<{ full_citation?: string; action?: string }> | undefined): string {
+  if (!history || history.length === 0) return ''
+  return history
+    .map(entry => entry.full_citation || entry.action || '')
+    .filter(Boolean)
+    .join('; ')
+}
+
 // ── Style constants ───────────────────────────────────────────────────────────
 
 const warm:  CSSProperties = { background: PALETTE.warm }
@@ -310,6 +322,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     footnotes,
     noticeText,
     priorHistory,
+    subsequent_history,
     parties,
     counsel,
   } = caseData
@@ -383,6 +396,12 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
           <div style={metadataRow}>
             <span style={metaLabel}>Prior History</span>
             <span style={metaValue}>{priorHistory}</span>
+          </div>
+        )}
+        {subsequent_history && subsequent_history.length > 0 && (
+          <div style={metadataRow}>
+            <span style={metaLabel}>Subsequent History</span>
+            <span style={metaValue}>{formatSubsequentHistory(subsequent_history)}</span>
           </div>
         )}
         {judges && (

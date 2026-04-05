@@ -81,6 +81,19 @@ export interface ValidationMetadata {
 }
 
 /**
+ * Subsequent history of a case (further appeals, petitions, etc.)
+ * Extracted from judicial opinion documents.
+ */
+export interface SubsequentHistory {
+  sequence:       number              // Order of occurrence
+  full_citation?: string              // Full citation of subsequent action
+  action?:        string              // Action taken (e.g., "Cert. applied for")
+  court?:         string | null       // Court that took the action
+  citation?:      string | null       // Citation to the action
+  decision_date?: string | null       // Date of action
+}
+
+/**
  * Parsing metadata about extraction process
  */
 export interface ParsingMetadata {
@@ -119,6 +132,7 @@ export interface CaseLaw {
   publishedAt:    string              // ISO date — when republished on this site
   noticeText?:    string              // e.g. "THIS OPINION IS UNCORRECTED AND SUBJECT TO REVISION"
   priorHistory?:  string              // e.g. "Motor vehicle accident. Fulton State Court. Before Judge Baxter."
+  subsequent_history?: SubsequentHistory[] // Further appeals, petitions, etc.
 
   // ─────────────────────────────────────────────────────────────────────────
   // Enhanced metadata from judicial opinion parser
