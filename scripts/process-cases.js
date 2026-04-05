@@ -1025,6 +1025,14 @@ function markStarPagination(html) {
   return html.replace(/(\s*)(\[(\*{1,3})\d+\])(\s{2})/g, '<span class="star-pagination">$1$2$4</span>');
 }
 
+/**
+ * Strip all hyperlinks from opinion text, preserving link text content.
+ * Converts <a href="...">text</a> to just text
+ */
+function stripHyperlinks(html) {
+  return html.replace(/<a[^>]*>([\s\S]*?)<\/a>/g, '$1');
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // SECTION 13 — DOCX PRE-PROCESSING (blockquote injection via JSZip)
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1160,6 +1168,7 @@ async function parseDocxFile(filename) {
   bodyHtml     = removeFootnoteList(bodyHtml);
   bodyHtml     = injectFnMarkers(bodyHtml);
   bodyHtml     = markStarPagination(bodyHtml);
+  bodyHtml     = stripHyperlinks(bodyHtml);
 
   // ── 14. Extract footnotes ─────────────────────────────────────────────────
   const footnotes = extractFootnotes(fullHtml);
