@@ -90,9 +90,9 @@ function VideoSlot({ title, artist, youtubeId }: typeof VIDEOS[0]) {
         </div>
       )}
 
-      <div style={{ padding: `${SPACING.xl} ${SPACING.xl}` }}>
-        <p style={{ ...T.micro, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.black, margin: `0 0 ${SPACING.sm}` }}>{title}</p>
-        <p style={{ ...T.micro, color: PALETTE.black, opacity: 0.45, margin: 0 }}>{artist}</p>
+      <div style={{ padding: `${SPACING.xl} ${SPACING.xl}`, background: PALETTE.black }}>
+        <p style={{ ...T.micro, fontSize: SIZE_LG, fontWeight: 600, color: PALETTE.white, margin: `0 0 ${SPACING.sm}` }}>{title}</p>
+        <p style={{ ...T.micro, color: PALETTE.white, opacity: 0.45, margin: 0 }}>{artist}</p>
       </div>
     </div>
   )
@@ -121,26 +121,31 @@ export default function RunwayPage() {
         @media (min-width: 768px) {
           .ag-runway-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: ${SPACING.xxxxl};
-            max-width: 1100px;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 6rem;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 ${SPACING.lg};
           }
           .ag-runway-item:nth-child(1) {
+            grid-column: 1 / 8;
             transform: translateY(0px);
           }
           .ag-runway-item:nth-child(2) {
-            transform: translateY(60px);
+            grid-column: 17 / 25;
+            transform: translateY(120px);
           }
           .ag-runway-item:nth-child(3) {
-            transform: translateY(-40px);
+            grid-column: 3 / 13;
+            transform: translateY(-80px);
           }
           .ag-runway-item:nth-child(4) {
-            transform: translateY(80px);
+            grid-column: 13 / 21;
+            transform: translateY(150px);
           }
           .ag-runway-item:nth-child(5) {
-            transform: translateY(-20px);
+            grid-column: 2 / 11;
+            transform: translateY(-40px);
           }
         }
       `}} />
