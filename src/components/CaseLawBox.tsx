@@ -108,6 +108,40 @@ function stripOpinionPreamble(html: string): string {
   return html.slice(last.end)
 }
 
+// ── Pagination marker handler ───────────────────────────────────────────────
+
+/**
+ * Wrap pagination markers in <span class="star-pagination"> for toggle control.
+ * Handles the spacing rules identified across all raw opinions:
+ *
+ * RULE 1 (99.8%): \xa0[MARKER]\xa0 → \xa0<span>[MARKER]</span>\xa0
+ *   Example: "argues that it cannot \xa0[**722]\xa0 be held"
+ *   → "argues that it cannot \xa0<span>[**722]</span>\xa0 be held"
+ *
+ * RULE 2 (0.2%): [MARKER]\xa0 → <span>[MARKER]</span>\xa0
+ *   Example: "[*880]\xa0 The financial entanglement"
+ *   → "<span>[*880]</span>\xa0 The financial entanglement"
+ *
+ * By default the spans have display: none (CSS), so markers are invisible
+ * but properly handled in the HTML. When .show-pagination is active, they
+ * become visible inline with proper spacing on both sides.
+ */
+function wrapPaginationMarkers(html: string): string {
+  // RULE 1: Non-breaking space before and after (\xa0[MARKER]\xa0)
+  html = html.replace(
+    /\xa0(\[\*{1,3}\d+\])\xa0/g,
+    '\xa0<span class="star-pagination">$1</span>\xa0'
+  )
+
+  // RULE 2: Non-breaking space after only ([MARKER]\xa0)
+  html = html.replace(
+    /(\[\*{1,3}\d+\])\xa0/g,
+    '<span class="star-pagination">$1</span>\xa0'
+  )
+
+  return html
+}
+
 // ── Blockquote detector & formatter ──────────────────────────────────────────
 
 /**
@@ -350,10 +384,11 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
   const fnDisplayMap: Record<string, number> = {}
   sortedFnKeys.forEach((key, i) => { fnDisplayMap[key] = i + 1 })
 
-  // Strip preamble, inject footnote anchors, then detect blockquotes
+  // Strip preamble, inject footnote anchors, detect blockquotes, wrap pagination
   const strippedHtml        = stripOpinionPreamble(opinionText ?? '')
   const withFootnotes       = renderOpinionHtml(strippedHtml, footnotes, slug)
-  const renderedOpinionHtml = detectAndWrapBlockquotes(withFootnotes)
+  const withBlockquotes     = detectAndWrapBlockquotes(withFootnotes)
+  const renderedOpinionHtml = wrapPaginationMarkers(withBlockquotes)
 
   const hasCoreTerms = coreTerms && coreTerms.length > 0
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
@@ -437,6 +472,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   padding: `2px ${SPACING.sm}`,
                   margin: '0',
                   transition: 'background 0.2s ease',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-block',
                 } : {
                   ...metaLabel,
                   background: 'none',
