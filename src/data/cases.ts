@@ -20,13 +20,11 @@
 export type { CaseLaw } from './types'
 import type { CaseLaw } from './types'
 
-// ─── Year imports (JSON for fast bundling; types asserted against CaseLaw) ───
-import CASES_2022_RAW from './cases-2022.json'
-import CASES_2023_RAW from './cases-2023.json'
-const CASES_2022 = CASES_2022_RAW as CaseLaw[]
-const CASES_2023 = CASES_2023_RAW as CaseLaw[]
+// ─── Consolidated case data (processed from raw-opinions/*.docx) ────────────
+import CASES_MASTER_RAW from './cases.json'
+const CASES_MASTER = CASES_MASTER_RAW as CaseLaw[]
 
-// ─── 2026 cases (current year — small enough to live here) ───────────────────
+// ─── 2026 cases (current year — manually edited metadata) ────────────────────
 const CASES_2026: CaseLaw[] = [
   {
     id:           'brosnan-2026',
@@ -164,15 +162,19 @@ const CASES_2026: CaseLaw[] = [
 ]
 
 // ─── Combined index ───────────────────────────────────────────────────────────
+// Consolidate all cases: 2026 overrides take precedence, then master archive.
+// This allows manual editorial updates for 2026 without rebuilding the full JSON.
+
+const CASE_SLUGS_2026 = new Set(CASES_2026.map(c => c.slug))
+const CASES_FROM_MASTER = CASES_MASTER.filter(c => !CASE_SLUGS_2026.has(c.slug))
 
 export const CASES: CaseLaw[] = [
   ...CASES_2026,
-  ...CASES_2023,
-  ...CASES_2022,
+  ...CASES_FROM_MASTER,
 ]
 
 /** The current featured case shown on the landing page CaseLawBox. */
-export const FEATURED_CASE: CaseLaw = CASES_2026[0]
+export const FEATURED_CASE: CaseLaw = CASES[0]
 
 /** Look up a full case record by its URL slug. Returns undefined if not found. */
 export function getCaseBySlug(slug: string): CaseLaw | undefined {
