@@ -213,6 +213,23 @@ function formatSubsequentHistory(history: Array<{ full_citation?: string; action
     .join('; ')
 }
 
+/**
+ * Parse case title into plaintiff and defendant by splitting on ' v. ' (case-insensitive).
+ * Returns { plaintiff, defendant } or { plaintiff: title, defendant: '' } if no 'v.' found.
+ */
+function parseCaseTitle(title: string): { plaintiff: string; defendant: string } {
+  const vPattern = /\s+v\.\s+/i
+  const match = title.match(vPattern)
+  if (!match) {
+    return { plaintiff: title, defendant: '' }
+  }
+  const parts = title.split(vPattern)
+  return {
+    plaintiff: parts[0].trim(),
+    defendant: parts.slice(1).join(' v. ').trim(),
+  }
+}
+
 // ── Style constants ───────────────────────────────────────────────────────────
 
 const warm:  CSSProperties = { background: PALETTE.warm }
@@ -354,16 +371,51 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     }}>
 
       {/* ── 1. Case title banner ──────────────────────────────────────────── */}
-      <header style={{ ...white, padding: BOX_PADDING, borderBottom: `1px solid ${PALETTE_CSS.border}` }}>
+      <header style={{ ...white, paddingTop: '3rem', paddingBottom: '2rem', paddingLeft: '14px', paddingRight: '14px', borderBottom: `1px solid ${PALETTE_CSS.border}` }}>
         <h1 style={{
           ...FONT.serif,
-          fontSize:   'clamp(1.6rem, 3.5vw, 2.6rem)',
-          fontWeight: 700,
-          lineHeight: 1.15,
-          color:      PALETTE.black,
-          margin:     0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          margin: 0,
+          lineHeight: 1.2,
         }}>
-          {title}
+          {(() => {
+            const { plaintiff, defendant } = parseCaseTitle(title)
+            return (
+              <>
+                <span style={{
+                  fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
+                  fontWeight: 700,
+                  color: PALETTE.black,
+                  maxWidth: '85%',
+                }}>
+                  {plaintiff}
+                </span>
+                {defendant && (
+                  <>
+                    <span style={{
+                      fontSize: '0.85em',
+                      fontStyle: 'italic',
+                      color: PALETTE.black,
+                      margin: '0.75rem 0',
+                      fontWeight: 400,
+                    }}>
+                      v.
+                    </span>
+                    <span style={{
+                      fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
+                      fontWeight: 700,
+                      color: PALETTE.black,
+                      maxWidth: '85%',
+                    }}>
+                      {defendant}
+                    </span>
+                  </>
+                )}
+              </>
+            )
+          })()}
         </h1>
       </header>
 
