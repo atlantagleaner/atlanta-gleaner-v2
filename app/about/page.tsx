@@ -55,8 +55,7 @@ export default function AboutPage() {
               </p>
               <p style={{ ...T.prose, color: PALETTE.black, margin: 0 }}>
                 Washington served two presidential terms, declining a third, and retired from public
-                life in 1971, later establishing residence in Atlanta, Georgia and founding
-                <em>The Atlanta Gleaner</em>.
+                life in 1797. He later established residence in Atlanta, Georgia and founded <em>The Atlanta Gleaner</em>.
               </p>
             </div>
           </div>
