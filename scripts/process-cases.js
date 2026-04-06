@@ -23,6 +23,16 @@ const JSZip   = require('jszip');
 const RAW_DIR     = path.resolve(__dirname, '..', 'raw-opinions');
 const OUTPUT_FILE = path.resolve(__dirname, '..', 'src', 'data', 'cases.json');
 
+function getExistingSlugMap(existingCases) {
+  const map = new Map();
+  for (const caseData of existingCases || []) {
+    if (caseData && caseData.slug) {
+      map.set(caseData.slug, caseData);
+    }
+  }
+  return map;
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // SECTION 1 — GENERAL UTILITIES
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1276,21 +1286,39 @@ async function run() {
   try {
     await fs.mkdir(path.dirname(OUTPUT_FILE), { recursive: true });
 
+    let existingCases = [];
+    try {
+      const existingRaw = await fs.readFile(OUTPUT_FILE, 'utf8');
+      existingCases = JSON.parse(existingRaw);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+    }
+
+    const existingSlugMap = getExistingSlugMap(existingCases);
+
     const files = (await fs.readdir(RAW_DIR))
       .filter(f => /\.docx?$/i.test(f))
       .sort();
 
-    console.log(`\nProcessing ${files.length} opinion files…\n`);
+    console.log(`\nScanning ${files.length} opinion files for new cases...\n`);
 
-    const results = [];
-    let ok     = 0;
+    const results = [...existingCases];
+    let ok = 0;
     let errors = 0;
+    let skipped = 0;
 
     for (const file of files) {
+      const slug = toSlug(file);
+      if (existingSlugMap.has(slug)) {
+        skipped++;
+        continue;
+      }
+
       try {
         process.stdout.write(`  [+] ${file.slice(0, 72).padEnd(72)}\r`);
         const caseData = await parseDocxFile(file);
         results.push(caseData);
+        existingSlugMap.set(caseData.slug, caseData);
         ok++;
       } catch (err) {
         console.error(`\n  [!] FAILED: ${file}\n      ${err.message}`);
@@ -1309,9 +1337,10 @@ async function run() {
 
     await fs.writeFile(OUTPUT_FILE, JSON.stringify(results, null, 2), 'utf8');
 
-    console.log(`\n  ✓ Processed : ${ok}`);
-    if (errors > 0) console.log(`  ✗ Failed    : ${errors}`);
-    console.log(`  → Output    : ${OUTPUT_FILE}\n`);
+    console.log(`\n  Added   : ${ok}`);
+    console.log(`  Skipped : ${skipped}`);
+    if (errors > 0) console.log(`  Failed  : ${errors}`);
+    console.log(`  Output  : ${OUTPUT_FILE}\n`);
   } catch (err) {
     console.error('Fatal:', err.message);
     process.exit(1);

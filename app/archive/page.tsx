@@ -25,10 +25,8 @@ import {
   BOX_PADDING, ITEM_RULE, SPACING, SIZE_SM, SIZE_MD,
   PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION,
 } from '@/src/styles/tokens'
-import casesRaw from '@/src/data/cases.json'
+import { CASES } from '@/src/data/cases'
 import type { CaseLaw } from '@/src/data/types'
-
-const cases = casesRaw as CaseLaw[]
 
 // ── Volume definitions ────────────────────────────────────────────────────────
 
@@ -309,10 +307,10 @@ export default function ArchivePage() {
   // Build and search with Fuse.js
   const { filteredCases, resultCount } = useMemo(() => {
     if (!searchQuery.trim()) {
-      return { filteredCases: cases, resultCount: cases.length }
+      return { filteredCases: CASES, resultCount: CASES.length }
     }
 
-    const searchableData = cases.map(buildSearchableCase)
+    const searchableData = CASES.map(buildSearchableCase)
     const fuse = new Fuse(searchableData, {
       keys: [
         { name: 'title', weight: 0.4 },
@@ -329,7 +327,7 @@ export default function ArchivePage() {
 
     const results = fuse.search(searchQuery)
     const resultSlugs = new Set(results.map((r) => r.item.slug))
-    const matched = cases.filter((c) => resultSlugs.has(c.slug))
+    const matched = CASES.filter((c) => resultSlugs.has(c.slug))
 
     return { filteredCases: matched, resultCount: matched.length }
   }, [searchQuery])
@@ -351,7 +349,7 @@ export default function ArchivePage() {
         {/* Page title block */}
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
           <h1 style={{ ...T.pageTitle, paddingTop: '20px' }}>
-            Case Law Archive
+            Archive
           </h1>
         </div>
 
