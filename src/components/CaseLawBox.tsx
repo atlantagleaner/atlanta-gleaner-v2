@@ -507,6 +507,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         {citations && (
           <div style={metadataRow}>
             <button
+              className="reporter-toggle-button"
               onClick={() => setShowPagination(!showPagination)}
               style={{
                 ...reporterToggleButtonBase,
@@ -527,6 +528,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               aria-pressed={showPagination}
             >
               <span
+                className="reporter-toggle-label"
                 style={{
                   ...reporterToggleLabel,
                   color: showPagination ? PALETTE.white : PALETTE_CSS.meta,
@@ -535,6 +537,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                 REPORTER
               </span>
               <span
+                className="reporter-toggle-value"
                 style={{
                   ...reporterToggleValue,
                   color: showPagination ? PALETTE.white : PALETTE.black,

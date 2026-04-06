@@ -284,6 +284,38 @@ body {
   display: inline;
 }
 
+.reporter-toggle-button {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+.reporter-toggle-button:focus,
+.reporter-toggle-button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .reporter-toggle-button {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    flex-wrap: wrap;
+  }
+
+  .reporter-toggle-label {
+    min-width: 84px;
+    padding-left: 0;
+    padding-right: 6px;
+  }
+
+  .reporter-toggle-value {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
 .footnote-list {
   margin-top: 64px;
   padding-top: 32px;
