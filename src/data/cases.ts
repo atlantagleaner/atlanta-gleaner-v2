@@ -26,6 +26,10 @@ import CASE_EDITORIAL_RAW from './case-editorial.json'
 const CASES_MASTER = CASES_MASTER_RAW as CaseLaw[]
 const CASE_EDITORIAL = CASE_EDITORIAL_RAW as Record<string, EditorialCaseContent>
 
+function normalizeKeyPart(value: string | undefined): string {
+  return (value || '').trim().toLowerCase()
+}
+
 function buildEditorialMatchKey(
   title: string | undefined,
   docketNumber: string | undefined,
@@ -41,6 +45,25 @@ function buildEditorialMatchKey(
     normalize(docketNumber),
     normalize(dateDecided),
   ].join('::')
+}
+
+function buildCaseKey(caseData: Pick<CaseLaw, 'court' | 'docketNumber' | 'slug'>): string {
+  const court = normalizeKeyPart(caseData.court)
+  const docket = normalizeKeyPart(caseData.docketNumber)
+  return docket ? `${court}::${docket}` : `slug::${normalizeKeyPart(caseData.slug)}`
+}
+
+function isMeaningfulText(value: string | undefined): boolean {
+  if (!value) return false
+  const trimmed = value.trim()
+  if (!trimmed) return false
+  const lower = trimmed.toLowerCase()
+  return !(
+    lower === 'summary pending.'
+    || lower === 'pending.'
+    || lower === 'full opinion text to be added.'
+    || lower === 'opinion pending.'
+  )
 }
 
 const CASE_EDITORIAL_BY_MATCH_KEY = new Map<string, EditorialCaseContent>(
@@ -91,6 +114,59 @@ function applyEditorialOverlay(caseData: CaseLaw): CaseLaw {
 }
 
 // ─── 2026 cases (current year — manually edited metadata) ────────────────────
+function caseQualityScore(caseData: CaseLaw): number {
+  let score = 0
+
+  if (isMeaningfulText(caseData.citations)) score += 6
+  if (isMeaningfulText(caseData.disposition)) score += 4
+  if (isMeaningfulText(caseData.opinionAuthor)) score += 2
+  if (isMeaningfulText(caseData.summary)) score += 3
+  if (isMeaningfulText(caseData.holdingBold)) score += 2
+  if (isMeaningfulText(caseData.conclusionText)) score += 2
+  if (isMeaningfulText(caseData.noticeText)) score += 1
+  if (isMeaningfulText(caseData.priorHistory)) score += 1
+  if ((caseData.subsequent_history?.length || 0) > 0) score += 1
+  if ((caseData.tags?.length || 0) > 0) score += 1
+  if ((caseData.coreTerms?.length || 0) > 0) score += 1
+
+  const opinionText = (caseData.opinionText || '').trim()
+  if (opinionText.length > 200) score += 6
+  else if (opinionText.length > 0 && !/full opinion text to be added\.?/i.test(opinionText)) score += 3
+
+  return score
+}
+
+function buildCanonicalCaseIndex(records: CaseLaw[]) {
+  const grouped = new Map<string, CaseLaw[]>()
+
+  for (const record of records) {
+    const key = buildCaseKey(record)
+    const bucket = grouped.get(key)
+    if (bucket) bucket.push(record)
+    else grouped.set(key, [record])
+  }
+
+  const canonical: CaseLaw[] = []
+  const aliases = new Map<string, CaseLaw>()
+
+  for (const group of grouped.values()) {
+    const winner = group.reduce((best, current) => {
+      const bestScore = caseQualityScore(best)
+      const currentScore = caseQualityScore(current)
+      if (currentScore > bestScore) return current
+      if (currentScore < bestScore) return best
+      return best
+    })
+
+    canonical.push(winner)
+    for (const record of group) {
+      aliases.set(record.slug, winner)
+    }
+  }
+
+  return { canonical, aliases }
+}
+
 const CASES_2026: CaseLaw[] = [
   {
     id:           'brosnan-2026',
@@ -233,18 +309,21 @@ const CASES_2026: CaseLaw[] = [
 
 const CASE_SLUGS_2026 = new Set(CASES_2026.map(c => c.slug))
 const CASES_FROM_MASTER = CASES_MASTER.filter(c => !CASE_SLUGS_2026.has(c.slug))
-
-export const CASES: CaseLaw[] = [
+const CASES_ALL: CaseLaw[] = [
   ...CASES_2026,
   ...CASES_FROM_MASTER,
 ].map(applyEditorialOverlay)
+const { canonical: CANONICAL_CASES, aliases: CASE_ALIASES_BY_SLUG } = buildCanonicalCaseIndex(CASES_ALL)
+
+export const CASES: CaseLaw[] = CANONICAL_CASES
+export const ALL_CASE_SLUGS: string[] = [...CASE_ALIASES_BY_SLUG.keys()]
 
 /** The current featured case shown on the landing page CaseLawBox. */
 export const FEATURED_CASE: CaseLaw = CASES[0]
 
 /** Look up a full case record by its URL slug. Returns undefined if not found. */
 export function getCaseBySlug(slug: string): CaseLaw | undefined {
-  return CASES.find(c => c.slug === slug)
+  return CASE_ALIASES_BY_SLUG.get(slug)
 }
 
 /** Lightweight index for the Archive page and generateStaticParams. */
