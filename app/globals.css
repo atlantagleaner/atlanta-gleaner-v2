@@ -284,41 +284,6 @@ body {
   display: inline;
 }
 
-.reporter-toggle-button {
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-  box-shadow: none;
-}
-
-.reporter-toggle-button:focus,
-.reporter-toggle-button:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
-
-@media (max-width: 640px) {
-  .reporter-toggle-button {
-    grid-template-columns: 84px minmax(0, 1fr);
-    width: 100%;
-    max-width: 100%;
-    padding-right: 0;
-    white-space: normal;
-  }
-
-  .reporter-toggle-label {
-    min-width: 0;
-    padding-left: 0;
-    padding-right: 6px;
-  }
-
-  .reporter-toggle-value {
-    min-width: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-}
-
 .footnote-list {
   margin-top: 64px;
   padding-top: 32px;
