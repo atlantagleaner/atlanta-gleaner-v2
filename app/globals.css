@@ -320,7 +320,7 @@ body {
 /* ── Archive case links ───────────────────────────────────────────────────────── */
 a.case-archive-link {
   display: block;
-  height: 120px;
+  height: 116px;
   box-sizing: border-box;
   padding: 18px 24px 16px;
   text-decoration: none;

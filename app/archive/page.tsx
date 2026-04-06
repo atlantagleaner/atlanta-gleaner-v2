@@ -188,21 +188,11 @@ function MonthShelf({
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'minmax(0, 1fr) 280px',
-                  gridTemplateRows: 'auto auto auto',
                   columnGap: SPACING.md,
-                  rowGap: SPACING.xs,
                   alignItems: 'start',
                 }}
               >
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1fr) 280px',
-                  gridTemplateRows: 'auto auto auto',
-                  columnGap: SPACING.md,
-                  rowGap: SPACING.xs,
-                  alignItems: 'start',
-                  gridColumn: '1 / 3',
-                }}>
+                <div style={{ display: 'contents' }}>
                   <div className="case-archive-title" style={{
                     ...T.body,
                     minWidth: 0,
@@ -217,7 +207,7 @@ function MonthShelf({
                     minWidth: 0,
                     maxWidth: '280px',
                     gridColumn: '2',
-                    gridRow: '1 / span 2',
+                    gridRow: '1 / span 3',
                     alignSelf: 'stretch',
                   }}>
                       <div className="case-archive-tags" style={{
