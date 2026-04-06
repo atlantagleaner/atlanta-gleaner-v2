@@ -15,7 +15,7 @@
 // Accepts the CaseLaw interface directly (src/data/types.ts).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import {
   PALETTE, PALETTE_CSS, FONT, T,
@@ -356,6 +356,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
   const [expanded, setExpanded] = useState(false)
   const [counselExpanded, setCounselExpanded] = useState(false)
   const [showPagination, setShowPagination] = useState(false)
+  const opinionSectionRef = useRef<HTMLElement | null>(null)
+  const [opinionMaxHeight, setOpinionMaxHeight] = useState(840)
   if (!caseData) return null
 
   const {
@@ -392,6 +394,12 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
 
   const hasCoreTerms = coreTerms && coreTerms.length > 0
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
+
+  useLayoutEffect(() => {
+    if (!expanded || !opinionSectionRef.current) return
+    const nextHeight = opinionSectionRef.current.scrollHeight
+    setOpinionMaxHeight(Math.max(nextHeight, 840))
+  }, [expanded, counselExpanded, showPagination, renderedOpinionHtml])
 
   return (
     <article id="case-law-box" style={{
@@ -603,11 +611,11 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
       </section>
 
       {/* ── 5. Verbatim opinion ──────────────────────────────────────────── */}
-      <section style={{
+      <section ref={opinionSectionRef} style={{
         ...white,
         position:   'relative',
         overflow:   'hidden',
-        maxHeight:  expanded ? '8000px' : '840px',
+        maxHeight:  expanded ? `${opinionMaxHeight}px` : '840px',
         transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
         padding:    '28px 24px 40px',
         ...sectionBorder,
