@@ -85,29 +85,49 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
   const { document } = result
   const isLong = document.wordCount >= COLLAPSE_WORD_THRESHOLD
   const [expanded, setExpanded] = useState(!isLong)
+  const [mode, setMode] = useState<'reader' | 'pictures'>('reader')
+
+  const tabButtonStyle = (active: boolean) => ({
+    ...T.label,
+    color: active ? PALETTE.black : PALETTE_CSS.meta,
+    border: 'none',
+    background: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    transition: `color ${ANIMATION.base} ${ANIMATION.ease}`,
+  } as const)
 
   return (
-    <article style={{ paddingBottom: SPACING.lg }}>
+    <article style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
       <style>{READER_BODY_CSS}</style>
 
-      <header
-        style={{
-          padding: `0 0 ${SPACING.lg}`,
-          borderBottom: '1px solid var(--palette-rule)',
-        }}
-      >
+      <header style={{ padding: `0 0 ${SPACING.md}` }}>
         <div
           style={{
             display: 'flex',
-            alignItems: 'baseline',
+            alignItems: 'center',
             justifyContent: 'space-between',
             gap: SPACING.md,
-            marginBottom: SPACING.sm,
+            paddingBottom: SPACING.sm,
+            borderBottom: '1px solid var(--palette-rule)',
           }}
         >
-          <p style={{ ...T.label, color: PALETTE.black, margin: 0 }}>
-            Reader View
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+            <button
+              type="button"
+              onClick={() => setMode('reader')}
+              style={tabButtonStyle(mode === 'reader')}
+            >
+              Reader View
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('pictures')}
+              style={tabButtonStyle(mode === 'pictures')}
+            >
+              Pictures
+            </button>
+          </div>
 
           <a
             href={document.readFullUrl}
@@ -117,129 +137,125 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
               ...T.micro,
               color: PALETTE.black,
               textDecoration: 'none',
-              borderBottom: `1px solid ${PALETTE.black}`,
-              paddingBottom: '1px',
               whiteSpace: 'nowrap',
             }}
           >
             {'Read Full ->'}
           </a>
         </div>
-
-        <h3
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
-            fontWeight: 700,
-            lineHeight: 1.08,
-            letterSpacing: '-0.01em',
-            color: PALETTE.black,
-            margin: `0 0 ${SPACING.sm}`,
-          }}
-        >
-          {document.title}
-        </h3>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: `${SPACING.xs} ${SPACING.md}` }}>
-          <span style={{ ...T.micro, color: PALETTE_CSS.meta }}>{document.source}</span>
-          {document.byline && <span style={{ ...T.micro, color: PALETTE_CSS.meta }}>By {document.byline}</span>}
-          {document.publishedAt && (
-            <span style={{ ...T.micro, color: PALETTE_CSS.meta }}>{document.publishedAt}</span>
-          )}
-        </div>
-
-        {document.excerpt && (
-          <p style={{ ...T.prose, color: PALETTE.black, margin: `${SPACING.md} 0 0` }}>
-            {document.excerpt}
-          </p>
-        )}
       </header>
 
-      {document.heroImageUrl && (
-        <figure style={{ margin: `${SPACING.lg} 0` }}>
-          <img
-            src={document.heroImageUrl}
-            alt={document.heroImageAlt || document.title}
-            loading="lazy"
+      {mode === 'reader' ? (
+        <>
+          <section
             style={{
-              width: '100%',
-              display: 'block',
-              border: '1px solid var(--palette-rule)',
-              background: 'var(--palette-warm)',
+              position: 'relative',
+              overflow: 'hidden',
+              maxHeight: expanded ? '9000px' : '1200px',
+              transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
+              padding: `0 0 ${SPACING.xl}`,
+              userSelect: 'text',
+              ...ITEM_RULE,
             }}
-          />
-          {document.heroImageAlt && (
-            <figcaption style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
-              {document.heroImageAlt}
-            </figcaption>
+          >
+            <div
+              className="ag-reader-body"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '14px',
+                lineHeight: 1.72,
+                color: PALETTE.black,
+              }}
+              dangerouslySetInnerHTML={{ __html: document.bodyHtml }}
+            />
+
+            {isLong && (
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: '90px',
+                  background: 'linear-gradient(to bottom, transparent, var(--interactive-gradient-fade))',
+                  pointerEvents: 'none',
+                  opacity: expanded ? 0 : 1,
+                  transition: `opacity ${expanded ? '0.1s' : '0.25s'} ${ANIMATION.ease}`,
+                }}
+              />
+            )}
+          </section>
+
+          {isLong && (
+            <button
+              type="button"
+              onClick={() => setExpanded((value) => !value)}
+              aria-expanded={expanded}
+              style={{
+                width: '100%',
+                background: PALETTE.white,
+                border: 'none',
+                borderTop: '1px solid var(--palette-rule)',
+                padding: `${SPACING.md} 0`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                transition: `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
+              }}
+            >
+              <span style={{ ...T.label, color: PALETTE.black }}>
+                {expanded ? 'Collapse' : 'Read Full Article'}
+              </span>
+              <span style={{ ...T.label, color: PALETTE.black, opacity: 0.45 }}>
+                {expanded ? '^' : 'v'}
+              </span>
+            </button>
           )}
-        </figure>
-      )}
-
-      <section
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          maxHeight: expanded ? '9000px' : '1200px',
-          transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
-          padding: `0 0 ${SPACING.xl}`,
-          userSelect: 'text',
-          ...ITEM_RULE,
-        }}
-      >
-        <div
-          className="ag-reader-body"
+        </>
+      ) : (
+        <section
           style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '14px',
-            lineHeight: 1.72,
-            color: PALETTE.black,
-          }}
-          dangerouslySetInnerHTML={{ __html: document.bodyHtml }}
-        />
-
-        {isLong && (
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: '90px',
-              background: 'linear-gradient(to bottom, transparent, var(--interactive-gradient-fade))',
-              pointerEvents: 'none',
-              opacity: expanded ? 0 : 1,
-              transition: `opacity ${expanded ? '0.1s' : '0.25s'} ${ANIMATION.ease}`,
-            }}
-          />
-        )}
-      </section>
-
-      {isLong && (
-        <button
-          onClick={() => setExpanded((value) => !value)}
-          aria-expanded={expanded}
-          style={{
-            width: '100%',
-            background: PALETTE.white,
-            border: 'none',
-            borderTop: '1px solid var(--palette-rule)',
-            padding: `${SPACING.md} 0`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            cursor: 'pointer',
-            transition: `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
+            display: 'grid',
+            gap: SPACING.md,
+            paddingBottom: SPACING.lg,
           }}
         >
-          <span style={{ ...T.label, color: PALETTE.black }}>
-            {expanded ? 'Collapse' : 'Read Full Article'}
-          </span>
-          <span style={{ ...T.label, color: PALETTE.black, opacity: 0.45 }}>
-            {expanded ? '^' : 'v'}
-          </span>
-        </button>
+          {document.images.length > 0 ? (
+            document.images.map((image) => (
+              <figure
+                key={image.src}
+                style={{
+                  margin: 0,
+                  paddingBottom: SPACING.md,
+                  ...ITEM_RULE,
+                }}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt || document.title}
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    display: 'block',
+                    border: '1px solid var(--palette-rule)',
+                    background: 'var(--palette-warm)',
+                  }}
+                />
+                {(image.caption || image.alt) && (
+                  <figcaption style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
+                    {image.caption || image.alt}
+                  </figcaption>
+                )}
+              </figure>
+            ))
+          ) : (
+            <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
+              No pictures were extracted from this article.
+            </p>
+          )}
+        </section>
       )}
     </article>
   )
@@ -264,8 +280,6 @@ function VideoEmbed({
             ...T.micro,
             color: PALETTE.black,
             textDecoration: 'none',
-            borderBottom: `1px solid ${PALETTE.black}`,
-            paddingBottom: '1px',
           }}
         >
           {'Watch ->'}

@@ -275,6 +275,11 @@ export interface ReaderDocument {
   heroImageAlt: string | null
   excerpt: string | null
   bodyHtml: string
+  images: Array<{
+    src: string
+    alt: string | null
+    caption: string | null
+  }>
   wordCount: number
 }
 
@@ -641,6 +646,68 @@ function isBoilerplateBlock(text: string): boolean {
   return BLOCK_TEXT_DROP_PATTERNS.some((pattern) => pattern.test(text))
 }
 
+function hasRecirculationHint(value: string): boolean {
+  return /(related|recirc|trending|topic|recommend|popular|latest|read-next|more-stories|newsletter|promo|taboola|outbrain)/i.test(value)
+}
+
+function recirculationScore(
+  $: cheerio.CheerioAPI,
+  $el: cheerio.Cheerio<any>,
+): number {
+  const text = cleanWhitespace($el.text()) || ''
+  if (!text) return 0
+
+  const links = $el.find('a')
+  const anchorCount = links.length
+  const listItems = $el.find('li')
+  const paragraphs = $el.find('p')
+  const sentenceLikeMatches = text.match(/[.!?](?:\s|$)/g)
+  const sentenceCount = sentenceLikeMatches?.length ?? 0
+  const textLength = text.length
+  const anchorTextLength = links
+    .toArray()
+    .reduce((sum, link) => sum + (cleanWhitespace($(link).text())?.length ?? 0), 0)
+  const linkDensity = textLength > 0 ? anchorTextLength / textLength : 0
+  const attrText = [
+    $el.attr('class') || '',
+    $el.attr('id') || '',
+    $el.attr('data-testid') || '',
+    $el.attr('data-component-name') || '',
+  ].join(' ')
+
+  let score = 0
+
+  if (hasRecirculationHint(attrText)) score += 4
+  if (anchorCount >= 2 && linkDensity >= 0.55) score += 3
+  if (anchorCount >= 3 && textLength <= 280) score += 2
+  if (listItems.length >= 2 && anchorCount >= listItems.length) score += 3
+  if (paragraphs.length === 0 && sentenceCount === 0 && anchorCount >= 2) score += 2
+  if (isBoilerplateBlock(normalizeComparableText(text))) score += 4
+
+  return score
+}
+
+function pruneRecirculationBlocks(
+  $: cheerio.CheerioAPI,
+  $section: cheerio.Cheerio<any>,
+): void {
+  const blockSelector = 'ul, ol, div, section, article'
+
+  $section.find(blockSelector).each((_, el) => {
+    const $el = $(el)
+    const score = recirculationScore($, $el)
+    const hasLargeParagraph = $el
+      .find('p')
+      .toArray()
+      .some((paragraph) => (cleanWhitespace($(paragraph).text())?.length ?? 0) >= 220)
+    const containsMedia = $el.find('img, figure, video, table').length > 0
+
+    if (score >= 5 && !hasLargeParagraph && !containsMedia) {
+      $el.remove()
+    }
+  })
+}
+
 function pruneRepeatedBlocks(
   $: cheerio.CheerioAPI,
   $section: cheerio.Cheerio<any>,
@@ -698,6 +765,74 @@ function trimLeadingDuplicates(
   return $section.html() || bodyHtml
 }
 
+function extractImages(
+  bodyHtml: string,
+  heroImageUrl: string | null,
+  heroImageAlt: string | null,
+): {
+  bodyHtml: string
+  images: Array<{
+    src: string
+    alt: string | null
+    caption: string | null
+  }>
+} {
+  const $ = cheerio.load(`<section>${bodyHtml}</section>`)
+  const $section = $('section').first()
+  const images: Array<{ src: string; alt: string | null; caption: string | null }> = []
+  const seen = new Set<string>()
+
+  function pushImage(src: string | null | undefined, alt: string | null | undefined, caption: string | null | undefined) {
+    const normalizedSrc = cleanWhitespace(src)
+    if (!normalizedSrc || seen.has(normalizedSrc)) return
+    seen.add(normalizedSrc)
+    images.push({
+      src: normalizedSrc,
+      alt: cleanWhitespace(alt),
+      caption: cleanWhitespace(caption),
+    })
+  }
+
+  if (heroImageUrl) {
+    pushImage(heroImageUrl, heroImageAlt, heroImageAlt)
+  }
+
+  $section.find('figure').each((_, figure) => {
+    const $figure = $(figure)
+    const $img = $figure.find('img').first()
+    pushImage(
+      $img.attr('src'),
+      $img.attr('alt'),
+      $figure.find('figcaption').first().text(),
+    )
+    $figure.remove()
+  })
+
+  $section.find('img').each((_, img) => {
+    const $img = $(img)
+    pushImage(
+      $img.attr('src'),
+      $img.attr('alt'),
+      $img.attr('alt'),
+    )
+    $img.remove()
+  })
+
+  $section.find('p, div, section, article').each((_, el) => {
+    const $el = $(el)
+    const text = cleanWhitespace($el.text())
+    const hasMedia = $el.find('img, figure').length > 0
+    if (!text && !hasMedia) {
+      $el.remove()
+    }
+  })
+
+  return {
+    bodyHtml: $section.html() || '',
+    images,
+  }
+}
+
 function buildExcerpt(bodyText: string): string | null {
   const cleaned = cleanWhitespace(bodyText)
   if (!cleaned) return null
@@ -722,6 +857,7 @@ function buildReaderDocument(
 
   const sanitized = cheerio.load(`<section>${cleanedBodyHtml}</section>`)
   const $section = sanitized('section').first()
+  pruneRecirculationBlocks(sanitized, $section)
   pruneRepeatedBlocks(sanitized, $section)
   cleanedBodyHtml = $section.html() || cleanedBodyHtml
 
@@ -739,6 +875,18 @@ function buildReaderDocument(
     throw new Error('Extraction produced insufficient article body')
   }
 
+  const extracted = extractImages(
+    cleanedBodyHtml,
+    metadata.heroImageUrl,
+    metadata.heroImageAlt,
+  )
+  cleanedBodyHtml = extracted.bodyHtml
+  words = wordCountFromHtml(cleanedBodyHtml)
+
+  if (!cleanedBodyHtml || words < 140) {
+    throw new Error('Extraction produced insufficient text-only article body')
+  }
+
   const bodyText = cheerio.load(`<section>${cleanedBodyHtml}</section>`)('section').text()
 
   return {
@@ -751,6 +899,7 @@ function buildReaderDocument(
     heroImageAlt: metadata.heroImageAlt,
     excerpt: buildExcerpt(bodyText),
     bodyHtml: cleanedBodyHtml,
+    images: extracted.images,
     wordCount: words,
   }
 }
