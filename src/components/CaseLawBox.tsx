@@ -489,6 +489,11 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   margin: '0',
                   transition: 'opacity 0.15s ease',
                 }),
+                border: 'none',
+                cursor: 'pointer',
+                lineHeight: '1',
+                verticalAlign: 'baseline',
+                textAlign: 'left',
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
