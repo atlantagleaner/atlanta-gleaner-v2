@@ -130,13 +130,13 @@ function wrapPaginationMarkers(html: string): string {
   // RULE 1: Non-breaking space before and after (\xa0[MARKER]\xa0)
   html = html.replace(
     /\xa0(\[\*{1,3}\d+\])\xa0/g,
-    '\xa0<span class="star-pagination">$1</span>\xa0'
+    '<span class="star-pagination-wrap">\xa0<span class="star-pagination">$1</span>\xa0</span>'
   )
 
   // RULE 2: Non-breaking space after only ([MARKER]\xa0)
   html = html.replace(
     /(\[\*{1,3}\d+\])\xa0/g,
-    '<span class="star-pagination">$1</span>\xa0'
+    '<span class="star-pagination-wrap"><span class="star-pagination">$1</span>\xa0</span>'
   )
 
   return html
@@ -343,6 +343,31 @@ const counselValue: CSSProperties = {
   wordBreak:    'break-word',
 }
 
+const reporterToggleButtonBase: CSSProperties = {
+  display:             'inline-grid',
+  gridTemplateColumns: '110px auto',
+  alignItems:          'baseline',
+  width:               'fit-content',
+  maxWidth:            '100%',
+  border:              'none',
+  padding:             '2px 8px 2px 0',
+  margin:              0,
+  cursor:              'pointer',
+  textAlign:           'left',
+  transition:          'background 0.2s ease, color 0.2s ease, opacity 0.15s ease',
+}
+
+const reporterToggleLabel: CSSProperties = {
+  ...metaLabel,
+  padding: '0 8px',
+  whiteSpace: 'nowrap',
+}
+
+const reporterToggleValue: CSSProperties = {
+  ...metaValue,
+  paddingRight: '8px',
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface CaseLawBoxProps {
@@ -473,27 +498,9 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             <button
               onClick={() => setShowPagination(!showPagination)}
               style={{
-                ...(showPagination ? {
-                  ...T.micro,
-                  background: PALETTE.black,
-                  color: PALETTE.white,
-                  padding: `2px ${SPACING.sm}`,
-                  margin: '0',
-                  transition: 'background 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-block',
-                } : {
-                  ...metaLabel,
-                  background: 'none',
-                  padding: '0',
-                  margin: '0',
-                  transition: 'opacity 0.15s ease',
-                }),
-                border: 'none',
-                cursor: 'pointer',
-                lineHeight: '1',
-                verticalAlign: 'baseline',
-                textAlign: 'left',
+                ...reporterToggleButtonBase,
+                background: showPagination ? PALETTE.black : 'transparent',
+                color: showPagination ? PALETTE.white : PALETTE.black,
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
@@ -508,9 +515,23 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               aria-label="Toggle pagination markers"
               aria-pressed={showPagination}
             >
-              REPORTER
+              <span
+                style={{
+                  ...reporterToggleLabel,
+                  color: showPagination ? PALETTE.white : PALETTE_CSS.meta,
+                }}
+              >
+                REPORTER
+              </span>
+              <span
+                style={{
+                  ...reporterToggleValue,
+                  color: showPagination ? PALETTE.white : PALETTE.black,
+                }}
+              >
+                {citations}
+              </span>
             </button>
-            <span style={metaValue}>{citations}</span>
           </div>
         )}
         {priorHistory && <MetadataRow label="Prior History" value={priorHistory} />}
