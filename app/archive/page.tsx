@@ -14,7 +14,7 @@
 // minimal — consistent with the rest of the Gleaner design system.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useState, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import Fuse from 'fuse.js'
@@ -97,24 +97,28 @@ const monthToggle: CSSProperties = {
 // ── Month sub-accordion ───────────────────────────────────────────────────────
 
 function MonthShelf({
-  month, year, monthCases,
+  month, year, monthCases, forceOpen = false,
 }: {
   month:      string
   year:       number
   monthCases: CaseLaw[]
+  forceOpen?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const isOpen = forceOpen || open
 
   return (
     <div>
       <button
-        onClick={() => setOpen(v => !v)}
+        onClick={() => {
+          if (!forceOpen) setOpen(v => !v)
+        }}
         style={monthToggle}
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <span style={{
           ...T.micro,
-          color:         open ? PALETTE.black : PALETTE_CSS.meta,
+          color:         isOpen ? PALETTE.black : PALETTE_CSS.meta,
         }}>
           {month} {year}
           <span style={{
@@ -134,13 +138,13 @@ function MonthShelf({
           color:      PALETTE_CSS.muted,
           transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}`,
           display:    'inline-block',
-          transform:  open ? 'rotate(90deg)' : 'rotate(0)',
+          transform:  isOpen ? 'rotate(90deg)' : 'rotate(0)',
         }}>
           ▶
         </span>
       </button>
 
-      {open && (
+      {isOpen && (
         <div style={{ background: PALETTE.white }}>
           {monthCases.map((c) => (
             <Link
@@ -177,12 +181,15 @@ function VolumeBox({
   volume,
   allCases,
   defaultOpen,
+  forceOpen = false,
 }: {
   volume:      typeof VOLUMES[number]
   allCases:    CaseLaw[]
   defaultOpen: boolean
+  forceOpen?: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
+  const isOpen = forceOpen || open
 
   // Filter cases that belong to this volume's year range
   const volumeCases = allCases.filter((c) => {
@@ -216,9 +223,11 @@ function VolumeBox({
     <div style={volumeShell}>
       {/* Volume header button */}
       <button
-        onClick={() => setOpen(v => !v)}
+        onClick={() => {
+          if (!forceOpen) setOpen(v => !v)
+        }}
         style={volumeToggle}
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: SPACING.lg }}>
           <span style={{ ...T.label, color: PALETTE.white, lineHeight: 1 }}>
@@ -238,14 +247,14 @@ function VolumeBox({
           opacity:    0.5,
           transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
           display:    'inline-block',
-          transform:  open ? 'rotate(90deg)' : 'rotate(0)',
+          transform:  isOpen ? 'rotate(90deg)' : 'rotate(0)',
         }}>
           ▶
         </span>
       </button>
 
       {/* Volume body */}
-      {open && (
+      {isOpen && (
         <div style={{ background: PALETTE.warm }}>
           {monthsWithCases.length === 0 ? (
             <div style={{
@@ -262,6 +271,7 @@ function VolumeBox({
                 month={label}
                 year={year}
                 monthCases={mCases}
+                forceOpen={forceOpen}
               />
             ))
           )}
@@ -277,11 +287,19 @@ interface SearchableCase {
   id: string
   slug: string
   title: string
+  shortTitle: string
   court: string
   docketNumber: string
   judges?: string
   disposition?: string
   summary?: string
+  holdingBold?: string
+  conclusionText?: string
+  opinionAuthor?: string
+  opinionText?: string
+  noticeText?: string
+  priorHistory?: string
+  footnotesText?: string
   coreTerms?: string
 }
 
@@ -290,11 +308,19 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
     id: c.id,
     slug: c.slug,
     title: c.title,
+    shortTitle: c.shortTitle,
     court: c.court,
     docketNumber: c.docketNumber,
     judges: c.judges || '',
     disposition: c.disposition || '',
     summary: c.summary || '',
+    holdingBold: c.holdingBold || '',
+    conclusionText: c.conclusionText || '',
+    opinionAuthor: c.opinionAuthor || '',
+    opinionText: c.opinionText || '',
+    noticeText: c.noticeText || '',
+    priorHistory: c.priorHistory || '',
+    footnotesText: c.footnotes ? Object.values(c.footnotes).filter(Boolean).join(' ') : '',
     coreTerms: c.coreTerms?.join(' ') || '',
   }
 }
@@ -314,12 +340,20 @@ export default function ArchivePage() {
     const fuse = new Fuse(searchableData, {
       keys: [
         { name: 'title', weight: 0.4 },
+        { name: 'shortTitle', weight: 0.25 },
         { name: 'docketNumber', weight: 0.3 },
         { name: 'coreTerms', weight: 0.3 },
         { name: 'court', weight: 0.2 },
         { name: 'judges', weight: 0.15 },
         { name: 'summary', weight: 0.15 },
+        { name: 'holdingBold', weight: 0.15 },
+        { name: 'conclusionText', weight: 0.15 },
+        { name: 'opinionAuthor', weight: 0.1 },
+        { name: 'opinionText', weight: 0.35 },
+        { name: 'footnotesText', weight: 0.1 },
         { name: 'disposition', weight: 0.1 },
+        { name: 'noticeText', weight: 0.05 },
+        { name: 'priorHistory', weight: 0.05 },
       ],
       threshold: 0.4, // Allows typos/variations
       includeScore: true,
@@ -331,6 +365,8 @@ export default function ArchivePage() {
 
     return { filteredCases: matched, resultCount: matched.length }
   }, [searchQuery])
+
+  const searchActive = searchQuery.trim().length > 0
 
   return (
     <main style={{
@@ -371,6 +407,10 @@ export default function ArchivePage() {
               volume={volume}
               allCases={filteredCases}
               defaultOpen={i === 0} // Volume IV (newest) open by default
+              forceOpen={searchActive && filteredCases.some((c) => {
+                const y = getYear(c.dateDecided)
+                return y !== null && volume.years.includes(y)
+              })}
             />
           ))}
         </div>
