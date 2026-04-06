@@ -181,65 +181,82 @@ function MonthShelf({
       {isOpen && (
         <div style={{ background: PALETTE.white }}>
           {monthCases.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/cases/${c.slug}#case-law-box`}
-              className="case-archive-link"
-            >
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                gap: SPACING.md,
-                flexWrap: 'nowrap',
-              }}>
-                <div className="case-archive-title" style={{
-                  ...T.body,
-                  flex: '1 1 auto',
-                  minWidth: 0,
-                  marginBottom: 0,
+              <Link
+                key={c.slug}
+                href={`/cases/${c.slug}#case-law-box`}
+                className="case-archive-link"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1fr) 280px',
+                  gridTemplateRows: 'auto auto auto',
+                  columnGap: SPACING.md,
+                  rowGap: SPACING.xs,
+                  alignItems: 'start',
+                }}
+              >
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1fr) 280px',
+                  gridTemplateRows: 'auto auto auto',
+                  columnGap: SPACING.md,
+                  rowGap: SPACING.xs,
+                  alignItems: 'start',
+                  gridColumn: '1 / 3',
                 }}>
-                  {c.title}
-                </div>
-                {c.tags && c.tags.length > 0 && (
-                  <div style={{
-                    flex: '0 0 280px',
-                    minWidth: '280px',
-                    maxWidth: '280px',
+                  <div className="case-archive-title" style={{
+                    ...T.body,
+                    minWidth: 0,
+                    marginBottom: 0,
+                    gridColumn: '1',
+                    gridRow: '1',
                   }}>
-                    <div className="case-archive-tags" style={{
-                      ...T.micro,
-                      textAlign: 'right',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      lineHeight: 1.45,
-                      overflow: 'hidden',
-                      overflowWrap: 'anywhere',
-                      paddingLeft: SPACING.md,
-                      borderLeft: `1px solid ${PALETTE_CSS.border}`,
-                    }}>
-                      {c.tags.join(' · ')}
-                    </div>
+                    {c.title}
                   </div>
-                )}
-              </div>
-              <div className="case-archive-meta" style={{
-                ...T.micro,
-                fontWeight:    400,
-                letterSpacing: '0.10em',
-                marginTop:     SPACING.xs,
-              }}>
-                {c.court}
-              </div>
-              <div className="case-archive-meta" style={{
-                ...T.micro,
-                fontWeight:    400,
-                letterSpacing: '0.10em',
-                marginTop:     SPACING.xs,
-              }}>
-                {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
-              </div>
-            </Link>
+                  {c.tags && c.tags.length > 0 && (
+                    <div style={{
+                    minWidth: 0,
+                    maxWidth: '280px',
+                    gridColumn: '2',
+                    gridRow: '1 / span 2',
+                    alignSelf: 'stretch',
+                  }}>
+                      <div className="case-archive-tags" style={{
+                        ...T.micro,
+                        textAlign: 'right',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        lineHeight: 1.45,
+                        overflow: 'hidden',
+                        overflowWrap: 'anywhere',
+                        paddingLeft: SPACING.md,
+                        borderLeft: `1px solid ${PALETTE_CSS.border}`,
+                      }}>
+                        {c.tags.join(' · ')}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                  <div className="case-archive-meta" style={{
+                    ...T.micro,
+                    fontWeight:    400,
+                    letterSpacing: '0.10em',
+                    marginTop:     0,
+                    gridColumn:    '1',
+                    gridRow:       '2',
+                  }}>
+                    {c.court}
+                  </div>
+                  <div className="case-archive-meta" style={{
+                    ...T.micro,
+                    fontWeight:    400,
+                    letterSpacing: '0.10em',
+                    marginTop:     0,
+                    gridColumn:    '1',
+                    gridRow:       '3',
+                  }}>
+                    {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
+                  </div>
+              </Link>
           ))}
         </div>
       )}
