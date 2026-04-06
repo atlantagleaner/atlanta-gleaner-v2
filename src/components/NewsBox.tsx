@@ -34,7 +34,7 @@ interface NewsItem {
   url:         string
   source:      string
   publishedAt: string
-  score:       number
+  score?:      number
   slot:        string
   type?:       'video' | 'text' | 'series'
   episodes?:   Array<{
@@ -157,8 +157,8 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
 
   const badge      = SLOT_BADGE[item.slot] ?? null
   const isSeries   = item.type === 'series' || Boolean(item.episodes?.length)
-  const isYouTube  = item.type === 'video' || item.url.includes('youtube.com')
-  const isSpotify  = item.url.includes('spotify.com')
+  const isYouTube  = item.type === 'video' || /youtube\.com|youtu\.be/i.test(item.url)
+  const isSpotify  = /spotify\.com/i.test(item.url)
   const mediaLabel = isYouTube ? ' · YouTube' : isSpotify ? ' · Spotify' : ''
 
   const handleChange = useCallback((val: string) => {

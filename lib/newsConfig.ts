@@ -1,9 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — News Engine Configuration (Serper-only Edition)
+// Atlanta Gleaner — News Engine Configuration
 // ─────────────────────────────────────────────────────────────────────────────
-// All news is fetched via Serper (Google Search API). No RSS feeds.
-// The cron job at 5:00 AM UTC (midnight ET) runs these queries once per day
-// and writes results to Edge Config. The /api/news route serves only from cache.
+// Editorial model:
+// - StarTalk + PBS Space Time stay pinned to slots 1-2.
+// - The remaining feed is one weighted pool.
+// - Local Georgia outlets should dominate that pool.
+// - CNN should be strongly represented.
+// - International, legal, absurd, and macabre stories compete underneath.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type SerperEndpoint = 'news' | 'search' | 'videos';
@@ -14,91 +17,317 @@ export interface SearchQuery {
   num: number;
 }
 
-// ── Search Queries ─────────────────────────────────────────────────────────────
-// Designed to surface diverse, high-quality content across science, local,
-// international, and oddball categories.
+export interface EditorialQuery extends SearchQuery {
+  label: string;
+  boost: number;
+  maxAgeDays?: number;
+}
 
-export const SEARCH_QUERIES: Record<string, SearchQuery> = {
-  // SLOTS 3-4 — Science bonus: overflow from above or adjacent science channels
-  scienceBonus: {
-    q: '"PBS Nova" OR Kurzgesagt OR Veritasium OR "Closer to Truth" OR "Isaac Arthur" science new episode',
-    endpoint: 'videos',
-    num: 4,
-  },
+export const FEED_TARGETS = {
+  featured: 2,
+  total: 15,
+} as const;
 
-  // SLOTS 5-10 — Local Atlanta/Georgia: TV stations first (guaranteed fresh), then general
-  atlantaTV: {
-    q: 'site:wsbtv.com OR site:atlantanewsfirst.com breaking news today',
-    endpoint: 'news',
-    num: 6,
-  },
+export const EDITORIAL_QUERIES = {
+  local: [
+    {
+      label: 'WSB',
+      q: 'site:wsbtv.com OR site:wsb.com Atlanta news breaking',
+      endpoint: 'news',
+      num: 8,
+      boost: 80,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'Atlanta News First',
+      q: 'site:atlantanewsfirst.com Atlanta news breaking local',
+      endpoint: 'news',
+      num: 8,
+      boost: 78,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'WABE',
+      q: 'site:wabe.org Atlanta Georgia local politics culture public radio',
+      endpoint: 'news',
+      num: 8,
+      boost: 76,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'GPB',
+      q: 'site:gpb.org Georgia local news politics education health',
+      endpoint: 'news',
+      num: 8,
+      boost: 75,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'Axios Atlanta',
+      q: 'site:axios.com/newsletters/axios-atlanta Atlanta',
+      endpoint: 'search',
+      num: 8,
+      boost: 64,
+      maxAgeDays: 10,
+    },
+    {
+      label: 'AJC',
+      q: 'site:ajc.com Atlanta Journal-Constitution local news Georgia',
+      endpoint: 'news',
+      num: 8,
+      boost: 62,
+      maxAgeDays: 10,
+    },
+    {
+      label: '11Alive',
+      q: 'site:11alive.com Atlanta local news breaking Georgia',
+      endpoint: 'news',
+      num: 8,
+      boost: 60,
+      maxAgeDays: 10,
+    },
+    {
+      label: 'FOX 5 Atlanta',
+      q: 'site:fox5atlanta.com Atlanta local news breaking Georgia',
+      endpoint: 'news',
+      num: 8,
+      boost: 58,
+      maxAgeDays: 10,
+    },
+    {
+      label: 'Atlanta Civic Circle',
+      q: 'site:atlantaciviccircle.org Atlanta civic journalism local news',
+      endpoint: 'news',
+      num: 8,
+      boost: 56,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'Rough Draft Atlanta',
+      q: 'site:roughdraftatlanta.com metro Atlanta local news',
+      endpoint: 'news',
+      num: 8,
+      boost: 54,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'SaportaReport',
+      q: 'site:saportareport.com Atlanta civic news politics development',
+      endpoint: 'news',
+      num: 8,
+      boost: 52,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'The Atlanta Voice',
+      q: 'site:theatlantavoice.com Atlanta local news community politics',
+      endpoint: 'news',
+      num: 8,
+      boost: 50,
+      maxAgeDays: 14,
+    },
+    {
+      label: 'Georgia Recorder',
+      q: 'site:georgiarecorder.com Georgia local politics public policy',
+      endpoint: 'news',
+      num: 8,
+      boost: 48,
+      maxAgeDays: 14,
+    },
+  ] as EditorialQuery[],
 
-  atlantaDeep: {
-    q: 'Atlanta Georgia court law politics community housing crime local news',
-    endpoint: 'news',
-    num: 10,
-  },
+  cnn: [
+    {
+      label: 'CNN',
+      q: 'site:cnn.com breaking news analysis',
+      endpoint: 'news',
+      num: 8,
+      boost: 72,
+    },
+  ] as EditorialQuery[],
 
-  // Mixed into local pool — national/CNN
-  national: {
-    q: 'site:cnn.com OR site:nbcnews.com OR site:pbsnewshour.org top news today',
-    endpoint: 'news',
-    num: 5,
-  },
+  legal: [
+    {
+      label: 'Georgia legal',
+      q: 'Georgia courts law lawsuit indictment verdict settlement wrongful death crime',
+      endpoint: 'news',
+      num: 8,
+      boost: 48,
+    },
+  ] as EditorialQuery[],
 
-  // SLOTS 11-13 — International / deep dives: long-form, unusual, thoughtful
-  international: {
-    q: 'site:aeon.co OR site:nautil.us OR site:restofworld.org OR site:foreignpolicy.com OR site:theatlantic.com international depth',
-    endpoint: 'search',
-    num: 6,
-  },
+  absurd: [
+    {
+      label: 'Absurd',
+      q: 'Georgia bizarre strange odd Ripley\'s Believe It Or Not weird facts unusual news',
+      endpoint: 'news',
+      num: 8,
+      boost: 42,
+    },
+  ] as EditorialQuery[],
 
-  // SLOTS 14-15 — Letterman: quirky, oddball, funny-strange
-  letterman: {
-    q: '"waffle house" OR "feral hog" OR alligator OR bizarre OR "claims to have" OR "police say" OR inexplicably weird funny news Georgia Florida',
-    endpoint: 'news',
-    num: 5,
-  },
-};
+  macabre: [
+    {
+      label: 'Macabre',
+      q: 'Georgia gruesome forensics horrifying crime wrongful death injuries macabre news',
+      endpoint: 'news',
+      num: 8,
+      boost: 46,
+    },
+  ] as EditorialQuery[],
 
-// ── Slot Targets ──────────────────────────────────────────────────────────────
-// How many items to fill per category. Total = 15.
+  international: [
+    {
+      label: 'International',
+      q: 'site:aeon.co OR site:nautil.us OR site:restofworld.org OR site:foreignpolicy.com OR site:theatlantic.com international depth',
+      endpoint: 'search',
+      num: 8,
+      boost: 36,
+    },
+  ] as EditorialQuery[],
 
-export const SLOT_TARGETS = {
-  sciencePin:   2,   // Slots 1-2:   StarTalk + PBS Space Time (hard guarantee)
-  scienceBonus: 2,   // Slots 3-4:   Extra science videos
-  local:        6,   // Slots 5-10:  Atlanta/Georgia local + national
-  international: 3,  // Slots 11-13: International deep dives
-  letterman:    2,   // Slots 14-15: Quirky/Letterman stories
-  total:        15,
-};
+  docs: [
+    {
+      label: 'Documentary',
+      q: 'site:youtube.com PBS Frontline NOVA documentary long form video',
+      endpoint: 'videos',
+      num: 8,
+      boost: 38,
+    },
+    {
+      label: 'Video essays',
+      q: 'site:youtube.com high quality documentary news analysis long form',
+      endpoint: 'videos',
+      num: 8,
+      boost: 30,
+    },
+  ] as EditorialQuery[],
 
-// ── Scoring Keywords ──────────────────────────────────────────────────────────
-// Applied to local/national pool to rank stories before filling slots 5-10.
+  scienceBonus: [
+    {
+      label: 'Science',
+      q: '"PBS Nova" OR Kurzgesagt OR Veritasium OR "Closer to Truth" OR "Isaac Arthur" science new episode',
+      endpoint: 'videos',
+      num: 6,
+      boost: 34,
+    },
+  ] as EditorialQuery[],
+} as const;
+
+export const SOURCE_WEIGHTS = {
+  'wsbtv.com': 42,
+  'wsb-tv.com': 42,
+  'wsb.com': 42,
+  'atlantanewsfirst.com': 40,
+  'wabe.org': 38,
+  'gpb.org': 37,
+  'cnn.com': 34,
+  'youtube.com': 20,
+} as const;
 
 export const SCORING = {
-  tier1: [
-    'georgia law', 'georgia legislature', 'general assembly', 'georgia supreme court',
-    'georgia court of appeals', '11th circuit', 'fulton county court', 'georgia bill',
-    'governor signs', 'governor kemp', 'indictment', 'settlement', 'verdict',
-    'lawsuit filed', 'georgia governor', 'state senate', 'state house',
+  localGeorgia: [
+    'atlanta',
+    'georgia',
+    'wsb',
+    'wsbtv',
+    'atlantanewsfirst',
+    'wabe',
+    'gpb',
+    'fulton',
+    'cobb county',
+    'dekalb',
+    'gwinnett',
+    'savannah',
+    'augusta',
+    'macon',
+    'athens',
   ],
-  tier2: [
-    'atlanta', 'georgia', 'savannah', 'macon', 'augusta', 'fayette',
-    'peachtree city', 'gwinnett', 'cobb county', 'dekalb', 'fulton',
-    'albany', 'columbus', 'rome, georgia', 'athens, georgia', 'valdosta',
+  cnn: [
+    'cnn',
   ],
-  tier3: [
-    'wrongful death', 'premises liability', 'malpractice', 'sovereign immunity',
-    'civil rights', 'fourth amendment', 'first amendment', 'due process',
-    'class action', 'injunction', 'attorney general', 'habeas corpus',
-    'qualified immunity', 'statute of limitations',
+  legalGeorgia: [
+    'law',
+    'lawsuit',
+    'indictment',
+    'verdict',
+    'settlement',
+    'wrongful death',
+    'forensic',
+    'forensics',
+    'autopsy',
+    'homicide',
+    'murder',
+    'assault',
+    'court',
+    'judge',
+    'appeal',
+    'legal',
   ],
-  caribbean: [
-    'jamaica', 'barbados', 'trinidad', 'bahamas', 'haiti',
-    'caribbean', 'caricom', 'cayman', 'antigua', 'belize',
+  absurd: [
+    'bizarre',
+    'strange',
+    'odd',
+    'weird',
+    'ripley',
+    'believe it or not',
+    'unusual',
+    'unexpected',
+    'outlandish',
+  ],
+  macabre: [
+    'gruesome',
+    'horrifying',
+    'horror',
+    'corpse',
+    'body',
+    'death',
+    'injury',
+    'injuries',
+    'crime scene',
+    'forensics',
+    'wrongful death',
+    'mutilated',
+    'blood',
+  ],
+  documentary: [
+    'documentary',
+    'frontline',
+    'nova',
+    'pbs',
+    'long form',
+    'investigation',
+    'investigative',
+    'deep dive',
+    'explained',
+  ],
+  international: [
+    'international',
+    'foreign policy',
+    'rest of world',
+    'aeon',
+    'nautilus',
+    'global',
+    'world',
+    'diplomacy',
   ],
   deprioritize: [
-    'nfl standings', 'nba standings', 'mlb standings', 'box score',
+    'nfl standings',
+    'nba standings',
+    'mlb standings',
+    'box score',
   ],
+} as const;
+
+export function flattenEditorialQueries() {
+  return [
+    ...EDITORIAL_QUERIES.local,
+    ...EDITORIAL_QUERIES.cnn,
+    ...EDITORIAL_QUERIES.legal,
+    ...EDITORIAL_QUERIES.absurd,
+    ...EDITORIAL_QUERIES.macabre,
+    ...EDITORIAL_QUERIES.international,
+    ...EDITORIAL_QUERIES.docs,
+    ...EDITORIAL_QUERIES.scienceBonus,
+  ];
 }

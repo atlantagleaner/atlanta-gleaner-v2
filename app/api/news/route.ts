@@ -1,85 +1,149 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — /api/news Route
-// ─────────────────────────────────────────────────────────────────────────────
-// This route ONLY reads from Edge Config cache. It never calls Serper directly.
-// Serper is called exclusively by the cron job at /api/cron/refresh-news,
-// which runs once per day at midnight ET. This guarantees Serper credits are
-// never wasted on individual user requests.
-// ─────────────────────────────────────────────────────────────────────────────
+// Atlanta Gleaner - /api/news Route
+// This route only reads the cached feed from Edge Config.
+// The cron pipeline stages the next feed at 10:30 PM ET, prewarms reader
+// caches, and publishes it live at 12:00 AM ET.
 
-import { NextResponse } from 'next/server';
-import { get } from '@vercel/edge-config';
+import { NextResponse } from 'next/server'
+import { get } from '@vercel/edge-config'
+import { resolveFeedEntry } from '@/lib/newsFeedCache'
+import type { CacheReference } from '@/lib/newsFeedCache'
+import { LIVE_CACHE_KEY } from '@/lib/newsRefresh'
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-// ── Types ──────────────────────────────────────────────────────────────────────
+export interface GleanerEpisode {
+  title: string
+  publishedAt: string
+  videoId: string
+  url?: string
+  source?: string
+  type?: 'video'
+  thumbnailUrl?: string
+}
 
 export interface GleanerItem {
-  title: string;
-  url: string;
-  source: string;
-  publishedAt: string;
-  type: 'video' | 'text' | 'series';
-  score: number;
-  slot: string;
-  episodes?: Array<{
-    title: string;
-    url: string;
-    source: string;
-    publishedAt: string;
-    type: 'video';
-    videoId: string;
-    thumbnailUrl: string;
-  }>;
+  title: string
+  url: string
+  source: string
+  publishedAt: string
+  type: 'video' | 'text' | 'series'
+  score?: number
+  slot: string
+  episodes?: GleanerEpisode[]
+}
+
+interface CompactEpisode {
+  t: string
+  p: string
+  v: string
+}
+
+interface CompactItem {
+  title: string
+  url: string
+  source: string
+  publishedAt: string
+  type: 'video' | 'text' | 'series'
+  slot: string
+  episodes?: CompactEpisode[]
 }
 
 export interface CacheEntry {
-  items: GleanerItem[];
-  cachedAt: string;
+  items: Array<GleanerItem | CompactItem>
+  cachedAt: string
 }
 
-// ── Handler ────────────────────────────────────────────────────────────────────
+function hydrateEpisode(episode: GleanerEpisode | CompactEpisode): GleanerEpisode {
+  if ('videoId' in episode) {
+    return {
+      ...episode,
+      url: episode.url || `https://www.youtube.com/watch?v=${episode.videoId}`,
+      source: episode.source || 'YouTube',
+      type: 'video',
+      thumbnailUrl: episode.thumbnailUrl || `https://i.ytimg.com/vi/${episode.videoId}/hqdefault.jpg`,
+    }
+  }
+
+  return {
+    title: episode.t,
+    publishedAt: episode.p,
+    videoId: episode.v,
+    url: `https://www.youtube.com/watch?v=${episode.v}`,
+    source: 'YouTube',
+    type: 'video',
+    thumbnailUrl: `https://i.ytimg.com/vi/${episode.v}/hqdefault.jpg`,
+  }
+}
+
+export function hydrateCacheItems(items: Array<GleanerItem | CompactItem>): GleanerItem[] {
+  return items.map((item) => ({
+    ...item,
+    score: 'score' in item ? item.score : undefined,
+    episodes: item.episodes?.map((episode) => hydrateEpisode(episode)),
+  }))
+}
+
+export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toISOString()): CacheEntry {
+  return {
+    cachedAt,
+    items: items.map((item) => ({
+      title: item.title,
+      url: item.url,
+      source: item.source,
+      publishedAt: item.publishedAt,
+      type: item.type,
+      slot: item.slot,
+      ...(item.episodes?.length
+        ? {
+            episodes: item.episodes.map((episode) => ({
+              t: episode.title,
+              p: episode.publishedAt,
+              v: episode.videoId,
+            })),
+          }
+        : {}),
+    })),
+  }
+}
 
 export async function GET() {
   try {
-    const cached = await get<CacheEntry>('news_cache');
+    const cached = await get<CacheEntry | CacheReference>(LIVE_CACHE_KEY)
+    const resolved = await resolveFeedEntry(cached)
 
-    if (cached && Array.isArray(cached.items) && cached.items.length > 0) {
+    if (resolved && Array.isArray(resolved.items) && resolved.items.length > 0) {
+      const items = hydrateCacheItems(resolved.items)
+
       return NextResponse.json(
         {
-          items: cached.items,
-          cachedAt: cached.cachedAt,
-          count: cached.items.length,
+          items,
+          cachedAt: resolved.cachedAt,
+          count: items.length,
         },
         {
           headers: {
-            // Allow CDN to serve this for up to 5 minutes before revalidating.
-            // The underlying data only changes once/day via cron, so this is safe.
             'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
           },
-        }
-      );
+        },
+      )
     }
 
-    // Cache exists but is empty — cron hasn't run yet
     return NextResponse.json({
       items: [],
       cachedAt: null,
       count: 0,
       message: 'Cache not yet populated. The cron job will fill it at midnight.',
-    });
-
+    })
   } catch (error) {
-    console.error('[/api/news] Edge Config read error:', error);
+    console.error('[/api/news] Edge Config read error:', error)
 
-    // EDGE_CONFIG env var likely not set — return helpful message in dev
     return NextResponse.json(
       {
         items: [],
         error: 'Edge Config unavailable. Check EDGE_CONFIG environment variable.',
       },
-      { status: 503 }
-    );
+      { status: 503 },
+    )
   }
 }
