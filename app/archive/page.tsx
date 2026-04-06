@@ -58,6 +58,36 @@ function getArchiveDate(c: Pick<CaseLaw, 'dateDecided' | 'decision_date_iso'>): 
   return c.decision_date_iso || c.dateDecided
 }
 
+function getArchiveDecisionDate(
+  c: Pick<CaseLaw, 'dateDecided' | 'decision_date_iso' | 'publishedAt'>
+): string {
+  if (c.dateDecided && c.dateDecided.trim()) return c.dateDecided
+
+  if (c.decision_date_iso) {
+    const parsed = new Date(c.decision_date_iso)
+    if (!isNaN(parsed.getTime())) {
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(parsed)
+    }
+  }
+
+  if (c.publishedAt) {
+    const parsed = new Date(c.publishedAt)
+    if (!isNaN(parsed.getTime())) {
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(parsed)
+    }
+  }
+
+  return ''
+}
+
 function yearLabel(years: number[]): string {
   if (years.length === 1) return String(years[0])
   return `${years[0]}–${years[years.length - 1]}`
@@ -156,20 +186,52 @@ function MonthShelf({
               href={`/cases/${c.slug}#case-law-box`}
               className="case-archive-link"
             >
-              {/* Case title */}
-              <div className="case-archive-title" style={{
-                ...T.body,
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                gap: SPACING.md,
+                flexWrap: 'nowrap',
                 marginBottom: SPACING.xs,
               }}>
-                {c.title}
+                <div className="case-archive-title" style={{
+                  ...T.body,
+                  flex: '1 1 auto',
+                  minWidth: 0,
+                  marginBottom: 0,
+                }}>
+                  {c.title}
+                </div>
+                {c.tags && c.tags.length > 0 && (
+                  <div style={{
+                    flex: '0 0 280px',
+                    minWidth: '280px',
+                    maxWidth: '280px',
+                  }}>
+                    <div style={{
+                      ...T.micro,
+                      color: PALETTE_CSS.meta,
+                      textAlign: 'right',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      lineHeight: 1.45,
+                      maxHeight: '3em',
+                      overflow: 'hidden',
+                      overflowWrap: 'anywhere',
+                      paddingLeft: SPACING.md,
+                      borderLeft: `1px solid ${PALETTE_CSS.border}`,
+                    }}>
+                      {c.tags.join(' · ')}
+                    </div>
+                  </div>
+                )}
               </div>
-              {/* Meta row */}
               <div className="case-archive-meta" style={{
                 ...T.micro,
                 fontWeight:    400,
                 letterSpacing: '0.10em',
               }}>
-                {[c.court, c.docketNumber, c.publishedAt].filter(Boolean).join(' · ')}
+                {[c.court, c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
               </div>
             </Link>
           ))}
