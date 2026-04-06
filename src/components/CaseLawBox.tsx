@@ -130,13 +130,13 @@ function wrapPaginationMarkers(html: string): string {
   // RULE 1: Non-breaking space before and after (\xa0[MARKER]\xa0)
   html = html.replace(
     /\xa0(\[\*{1,3}\d+\])\xa0/g,
-    '<span class="star-pagination-wrap">\xa0<span class="star-pagination">$1</span>\xa0</span>'
+    '<span class="star-pagination-wrap"><span class="star-pagination">$1</span></span>'
   )
 
   // RULE 2: Non-breaking space after only ([MARKER]\xa0)
   html = html.replace(
     /(\[\*{1,3}\d+\])\xa0/g,
-    '<span class="star-pagination-wrap"><span class="star-pagination">$1</span>\xa0</span>'
+    '<span class="star-pagination-wrap"><span class="star-pagination">$1</span></span>'
   )
 
   return html
@@ -344,17 +344,20 @@ const counselValue: CSSProperties = {
 }
 
 const reporterToggleButtonBase: CSSProperties = {
-  display:             'inline-grid',
-  gridTemplateColumns: '110px auto',
+  display:             'inline-flex',
   alignItems:          'baseline',
   width:               'fit-content',
   maxWidth:            '100%',
+  gridColumn:          '1 / -1',
   border:              'none',
   padding:             '2px 8px 2px 0',
   margin:              0,
   cursor:              'pointer',
   textAlign:           'left',
   transition:          'background 0.2s ease, color 0.2s ease, opacity 0.15s ease',
+  gap:                 '0',
+  whiteSpace:          'nowrap',
+  justifySelf:         'start',
 }
 
 const reporterToggleLabel: CSSProperties = {
@@ -366,6 +369,9 @@ const reporterToggleLabel: CSSProperties = {
 const reporterToggleValue: CSSProperties = {
   ...metaValue,
   paddingRight: '8px',
+  whiteSpace: 'nowrap',
+  wordBreak: 'normal',
+  flex: '0 0 auto',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────

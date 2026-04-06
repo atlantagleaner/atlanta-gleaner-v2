@@ -274,7 +274,6 @@ body {
 
 .star-pagination-wrap {
   display: none;
-  white-space: pre;
 }
 
 .star-pagination {
@@ -286,6 +285,11 @@ body {
 
 .opinion-body.show-pagination .star-pagination-wrap {
   display: inline;
+}
+
+.opinion-body.show-pagination .star-pagination-wrap::before,
+.opinion-body.show-pagination .star-pagination-wrap::after {
+  content: "\00a0";
 }
 
 .footnote-list {
