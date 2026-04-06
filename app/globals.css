@@ -320,7 +320,9 @@ body {
 /* ── Archive case links ───────────────────────────────────────────────────────── */
 a.case-archive-link {
   display: block;
-  padding: 13px 24px;
+  height: 132px;
+  box-sizing: border-box;
+  padding: 18px 24px 16px;
   text-decoration: none;
   color: var(--palette-black);
   border-bottom: 1px solid var(--palette-rule-sm);
@@ -333,6 +335,12 @@ a.case-archive-link:hover .case-archive-title {
   color: var(--palette-white);
 }
 a.case-archive-link:hover .case-archive-meta {
+  color: rgba(255,255,255,0.45);
+}
+a.case-archive-link .case-archive-tags {
+  color: rgba(0,0,0,0.58);
+}
+a.case-archive-link:hover .case-archive-tags {
   color: rgba(255,255,255,0.45);
 }
 

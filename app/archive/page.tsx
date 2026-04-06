@@ -192,7 +192,6 @@ function MonthShelf({
                 alignItems: 'flex-start',
                 gap: SPACING.md,
                 flexWrap: 'nowrap',
-                marginBottom: SPACING.xs,
               }}>
                 <div className="case-archive-title" style={{
                   ...T.body,
@@ -208,14 +207,12 @@ function MonthShelf({
                     minWidth: '280px',
                     maxWidth: '280px',
                   }}>
-                    <div style={{
+                    <div className="case-archive-tags" style={{
                       ...T.micro,
-                      color: PALETTE_CSS.meta,
                       textAlign: 'right',
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
                       lineHeight: 1.45,
-                      maxHeight: '3em',
                       overflow: 'hidden',
                       overflowWrap: 'anywhere',
                       paddingLeft: SPACING.md,
@@ -230,8 +227,17 @@ function MonthShelf({
                 ...T.micro,
                 fontWeight:    400,
                 letterSpacing: '0.10em',
+                marginTop:     SPACING.xs,
               }}>
-                {[c.court, c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
+                {c.court}
+              </div>
+              <div className="case-archive-meta" style={{
+                ...T.micro,
+                fontWeight:    400,
+                letterSpacing: '0.10em',
+                marginTop:     SPACING.xs,
+              }}>
+                {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
               </div>
             </Link>
           ))}
