@@ -20,7 +20,7 @@ function PortraitModule() {
   }, [isMobile])
 
   return (
-    <div style={{ ...BOX_SHELL, overflow: 'hidden' }}>
+    <div className="portrait-module" style={{ ...BOX_SHELL, overflow: 'hidden' }}>
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -62,7 +62,7 @@ function PortraitModule() {
           background: PALETTE.white,
         }}
       >
-        <div style={{ padding: BOX_PADDING, display: 'flex', justifyContent: 'center' }}>
+        <div className="portrait-body">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={PORTRAIT_SRC}
@@ -148,7 +148,7 @@ export default function AboutPage() {
           margin: 0 auto;
           padding: 0 ${SPACING.xl};
           display: grid;
-          grid-template-columns: minmax(240px, 1fr) minmax(0, 680px);
+          grid-template-columns: minmax(260px, 320px) minmax(0, 680px);
           column-gap: ${SPACING.xl};
           row-gap: ${SPACING.lg};
           align-items: start;
@@ -159,6 +159,20 @@ export default function AboutPage() {
           grid-row: 1;
           width: 100%;
           align-self: center;
+        }
+
+        .portrait-module {
+          width: min(100%, 320px);
+          margin: 0 auto;
+        }
+
+        .portrait-body {
+          aspect-ratio: 1 / 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: ${SPACING.lg};
+          box-sizing: border-box;
         }
 
         .about-copy {
@@ -206,18 +220,22 @@ export default function AboutPage() {
           }
 
           .about-portrait-image {
-            width: min(100%, 260px);
+            width: 100%;
             height: auto;
             display: block;
-            object-fit: cover;
+            object-fit: contain;
+          }
+
+          .portrait-module {
+            width: min(100%, 260px);
           }
         }
 
         .about-portrait-image {
-          width: min(100%, 280px);
+          width: 100%;
           height: auto;
           display: block;
-          object-fit: cover;
+          object-fit: contain;
         }
       `}</style>
     </main>
