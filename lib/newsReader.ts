@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { createHash } from 'crypto'
 import { list, put } from '@vercel/blob'
 
-const BLOB_PREFIX = 'news-reader/'
+const BLOB_PREFIX = 'news-reader/v2/'
 const TTL_MS = 30 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 12_000
 
@@ -66,6 +66,7 @@ const ROOT_CANDIDATE_SELECTOR = [
 const BLOCK_TEXT_DROP_PATTERNS = [
   /^trending stories:?$/i,
   /^see all topics$/i,
+  /^download:?\s+/i,
   /^download(?: the)?(?: free)? .* app.*$/i,
   /^free .* news app.*$/i,
   /^subscribe(?: now)?$/i,
@@ -682,6 +683,7 @@ function recirculationScore(
   if (anchorCount >= 3 && textLength <= 280) score += 2
   if (listItems.length >= 2 && anchorCount >= listItems.length) score += 3
   if (paragraphs.length === 0 && sentenceCount === 0 && anchorCount >= 2) score += 2
+  if (/alerts?\b|app\b|topics?\b/i.test(text) && anchorCount >= 1 && textLength <= 180) score += 3
   if (isBoilerplateBlock(normalizeComparableText(text))) score += 4
 
   return score
@@ -703,6 +705,23 @@ function pruneRecirculationBlocks(
     const containsMedia = $el.find('img, figure, video, table').length > 0
 
     if (score >= 5 && !hasLargeParagraph && !containsMedia) {
+      $el.remove()
+    }
+  })
+
+  $section.find('p, li').each((_, el) => {
+    const $el = $(el)
+    const text = normalizeComparableText($el.text())
+    const links = $el.find('a')
+    const linkText = normalizeComparableText(links.text())
+    if (!text) return
+
+    const looksLikeInlinePromo =
+      (text.includes('see all topics') || text.includes('download') || text.includes('alerts')) &&
+      links.length >= 1 &&
+      linkText.length >= Math.max(12, Math.floor(text.length * 0.35))
+
+    if (looksLikeInlinePromo) {
       $el.remove()
     }
   })

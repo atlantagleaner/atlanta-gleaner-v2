@@ -81,11 +81,20 @@ const READER_BODY_CSS = `
   }
 `
 
+function stripMediaFromLegacyReaderHtml(bodyHtml: string): string {
+  return bodyHtml
+    .replace(/<figure[\s\S]*?<\/figure>/gi, '')
+    .replace(/<img\b[^>]*>/gi, '')
+    .replace(/<figcaption[\s\S]*?<\/figcaption>/gi, '')
+}
+
 function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader' }> }) {
   const { document } = result
   const isLong = document.wordCount >= COLLAPSE_WORD_THRESHOLD
   const [expanded, setExpanded] = useState(!isLong)
   const [mode, setMode] = useState<'reader' | 'pictures'>('reader')
+  const images = Array.isArray(document.images) ? document.images : []
+  const readerBodyHtml = stripMediaFromLegacyReaderHtml(document.bodyHtml)
 
   const tabButtonStyle = (active: boolean) => ({
     ...T.label,
@@ -98,16 +107,17 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
   } as const)
 
   return (
-    <article style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
+    <article style={{ padding: `0 0 ${SPACING.lg}` }}>
       <style>{READER_BODY_CSS}</style>
 
-      <header style={{ padding: `0 0 ${SPACING.md}` }}>
+      <header style={{ padding: 0 }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: SPACING.md,
+            paddingTop: SPACING.xs,
             paddingBottom: SPACING.sm,
             borderBottom: '1px solid var(--palette-rule)',
           }}
@@ -166,7 +176,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
                 lineHeight: 1.72,
                 color: PALETTE.black,
               }}
-              dangerouslySetInnerHTML={{ __html: document.bodyHtml }}
+              dangerouslySetInnerHTML={{ __html: readerBodyHtml }}
             />
 
             {isLong && (
@@ -222,8 +232,8 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
             paddingBottom: SPACING.lg,
           }}
         >
-          {document.images.length > 0 ? (
-            document.images.map((image) => (
+          {images.length > 0 ? (
+            images.map((image) => (
               <figure
                 key={image.src}
                 style={{
