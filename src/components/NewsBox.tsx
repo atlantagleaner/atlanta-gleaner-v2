@@ -143,7 +143,6 @@ function SeriesDrawer({ item }: { item: NewsItem }) {
   return (
     <SeriesViewer
       title={item.title}
-      source={item.source}
       episodes={item.episodes ?? []}
       readFullUrl={item.url}
     />

@@ -15,12 +15,10 @@ export interface SeriesEpisode {
 
 export function SeriesViewer({
   title,
-  source,
   episodes,
   readFullUrl,
 }: {
   title: string
-  source: string
   episodes: SeriesEpisode[]
   readFullUrl: string
   }) {
@@ -67,10 +65,6 @@ export function SeriesViewer({
           {episodes.length} recent uploads
         </p>
       </div>
-
-      <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.md}` }}>
-        {source}
-      </p>
 
       {!selectedEpisode || !embedSrc ? (
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
@@ -128,9 +122,6 @@ export function SeriesViewer({
                   <p style={{ ...T.body, margin: `0 0 ${SPACING.xs}` }}>
                     <span style={{ color: PALETTE.black }}>{episode.title}</span>
                   </p>
-                  <span style={linkStyle}>
-                    {'Play here ->'}
-                  </span>
                 </button>
               )
             })}
