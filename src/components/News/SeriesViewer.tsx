@@ -46,7 +46,7 @@ export function SeriesViewer({
     : null
 
   return (
-    <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
+    <div style={{ padding: `0 0 ${SPACING.lg}` }}>
       <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.xs}` }}>
         Latest uploads
       </p>

@@ -92,13 +92,39 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
 
       <header
         style={{
-          padding: `${SPACING.md} 0 ${SPACING.lg}`,
+          padding: `0 0 ${SPACING.lg}`,
           borderBottom: '1px solid var(--palette-rule)',
         }}
       >
-        <p style={{ ...T.label, color: PALETTE.black, margin: `0 0 ${SPACING.sm}` }}>
-          Reader View
-        </p>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            gap: SPACING.md,
+            marginBottom: SPACING.sm,
+          }}
+        >
+          <p style={{ ...T.label, color: PALETTE.black, margin: 0 }}>
+            Reader View
+          </p>
+
+          <a
+            href={document.readFullUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              ...T.micro,
+              color: PALETTE.black,
+              textDecoration: 'none',
+              borderBottom: `1px solid ${PALETTE.black}`,
+              paddingBottom: '1px',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {'Read Full ->'}
+          </a>
+        </div>
 
         <h3
           style={{
@@ -154,7 +180,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
         style={{
           position: 'relative',
           overflow: 'hidden',
-          maxHeight: expanded ? '9000px' : '900px',
+          maxHeight: expanded ? '9000px' : '1200px',
           transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
           padding: `0 0 ${SPACING.xl}`,
           userSelect: 'text',
@@ -198,7 +224,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
             width: '100%',
             background: PALETTE.white,
             border: 'none',
-            borderTop: expanded ? '1px solid var(--palette-rule)' : 'none',
+            borderTop: '1px solid var(--palette-rule)',
             padding: `${SPACING.md} 0`,
             display: 'flex',
             alignItems: 'center',
@@ -215,23 +241,6 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
           </span>
         </button>
       )}
-
-      <a
-        href={document.readFullUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          ...T.micro,
-          display: 'inline-block',
-          marginTop: SPACING.md,
-          color: PALETTE.black,
-          textDecoration: 'none',
-          borderBottom: `1px solid ${PALETTE.black}`,
-          paddingBottom: '1px',
-        }}
-      >
-        {'Read Full ->'}
-      </a>
     </article>
   )
 }
@@ -270,7 +279,7 @@ function VideoEmbed({
     `?modestbranding=1&rel=0&showinfo=0`
 
   return (
-    <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
+    <div style={{ padding: `0 0 ${SPACING.lg}` }}>
       <div
         style={{
           position: 'relative',
