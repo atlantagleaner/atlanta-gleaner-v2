@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // Validate palette sync before build
 function validateThemeSync() {
   try {
-    execSync('npx ts-node scripts/validate-theme-sync.ts', {
+    execSync('node scripts/validate-theme-sync.js', {
       cwd: __dirname,
       stdio: 'inherit',
     })

@@ -25,6 +25,7 @@ import {
 import { gleanArticle }         from '@/app/actions/glean'
 import type { GleanResult }     from '@/app/actions/glean'
 import { MirrorViewer }         from '@/src/components/News/MirrorViewer'
+import { SeriesViewer }         from '@/src/components/News/SeriesViewer'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -35,7 +36,16 @@ interface NewsItem {
   publishedAt: string
   score:       number
   slot:        string
-  type?:       'video' | 'text'
+  type?:       'video' | 'text' | 'series'
+  episodes?:   Array<{
+    title: string
+    url: string
+    source: string
+    publishedAt: string
+    type: 'video'
+    videoId: string
+    thumbnailUrl: string
+  }>
 }
 
 type DrawerState =
@@ -47,7 +57,7 @@ type DrawerState =
 // ── Slot badges ───────────────────────────────────────────────────────────────
 
 const SLOT_BADGE: Record<string, string | null> = {
-  science_pin:          '▶',
+  science_pin:          null,
   science_nova:         '◉',
   letterman:            '★',
   news:                 null,
@@ -129,12 +139,24 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
   return <MirrorViewer result={drawer.result} />
 }
 
+function SeriesDrawer({ item }: { item: NewsItem }) {
+  return (
+    <SeriesViewer
+      title={item.title}
+      source={item.source}
+      episodes={item.episodes ?? []}
+      readFullUrl={item.url}
+    />
+  )
+}
+
 // ── Individual accordion item ─────────────────────────────────────────────────
 
 function NewsAccordionItem({ item }: { item: NewsItem }) {
   const [open, setOpen] = useState(false)
 
   const badge      = SLOT_BADGE[item.slot] ?? null
+  const isSeries   = item.type === 'series' || Boolean(item.episodes?.length)
   const isYouTube  = item.type === 'video' || item.url.includes('youtube.com')
   const isSpotify  = item.url.includes('spotify.com')
   const mediaLabel = isYouTube ? ' · YouTube' : isSpotify ? ' · Spotify' : ''
@@ -215,7 +237,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
         {/* ── Content ─────────────────────────────────────────────────────── */}
         <Accordion.Content className="gleaner-accordion-content">
           <div style={{ paddingBottom: SPACING.sm }}>
-            {open && <MirrorDrawer item={item} />}
+            {open && (isSeries ? <SeriesDrawer item={item} /> : <MirrorDrawer item={item} />)}
           </div>
         </Accordion.Content>
       </Accordion.Item>

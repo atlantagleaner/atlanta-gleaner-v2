@@ -38,7 +38,6 @@
   --palette-warm:  #FFFFFF;   /* pure white — page background, borders         */
   --palette-black: #000000;   /* jet black — all text, headers, borders       */
   --palette-accent: #333333;  /* dark charcoal — footer, hover, buttons       */
-  --palette-hover-bg: #FFFFFF; /* pure white — interactive hover states        */
 
   --palette-border:   rgba(0,0,0,0.18);
   --palette-rule:     rgba(0,0,0,0.07);
@@ -59,7 +58,7 @@
 
 /* Classical theme hover states — pale slate backgrounds with black text */
 [data-theme="classical"] a.case-archive-link:hover {
-  background: var(--palette-hover-bg);
+  background: var(--interactive-hover-bg);
 }
 [data-theme="classical"] a.case-archive-link:hover .case-archive-title,
 [data-theme="classical"] a.case-archive-link:hover .case-archive-meta {
@@ -67,7 +66,7 @@
 }
 
 [data-theme="classical"] .ag-dropdown-link:hover {
-  background: var(--palette-hover-bg) !important;
+  background: var(--interactive-hover-bg) !important;
   color: var(--palette-black);
 }
 

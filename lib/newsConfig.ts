@@ -19,21 +19,6 @@ export interface SearchQuery {
 // international, and oddball categories.
 
 export const SEARCH_QUERIES: Record<string, SearchQuery> = {
-
-  // SLOT 1 — Always: StarTalk (Neil deGrasse Tyson)
-  starTalk: {
-    q: 'StarTalk Neil deGrasse Tyson latest episode',
-    endpoint: 'videos',
-    num: 3,
-  },
-
-  // SLOT 2 — Always: PBS Space Time
-  pbsSpaceTime: {
-    q: 'PBS Space Time latest episode',
-    endpoint: 'videos',
-    num: 3,
-  },
-
   // SLOTS 3-4 — Science bonus: overflow from above or adjacent science channels
   scienceBonus: {
     q: '"PBS Nova" OR Kurzgesagt OR Veritasium OR "Closer to Truth" OR "Isaac Arthur" science new episode',

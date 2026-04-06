@@ -32,7 +32,7 @@ export type GleanResult =
 export interface GleanItemMeta {
   title:  string
   source: string
-  type?:  'video' | 'text'
+  type?:  'video' | 'text' | 'series'
 }
 
 // ── YouTube ID extraction ─────────────────────────────────────────────────────

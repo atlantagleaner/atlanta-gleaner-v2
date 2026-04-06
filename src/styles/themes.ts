@@ -34,13 +34,11 @@ export const THEMES = {
      * Interactive state colors
      */
     interactive: {
-      newsBoxHoverBg:     '#EEEDEB',
-      newsBoxHoverText:   '#FFFFFF',
-      volumeBoxHoverBg:   '#EEEDEB',
-      volumeBoxHoverText: '#000000',
-      volumeBoxBorder:    '#f0f0f0',
-      volumeBoxCitation:  '#666',
-      caseLawGradientFade: '#EEEDEB',
+      hoverBg:      '#EEEDEB',
+      hoverText:    '#FFFFFF',
+      border:       '#f0f0f0',
+      citation:     '#666',
+      gradientFade: '#EEEDEB',
     },
   },
 
@@ -71,13 +69,11 @@ export const THEMES = {
      * Interactive state colors — pure white hover with dark charcoal text
      */
     interactive: {
-      newsBoxHoverBg:     '#FFFFFF',
-      newsBoxHoverText:   '#333333',
-      volumeBoxHoverBg:   '#FFFFFF',
-      volumeBoxHoverText: '#333333',
-      volumeBoxBorder:    '#FFFFFF',
-      volumeBoxCitation:  '#333333',
-      caseLawGradientFade: '#FFFFFF',
+      hoverBg:      '#FFFFFF',
+      hoverText:    '#333333',
+      border:       '#FFFFFF',
+      citation:     '#333333',
+      gradientFade: '#FFFFFF',
     },
   },
 
@@ -108,13 +104,11 @@ export const THEMES = {
      * Interactive state colors — Matrix green throughout
      */
     interactive: {
-      newsBoxHoverBg:     '#00FF41',
-      newsBoxHoverText:   '#00FF41',
-      volumeBoxHoverBg:   '#00FF41',
-      volumeBoxHoverText: '#00FF41',
-      volumeBoxBorder:    '#f0f0f0',
-      volumeBoxCitation:  '#666',
-      caseLawGradientFade: '#000000',
+      hoverBg:      '#00FF41',
+      hoverText:    '#00FF41',
+      border:       '#f0f0f0',
+      citation:     '#666',
+      gradientFade: '#000000',
     },
   },
 } as const

@@ -20,9 +20,18 @@ export interface GleanerItem {
   url: string;
   source: string;
   publishedAt: string;
-  type: 'video' | 'text';
+  type: 'video' | 'text' | 'series';
   score: number;
   slot: string;
+  episodes?: Array<{
+    title: string;
+    url: string;
+    source: string;
+    publishedAt: string;
+    type: 'video';
+    videoId: string;
+    thumbnailUrl: string;
+  }>;
 }
 
 export interface CacheEntry {

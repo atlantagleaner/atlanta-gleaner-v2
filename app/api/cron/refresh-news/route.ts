@@ -1,43 +1,243 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — Daily News Refresh Cron
-// ─────────────────────────────────────────────────────────────────────────────
-// Runs once daily at 5:00 AM UTC (midnight ET) via Vercel Cron.
-// This is the ONLY place Serper API is called. It builds the full 15-item
-// news feed and writes it to Edge Config, where /api/news reads it for the
-// next 24 hours. If Serper returns nothing, the previous cache is preserved.
+// Atlanta Gleaner - Daily News Refresh Cron
 //
-// Required env vars:
-//   SERPER_API_KEY     — Your Serper.dev API key
-//   EDGE_CONFIG        — Vercel Edge Config connection string (auto-set when linked)
-//   EDGE_CONFIG_ID     — Edge Config store ID (ecfg_xxxx), from the Vercel dashboard
-//   VERCEL_API_TOKEN   — Vercel personal/team token for writing to Edge Config
-//   CRON_SECRET        — Shared secret to authenticate this endpoint
-// ─────────────────────────────────────────────────────────────────────────────
+// Runs once daily at 5:00 AM UTC (midnight ET) via Vercel Cron.
+// This route builds the cached feed and writes it to Edge Config, where
+// /api/news reads it for the next 24 hours.
+//
+// Slots 1 and 2 are sourced directly from the official StarTalk and
+// PBS Space Time YouTube uploads pages. Each slot stores the three most
+// recent regular videos, with shorts filtered out.
 
 import { SEARCH_QUERIES, SLOT_TARGETS, SCORING } from '@/lib/newsConfig';
 import type { SerperEndpoint } from '@/lib/newsConfig';
-import type { GleanerItem, CacheEntry } from '@/app/api/news/route';
+import type { CacheEntry, GleanerItem } from '@/app/api/news/route';
 
 export const runtime = 'nodejs';
 
-const SERPER_API_KEY  = process.env.SERPER_API_KEY;
-const EDGE_CONFIG_ID  = process.env.EDGE_CONFIG_ID;
+const SERPER_API_KEY = process.env.SERPER_API_KEY;
+const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 
-// ── Scoring ────────────────────────────────────────────────────────────────────
+const FEATURED_CHANNELS = {
+  starTalk: {
+    title: 'StarTalk',
+    url: 'https://www.youtube.com/@StarTalk/videos',
+  },
+  pbsSpaceTime: {
+    title: 'PBS Space Time',
+    url: 'https://www.youtube.com/@pbsspacetime/videos',
+  },
+} as const;
+
+interface YoutubeEpisode {
+  title: string;
+  url: string;
+  source: string;
+  publishedAt: string;
+  type: 'video';
+  videoId: string;
+  thumbnailUrl: string;
+}
+
+interface YoutubeRenderer {
+  videoId?: string;
+  title?: { runs?: Array<{ text?: string }>; simpleText?: string };
+  publishedTimeText?: { simpleText?: string };
+  thumbnailOverlays?: Array<{
+    thumbnailOverlayTimeStatusRenderer?: {
+      text?: { simpleText?: string };
+    };
+  }>;
+  navigationEndpoint?: {
+    watchEndpoint?: {
+      videoId?: string;
+    };
+  };
+}
+
+function extractJsonObject(text: string, marker: string): string | null {
+  const start = text.indexOf(marker);
+  if (start === -1) return null;
+
+  const braceStart = text.indexOf('{', start);
+  if (braceStart === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = braceStart; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (char === '\\') {
+        escaped = true;
+        continue;
+      }
+      if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (char === '{') {
+      depth += 1;
+      continue;
+    }
+
+    if (char === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        return text.slice(braceStart, i + 1);
+      }
+    }
+  }
+
+  return null;
+}
+
+function collectRenderers(value: unknown, output: YoutubeRenderer[] = []): YoutubeRenderer[] {
+  if (!value || typeof value !== 'object') return output;
+
+  if (Array.isArray(value)) {
+    for (const entry of value) collectRenderers(entry, output);
+    return output;
+  }
+
+  const record = value as Record<string, unknown>;
+  if (record.gridVideoRenderer && typeof record.gridVideoRenderer === 'object') {
+    output.push(record.gridVideoRenderer as YoutubeRenderer);
+  }
+  if (record.videoRenderer && typeof record.videoRenderer === 'object') {
+    output.push(record.videoRenderer as YoutubeRenderer);
+  }
+
+  for (const child of Object.values(record)) {
+    collectRenderers(child, output);
+  }
+
+  return output;
+}
+
+function parseDurationSeconds(value: string | undefined): number | null {
+  if (!value) return null;
+
+  const parts = value.split(':').map((part) => Number(part));
+  if (parts.some((part) => Number.isNaN(part))) return null;
+
+  return parts.reduce((total, part) => total * 60 + part, 0);
+}
+
+function rendererToEpisode(renderer: YoutubeRenderer): YoutubeEpisode | null {
+  const videoId =
+    renderer.videoId ||
+    renderer.navigationEndpoint?.watchEndpoint?.videoId ||
+    null;
+
+  const title =
+    renderer.title?.simpleText ||
+    renderer.title?.runs?.map((run) => run.text ?? '').join('').trim() ||
+    '';
+
+  const publishedAt = renderer.publishedTimeText?.simpleText || '';
+  const durationText =
+    renderer.thumbnailOverlays?.find(
+      (overlay) => overlay.thumbnailOverlayTimeStatusRenderer?.text?.simpleText,
+    )?.thumbnailOverlayTimeStatusRenderer?.text?.simpleText;
+
+  const durationSeconds = parseDurationSeconds(durationText);
+  if (!videoId || !title) return null;
+  if (durationSeconds !== null && durationSeconds < 60) return null;
+
+  return {
+    title,
+    url: `https://www.youtube.com/watch?v=${videoId}`,
+    source: 'YouTube',
+    publishedAt,
+    type: 'video',
+    videoId,
+    thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+  };
+}
+
+async function fetchLatestYouTubeEpisodes(channelTitle: string, channelUrl: string): Promise<YoutubeEpisode[]> {
+  const response = await fetch(channelUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; AtlantaGleaner/1.0)',
+      'Accept-Language': 'en-US,en;q=0.9',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load ${channelTitle} uploads page: HTTP ${response.status}`);
+  }
+
+  const html = await response.text();
+  const jsonText = extractJsonObject(html, 'ytInitialData');
+  if (!jsonText) {
+    throw new Error(`Could not locate ytInitialData for ${channelTitle}`);
+  }
+
+  const data = JSON.parse(jsonText) as unknown;
+  const renderers = collectRenderers(data)
+    .map((renderer) => rendererToEpisode(renderer))
+    .filter((episode): episode is YoutubeEpisode => episode !== null);
+
+  const seen = new Set<string>();
+  const episodes: YoutubeEpisode[] = [];
+
+  for (const episode of renderers) {
+    if (seen.has(episode.videoId)) continue;
+    seen.add(episode.videoId);
+    episodes.push(episode);
+    if (episodes.length === 3) break;
+  }
+
+  if (episodes.length < 3) {
+    throw new Error(`Only found ${episodes.length} regular videos for ${channelTitle}`);
+  }
+
+  return episodes;
+}
+
+async function buildFeaturedSeries(
+  title: string,
+  channelUrl: string,
+  slot: 'science_pin',
+): Promise<GleanerItem> {
+  const episodes = await fetchLatestYouTubeEpisodes(title, channelUrl);
+
+  return {
+    title,
+    url: channelUrl,
+    source: `Official ${title} uploads`,
+    publishedAt: episodes[0]?.publishedAt || '',
+    type: 'series',
+    score: 1000,
+    slot,
+    episodes,
+  };
+}
 
 function scoreItem(title: string): number {
   const text = title.toLowerCase();
   let score = 0;
-  for (const kw of SCORING.tier1)      if (text.includes(kw)) score += 10;
-  for (const kw of SCORING.tier2)      if (text.includes(kw)) score += 5;
-  for (const kw of SCORING.tier3)      if (text.includes(kw)) score += 3;
-  for (const kw of SCORING.caribbean)  if (text.includes(kw)) score += 5;
+  for (const kw of SCORING.tier1) if (text.includes(kw)) score += 10;
+  for (const kw of SCORING.tier2) if (text.includes(kw)) score += 5;
+  for (const kw of SCORING.tier3) if (text.includes(kw)) score += 3;
+  for (const kw of SCORING.caribbean) if (text.includes(kw)) score += 5;
   for (const kw of SCORING.deprioritize) if (text.includes(kw)) score -= 8;
   return score;
 }
-
-// ── Serper Fetch ───────────────────────────────────────────────────────────────
 
 type SerperRawRow = {
   title?: string;
@@ -50,12 +250,12 @@ type SerperRawRow = {
 function normalize(row: SerperRawRow, slot: string): GleanerItem | null {
   if (!row.title || !row.link) return null;
   return {
-    title:       row.title,
-    url:         row.link,
-    source:      row.source || row.channel || 'Web',
-    publishedAt: row.date   || '',
-    type:        row.link.includes('youtube.com') ? 'video' : 'text',
-    score:       scoreItem(row.title),
+    title: row.title,
+    url: row.link,
+    source: row.source || row.channel || 'Web',
+    publishedAt: row.date || '',
+    type: row.link.includes('youtube.com') ? 'video' : 'text',
+    score: scoreItem(row.title),
     slot,
   };
 }
@@ -65,114 +265,92 @@ async function serperSearch(q: string, num: number, endpoint: SerperEndpoint): P
     console.error('[serperSearch] SERPER_API_KEY not set');
     return [];
   }
+
   try {
     const res = await fetch(`https://google.serper.dev/${endpoint}`, {
-      method:  'POST',
-      headers: { 'X-API-KEY': SERPER_API_KEY, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ q, num }),
+      method: 'POST',
+      headers: {
+        'X-API-KEY': SERPER_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ q, num }),
     });
+
     if (!res.ok) throw new Error(`Serper HTTP ${res.status}`);
+
     const data = await res.json() as Record<string, unknown>;
-    const rows = (data[endpoint] as SerperRawRow[] | undefined)
-              || (data.organic   as SerperRawRow[] | undefined)
-              || [];
+    const rows =
+      (data[endpoint] as SerperRawRow[] | undefined) ||
+      (data.organic as SerperRawRow[] | undefined) ||
+      [];
+
     return rows
-      .map(r => normalize(r, 'news'))
-      .filter((x): x is GleanerItem => x !== null);
-  } catch (e) {
-    console.error(`[serperSearch] Error for query "${q}":`, e);
+      .map((row) => normalize(row, 'news'))
+      .filter((item): item is GleanerItem => item !== null);
+  } catch (error) {
+    console.error(`[serperSearch] Error for query "${q}":`, error);
     return [];
   }
 }
-
-// ── Feed Builder ───────────────────────────────────────────────────────────────
-// Runs all Serper queries in parallel batches and assembles the 15-item feed.
-// Slot order:
-//   1-2:   StarTalk + PBS Space Time (hard-guaranteed first two slots)
-//   3-4:   Science bonus (overflow from above, or adjacent science channels)
-//   5-10:  Atlanta/Georgia local + national (scored and ranked)
-//   11-13: International deep dives
-//   14-15: Letterman / quirky / oddball
 
 async function buildNewsFeed(): Promise<GleanerItem[]> {
   const usedUrls = new Set<string>();
   const result: GleanerItem[] = [];
 
-  // ── Batch 1: Science videos ──────────────────────────────────────────────────
-  const [starTalkRaw, pbsSTRaw, scienceBonusRaw] = await Promise.all([
-    serperSearch(SEARCH_QUERIES.starTalk.q,      SEARCH_QUERIES.starTalk.num,      'videos'),
-    serperSearch(SEARCH_QUERIES.pbsSpaceTime.q,  SEARCH_QUERIES.pbsSpaceTime.num,  'videos'),
-    serperSearch(SEARCH_QUERIES.scienceBonus.q,  SEARCH_QUERIES.scienceBonus.num,  'videos'),
+  // Batch 1: featured official YouTube channels
+  const [starTalk, pbsSpaceTime, scienceBonusRaw] = await Promise.all([
+    buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
+    buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
+    serperSearch(SEARCH_QUERIES.scienceBonus.q, SEARCH_QUERIES.scienceBonus.num, 'videos'),
   ]);
 
-  // Slot 1 — StarTalk
-  const starTalk = starTalkRaw[0];
-  if (starTalk) {
-    result.push({ ...starTalk, slot: 'science_pin' });
-    usedUrls.add(starTalk.url);
-  }
+  result.push(starTalk, pbsSpaceTime);
+  usedUrls.add(starTalk.url);
+  usedUrls.add(pbsSpaceTime.url);
 
-  // Slot 2 — PBS Space Time
-  const pbsST = pbsSTRaw[0];
-  if (pbsST) {
-    result.push({ ...pbsST, slot: 'science_pin' });
-    usedUrls.add(pbsST.url);
-  }
-
-  // Slots 3-4 — Science bonus (overflow from above first, then scienceBonus pool)
-  const sciencePool = [
-    ...starTalkRaw.slice(1),
-    ...pbsSTRaw.slice(1),
-    ...scienceBonusRaw,
-  ].filter(x => !usedUrls.has(x.url));
-
-  for (const item of sciencePool.slice(0, SLOT_TARGETS.scienceBonus)) {
+  // Slots 3-4: science bonus
+  for (const item of scienceBonusRaw.filter((item) => !usedUrls.has(item.url)).slice(0, SLOT_TARGETS.scienceBonus)) {
     result.push({ ...item, slot: 'science_nova' });
     usedUrls.add(item.url);
   }
 
-  // ── Batch 2: Local + National ────────────────────────────────────────────────
+  // Batch 2: local + national
   const [tvRaw, deepRaw, nationalRaw] = await Promise.all([
-    serperSearch(SEARCH_QUERIES.atlantaTV.q,   SEARCH_QUERIES.atlantaTV.num,   'news'),
+    serperSearch(SEARCH_QUERIES.atlantaTV.q, SEARCH_QUERIES.atlantaTV.num, 'news'),
     serperSearch(SEARCH_QUERIES.atlantaDeep.q, SEARCH_QUERIES.atlantaDeep.num, 'news'),
-    serperSearch(SEARCH_QUERIES.national.q,    SEARCH_QUERIES.national.num,    'news'),
+    serperSearch(SEARCH_QUERIES.national.q, SEARCH_QUERIES.national.num, 'news'),
   ]);
 
-  // Merge, score, deduplicate, sort by relevance score
   const localPool = [...tvRaw, ...deepRaw, ...nationalRaw]
-    .filter(x => !usedUrls.has(x.url))
-    .map(x => ({ ...x, slot: 'news', score: scoreItem(x.title) }))
+    .filter((item) => !usedUrls.has(item.url))
+    .map((item) => ({ ...item, slot: 'news', score: scoreItem(item.title) }))
     .sort((a, b) => b.score - a.score);
 
   for (const item of localPool) {
-    const localCount = result.filter(r => r.slot === 'news').length;
+    const localCount = result.filter((entry) => entry.slot === 'news').length;
     if (localCount >= SLOT_TARGETS.local) break;
     result.push(item);
     usedUrls.add(item.url);
   }
 
-  // ── Batch 3: International + Letterman ──────────────────────────────────────
+  // Batch 3: international + Letterman
   const [intlRaw, lettermanRaw] = await Promise.all([
     serperSearch(SEARCH_QUERIES.international.q, SEARCH_QUERIES.international.num, 'search'),
-    serperSearch(SEARCH_QUERIES.letterman.q,     SEARCH_QUERIES.letterman.num,     'news'),
+    serperSearch(SEARCH_QUERIES.letterman.q, SEARCH_QUERIES.letterman.num, 'news'),
   ]);
 
-  // Slots 11-13 — International / deep dives
-  for (const item of intlRaw.filter(x => !usedUrls.has(x.url)).slice(0, SLOT_TARGETS.international)) {
+  for (const item of intlRaw.filter((entry) => !usedUrls.has(entry.url)).slice(0, SLOT_TARGETS.international)) {
     result.push({ ...item, slot: 'news-international' });
     usedUrls.add(item.url);
   }
 
-  // Slots 14-15 — Letterman
-  for (const item of lettermanRaw.filter(x => !usedUrls.has(x.url)).slice(0, SLOT_TARGETS.letterman)) {
+  for (const item of lettermanRaw.filter((entry) => !usedUrls.has(entry.url)).slice(0, SLOT_TARGETS.letterman)) {
     result.push({ ...item, slot: 'letterman' });
     usedUrls.add(item.url);
   }
 
   return result.slice(0, SLOT_TARGETS.total);
 }
-
-// ── Edge Config Writer ─────────────────────────────────────────────────────────
 
 async function writeToEdgeConfig(items: GleanerItem[]): Promise<void> {
   if (!EDGE_CONFIG_ID || !VERCEL_API_TOKEN) {
@@ -184,30 +362,24 @@ async function writeToEdgeConfig(items: GleanerItem[]): Promise<void> {
     cachedAt: new Date().toISOString(),
   };
 
-  const res = await fetch(
-    `https://api.vercel.com/v1/edge-config/${EDGE_CONFIG_ID}/items`,
-    {
-      method:  'PATCH',
-      headers: {
-        Authorization: `Bearer ${VERCEL_API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        items: [{ operation: 'upsert', key: 'news_cache', value: entry }],
-      }),
-    }
-  );
+  const res = await fetch(`https://api.vercel.com/v1/edge-config/${EDGE_CONFIG_ID}/items`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${VERCEL_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      items: [{ operation: 'upsert', key: 'news_cache', value: entry }],
+    }),
+  });
 
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(`Edge Config write failed: HTTP ${res.status} — ${body}`);
+    throw new Error(`Edge Config write failed: HTTP ${res.status} - ${body}`);
   }
 }
 
-// ── Route Handler ──────────────────────────────────────────────────────────────
-
 export async function GET(request: Request) {
-  // Authenticate via CRON_SECRET
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
 
@@ -216,39 +388,37 @@ export async function GET(request: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  console.log('[cron/refresh-news] Starting daily Serper fetch...');
+  console.log('[cron/refresh-news] Starting daily news refresh...');
 
   try {
     const items = await buildNewsFeed();
 
     if (items.length === 0) {
-      // Serper returned nothing — leave previous cache intact
-      console.warn('[cron/refresh-news] Serper returned 0 items. Previous cache preserved.');
+      console.warn('[cron/refresh-news] No items returned. Previous cache preserved.');
       return Response.json({
         ok: false,
-        message: 'Serper returned no items. Previous cache was preserved.',
+        message: 'No items returned. Previous cache was preserved.',
       });
     }
 
     await writeToEdgeConfig(items);
 
-    console.log(`[cron/refresh-news] ✓ Cache updated — ${items.length} items at ${new Date().toISOString()}`);
+    console.log(`[cron/refresh-news] Cache updated - ${items.length} items at ${new Date().toISOString()}`);
 
     return Response.json({
-      ok:        true,
-      message:   `News refreshed — ${items.length} items`,
-      cachedAt:  new Date().toISOString(),
+      ok: true,
+      message: `News refreshed - ${items.length} items`,
+      cachedAt: new Date().toISOString(),
       breakdown: {
-        sciencePin:    items.filter(i => i.slot === 'science_pin').length,
-        scienceNova:   items.filter(i => i.slot === 'science_nova').length,
-        local:         items.filter(i => i.slot === 'news').length,
-        international: items.filter(i => i.slot === 'news-international').length,
-        letterman:     items.filter(i => i.slot === 'letterman').length,
+        sciencePin: items.filter((item) => item.slot === 'science_pin').length,
+        scienceNova: items.filter((item) => item.slot === 'science_nova').length,
+        local: items.filter((item) => item.slot === 'news').length,
+        international: items.filter((item) => item.slot === 'news-international').length,
+        letterman: items.filter((item) => item.slot === 'letterman').length,
       },
     });
-
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     console.error('[cron/refresh-news] Error:', message);
     return Response.json({ ok: false, error: message }, { status: 500 });
   }
