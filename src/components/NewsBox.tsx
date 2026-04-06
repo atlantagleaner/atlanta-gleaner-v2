@@ -182,7 +182,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
               width:          '100%',
               background:     'none',
               border:         'none',
-              padding:        `${SPACING.md} 0`,
+              padding:        open ? `${SPACING.sm} 0 ${SPACING.xs}` : `${SPACING.md} 0`,
               cursor:         'pointer',
               textAlign:      'left',
               display:        'flex',
@@ -196,6 +196,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                 ...T.body,
                 color:      open ? 'var(--interactive-hover-text, #000)' : PALETTE.black,
                 display:    'block',
+                marginBottom: open ? 0 : SPACING.xs,
                 transition: `color ${ANIMATION.fast} ${ANIMATION.ease}`,
               }}>
                 {badge && (
@@ -205,7 +206,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                 )}
                 {item.title}
               </span>
-              {!isSeries && (
+              {!isSeries && !open && (
                 <span style={{
                   ...T.micro,
                   color:     PALETTE_CSS.meta,
@@ -213,6 +214,16 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                   marginTop: SPACING.xs,
                 }}>
                   {item.source}{mediaLabel}
+                </span>
+              )}
+              {open && !isSeries && (
+                <span style={{
+                  ...T.micro,
+                  color:     PALETTE_CSS.meta,
+                  display:   'block',
+                  marginTop: SPACING.xs,
+                }}>
+                  Open article
                 </span>
               )}
             </span>
