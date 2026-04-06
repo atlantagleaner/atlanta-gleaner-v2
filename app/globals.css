@@ -272,19 +272,15 @@ body {
   color: var(--palette-black);
 }
 
-.star-pagination-wrap {
-  display: none;
-  white-space: pre;
-}
-
 .star-pagination {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--palette-muted);
-  display: inline;
+  margin-right: 6px;
+  display: none;
 }
 
-.opinion-body.show-pagination .star-pagination-wrap {
+.opinion-body.show-pagination .star-pagination {
   display: inline;
 }
 
