@@ -112,6 +112,8 @@ const SECTION_LABELS = [
   'Subsequent History',
   'Prior History',
   'Disposition',
+  'Syllabus',
+  'Held',
   'Notice',
   'Counsel',
   'Judges',
@@ -506,21 +508,39 @@ function parseSubsequentHistory(lines) {
 function parseDisposition(text) {
   if (!text) return { disposition_text: '', disposition_type: null };
 
-  const upper = text.toUpperCase();
+  // SCOTUS opinions can place a clean disposition line immediately before a
+  // "Syllabus" / "Held:" block. We only want the actual disposition line.
+  const normalized = cleanStr(text)
+    .split(/\bSyllabus\b/i)[0]
+    .split(/\bHeld:\b/i)[0]
+    .trim();
+
+  const upper = normalized.toUpperCase();
   let type    = 'OTHER';
   let action  = null;
 
-  if (/AFFIRM/.test(upper))                           { type = 'AFFIRM'; action = 'affirmed'; }
-  else if (/REVERS/.test(upper) && /REMAND/.test(upper)) { type = 'REVERSE_REMAND'; action = 'reversed and remanded'; }
-  else if (/REVERS/.test(upper))                      { type = 'REVERSE'; action = 'reversed'; }
-  else if (/REMAND/.test(upper))                      { type = 'REMAND'; action = 'remanded'; }
-  else if (/DISMISS/.test(upper))                     { type = 'DISMISS'; action = 'dismissed'; }
-  else if (/VACATE/.test(upper))                      { type = 'VACATE'; action = 'vacated'; }
+  if (/\bREVERS(?:E|ED|AL)?\b/.test(upper) && /\bREMAND(?:ED)?\b/.test(upper)) {
+    type = 'REVERSE_REMAND';
+    action = 'reversed and remanded';
+  }
+  else if (/\bAFFIRM(?:ED|S)?\b/.test(upper) && /\bREVERS(?:E|ED|AL)?\b/.test(upper)) {
+    type = 'AFFIRM_REVERSE';
+    action = 'affirmed in part and reversed in part';
+  }
+  else if (/\bAFFIRM(?:ED|S)?\b/.test(upper) && /\bVACAT(?:E|ED)\b/.test(upper)) {
+    type = 'AFFIRM_VACATE';
+    action = 'affirmed in part and vacated in part';
+  }
+  else if (/\bREVERS(?:E|ED|AL)?\b/.test(upper))      { type = 'REVERSE'; action = 'reversed'; }
+  else if (/\bAFFIRM(?:ED|S)?\b/.test(upper))         { type = 'AFFIRM'; action = 'affirmed'; }
+  else if (/\bREMAND(?:ED)?\b/.test(upper))           { type = 'REMAND'; action = 'remanded'; }
+  else if (/\bDISMISS(?:ED|AL)?\b/.test(upper))       { type = 'DISMISS'; action = 'dismissed'; }
+  else if (/\bVACAT(?:E|ED)\b/.test(upper))           { type = 'VACATE'; action = 'vacated'; }
 
-  const remandM = text.match(/remand(?:ed)?\s+(?:for\s+)?(.+?)(?:\.|$)/i);
+  const remandM = normalized.match(/remand(?:ed)?\s+(?:for\s+)?(.+?)(?:\.|$)/i);
 
   return {
-    disposition_text: text,
+    disposition_text: normalized,
     disposition_type: type,
     disposition_action: action,
     remand_instructions: remandM ? remandM[1].trim() : null,
