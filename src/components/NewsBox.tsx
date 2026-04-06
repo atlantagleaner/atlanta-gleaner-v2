@@ -205,14 +205,16 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                 )}
                 {item.title}
               </span>
-              <span style={{
-                ...T.micro,
-                color:     PALETTE_CSS.meta,
-                display:   'block',
-                marginTop: SPACING.xs,
-              }}>
-                {item.source}{mediaLabel}
-              </span>
+              {!isSeries && (
+                <span style={{
+                  ...T.micro,
+                  color:     PALETTE_CSS.meta,
+                  display:   'block',
+                  marginTop: SPACING.xs,
+                }}>
+                  {item.source}{mediaLabel}
+                </span>
+              )}
             </span>
 
             {/* Chevron */}
