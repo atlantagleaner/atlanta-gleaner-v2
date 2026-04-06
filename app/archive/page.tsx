@@ -295,6 +295,7 @@ interface SearchableCase {
   shortTitle: string
   court: string
   docketNumber: string
+  tags?: string
   judges?: string
   disposition?: string
   summary?: string
@@ -316,6 +317,7 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
     shortTitle: c.shortTitle,
     court: c.court,
     docketNumber: c.docketNumber,
+    tags: c.tags?.join(' ') || '',
     judges: c.judges || '',
     disposition: c.disposition || '',
     summary: c.summary || '',
@@ -344,6 +346,7 @@ export default function ArchivePage() {
         { name: 'title', weight: 0.4 },
         { name: 'shortTitle', weight: 0.25 },
         { name: 'docketNumber', weight: 0.3 },
+        { name: 'tags', weight: 0.3 },
         { name: 'coreTerms', weight: 0.3 },
         { name: 'court', weight: 0.2 },
         { name: 'judges', weight: 0.15 },

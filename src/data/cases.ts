@@ -18,11 +18,77 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type { CaseLaw } from './types'
-import type { CaseLaw } from './types'
+import type { CaseLaw, EditorialCaseContent, EditorialStatus } from './types'
 
 // ─── Consolidated case data (processed from raw-opinions/*.docx) ────────────
 import CASES_MASTER_RAW from './cases.json'
+import CASE_EDITORIAL_RAW from './case-editorial.json'
 const CASES_MASTER = CASES_MASTER_RAW as CaseLaw[]
+const CASE_EDITORIAL = CASE_EDITORIAL_RAW as Record<string, EditorialCaseContent>
+
+function buildEditorialMatchKey(
+  title: string | undefined,
+  docketNumber: string | undefined,
+  dateDecided: string | undefined,
+): string {
+  const normalize = (value: string | undefined) => (value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+
+  return [
+    normalize(title),
+    normalize(docketNumber),
+    normalize(dateDecided),
+  ].join('::')
+}
+
+const CASE_EDITORIAL_BY_MATCH_KEY = new Map<string, EditorialCaseContent>(
+  Object.values(CASE_EDITORIAL).map((entry) => [
+    buildEditorialMatchKey(entry.title, entry.docketNumber, entry.dateDecided),
+    entry,
+  ])
+)
+
+function isMeaningfulSummary(summary: string | undefined): summary is string {
+  if (!summary) return false
+  const trimmed = summary.trim()
+  return trimmed.length > 0 && trimmed !== 'Summary pending.'
+}
+
+function resolveEditorialStatus(
+  editorial: EditorialCaseContent | undefined,
+  hasLegacyEditorial: boolean,
+): EditorialStatus {
+  if (editorial?.status) return editorial.status
+  if (hasLegacyEditorial) return 'seeded'
+  return 'pending'
+}
+
+function applyEditorialOverlay(caseData: CaseLaw): CaseLaw {
+  const editorial = CASE_EDITORIAL[caseData.slug]
+    || CASE_EDITORIAL_BY_MATCH_KEY.get(
+      buildEditorialMatchKey(caseData.title, caseData.docketNumber, caseData.dateDecided)
+    )
+  const legacyTags = Array.isArray(caseData.tags) && caseData.tags.length > 0
+    ? caseData.tags
+    : caseData.coreTerms
+  const mergedTags = editorial?.tags?.length ? editorial.tags : legacyTags
+  const mergedSummary = isMeaningfulSummary(editorial?.summary)
+    ? editorial.summary.trim()
+    : isMeaningfulSummary(caseData.summary)
+      ? caseData.summary.trim()
+      : 'Summary pending.'
+  const hasLegacyEditorial = mergedTags.length > 0 || isMeaningfulSummary(caseData.summary)
+
+  return {
+    ...caseData,
+    tags: mergedTags,
+    coreTerms: mergedTags,
+    summary: mergedSummary,
+    editorialStatus: resolveEditorialStatus(editorial, hasLegacyEditorial),
+  }
+}
 
 // ─── 2026 cases (current year — manually edited metadata) ────────────────────
 const CASES_2026: CaseLaw[] = [
@@ -171,7 +237,7 @@ const CASES_FROM_MASTER = CASES_MASTER.filter(c => !CASE_SLUGS_2026.has(c.slug))
 export const CASES: CaseLaw[] = [
   ...CASES_2026,
   ...CASES_FROM_MASTER,
-]
+].map(applyEditorialOverlay)
 
 /** The current featured case shown on the landing page CaseLawBox. */
 export const FEATURED_CASE: CaseLaw = CASES[0]

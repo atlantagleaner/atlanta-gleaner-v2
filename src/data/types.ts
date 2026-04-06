@@ -108,6 +108,27 @@ export interface ParsingMetadata {
   }
 }
 
+export type EditorialStatus =
+  | 'pending'
+  | 'seeded'
+  | 'drafted'
+  | 'reviewed'
+  | 'flagged'
+  | 'failed'
+
+export interface EditorialCaseContent {
+  slug:          string
+  title?:        string
+  docketNumber?: string
+  dateDecided?:  string
+  tags:          string[]
+  summary:       string
+  status?:       EditorialStatus
+  source?:       'editorial' | 'legacy-seed'
+  flags?:        string[]
+  updatedAt?:    string
+}
+
 export interface CaseLaw {
   id:             string
   slug:           string              // used as URL segment: /cases/[slug]
@@ -120,6 +141,7 @@ export interface CaseLaw {
   citations:      string
   judges:         string
   disposition:    string
+  tags?:          string[]            // editorial overlay used by the CaseLawBox
   coreTerms:      string[]            // editorial — leave [] until filled in
   summary:        string              // editorial summary — leave "" until filled in
   holdingBold:    string              // editorial holding — leave "" until filled in
@@ -151,4 +173,5 @@ export interface CaseLaw {
   sourceFile?:      string                    // Original DOCX filename
   html?:            string                    // HTML-formatted opinion text
   opinionTextLength?: number                  // Length of opinion text in characters
+  editorialStatus?: EditorialStatus
 }

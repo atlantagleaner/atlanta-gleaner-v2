@@ -370,6 +370,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
     judges,
     disposition,
     disposition_structured,
+    tags,
     coreTerms,
     summary,
     opinionAuthor,
@@ -392,7 +393,8 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
   const withBlockquotes     = detectAndWrapBlockquotes(withFootnotes)
   const renderedOpinionHtml = wrapPaginationMarkers(withBlockquotes)
 
-  const hasCoreTerms = coreTerms && coreTerms.length > 0
+  const editorialTags = tags && tags.length > 0 ? tags : coreTerms
+  const hasEditorialTags = editorialTags && editorialTags.length > 0
   const hasSummary   = summary && summary.trim() && summary.trim() !== 'Summary pending.'
 
   useLayoutEffect(() => {
@@ -581,11 +583,11 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         <div style={{ marginBottom: SPACING.xl }}>
           {/* Sub-section label: no bottom border — spacing + uppercase mono is sufficient */}
           <div style={{ ...BOX_HEADER, borderBottom: 'none', paddingBottom: 0, marginBottom: '10px', display: 'block' }}>
-            Core Terms
+            Tags
           </div>
-          {hasCoreTerms ? (
+          {hasEditorialTags ? (
             <div>
-              {coreTerms!.map((term) => (
+              {editorialTags!.map((term) => (
                 <span key={term} style={termChip}>{term}</span>
               ))}
             </div>
