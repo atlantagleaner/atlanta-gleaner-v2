@@ -345,9 +345,9 @@ const counselValue: CSSProperties = {
 
 const reporterToggleButtonBase: CSSProperties = {
   display:             'inline-grid',
-  gridTemplateColumns: '110px auto',
+  gridTemplateColumns: '110px minmax(0, 1fr)',
   alignItems:          'baseline',
-  width:               'fit-content',
+  width:               '100%',
   maxWidth:            '100%',
   gridColumn:          '1 / -1',
   border:              'none',
@@ -360,8 +360,8 @@ const reporterToggleButtonBase: CSSProperties = {
   textAlign:           'left',
   transition:          'background 0.2s ease, color 0.2s ease, opacity 0.15s ease',
   gap:                 '0',
-  whiteSpace:          'nowrap',
-  justifySelf:         'start',
+  whiteSpace:          'normal',
+  justifySelf:         'stretch',
   boxShadow:           'none',
 }
 
@@ -374,9 +374,10 @@ const reporterToggleLabel: CSSProperties = {
 const reporterToggleValue: CSSProperties = {
   ...metaValue,
   paddingRight: '8px',
-  whiteSpace: 'nowrap',
-  wordBreak: 'normal',
-  flex: '0 0 auto',
+  minWidth: 0,
+  whiteSpace: 'normal',
+  overflowWrap: 'anywhere',
+  wordBreak: 'break-word',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
