@@ -6,7 +6,7 @@
 //
 // Slots 1 and 2 are sourced directly from the official StarTalk and
 // PBS Space Time YouTube uploads pages. Each slot stores the three most
-// recent regular videos, with shorts filtered out.
+// recent videos, excluding uploads under 8 minutes.
 
 import { EDITORIAL_QUERIES, FEED_TARGETS, SCORING, SOURCE_WEIGHTS } from '@/lib/newsConfig';
 import type { EditorialQuery, SerperEndpoint } from '@/lib/newsConfig';
@@ -25,6 +25,7 @@ const SERPER_API_KEY = process.env.SERPER_API_KEY;
 const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const MAX_STATUS_FAILURES = 12;
+const MIN_FEATURED_VIDEO_SECONDS = 8 * 60;
 
 const FEATURED_CHANNELS = {
   starTalk: {
@@ -164,7 +165,7 @@ function rendererToEpisode(renderer: YoutubeRenderer): YoutubeEpisode | null {
 
   const durationSeconds = parseDurationSeconds(durationText);
   if (!videoId || !title) return null;
-  if (durationSeconds !== null && durationSeconds < 60) return null;
+  if (durationSeconds !== null && durationSeconds < MIN_FEATURED_VIDEO_SECONDS) return null;
 
   return {
     title,
