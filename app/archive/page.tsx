@@ -14,7 +14,7 @@
 // minimal — consistent with the rest of the Gleaner design system.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useMemo, useState } from 'react'
+import React, { useDeferredValue, useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import Fuse from 'fuse.js'
@@ -334,15 +334,12 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
 
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
+  const deferredSearchQuery = useDeferredValue(searchQuery)
 
-  // Build and search with Fuse.js
-  const { filteredCases, resultCount } = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return { filteredCases: CASES, resultCount: CASES.length }
-    }
+  const searchableData = useMemo(() => CASES.map(buildSearchableCase), [])
 
-    const searchableData = CASES.map(buildSearchableCase)
-    const fuse = new Fuse(searchableData, {
+  const fuse = useMemo(() => {
+    return new Fuse(searchableData, {
       keys: [
         { name: 'title', weight: 0.4 },
         { name: 'shortTitle', weight: 0.25 },
@@ -363,15 +360,23 @@ export default function ArchivePage() {
       threshold: 0.4, // Allows typos/variations
       includeScore: true,
     })
+  }, [searchableData])
 
-    const results = fuse.search(searchQuery)
+  // Build and search with Fuse.js
+  const { filteredCases, resultCount } = useMemo(() => {
+    if (!deferredSearchQuery.trim()) {
+      return { filteredCases: CASES, resultCount: CASES.length }
+    }
+
+    const results = fuse.search(deferredSearchQuery)
     const resultSlugs = new Set(results.map((r) => r.item.slug))
     const matched = CASES.filter((c) => resultSlugs.has(c.slug))
 
     return { filteredCases: matched, resultCount: matched.length }
-  }, [searchQuery])
+  }, [deferredSearchQuery, fuse])
 
   const searchActive = searchQuery.trim().length > 0
+  const searchNoResults = searchActive && resultCount === 0
 
   return (
     <main style={{
@@ -400,25 +405,37 @@ export default function ArchivePage() {
             value={searchQuery}
             onChange={setSearchQuery}
             resultCount={resultCount}
-            noResults={searchQuery.trim().length > 0 && resultCount === 0}
+            noResults={searchNoResults}
           />
         </div>
 
-        {/* Volume boxes */}
-        <div style={{ maxWidth: '760px' }}>
-          {VOLUMES.map((volume, i) => (
-            <VolumeBox
-              key={volume.number}
-              volume={volume}
-              allCases={filteredCases}
-              defaultOpen={i === 0} // Volume IV (newest) open by default
-              forceOpen={searchActive && filteredCases.some((c) => {
-                const y = getYear(getArchiveDate(c))
-                return y !== null && volume.years.includes(y)
-              })}
-            />
-          ))}
-        </div>
+        {searchNoResults ? (
+          <div style={{
+            ...T.body,
+            maxWidth: '760px',
+            color: PALETTE_CSS.meta,
+            background: PALETTE.white,
+            border: `1px solid ${PALETTE_CSS.border}`,
+            padding: `${SPACING.lg}`,
+          }}>
+            No cases matched “{searchQuery.trim()}”. Try a docket number, court, or a phrase from the opinion text.
+          </div>
+        ) : (
+          <div style={{ maxWidth: '760px' }}>
+            {VOLUMES.map((volume, i) => (
+              <VolumeBox
+                key={volume.number}
+                volume={volume}
+                allCases={filteredCases}
+                defaultOpen={i === 0 && !searchActive} // Volume IV (newest) open by default only when browsing
+                forceOpen={searchActive && filteredCases.some((c) => {
+                  const y = getYear(getArchiveDate(c))
+                  return y !== null && volume.years.includes(y)
+                })}
+              />
+            ))}
+          </div>
+        )}
 
       </div>
     </main>

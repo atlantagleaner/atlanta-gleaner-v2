@@ -83,6 +83,7 @@ export function SearchInput({
         />
         {value && (
           <button
+            type="button"
             onClick={handleClear}
             style={{
               position: 'absolute',
