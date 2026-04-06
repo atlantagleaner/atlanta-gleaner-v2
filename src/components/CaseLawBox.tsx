@@ -344,11 +344,16 @@ const counselValue: CSSProperties = {
 }
 
 const reporterToggleButtonBase: CSSProperties = {
-  display:             'inline-flex',
+  display:             'inline-grid',
+  gridTemplateColumns: '110px auto',
   alignItems:          'baseline',
   width:               'fit-content',
   maxWidth:            '100%',
+  gridColumn:          '1 / -1',
   border:              'none',
+  outline:             'none',
+  appearance:          'none',
+  background:          'transparent',
   padding:             '2px 8px 2px 0',
   margin:              0,
   cursor:              'pointer',
@@ -357,6 +362,7 @@ const reporterToggleButtonBase: CSSProperties = {
   gap:                 '0',
   whiteSpace:          'nowrap',
   justifySelf:         'start',
+  boxShadow:           'none',
 }
 
 const reporterToggleLabel: CSSProperties = {
@@ -503,23 +509,9 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             <button
               onClick={() => setShowPagination(!showPagination)}
               style={{
-                ...(showPagination ? {
-                  ...T.micro,
-                  background: PALETTE.black,
-                  color: PALETTE.white,
-                  padding: `2px ${SPACING.sm}`,
-                  margin: '0',
-                  transition: 'background 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-block',
-                } : {
-                  ...metaLabel,
-                  background: 'none',
-                  padding: '0 8px',
-                  whiteSpace: 'nowrap',
-                  margin: '0',
-                  transition: 'opacity 0.15s ease',
-                }),
+                ...reporterToggleButtonBase,
+                background: showPagination ? PALETTE.black : 'transparent',
+                color: showPagination ? PALETTE.white : PALETTE.black,
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
@@ -534,9 +526,23 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               aria-label="Toggle pagination markers"
               aria-pressed={showPagination}
             >
-              REPORTER
+              <span
+                style={{
+                  ...reporterToggleLabel,
+                  color: showPagination ? PALETTE.white : PALETTE_CSS.meta,
+                }}
+              >
+                REPORTER
+              </span>
+              <span
+                style={{
+                  ...reporterToggleValue,
+                  color: showPagination ? PALETTE.white : PALETTE.black,
+                }}
+              >
+                {citations}
+              </span>
             </button>
-            <span style={metaValue}>{citations}</span>
           </div>
         )}
         {priorHistory && <MetadataRow label="Prior History" value={priorHistory} />}
