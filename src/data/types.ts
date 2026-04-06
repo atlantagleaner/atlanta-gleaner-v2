@@ -116,6 +116,7 @@ export interface CaseLaw {
   court:          string
   docketNumber:   string
   dateDecided:    string
+  decision_date_iso?: string          // normalized decision date for archive grouping
   citations:      string
   judges:         string
   disposition:    string

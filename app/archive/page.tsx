@@ -54,6 +54,10 @@ function getMonth(dateStr: string): number | null {
   return isNaN(d.getTime()) ? null : d.getMonth() // 0-indexed
 }
 
+function getArchiveDate(c: Pick<CaseLaw, 'dateDecided' | 'decision_date_iso'>): string {
+  return c.decision_date_iso || c.dateDecided
+}
+
 function yearLabel(years: number[]): string {
   if (years.length === 1) return String(years[0])
   return `${years[0]}–${years[years.length - 1]}`
@@ -193,7 +197,7 @@ function VolumeBox({
 
   // Filter cases that belong to this volume's year range
   const volumeCases = allCases.filter((c) => {
-    const y = getYear(c.dateDecided)
+    const y = getYear(getArchiveDate(c))
     return y !== null && volume.years.includes(y)
   })
 
@@ -204,8 +208,9 @@ function VolumeBox({
   for (const year of [...volume.years].reverse()) {
     for (let m = 11; m >= 0; m--) {
       const mCases = volumeCases.filter((c) => {
-        const y = getYear(c.dateDecided)
-        const mo = getMonth(c.dateDecided)
+        const archiveDate = getArchiveDate(c)
+        const y = getYear(archiveDate)
+        const mo = getMonth(archiveDate)
         return y === year && mo === m
       })
       if (mCases.length > 0) {
@@ -217,7 +222,7 @@ function VolumeBox({
   // Year span description
   const yearSpanLabel = volume.years.length === 1
     ? String(volume.years[0])
-    : `${volume.years[0]}–${volume.years.filter(y => volumeCases.some(c => getYear(c.dateDecided) === y)).pop() ?? volume.years[volume.years.length - 1]}`
+    : `${volume.years[0]}–${volume.years.filter(y => volumeCases.some(c => getYear(getArchiveDate(c)) === y)).pop() ?? volume.years[volume.years.length - 1]}`
 
   return (
     <div style={volumeShell}>
@@ -408,7 +413,7 @@ export default function ArchivePage() {
               allCases={filteredCases}
               defaultOpen={i === 0} // Volume IV (newest) open by default
               forceOpen={searchActive && filteredCases.some((c) => {
-                const y = getYear(c.dateDecided)
+                const y = getYear(getArchiveDate(c))
                 return y !== null && volume.years.includes(y)
               })}
             />
