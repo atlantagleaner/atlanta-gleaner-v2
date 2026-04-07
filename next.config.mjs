@@ -27,6 +27,21 @@ if (process.env.NODE_ENV === 'production' || process.argv.includes('build')) {
 }
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  serverExternalPackages: [
+    'metascraper',
+    'metascraper-author',
+    'metascraper-date',
+    'metascraper-description',
+    'metascraper-image',
+    'metascraper-logo',
+    'metascraper-publisher',
+    'metascraper-title',
+    'metascraper-url',
+    'metascraper-readability',
+    're2',
+    'isomorphic-dompurify'
+  ],
+}
 
 export default nextConfig
