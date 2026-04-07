@@ -100,6 +100,7 @@ export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toI
               t: episode.title,
               p: episode.publishedAt,
               v: episode.videoId,
+              s: episode.spotifyId,
             })),
           }
         : {}),
@@ -109,7 +110,8 @@ export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toI
 
 export async function GET() {
   // Check for local development override
-  if (process.env.NODE_ENV === 'development') {
+  const isDev = process.env.NODE_ENV === 'development' || !!process.env.SERPER_API_KEY;
+  if (isDev) {
     try {
       const fs = await import('fs');
       const path = await import('path');

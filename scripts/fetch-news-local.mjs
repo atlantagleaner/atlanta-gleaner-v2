@@ -352,7 +352,6 @@ const SPOTIFY_POOL = [
 ];
 
 async function fetchPodcastEpisodes(show) {
-  console.log(`🎙️ Fetching Podcast: ${show.name}...`);
   try {
     const res = await fetch(show.rss, { headers: { 'User-Agent': 'Mozilla/5.0' } });
     const xml = await res.text();
@@ -388,6 +387,7 @@ async function fetchPodcastEpisodes(show) {
 }
 
 async function buildPodcastDrawer() {
+  console.log(`🎙️ Fetching curated Podcasts...`);
   const results = await Promise.all(SPOTIFY_POOL.map(fetchPodcastEpisodes));
   const episodes = results.flat().sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   

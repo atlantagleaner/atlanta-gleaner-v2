@@ -352,6 +352,68 @@ async function buildScienceGrabBag(): Promise<GleanerItem> {
   };
 }
 
+const SPOTIFY_POOL = [
+  { id: '2YvYmS07vLD1o2MvAsv3P3', name: 'The Bill Simmons Podcast', rss: 'https://feeds.megaphone.fm/the-bill-simmons-podcast' },
+  { id: '1lUPomulZRPquVAOOd56EW', name: 'The Rewatchables', rss: 'https://feeds.megaphone.fm/the-rewatchables' },
+  { id: '6id9uS9D2890S97S9S9S9S', name: 'The Big Picture', rss: 'https://feeds.megaphone.fm/the-big-picture' },
+  { id: '71mvXo2OfCExQKsgpXFS4t', name: 'The Michelle Obama Podcast', rss: 'https://feeds.megaphone.fm/WWO6610531024' },
+  { id: '4rXoR4SbsZhbTq6rOqBGMc', name: 'Closer Look (WABE)', rss: 'https://feeds.npr.org/510344/podcast.xml' },
+  { id: '3IM0SVD9ndXmB5KyEpxRYm', name: 'The Daily', rss: 'https://feeds.nytimes.com/nyt-the-daily' },
+  { id: '06fP6O8HkR4NfI3R4lXU5J', name: 'Fresh Air', rss: 'https://feeds.npr.org/381444908/podcast.xml' },
+  { id: '46ST9S0P56Y8p3S5S6MQ', name: 'Throughline', rss: 'https://feeds.npr.org/510333/podcast.xml' },
+  { id: '2m7SipG3T4q0xXBsS6MQiS', name: 'Science Vs', rss: 'https://feeds.megaphone.fm/sciencevs' },
+];
+
+async function fetchPodcastEpisodes(show: { id: string; name: string; rss: string }): Promise<any[]> {
+  try {
+    const res = await fetch(show.rss, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const xml = await res.text();
+    const itemRegex = /<item[\s>]([\s\S]*?)<\/item>/gi;
+    const episodes: any[] = [];
+    let match;
+    const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+
+    while ((match = itemRegex.exec(xml)) !== null && episodes.length < 1) {
+      const chunk = match[1];
+      const title = chunk.match(/<title>(<!\[CDATA\[)?([\s\S]*?)(]]>)?<\/title>/i)?.[2] || '';
+      const pubDateStr = chunk.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)?.[1] || '';
+      const pubDate = new Date(pubDateStr);
+      
+      if (pubDate >= twoWeeksAgo) {
+        episodes.push({
+          title: title.trim(),
+          url: `https://open.spotify.com/show/${show.id}`,
+          source: show.name,
+          publishedAt: pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          type: 'audio',
+          spotifyId: show.id, 
+          thumbnailUrl: '',
+        });
+      }
+    }
+    return episodes;
+  } catch (e) {
+    console.error(`❌ Podcast fail (${show.name}):`, e);
+    return [];
+  }
+}
+
+async function buildPodcastDrawer(): Promise<GleanerItem> {
+  const results = await Promise.all(SPOTIFY_POOL.map(fetchPodcastEpisodes));
+  const episodes = results.flat().sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  
+  return {
+    title: 'Podcasts',
+    url: 'https://open.spotify.com/',
+    source: 'Curated Audio',
+    publishedAt: new Date().toISOString(),
+    type: 'series',
+    score: 1000,
+    slot: 'podcast_pin',
+    episodes: episodes.slice(0, 9),
+  };
+}
+
 function toLowerText(value: string | undefined): string {
   return (value || '').toLowerCase();
 }
@@ -707,16 +769,18 @@ async function buildNewsFeed(options?: {
   const featured: GleanerItem[] = [];
   const failures: RefreshFailure[] = [];
 
-  const [starTalk, pbsSpaceTime, grabBag] = await Promise.all([
+  const [starTalk, pbsSpaceTime, grabBag, podcasts] = await Promise.all([
     buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
     buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
     buildScienceGrabBag(),
+    buildPodcastDrawer(),
   ]);
 
-  featured.push(starTalk, pbsSpaceTime, grabBag);
+  featured.push(starTalk, pbsSpaceTime, grabBag, podcasts);
   usedUrls.add(starTalk.url);
   usedUrls.add(pbsSpaceTime.url);
   usedUrls.add(grabBag.url);
+  usedUrls.add(podcasts.url);
 
   const queries = [
     ...EDITORIAL_QUERIES.local.map((query) => ({ lane: 'local' as const, query })),
