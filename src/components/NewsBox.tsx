@@ -63,14 +63,52 @@ async function fetchNews(): Promise<NewsResponse> {
   return res.json()
 }
 
-async function gleanItem(item: NewsItem): Promise<GleanResult> {
-  const res = await gleanArticle(item.url, {
-    title: item.title,
-    source: item.source,
-    type: item.type,
-  })
-  if ('error' in res) throw new Error(res.error)
-  return res
+async function gleanItem(item: NewsItem): Promise<DrawerResult> {
+  try {
+    const res = await gleanArticle(item.url, {
+      title: item.title,
+      source: item.source,
+      type: item.type,
+    })
+
+    if ('error' in res) {
+      return {
+        status: 'error',
+        message: normalizeMirrorError(res.error),
+      } as const
+    }
+
+    return {
+      status: 'ready',
+      result: res,
+    } as const
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      status: 'error',
+      message: normalizeMirrorError(message),
+    } as const
+  }
+}
+
+type DrawerResult =
+  | { status: 'ready'; result: GleanResult }
+  | { status: 'error'; message: string }
+
+function normalizeMirrorError(message: string): string {
+  if (
+    message.includes('Server Components render') ||
+    message.includes('digest property') ||
+    message.includes('server components')
+  ) {
+    return 'The source blocked the mirror request. Open directly to read the original page.'
+  }
+
+  if (message.includes('HTTP 403')) {
+    return 'The source denied the mirror request. Open directly to read the original page.'
+  }
+
+  return message
 }
 
 type DrawerState =
@@ -97,11 +135,11 @@ const SLOT_BADGE: Record<string, string | null> = {
 // loading skeleton on cache-miss.
 
 function MirrorDrawer({ item }: { item: NewsItem }) {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<DrawerResult>({
     queryKey: ['glean', item.url],
     queryFn: () => gleanItem(item),
     staleTime: 1000 * 60 * 60, // 1 hour
-    retry: 1,
+    retry: 0,
   })
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -142,7 +180,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
             rel="noopener noreferrer"
             style={{ color: PALETTE.black, textUnderlineOffset: '2px' }}
           >
-            Open directly →
+            {'Open directly ->'}
           </a>
         </p>
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
@@ -154,7 +192,29 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
 
   // ── Result ─────────────────────────────────────────────────────────────────
   if (!data) return null
-  return <MirrorViewer result={data} />
+
+  if (data.status === 'error') {
+    return (
+      <div style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
+        <p style={{ ...T.micro, color: PALETTE_CSS.muted, margin: 0 }}>
+          Could not mirror article.{' '}
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: PALETTE.black, textUnderlineOffset: '2px' }}
+          >
+            {'Open directly ->'}
+          </a>
+        </p>
+        <p style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
+          {data.message}
+        </p>
+      </div>
+    )
+  }
+
+  return <MirrorViewer result={data.result} />
 }
 
 function SeriesDrawer({ item }: { item: NewsItem }) {
