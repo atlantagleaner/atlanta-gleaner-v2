@@ -60,7 +60,7 @@ export function VolumeBox({ label, cases }: { label: string, cases: CaseData[] }
                 {monthCases.map(c => (
                   <div key={c.id} style={{ padding: '16px 0', borderBottom: `1px solid var(--interactive-border)` }}>
                     <Link href={c.url} style={{ textDecoration: 'none', color: PALETTE.black, display: 'block' }}>
-                      <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 4px 0', fontWeight: 700 }}>{c.title}</h4>
+                      <h4 style={{ ...FONT.serif, fontSize: '18px', margin: '0 0 4px 0', fontWeight: 600 }}>{c.title}</h4>
                       <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--interactive-citation)', margin: '0' }}>
                         {c.citation} · {c.fullDate}
                       </p>

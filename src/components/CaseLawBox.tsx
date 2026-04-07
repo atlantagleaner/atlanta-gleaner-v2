@@ -432,7 +432,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               <>
                 <span style={{
                   fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: PALETTE.black,
                   maxWidth: '85%',
                 }}>
@@ -451,7 +451,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                     </span>
                     <span style={{
                       fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-                      fontWeight: 700,
+                      fontWeight: 600,
                       color: PALETTE.black,
                       maxWidth: '85%',
                     }}>

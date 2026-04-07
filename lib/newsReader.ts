@@ -101,6 +101,35 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
     }
   })
 
+  // 1. Remove common share containers and labels
+  const shareSelectors = [
+    '.social-share', '.share-container', '.share-tools', '.share-buttons',
+    '.article-share', '.social-links', '.social-icons', '.share-list',
+    '.share-item', '.social-item', '.social-share-list', '.social-share-item',
+    '.article__share', '.article__share-icons', '.share-label', '.share-bar'
+  ];
+  $section.find(shareSelectors.join(',')).remove();
+
+  // 2. Remove share links by href patterns
+  $section.find('a[href]').each((_, el) => {
+    const href = $(el).attr('href') || '';
+    const isShareLink = 
+      href.includes('facebook.com/sharer') ||
+      href.includes('twitter.com/intent/tweet') ||
+      href.includes('linkedin.com/share') ||
+      href.includes('pinterest.com/pin/create') ||
+      (href.startsWith('mailto:') && (href.includes('subject=') || href.includes('body='))) ||
+      href.includes('whatsapp://send') ||
+      href.includes('t.me/share');
+    
+    if (isShareLink) {
+      $(el).remove();
+    }
+  });
+  
+  // 3. Remove SVG icons which are often social icons left behind
+  $section.find('svg').remove();
+
   return $section.html() || ''
 }
 

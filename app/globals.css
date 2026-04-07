@@ -197,7 +197,7 @@ body {
 .case-title {
   font-family: var(--font-serif);
   font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   margin-bottom: 24px;
 }
@@ -242,7 +242,7 @@ body {
 .opinion-header {
   font-family: var(--font-serif);
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
   margin: 48px 0 16px;
 }
 
