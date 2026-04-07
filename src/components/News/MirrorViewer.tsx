@@ -70,6 +70,13 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
   const images = Array.isArray(document.images) ? document.images : []
   const readerBodyHtml = stripMediaFromLegacyReaderHtml(document.bodyHtml)
 
+  let displayHostname = ''
+  try {
+    displayHostname = new URL(document.readFullUrl).hostname.replace(/^www\./, '')
+  } catch {
+    displayHostname = 'Source'
+  }
+
   const tabButtonStyle = (active: boolean) => ({
     ...T.label,
     color: active ? PALETTE.black : PALETTE_CSS.meta,
@@ -125,7 +132,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
               gap: SPACING.xs,
             }}
           >
-            <span>Source: {new URL(document.readFullUrl).hostname}</span>
+            <span>Source: {displayHostname}</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>

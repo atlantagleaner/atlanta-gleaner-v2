@@ -3,10 +3,10 @@
 import * as cheerio from 'cheerio'
 import { createHash } from 'crypto'
 import { list, put } from '@vercel/blob'
-import { JSDOM } from 'jsdom'
+import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
 
-const BLOB_PREFIX = 'news-reader/v3/'
+const BLOB_PREFIX = 'news-reader/v4/'
 const TTL_MS = 30 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 12_000
 
@@ -185,8 +185,8 @@ function buildReaderDocument(
   rawUrl: string,
   input: ReaderExtractionInput,
 ): ReaderDocument {
-  const dom = new JSDOM(rawHtml, { url: rawUrl })
-  const reader = new Readability(dom.window.document)
+  const { document } = parseHTML(rawHtml)
+  const reader = new Readability(document)
   const article = reader.parse()
 
   if (!article || !article.content || !article.textContent || article.textContent.length < 300) {
