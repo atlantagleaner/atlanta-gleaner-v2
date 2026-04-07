@@ -58,7 +58,7 @@ type DrawerState =
 
 const SLOT_BADGE: Record<string, string | null> = {
   science_pin:          null,
-  science_grab_bag:     '✦',
+  grab_bag:             '✦',
   science_nova:         '◉',
   letterman:            '★',
   news:                 null,

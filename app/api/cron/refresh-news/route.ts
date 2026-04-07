@@ -341,13 +341,13 @@ async function buildScienceGrabBag(): Promise<GleanerItem> {
   }
   
   return {
-    title: 'Science Grab Bag',
+    title: 'Grab Bag',
     url: 'https://www.youtube.com/',
     source: 'Curated Grab Bag',
     publishedAt: new Date().toISOString(),
     type: 'series',
     score: 1000,
-    slot: 'science_grab_bag',
+    slot: 'grab_bag',
     episodes,
   };
 }
@@ -1001,7 +1001,7 @@ export async function GET(request: Request) {
       forced: forceRun,
       failures,
       breakdown: {
-        featured: liveEntry.items.filter((item) => item.slot === 'science_pin' || item.slot === 'science_grab_bag').length,
+        featured: liveEntry.items.filter((item) => item.slot === 'science_pin' || item.slot === 'grab_bag').length,
         localOrNational: liveEntry.items.filter((item) => item.slot === 'news').length,
         international: liveEntry.items.filter((item) => item.slot === 'news-international').length,
         editorialOddities: liveEntry.items.filter((item) => item.slot === 'letterman').length,

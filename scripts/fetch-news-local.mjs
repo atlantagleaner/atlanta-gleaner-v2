@@ -331,13 +331,13 @@ async function buildScienceGrabBag() {
   };
   if (episodes.length >= 3) { episodes.splice(3, 0, nasaLive); } else { episodes.push(nasaLive); }
   return {
-    title: 'Science Grab Bag',
+    title: 'Grab Bag',
     url: 'https://www.youtube.com/',
     source: 'Curated Grab Bag',
     publishedAt: new Date().toISOString(),
     type: 'series',
     score: 1000,
-    slot: 'science_grab_bag',
+    slot: 'grab_bag',
     episodes,
   };
 }
