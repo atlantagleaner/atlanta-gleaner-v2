@@ -131,9 +131,21 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
-              gap: SPACING.xs,
+              gap: SPACING.sm,
             }}
           >
+            {document.logo && (
+              <img 
+                src={document.logo} 
+                alt={document.publisher || displayHostname}
+                style={{
+                  height: '14px',
+                  width: 'auto',
+                  display: 'block',
+                  filter: 'grayscale(1)',
+                }}
+              />
+            )}
             <span>Source: {displayHostname}</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
@@ -146,8 +158,22 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
           padding: `${SPACING.md} ${SPACING.lg}`,
           margin: `0 0 ${SPACING.xl}`,
         }}>
-          <div style={{ ...T.micro, color: PALETTE_CSS.meta, marginBottom: SPACING.xs }}>
-            {document.source}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: SPACING.sm, 
+            marginBottom: SPACING.xs 
+          }}>
+            {document.logo && (
+              <img 
+                src={document.logo} 
+                alt={document.publisher || ''} 
+                style={{ height: '12px', width: 'auto', opacity: 0.8 }}
+              />
+            )}
+            <div style={{ ...T.micro, color: PALETTE_CSS.meta }}>
+              {document.publisher || document.source}
+            </div>
           </div>
           <h1 style={{ 
             ...FONT.serif, 

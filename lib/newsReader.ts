@@ -6,6 +6,30 @@ import { list, put } from '@vercel/blob'
 import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
 
+// Metascraper core and plugins
+import metascraper from 'metascraper'
+import author from 'metascraper-author'
+import date from 'metascraper-date'
+import description from 'metascraper-description'
+import image from 'metascraper-image'
+import logo from 'metascraper-logo'
+import publisher from 'metascraper-publisher'
+import title from 'metascraper-title'
+import url from 'metascraper-url'
+import readability from 'metascraper-readability'
+
+const scraper = metascraper([
+  author(),
+  date(),
+  description(),
+  image(),
+  logo(),
+  publisher(),
+  title(),
+  url(),
+  readability()
+])
+
 const BLOB_PREFIX = 'news-reader/v4/'
 const TTL_MS = 30 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 12_000
@@ -14,6 +38,8 @@ export interface ReaderDocument {
   title: string
   byline: string | null
   source: string
+  publisher: string | null
+  logo: string | null
   publishedAt: string | null
   readFullUrl: string
   heroImageUrl: string | null
@@ -207,33 +233,50 @@ function wordCountFromHtml(bodyHtml: string): number {
 }
 
 /**
- * Main Mozilla Readability Orchestrator
+ * Main Mozilla Readability Orchestrator powered by Metascraper
  */
-function buildReaderDocument(
+async function buildReaderDocument(
   rawHtml: string,
   rawUrl: string,
   input: ReaderExtractionInput,
-): ReaderDocument {
-  const { document } = parseHTML(rawHtml)
-  const reader = new Readability(document)
-  const article = reader.parse()
-
+): Promise<ReaderDocument> {
+  // 1. Unified metadata extraction
+  const metadata = await scraper({ html: rawHtml, url: rawUrl })
+  
+  // 2. Body extraction (from metascraper-readability or fallback)
+  const article = metadata.readability || null
+  
   if (!article || !article.content || !article.textContent || article.textContent.length < 300) {
-    throw new Error('Extraction produced insufficient article body')
+    // If metascraper-readability fails, try raw Readability as a fallback
+    const { document } = parseHTML(rawHtml)
+    const reader = new Readability(document)
+    const fallback = reader.parse()
+    
+    if (!fallback || !fallback.content || !fallback.textContent || fallback.textContent.length < 300) {
+      throw new Error('Extraction produced insufficient article body')
+    }
+    
+    // Map fallback to article structure
+    Object.assign(article || {}, fallback)
   }
 
-  // 1. Clean the HTML (URLs, security)
-  let cleanedHtml = cleanReadabilityHtml(article.content, rawUrl)
+  const articleContent = article?.content || ''
+  const articleTitle = metadata.title || article?.title || input.title
+  const articleByline = metadata.author || article?.byline || null
+  const articleSource = metadata.publisher || article?.siteName || input.source
+  const articleExcerpt = metadata.description || article?.excerpt || null
+  const articlePublishedAt = metadata.date || article?.publishedTime || null
 
-  // 2. Separate images for the "Gallery" split (user constraint: no interleaved media)
+  // 3. Clean the HTML (URLs, security)
+  let cleanedHtml = cleanReadabilityHtml(articleContent, rawUrl)
+
+  // 4. Separate images for the "Gallery" split
   const extracted = extractImagesAndStrip(cleanedHtml, null, null)
   
-  // 3. Final metadata gathering
-  const $ = cheerio.load(rawHtml)
-  const heroImageUrl = cleanWhitespace($('meta[property="og:image"]').attr('content'))
-  const heroImageAlt = cleanWhitespace($('meta[property="og:image:alt"]').attr('content')) || article.title || null
+  // 5. Final metadata gathering
+  const heroImageUrl = metadata.image || null
+  const heroImageAlt = articleTitle
 
-  // If extractImagesAndStrip didn't have hero, add it now if found in meta
   if (heroImageUrl) {
     const absoluteHero = toAbsolute(new URL(rawUrl), heroImageUrl)
     const alreadyPresent = extracted.images.some(img => img.src === absoluteHero)
@@ -249,14 +292,16 @@ function buildReaderDocument(
   const words = wordCountFromHtml(extracted.bodyHtml)
 
   return {
-    title: article.title || input.title,
-    byline: article.byline || null,
-    source: article.siteName || input.source,
-    publishedAt: article.publishedTime || null,
+    title: articleTitle,
+    byline: articleByline,
+    source: articleSource,
+    publisher: metadata.publisher || null,
+    logo: metadata.logo || null,
+    publishedAt: articlePublishedAt,
     readFullUrl: rawUrl,
     heroImageUrl: heroImageUrl ? toAbsolute(new URL(rawUrl), heroImageUrl) : null,
     heroImageAlt,
-    excerpt: cleanWhitespace(article.excerpt) || null,
+    excerpt: articleExcerpt,
     bodyHtml: extracted.bodyHtml,
     images: extracted.images,
     wordCount: words,
@@ -301,9 +346,11 @@ export async function fetchReaderDocument(
   const response = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; AtlantaGleaner/1.0)',
-      Accept: 'text/html,application/xhtml+xml,*/*',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
     },
     redirect: 'follow',
   })
@@ -313,7 +360,7 @@ export async function fetchReaderDocument(
   }
 
   const rawHtml = await response.text()
-  return buildReaderDocument(rawHtml, url, input)
+  return await buildReaderDocument(rawHtml, url, input)
 }
 
 export async function ensureReaderDocument(
