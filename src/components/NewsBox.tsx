@@ -195,10 +195,9 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
             <span>
               <span style={{
                 ...T.body,
-                color:      open ? 'var(--interactive-hover-text, #000)' : PALETTE.black,
+                color:      PALETTE.black,
                 display:    'block',
                 marginBottom: SPACING.xs,
-                transition: `color ${ANIMATION.fast} ${ANIMATION.ease}`,
               }}>
                 {badge && (
                   <span style={{ ...T.micro, marginRight: SPACING.xs, verticalAlign: 'middle' }}>
