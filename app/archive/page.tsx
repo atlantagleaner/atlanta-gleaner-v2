@@ -587,8 +587,7 @@ function ArchiveVolumePanel({
             aria-pressed={isCivil}
             className={`archive-volume-selector-button${isCivil ? ' is-active' : ''}`}
           >
-            <span className="archive-volume-selector-label">Civil Law</span>
-            <span className="archive-volume-selector-year">Topical Index</span>
+            <span className="archive-volume-selector-label">CIVIL</span>
           </button>
           
           <button
@@ -597,8 +596,7 @@ function ArchiveVolumePanel({
             aria-pressed={isCriminal}
             className={`archive-volume-selector-button${isCriminal ? ' is-active' : ''}`}
           >
-            <span className="archive-volume-selector-label">Criminal Law</span>
-            <span className="archive-volume-selector-year">Topical Index</span>
+            <span className="archive-volume-selector-label">CRIMINAL</span>
           </button>
         </div>
       </div>
