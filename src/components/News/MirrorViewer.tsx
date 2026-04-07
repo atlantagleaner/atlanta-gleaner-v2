@@ -7,7 +7,10 @@ import { PALETTE, PALETTE_CSS, T, SPACING, ANIMATION, ITEM_RULE } from '@/src/st
 const COLLAPSE_WORD_THRESHOLD = 1200
 
 const READER_BODY_CSS = `
-  .ag-reader-body p { margin: 0 0 1.05em; }
+  .ag-reader-body p { 
+    margin: 0 0 1.1em; 
+    line-height: 1.72;
+  }
   .ag-reader-body > :first-child {
     margin-top: 0 !important;
   }
@@ -16,69 +19,40 @@ const READER_BODY_CSS = `
   .ag-reader-body h4 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
-    line-height: 1.15;
-    margin: 1.2em 0 0.55em;
+    line-height: 1.12;
+    margin: 1.5em 0 0.6em;
+    color: var(--palette-black);
   }
-  .ag-reader-body h2 { font-size: 1.45rem; }
-  .ag-reader-body h3 { font-size: 1.2rem; }
-  .ag-reader-body h4 { font-size: 1rem; }
+  .ag-reader-body h2 { font-size: 1.6rem; }
+  .ag-reader-body h3 { font-size: 1.3rem; }
+  .ag-reader-body h4 { font-size: 1.1rem; }
   .ag-reader-body a {
     color: inherit;
+    text-decoration: underline;
     text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--palette-rule-md);
   }
   .ag-reader-body blockquote {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-style: italic;
-    line-height: 1.5;
-    margin: 0 0 1em;
-    padding-left: 14px;
+    line-height: 1.55;
+    margin: 1.5em 0;
+    padding: 0.2em 0 0.2em 20px;
     border-left: 3px solid var(--palette-black);
+    color: var(--palette-black);
   }
   .ag-reader-body ul,
   .ag-reader-body ol {
-    margin: 0 0 1em;
-    padding-left: 1.4em;
+    margin: 0 0 1.2em;
+    padding-left: 1.5em;
   }
-  .ag-reader-body li { margin-bottom: 0.35em; }
-  .ag-reader-body figure { margin: 0 0 1.1em; }
-  .ag-reader-body p:empty,
-  .ag-reader-body div:empty,
-  .ag-reader-body section:empty,
-  .ag-reader-body article:empty,
-  .ag-reader-body li:empty,
-  .ag-reader-body blockquote:empty {
-    display: none;
+  .ag-reader-body li { 
+    margin-bottom: 0.5em;
+    line-height: 1.6;
   }
-  .ag-reader-body img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border: 1px solid var(--palette-rule);
-    background: var(--palette-warm);
-  }
-  .ag-reader-body figcaption {
-    margin-top: 6px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--palette-meta);
-  }
-  .ag-reader-body table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 0 1em;
-    font-size: 13px;
-  }
-  .ag-reader-body th,
-  .ag-reader-body td {
-    padding: 6px 8px;
-    border-bottom: 1px solid var(--palette-rule);
-    text-align: left;
-  }
+  .ag-reader-body p:empty { display: none; }
 `
 
 function stripMediaFromLegacyReaderHtml(bodyHtml: string): string {
@@ -101,57 +75,68 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
     color: active ? PALETTE.black : PALETTE_CSS.meta,
     border: 'none',
     background: 'none',
-    padding: 0,
+    padding: `${SPACING.xs} 0`,
     cursor: 'pointer',
     transition: `color ${ANIMATION.base} ${ANIMATION.ease}`,
+    borderBottom: active ? `1.5px solid ${PALETTE.black}` : '1.5px solid transparent',
   } as const)
 
   return (
-    <article style={{ padding: `0 0 ${SPACING.lg}` }}>
+    <article style={{ padding: `0 0 ${SPACING.lg}`, maxWidth: '700px', margin: '0 auto' }}>
       <style>{READER_BODY_CSS}</style>
 
-      <header style={{ padding: 0 }}>
+      {/* ── Metadata Notice Block ────────────────────────────────────────── */}
+      <div style={{
+        background: PALETTE.warm,
+        borderLeft: `3px solid ${PALETTE.black}`,
+        padding: `${SPACING.md} ${SPACING.lg}`,
+        margin: `${SPACING.md} 0 ${SPACING.xl}`,
+      }}>
+        <div style={{ ...T.micro, color: PALETTE_CSS.meta, marginBottom: SPACING.xs }}>
+          {document.source}
+        </div>
+        <h1 style={{ 
+          ...FONT.serif, 
+          fontSize: '1.8rem', 
+          fontWeight: 700, 
+          lineHeight: 1.1, 
+          margin: `0 0 ${SPACING.sm}`,
+          color: PALETTE.black 
+        }}>
+          {document.title}
+        </h1>
+        {document.byline && (
+          <div style={{ ...T.label, color: PALETTE.black }}>
+            {document.byline}
+          </div>
+        )}
+      </div>
+
+      <header style={{ marginBottom: SPACING.lg }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: SPACING.md,
-            paddingTop: SPACING.xs,
-            paddingBottom: SPACING.sm,
-            borderBottom: '1px solid var(--palette-rule)',
+            justifyContent: 'flex-start',
+            gap: SPACING.xl,
+            paddingBottom: SPACING.xs,
+            borderBottom: `1px solid ${PALETTE_CSS.rule}`,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
-            <button
-              type="button"
-              onClick={() => setMode('reader')}
-              style={tabButtonStyle(mode === 'reader')}
-            >
-              Reader View
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('pictures')}
-              style={tabButtonStyle(mode === 'pictures')}
-            >
-              Pictures
-            </button>
-          </div>
-
-          <a
-            href={document.readFullUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              ...T.micro,
-              color: PALETTE.black,
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-            }}
+          <button
+            type="button"
+            onClick={() => setMode('reader')}
+            style={tabButtonStyle(mode === 'reader')}
           >
-            {'Read Full ->'}
-          </a>
+            Article
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('pictures')}
+            style={tabButtonStyle(mode === 'pictures')}
+          >
+            Gallery
+          </button>
         </div>
       </header>
 
@@ -161,25 +146,22 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
             style={{
               position: 'relative',
               overflow: 'hidden',
-              maxHeight: expanded ? '9000px' : '1200px',
-              transition: expanded ? 'max-height 0.55s ease-in' : 'max-height 0.3s ease-out',
+              maxHeight: expanded ? 'none' : '1000px',
+              transition: 'max-height 0.5s ease',
               padding: `0 0 ${SPACING.xl}`,
               userSelect: 'text',
-              ...ITEM_RULE,
             }}
           >
             <div
               className="ag-reader-body"
               style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '14px',
-                lineHeight: 1.72,
+                ...T.prose,
                 color: PALETTE.black,
               }}
               dangerouslySetInnerHTML={{ __html: readerBodyHtml }}
             />
 
-            {isLong && (
+            {!expanded && (
               <div
                 aria-hidden="true"
                 style={{
@@ -187,11 +169,9 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '90px',
-                  background: 'linear-gradient(to bottom, transparent, var(--interactive-gradient-fade))',
+                  height: '150px',
+                  background: `linear-gradient(to bottom, transparent, ${PALETTE.white})`,
                   pointerEvents: 'none',
-                  opacity: expanded ? 0 : 1,
-                  transition: `opacity ${expanded ? '0.1s' : '0.25s'} ${ANIMATION.ease}`,
                 }}
               />
             )}
@@ -201,26 +181,19 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
             <button
               type="button"
               onClick={() => setExpanded((value) => !value)}
-              aria-expanded={expanded}
               style={{
                 width: '100%',
-                background: PALETTE.white,
-                border: 'none',
-                borderTop: '1px solid var(--palette-rule)',
-                padding: `${SPACING.md} 0`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                background: 'none',
+                border: `1px solid ${PALETTE_CSS.ruleMd}`,
+                padding: `${SPACING.sm} ${SPACING.md}`,
                 cursor: 'pointer',
-                transition: `border-color ${ANIMATION.base} ${ANIMATION.ease}`,
+                ...T.label,
+                color: PALETTE.black,
+                marginTop: SPACING.md,
+                textAlign: 'center',
               }}
             >
-              <span style={{ ...T.label, color: PALETTE.black }}>
-                {expanded ? 'Collapse' : 'Read Full Article'}
-              </span>
-              <span style={{ ...T.label, color: PALETTE.black, opacity: 0.45 }}>
-                {expanded ? '^' : 'v'}
-              </span>
+              {expanded ? 'Show Less' : 'Continue Reading'}
             </button>
           )}
         </>
@@ -228,33 +201,32 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
         <section
           style={{
             display: 'grid',
-            gap: SPACING.md,
-            paddingBottom: SPACING.lg,
+            gap: SPACING.xl,
+            paddingBottom: SPACING.xl,
           }}
         >
           {images.length > 0 ? (
             images.map((image) => (
-              <figure
-                key={image.src}
-                style={{
-                  margin: 0,
-                  paddingBottom: SPACING.md,
-                  ...ITEM_RULE,
-                }}
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt || document.title}
-                  loading="lazy"
-                  style={{
-                    width: '100%',
-                    display: 'block',
-                    border: '1px solid var(--palette-rule)',
-                    background: 'var(--palette-warm)',
-                  }}
-                />
+              <figure key={image.src} style={{ margin: 0 }}>
+                <div style={{ background: PALETTE.warm, padding: SPACING.xs, border: `1px solid ${PALETTE_CSS.ruleSm}` }}>
+                  <img
+                    src={image.src}
+                    alt={image.alt || document.title}
+                    loading="lazy"
+                    style={{
+                      width: '100%',
+                      display: 'block',
+                    }}
+                  />
+                </div>
                 {(image.caption || image.alt) && (
-                  <figcaption style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
+                  <figcaption style={{ 
+                    ...T.micro, 
+                    color: PALETTE_CSS.meta, 
+                    marginTop: SPACING.sm,
+                    paddingLeft: SPACING.xs,
+                    borderLeft: `1px solid ${PALETTE_CSS.ruleMd}`
+                  }}>
                     {image.caption || image.alt}
                   </figcaption>
                 )}
@@ -267,6 +239,33 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
           )}
         </section>
       )}
+
+      {/* ── Colophon ─────────────────────────────────────────────────────── */}
+      <footer style={{ 
+        marginTop: SPACING.xxl, 
+        paddingTop: SPACING.lg, 
+        borderTop: `1px solid ${PALETTE_CSS.rule}` 
+      }}>
+        <a
+          href={document.readFullUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            ...T.micro,
+            color: PALETTE_CSS.meta,
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.xs,
+          }}
+        >
+          <span>Source: {new URL(document.readFullUrl).hostname}</span>
+          <span style={{ fontSize: '12px' }}>↗</span>
+        </a>
+      </footer>
+    </article>
+  )
+}
     </article>
   )
 }

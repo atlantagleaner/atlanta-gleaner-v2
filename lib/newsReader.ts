@@ -44,8 +44,13 @@ const NOISE_SELECTOR = [
   '[class*="paywall"]',
   '[class*="ad-"]',
   '[class*="-ad"]',
+  '[class*="outbrain"]',
+  '[class*="taboola"]',
   '.advertisement',
   '.sr-only',
+  '.newsletter-signup',
+  '.related-links',
+  '.trending-stories',
 ].join(', ')
 
 const ROOT_CANDIDATE_SELECTOR = [
