@@ -9,6 +9,7 @@ import type { CSSProperties } from 'react'
 import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
 import { SearchInput } from '@/src/components/common/SearchInput'
+import { useMobileDetect } from '@/src/hooks'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
   ITEM_RULE, SPACING, SIZE_SM,
@@ -274,15 +275,19 @@ const monthToggle: CSSProperties = {
 // ── Shared Case Link Component ────────────────────────────────────────────────
 
 function CaseArchiveRow({ c }: { c: CaseLaw }) {
+  const isMobile = useMobileDetect(640)
+
   return (
     <Link
       href={`/cases/${c.slug}#case-law-box`}
       className="case-archive-link"
       style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) 280px',
+        gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) 280px',
         columnGap: SPACING.md,
+        rowGap: isMobile ? SPACING.xs : 0,
         alignItems: 'start',
+        padding: isMobile ? `${SPACING.md} ${SPACING.lg}` : undefined,
       }}
     >
       <div style={{
@@ -298,7 +303,7 @@ function CaseArchiveRow({ c }: { c: CaseLaw }) {
           lineHeight: 1.15,
           minWidth: 0,
           marginBottom: 0,
-          minHeight: '2.3em',
+          minHeight: isMobile ? 'auto' : '2.3em',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 2,
@@ -328,18 +333,18 @@ function CaseArchiveRow({ c }: { c: CaseLaw }) {
       {c.tags && c.tags.length > 0 && (
         <div style={{
           minWidth: 0,
-          alignSelf: 'stretch',
+          alignSelf: isMobile ? 'start' : 'stretch',
         }}>
           <div className="case-archive-tags" style={{
             ...T.micro,
-            textAlign: 'right',
+            textAlign: isMobile ? 'left' : 'right',
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
             lineHeight: 1.45,
             overflow: 'hidden',
             overflowWrap: 'anywhere',
-            paddingLeft: SPACING.md,
-            borderLeft: `1px solid ${PALETTE_CSS.border}`,
+            paddingLeft: isMobile ? 0 : SPACING.md,
+            borderLeft: isMobile ? 'none' : `1px solid ${PALETTE_CSS.border}`,
           }}>
             {c.tags.join(' · ')}
           </div>
