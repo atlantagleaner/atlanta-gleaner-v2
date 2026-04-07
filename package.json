@@ -19,7 +19,7 @@
     "@vercel/edge-config": "^1.4.3",
     "cheerio": "^1.0.0-rc.12",
     "fuse.js": "^7.3.0",
-    "isomorphic-dompurify": "^3.7.1",
+    "isomorphic-dompurify": "^3.2.0",
     "linkedom": "^0.18.12",
     "mammoth": "^1.12.0",
     "metascraper": "^5.50.0",
