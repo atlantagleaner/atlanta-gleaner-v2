@@ -31,7 +31,7 @@
     "typescript": "^5"
   },
   "description": "",
-  "main": "next.config.js",
+  "main": "next.config.mjs",
   "directories": {
     "lib": "lib"
   },
@@ -42,7 +42,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/atlantagleaner/atlanta-gleaner-v2/issues"
   },
