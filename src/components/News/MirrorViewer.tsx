@@ -19,7 +19,7 @@ const READER_BODY_CSS = `
   .ag-reader-body h4 {
     font-family: var(--font-serif), serif;
     font-variant-numeric: lining-nums;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.12;
     margin: 1.5em 0 0.6em;
     color: var(--palette-black);

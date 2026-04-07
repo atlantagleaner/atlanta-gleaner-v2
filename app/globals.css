@@ -29,13 +29,13 @@
   --archive-volume-selector-active-bg: #000000;
   --archive-volume-selector-active-text: #FFFFFF;
 
-  --font-serif: 'EB Garamond', serif;
+  --font-serif: 'Cormorant Garamond', serif;
   --font-sans:  'Inter', sans-serif;
   --font-mono:  'IBM Plex Mono', monospace;
 }
 
-/* Ensure EB Garamond uses lining figures site-wide for consistency */
-[style*="font-family: 'EB Garamond'"],
+/* Ensure Cormorant Garamond uses lining figures site-wide for consistency */
+[style*="font-family: 'Cormorant Garamond'"],
 [style*="font-family: var(--font-serif)"],
 .font-serif,
 h1, h2, h3, h4,

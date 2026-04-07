@@ -292,7 +292,7 @@ const metaLabel: CSSProperties = {
 
 const metaValue: CSSProperties = {
   ...T.prose,               // SIZE_MD (14px), consistent with body copy
-  fontWeight: 400,
+  fontWeight: 700,
   lineHeight: 1.4,
   color:      PALETTE.black,
 }
@@ -336,7 +336,7 @@ const counselChevron: CSSProperties = {
 
 const counselValue: CSSProperties = {
   ...T.prose,
-  fontWeight:   400,
+  fontWeight: 700,
   lineHeight:   1.4,
   color:        PALETTE.black,
   flex:         1,
@@ -432,7 +432,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
               <>
                 <span style={{
                   fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: PALETTE.black,
                   maxWidth: '85%',
                 }}>
@@ -445,13 +445,13 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                       fontStyle: 'italic',
                       color: PALETTE.black,
                       margin: '0.75rem 0',
-                      fontWeight: 400,
+                      fontWeight: 700,
                     }}>
                       v.
                     </span>
                     <span style={{
                       fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       color: PALETTE.black,
                       maxWidth: '85%',
                     }}>
@@ -674,7 +674,7 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                     style={{
                       ...FONT.mono,
                       fontSize:       '9px',
-                      fontWeight:     700,
+                      fontWeight: 700,
                       color:          PALETTE.black,
                       textDecoration: 'none',
                       flexShrink:     0,

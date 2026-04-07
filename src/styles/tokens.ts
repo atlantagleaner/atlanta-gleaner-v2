@@ -168,7 +168,7 @@ export const T: Record<string, CSSProperties> = {
   // ── Serif stack ──────────────────────────────────────────────────────────
 
   /**
-   * caption · SIZE_MD EB Garamond italic
+   * caption · SIZE_MD Cormorant Garamond italic
    * Used for: Far Side caption, pull quotes
    */
   caption: {
@@ -180,27 +180,27 @@ export const T: Record<string, CSSProperties> = {
   },
 
   /**
-   * heading · responsive clamp, EB Garamond semibold
+   * heading · responsive clamp, Cormorant Garamond bold
    * Used for: case law box title — large serif case names
    * Sized at 50% of display (banner masthead) for visual hierarchy.
    */
   heading: {
     fontFamily:    "var(--font-serif), serif",
     fontSize:      'clamp(1.5rem, 9vw, 4.5rem)',
-    fontWeight:    600,
+    fontWeight:    700,
     lineHeight:    1.12,
     letterSpacing: '-0.01em',
   },
 
   /**
-   * display · responsive clamp, EB Garamond
+   * display · responsive clamp, Cormorant Garamond
    * Used for: banner masthead only — "The Atlanta Gleaner."
    * Exception to three-size rule: this is branding, not content text.
    */
   display: {
     fontFamily:    "var(--font-serif), serif",
     fontSize:      'clamp(3rem, 18vw, 9rem)',
-    fontWeight:    600,
+    fontWeight:    700,
     letterSpacing: '-0.03em',
     lineHeight:    0.95,
   },
@@ -353,14 +353,14 @@ export const PAGE_TITLE_BLOCK: CSSProperties = {
 //                           verbatim paragraphs · footnote list
 //
 // ── TYPOGRAPHY ────────────────────────────────────────────────────────────────
-//   Case title:       FONT.serif · clamp(1.6rem,3.5vw,2.6rem) / (2rem,5vw,3.5rem) · 600
+//   Case title:       FONT.serif · clamp(1.6rem,3.5vw,2.6rem) / (2rem,5vw,3.5rem) · 700
 //   Notice text:      T.micro · weight 400 · NEVER bold
 //   Metadata label:   T.micro · minWidth 120px
 //   Metadata value:   FONT.sans · 12px · weight 400
 //   Core terms chip:  T.micro · PALETTE.black bg · PALETTE.white text
 //   Summary prose:    T.prose
 //   Holding:          T.prose · weight 600 · border-left 3px PALETTE.black
-//   Opinion header:   FONT.serif · 24px · weight 600
+//   Opinion header:   FONT.serif · 24px · weight 700
 //   Author line:      T.label
 //   Paragraphs:       T.prose · lineHeight 1.72 · margin 0 0 1.1em
 //   Block quotes:     FONT.serif · italic · 15px · border-left 3px · paddingLeft 16px

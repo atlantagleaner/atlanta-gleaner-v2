@@ -1,15 +1,15 @@
-import { EB_Garamond, Inter, IBM_Plex_Mono } from 'next/font/google';
+import { Cormorant_Garamond, Inter, IBM_Plex_Mono } from 'next/font/google';
 
 /**
- * EB Garamond — Primary Serif
+ * Cormorant Garamond — Primary Serif
  * Used for branding, opinion titles, and news headers.
  * Sourced via next/font for build-time optimization.
  */
-export const serif = EB_Garamond({
+export const serif = Cormorant_Garamond({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-serif',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
 });
 
