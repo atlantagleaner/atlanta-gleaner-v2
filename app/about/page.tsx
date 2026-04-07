@@ -20,7 +20,15 @@ function PortraitModule() {
   }, [isMobile])
 
   return (
-    <div className="portrait-module" style={{ ...BOX_SHELL, overflow: 'hidden' }}>
+    <div 
+      className="portrait-module" 
+      style={{ 
+        ...BOX_SHELL, 
+        overflow: 'hidden',
+        width: isMobile ? 'min(100%, 260px)' : 'min(100%, 320px)',
+        margin: '0 auto'
+      }}
+    >
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -62,12 +70,27 @@ function PortraitModule() {
           background: PALETTE.white,
         }}
       >
-        <div className="portrait-body">
+        <div 
+          className="portrait-body"
+          style={{
+            aspectRatio: '1 / 1',
+            width: '100%',
+            overflow: 'hidden',
+            boxSizing: 'border-box'
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={PORTRAIT_SRC}
             alt="George Washington portrait"
             className="about-portrait-image"
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'block',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
           />
         </div>
       </div>
