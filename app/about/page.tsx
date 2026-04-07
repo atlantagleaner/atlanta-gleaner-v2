@@ -168,10 +168,8 @@ export default function AboutPage() {
 
         .portrait-body {
           aspect-ratio: 1 / 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: ${SPACING.lg};
+          width: 100%;
+          overflow: hidden;
           box-sizing: border-box;
         }
 
@@ -221,9 +219,10 @@ export default function AboutPage() {
 
           .about-portrait-image {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
-            object-fit: contain;
+            object-fit: cover;
+            object-position: center;
           }
 
           .portrait-module {
@@ -233,9 +232,10 @@ export default function AboutPage() {
 
         .about-portrait-image {
           width: 100%;
-          height: auto;
+          height: 100%;
           display: block;
-          object-fit: contain;
+          object-fit: cover;
+          object-position: center;
         }
       `}</style>
     </main>
