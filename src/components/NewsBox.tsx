@@ -82,10 +82,11 @@ type DrawerState =
 // ── Slot badges ───────────────────────────────────────────────────────────────
 
 const SLOT_BADGE: Record<string, string | null> = {
-  science_pin:          null,
+  science_pin:          '✦',
   grab_bag:             '✦',
   science_nova:         '◉',
   letterman:            '★',
+  podcast_pin:          '🎙️',
   news:                 null,
   'news-international': null,
 }
@@ -100,6 +101,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
     queryKey: ['glean', item.url],
     queryFn: () => gleanItem(item),
     staleTime: 1000 * 60 * 60, // 1 hour
+    retry: 1,
   })
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -143,6 +145,9 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
             Open directly →
           </a>
         </p>
+        <p style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.xs }}>
+          {error.message}
+        </p>
       </div>
     )
   }
@@ -153,10 +158,28 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
 }
 
 function SeriesDrawer({ item }: { item: NewsItem }) {
+  if (!item.episodes?.length) {
+    return (
+      <div style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
+        <p style={{ ...T.micro, color: PALETTE_CSS.muted, margin: 0 }}>
+          No recent episodes found.{' '}
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: PALETTE.black }}
+          >
+            View on platform →
+          </a>
+        </p>
+      </div>
+    )
+  }
+
   return (
     <SeriesViewer
       title={item.title}
-      episodes={item.episodes ?? []}
+      episodes={item.episodes}
       readFullUrl={item.url}
     />
   )
@@ -168,7 +191,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
   const [open, setOpen] = useState(false)
 
   const badge      = SLOT_BADGE[item.slot] ?? null
-  const isSeries   = item.type === 'series' || Boolean(item.episodes?.length)
+  const isSeries   = item.type === 'series' || (item.episodes && item.episodes.length > 0)
   const isYouTube  = item.type === 'video' || /youtube\.com|youtu\.be/i.test(item.url)
   const isSpotify  = /spotify\.com/i.test(item.url)
   const mediaLabel = isYouTube ? ' · YouTube' : isSpotify ? ' · Spotify' : ''
@@ -228,6 +251,16 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                   {item.source}{mediaLabel}
                 </span>
               )}
+              {isSeries && (
+                <span style={{
+                  ...T.micro,
+                  color:     PALETTE_CSS.meta,
+                  display:   'block',
+                  marginTop: SPACING.xs,
+                }}>
+                  {item.source} · Gallery
+                </span>
+              )}
             </span>
 
             {/* Chevron */}
@@ -277,7 +310,7 @@ function LoadingSkeleton() {
 // ── Main NewsBox ───────────────────────────────────────────────────────────────
 
 export function NewsBox({ style }: { style?: React.CSSProperties }) {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['news-feed'],
     queryFn: fetchNews,
   })
@@ -302,10 +335,37 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
             {isLoading && <LoadingSkeleton />}
 
             {isError && !isLoading && (
-              <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>News unavailable</p>
+              <div style={{ padding: `${SPACING.md} 0` }}>
+                <p style={{ ...T.micro, color: PALETTE.black, marginBottom: SPACING.sm }}>
+                  News feed unavailable.
+                </p>
+                <button 
+                  onClick={() => refetch()}
+                  style={{
+                    ...T.micro,
+                    background: 'none',
+                    border: `1px solid ${PALETTE.black}`,
+                    padding: `${SPACING.xs} ${SPACING.sm}`,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Retry
+                </button>
+                {error && (
+                  <p style={{ ...T.micro, color: PALETTE_CSS.meta, marginTop: SPACING.sm }}>
+                    Error: {error.message}
+                  </p>
+                )}
+              </div>
             )}
 
-            {!isLoading && !isError && (
+            {!isLoading && !isError && items.length === 0 && (
+              <p style={{ ...T.micro, color: PALETTE_CSS.meta, padding: `${SPACING.md} 0` }}>
+                Feed is empty. Check back later.
+              </p>
+            )}
+
+            {!isLoading && !isError && items.length > 0 && (
               <div>
                 {items.map((item) => (
                   <NewsAccordionItem key={item.url} item={item} />
