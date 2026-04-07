@@ -1,36 +1,14 @@
 import * as cheerio from 'cheerio'
 import { createHash } from 'crypto'
-import { list, put } from '@vercel/blob'
+import { put, head } from '@vercel/blob'
 import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
-
-// Metascraper core and plugins
-import metascraper from 'metascraper'
-import author from 'metascraper-author'
-import date from 'metascraper-date'
-import description from 'metascraper-description'
-import image from 'metascraper-image'
-import logo from 'metascraper-logo'
-import publisher from 'metascraper-publisher'
-import title from 'metascraper-title'
-import url from 'metascraper-url'
-import readability from 'metascraper-readability'
 import DOMPurify from 'isomorphic-dompurify'
 
-const scraper = metascraper([
-  author(),
-  date(),
-  description(),
-  image(),
-  logo(),
-  publisher(),
-  title(),
-  url(),
-  readability()
-])
+// ── Configuration ─────────────────────────────────────────────────────────────
 
 const BLOB_PREFIX = 'news-reader/v4/'
-const TTL_MS = 30 * 60 * 60 * 1000
+const TTL_MS = 30 * 60 * 60 * 1000 // 30 hours
 const FETCH_TIMEOUT_MS = 12_000
 
 export interface ReaderDocument {
@@ -58,6 +36,8 @@ export interface ReaderExtractionInput {
   source: string
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 function urlHash(url: string): string {
   return createHash('sha256').update(url).digest('hex').slice(0, 32)
 }
@@ -66,9 +46,6 @@ function cachePathname(url: string): string {
   return `${BLOB_PREFIX}${urlHash(url)}.json`
 }
 
-/**
- * Normalizes relative URLs to absolute.
- */
 function toAbsolute(baseUrl: URL, value: string): string {
   if (!value) return value
   if (
@@ -79,7 +56,6 @@ function toAbsolute(baseUrl: URL, value: string): string {
   ) {
     return value
   }
-
   try {
     return new URL(value).toString()
   } catch {
@@ -93,13 +69,14 @@ function cleanWhitespace(value: string | null | undefined): string | null {
   return cleaned || null
 }
 
-/**
- * Post-processes Readability HTML to ensure URLs are absolute 
- * and unwanted tags/attributes are stripped.
- */
+function wordCountFromHtml(bodyHtml: string): number {
+  const text = cleanWhitespace(bodyHtml.replace(/<[^>]+>/g, ' '))
+  return text ? text.split(/\s+/).length : 0
+}
+
+// ── HTML Cleaning ─────────────────────────────────────────────────────────────
+
 function cleanReadabilityHtml(html: string, baseUrl: string): string {
-  // 1. Sanitize with DOMPurify (whitelist-based)
-  // This strips all scripts, inline styles, and non-standard attributes
   let sanitized = html
   try {
     sanitized = DOMPurify.sanitize(html, {
@@ -108,21 +85,18 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
         'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span'
       ],
       ALLOWED_ATTR: ['href', 'target', 'rel'],
-      // Ensure all links are forced to be safe
       ADD_ATTR: ['target', 'rel'],
       FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed'],
       FORBID_ATTR: ['style', 'onerror', 'onclick'],
     })
   } catch (err) {
-    console.error('[cleanReadabilityHtml] DOMPurify failed, falling back to raw html:', err)
+    console.error('[cleanReadabilityHtml] DOMPurify failed:', err)
   }
 
-  // 2. Post-process with Cheerio for absolute URLs and extra cleanup
   const $ = cheerio.load(`<section>${sanitized}</section>`)
   const base = new URL(baseUrl)
   const $section = $('section').first()
 
-  // Ensure absolute URLs and standard attributes for all links
   $section.find('a[href]').each((_, el) => {
     const href = $(el).attr('href')
     if (href) {
@@ -132,7 +106,6 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
     }
   })
 
-  // Remove common share containers and labels (secondary filter)
   const shareSelectors = [
     '.social-share', '.share-container', '.share-tools', '.share-buttons',
     '.article-share', '.social-links', '.social-icons', '.share-list',
@@ -141,7 +114,6 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
   ];
   $section.find(shareSelectors.join(',')).remove();
 
-  // Remove share links by href patterns
   $section.find('a[href]').each((_, el) => {
     const href = $(el).attr('href') || '';
     const isShareLink = 
@@ -153,20 +125,15 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
       href.includes('whatsapp://send') ||
       href.includes('t.me/share');
     
-    if (isShareLink) {
-      $(el).remove();
-    }
+    if (isShareLink) $(el).remove();
   });
   
-  // Remove SVG icons which are often social icons left behind
   $section.find('svg').remove();
-
   return $section.html() || ''
 }
 
-/**
- * Pulls images out of the article body to populate the "Gallery" tab.
- */
+// ── Extraction ────────────────────────────────────────────────────────────────
+
 function extractImagesAndStrip(
   bodyHtml: string,
   heroImageUrl: string | null,
@@ -204,11 +171,7 @@ function extractImagesAndStrip(
     const $img = $figure.find('img').first()
     const src = $img.attr('src')
     if (src) {
-      pushImage(
-        src,
-        $img.attr('alt'),
-        $figure.find('figcaption').first().text() || $img.attr('alt'),
-      )
+      pushImage(src, $img.attr('alt'), $figure.find('figcaption').first().text() || $img.attr('alt'))
     }
     $figure.remove()
   })
@@ -216,80 +179,44 @@ function extractImagesAndStrip(
   $section.find('img').each((_, img) => {
     const $img = $(img)
     const src = $img.attr('src')
-    if (src) {
-      pushImage(
-        src,
-        $img.attr('alt'),
-        $img.attr('alt'),
-      )
-    }
+    if (src) pushImage(src, $img.attr('alt'), $img.attr('alt'))
     $img.remove()
   })
 
-  return {
-    bodyHtml: $section.html() || '',
-    images,
-  }
+  return { bodyHtml: $section.html() || '', images }
 }
 
-function wordCountFromHtml(bodyHtml: string): number {
-  const text = cleanWhitespace(bodyHtml.replace(/<[^>]+>/g, ' '))
-  return text ? text.split(/\s+/).length : 0
-}
-
-/**
- * Main Mozilla Readability Orchestrator powered by Metascraper
- */
 async function buildReaderDocument(
   rawHtml: string,
   rawUrl: string,
   input: ReaderExtractionInput,
 ): Promise<ReaderDocument> {
-  // 1. Unified metadata extraction
-  const metadata = await scraper({ html: rawHtml, url: rawUrl })
+  const { document } = parseHTML(rawHtml)
+  const reader = new Readability(document)
+  const article = reader.parse()
   
-  // 2. Body extraction (from metascraper-readability or fallback)
-  let article = metadata.readability as any || null
-  
-  if (!article || typeof article !== 'object' || !article.content || !article.textContent || article.textContent.length < 300) {
-    // If metascraper-readability fails, try raw Readability as a fallback
-    const { document } = parseHTML(rawHtml)
-    const reader = new Readability(document)
-    const fallback = reader.parse()
-    
-    if (!fallback || !fallback.content || !fallback.textContent || fallback.textContent.length < 300) {
-      throw new Error('Extraction produced insufficient article body')
-    }
-    
-    article = fallback
+  if (!article || !article.content) {
+    throw new Error('Readability failed to extract content')
   }
 
-  const articleContent = article?.content || ''
-  const articleTitle = metadata.title || article?.title || input.title
-  const articleByline = metadata.author || article?.byline || null
-  const articleSource = metadata.publisher || article?.siteName || input.source
-  const articleExcerpt = metadata.description || article?.excerpt || null
-  const articlePublishedAt = metadata.date || article?.publishedTime || null
+  const articleTitle = article.title || input.title
+  const articleByline = article.byline || null
+  const articleSource = article.siteName || input.source
+  const articleExcerpt = article.excerpt || null
+  const cleanedHtml = cleanReadabilityHtml(article.content, rawUrl)
 
-  // 3. Clean the HTML (URLs, security)
-  let cleanedHtml = cleanReadabilityHtml(articleContent, rawUrl)
+  // Extract meta tags for more info
+  const $ = cheerio.load(rawHtml)
+  const ogImage = $('meta[property="og:image"]').attr('content')
+  const twitterImage = $('meta[name="twitter:image"]').attr('content')
+  const heroImageUrl = ogImage || twitterImage || null
 
-  // 4. Separate images for the "Gallery" split
   const extracted = extractImagesAndStrip(cleanedHtml, null, null)
   
-  // 5. Final metadata gathering
-  const heroImageUrl = metadata.image || null
-  const heroImageAlt = articleTitle
-
   if (heroImageUrl) {
     const absoluteHero = toAbsolute(new URL(rawUrl), heroImageUrl)
-    const alreadyPresent = extracted.images.some(img => img.src === absoluteHero)
-    if (!alreadyPresent) {
-      extracted.images.unshift({
-        src: absoluteHero,
-        alt: heroImageAlt,
-        caption: heroImageAlt
-      })
+    if (!extracted.images.some(img => img.src === absoluteHero)) {
+      extracted.images.unshift({ src: absoluteHero, alt: articleTitle, caption: articleTitle })
     }
   }
 
@@ -299,12 +226,12 @@ async function buildReaderDocument(
     title: articleTitle,
     byline: articleByline,
     source: articleSource,
-    publisher: metadata.publisher || null,
-    logo: metadata.logo || null,
-    publishedAt: articlePublishedAt,
+    publisher: articleSource,
+    logo: null, // Hard to get reliably without metascraper
+    publishedAt: null, 
     readFullUrl: rawUrl,
     heroImageUrl: heroImageUrl ? toAbsolute(new URL(rawUrl), heroImageUrl) : null,
-    heroImageAlt,
+    heroImageAlt: articleTitle,
     excerpt: articleExcerpt,
     bodyHtml: extracted.bodyHtml,
     images: extracted.images,
@@ -312,21 +239,24 @@ async function buildReaderDocument(
   }
 }
 
+// ── Cache Operations ──────────────────────────────────────────────────────────
+
 export async function getCachedReader(url: string): Promise<ReaderDocument | null> {
   const pathname = cachePathname(url)
 
   try {
-    const { blobs } = await list({ prefix: pathname, limit: 1 })
-    if (!blobs.length) return null
-
-    const blob = blobs[0]
+    // 1. Optimized check: Use head() to see if it exists and is fresh
+    const blob = await head(pathname)
+    if (!blob) return null
     if (Date.now() - new Date(blob.uploadedAt).getTime() > TTL_MS) return null
 
+    // 2. Fetch the actual content
     const response = await fetch(blob.url, { cache: 'no-store' })
     if (!response.ok) return null
 
     return await response.json() as ReaderDocument
-  } catch {
+  } catch (error) {
+    console.warn('[getCachedReader] Cache miss/error:', error)
     return null
   }
 }
@@ -343,6 +273,8 @@ export async function saveCachedReader(url: string, document: ReaderDocument): P
   }
 }
 
+// ── Fetching ──────────────────────────────────────────────────────────────────
+
 export async function fetchReaderDocument(
   url: string,
   input: ReaderExtractionInput,
@@ -354,22 +286,13 @@ export async function fetchReaderDocument(
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
       'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache',
     },
     redirect: 'follow',
   })
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
   const rawHtml = await response.text()
-  try {
-    return await buildReaderDocument(rawHtml, url, input)
-  } catch (err) {
-    console.error(`[fetchReaderDocument] buildReaderDocument failed for ${url}:`, err)
-    throw err
-  }
+  return await buildReaderDocument(rawHtml, url, input)
 }
 
 export async function ensureReaderDocument(

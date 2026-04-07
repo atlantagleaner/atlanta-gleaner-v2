@@ -65,6 +65,7 @@ export async function gleanArticle(
   }
 
   try {
+    console.log(`[gleanArticle] Gleaning: ${url}`);
     const document = await ensureReaderDocument(url, {
       title: itemMeta.title,
       source: itemMeta.source,
@@ -75,6 +76,7 @@ export async function gleanArticle(
       document,
     }
   } catch (error: unknown) {
+    console.error(`[gleanArticle] Failed for ${url}:`, error);
     return {
       error: `Extraction failed: ${error instanceof Error ? error.message : String(error)}`,
     }

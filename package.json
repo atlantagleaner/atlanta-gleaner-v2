@@ -8,7 +8,8 @@
     "start": "next start",
     "parse-opinions": "node scripts/process-cases.js",
     "sync-editorial": "node scripts/build-case-editorial.js",
-    "fetch-news": "node scripts/fetch-news-local.mjs --sync"
+    "fetch-news": "tsx scripts/fetch-news.ts",
+    "fetch-news:sync": "tsx scripts/fetch-news.ts --sync"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
