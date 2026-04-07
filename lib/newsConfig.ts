@@ -24,7 +24,7 @@ export interface EditorialQuery extends SearchQuery {
 }
 
 export const FEED_TARGETS = {
-  featured: 2,
+  featured: 3,
   total: 15,
 } as const;
 

@@ -25,7 +25,7 @@ const SERPER_API_KEY = process.env.SERPER_API_KEY;
 const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const MAX_STATUS_FAILURES = 12;
-const MIN_FEATURED_VIDEO_SECONDS = 8 * 60;
+const MIN_FEATURED_VIDEO_SECONDS = 4 * 60;
 
 const FEATURED_CHANNELS = {
   starTalk: {
@@ -233,6 +233,121 @@ async function buildFeaturedSeries(
     type: 'series',
     score: 1000,
     slot,
+    episodes,
+  };
+}
+
+const GRAB_BAG_CHANNELS = [
+  { id: 'kurzgesagt', url: 'https://www.youtube.com/@kurzgesagt/videos' },
+  { id: 'novapbs', url: 'https://www.youtube.com/@novapbs/videos' },
+  { id: 'PBSDocumentaries', url: 'https://www.youtube.com/@PBSDocumentaries/videos' },
+  { id: 'TheLIUniverse', url: 'https://www.youtube.com/@TheLIUniverse/videos' },
+  { id: 'whatifscienceshow', url: 'https://www.youtube.com/@whatifscienceshow/videos' },
+  { id: 'StarTalk', url: 'https://www.youtube.com/@StarTalk/videos' },
+  { id: 'PBS', url: 'https://www.youtube.com/@PBS/videos' },
+  { id: 'americanmasters', url: 'https://www.youtube.com/@americanmasters/videos' },
+  { id: 'AmericanExperiencePBS', url: 'https://www.youtube.com/@AmericanExperiencePBS/videos' },
+  { id: 'Veritasium', url: 'https://www.youtube.com/@veritasium/videos' },
+  { id: 'SmarterEveryDay', url: 'https://www.youtube.com/@smartereveryday/videos' },
+  { id: 'RealEngineering', url: 'https://www.youtube.com/@RealEngineering/videos' },
+  { id: 'history', url: 'https://www.youtube.com/@history/videos' },
+  { id: 'TimelineChannel', url: 'https://www.youtube.com/@TimelineChannel/videos' },
+  { id: 'TEDEd', url: 'https://www.youtube.com/@TEDEd/videos' },
+];
+
+async function fetchNasaLiveStream(): Promise<YoutubeEpisode | null> {
+  try {
+    const response = await fetch('https://www.youtube.com/@NASA/streams', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; AtlantaGleaner/1.0)',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+    });
+
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    const jsonText = extractJsonObject(html, 'ytInitialData');
+    if (!jsonText) return null;
+
+    const data = JSON.parse(jsonText);
+    const renderers = collectRenderers(data);
+    
+    for (const renderer of renderers) {
+      const isLive = renderer.thumbnailOverlays?.some((overlay: any) => 
+        overlay.thumbnailOverlayTimeStatusRenderer?.style === 'LIVE' || 
+        overlay.thumbnailOverlayTimeStatusRenderer?.style === 'BADGE_STYLE_TYPE_LIVE_NOW'
+      );
+      if (isLive) {
+        const videoId = renderer.videoId || renderer.navigationEndpoint?.watchEndpoint?.videoId;
+        const title = renderer.title?.simpleText || renderer.title?.runs?.map((r: any) => r.text).join('') || 'NASA Live Stream';
+        if (videoId) {
+          return {
+            title,
+            url: `https://www.youtube.com/watch?v=${videoId}`,
+            source: 'NASA',
+            publishedAt: 'Live Now',
+            type: 'video',
+            videoId,
+            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+          };
+        }
+      }
+    }
+  } catch (e) {
+    console.error('[fetchNasaLiveStream] Error:', e);
+  }
+  return null;
+}
+
+async function buildScienceGrabBag(): Promise<GleanerItem> {
+  const shuffledChannels = [...GRAB_BAG_CHANNELS].sort(() => Math.random() - 0.5);
+  const selectedChannels = shuffledChannels.slice(0, 9);
+  
+  const episodes: YoutubeEpisode[] = [];
+  
+  const channelResults = await Promise.all(
+    selectedChannels.map(async (ch) => {
+      try {
+        const eps = await fetchLatestYouTubeEpisodes(ch.id, ch.url);
+        if (eps.length > 0) {
+          return eps[Math.floor(Math.random() * eps.length)];
+        }
+      } catch(e) {
+        // Silently ignore channel fetch failures to keep the cron robust
+      }
+      return null;
+    })
+  );
+  
+  for (const ep of channelResults) {
+    if (ep && episodes.length < 9) episodes.push(ep);
+  }
+  
+  const nasaLive = await fetchNasaLiveStream() || {
+    title: 'NASA Live Stream',
+    url: 'https://www.youtube.com/@NASA/live',
+    source: 'NASA',
+    publishedAt: 'Live Now',
+    type: 'video',
+    videoId: '21X5lGlDOfg', // Generic fallback video ID for embed safety if the parse fails
+    thumbnailUrl: '',
+  } as YoutubeEpisode;
+  
+  if (episodes.length >= 3) {
+    episodes.splice(3, 0, nasaLive);
+  } else {
+    episodes.push(nasaLive);
+  }
+  
+  return {
+    title: 'Science Grab Bag',
+    url: 'https://www.youtube.com/',
+    source: 'Curated Grab Bag',
+    publishedAt: new Date().toISOString(),
+    type: 'series',
+    score: 1000,
+    slot: 'science_grab_bag',
     episodes,
   };
 }
@@ -592,14 +707,16 @@ async function buildNewsFeed(options?: {
   const featured: GleanerItem[] = [];
   const failures: RefreshFailure[] = [];
 
-  const [starTalk, pbsSpaceTime] = await Promise.all([
+  const [starTalk, pbsSpaceTime, grabBag] = await Promise.all([
     buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
     buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
+    buildScienceGrabBag(),
   ]);
 
-  featured.push(starTalk, pbsSpaceTime);
+  featured.push(starTalk, pbsSpaceTime, grabBag);
   usedUrls.add(starTalk.url);
   usedUrls.add(pbsSpaceTime.url);
+  usedUrls.add(grabBag.url);
 
   const queries = [
     ...EDITORIAL_QUERIES.local.map((query) => ({ lane: 'local' as const, query })),
@@ -884,7 +1001,7 @@ export async function GET(request: Request) {
       forced: forceRun,
       failures,
       breakdown: {
-        featured: liveEntry.items.filter((item) => item.slot === 'science_pin').length,
+        featured: liveEntry.items.filter((item) => item.slot === 'science_pin' || item.slot === 'science_grab_bag').length,
         localOrNational: liveEntry.items.filter((item) => item.slot === 'news').length,
         international: liveEntry.items.filter((item) => item.slot === 'news-international').length,
         editorialOddities: liveEntry.items.filter((item) => item.slot === 'letterman').length,
