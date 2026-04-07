@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { GleanResult } from '@/app/actions/glean'
-import { PALETTE, PALETTE_CSS, T, SPACING, ANIMATION, ITEM_RULE } from '@/src/styles/tokens'
+import { PALETTE, PALETTE_CSS, T, FONT, SPACING, ANIMATION, ITEM_RULE } from '@/src/styles/tokens'
 
 const COLLAPSE_WORD_THRESHOLD = 1200
 
@@ -263,9 +263,6 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
           <span style={{ fontSize: '12px' }}>↗</span>
         </a>
       </footer>
-    </article>
-  )
-}
     </article>
   )
 }

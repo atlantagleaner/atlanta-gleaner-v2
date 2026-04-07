@@ -15,10 +15,11 @@ export const runtime = 'nodejs'
 export interface GleanerEpisode {
   title: string
   publishedAt: string
-  videoId: string
+  videoId?: string
+  spotifyId?: string
   url?: string
   source?: string
-  type?: 'video'
+  type?: 'video' | 'audio'
   thumbnailUrl?: string
 }
 
@@ -36,7 +37,8 @@ export interface GleanerItem {
 interface CompactEpisode {
   t: string
   p: string
-  v: string
+  v?: string
+  s?: string
 }
 
 interface CompactItem {
@@ -55,24 +57,47 @@ export interface CacheEntry {
 }
 
 function hydrateEpisode(episode: GleanerEpisode | CompactEpisode): GleanerEpisode {
-  if ('videoId' in episode) {
+  if ('videoId' in episode || 'spotifyId' in episode) {
+    const ep = episode as GleanerEpisode;
+    if (ep.spotifyId) {
+      return {
+        ...ep,
+        url: ep.url || `https://open.spotify.com/episode/${ep.spotifyId}`,
+        source: ep.source || 'Spotify',
+        type: ep.type || 'audio',
+        thumbnailUrl: ep.thumbnailUrl || '',
+      }
+    }
     return {
-      ...episode,
-      url: episode.url || `https://www.youtube.com/watch?v=${episode.videoId}`,
-      source: episode.source || 'YouTube',
-      type: 'video',
-      thumbnailUrl: episode.thumbnailUrl || `https://i.ytimg.com/vi/${episode.videoId}/hqdefault.jpg`,
+      ...ep,
+      url: ep.url || `https://www.youtube.com/watch?v=${ep.videoId}`,
+      source: ep.source || 'YouTube',
+      type: ep.type || 'video',
+      thumbnailUrl: ep.thumbnailUrl || `https://i.ytimg.com/vi/${ep.videoId}/hqdefault.jpg`,
+    }
+  }
+
+  const comp = episode as CompactEpisode;
+  if (comp.s) {
+    return {
+      title: comp.t,
+      publishedAt: comp.p,
+      spotifyId: comp.s,
+      url: `https://open.spotify.com/episode/${comp.s}`,
+      source: 'Spotify',
+      type: 'audio',
+      thumbnailUrl: '',
     }
   }
 
   return {
-    title: episode.t,
-    publishedAt: episode.p,
-    videoId: episode.v,
-    url: `https://www.youtube.com/watch?v=${episode.v}`,
+    title: comp.t,
+    publishedAt: comp.p,
+    videoId: comp.v || '',
+    url: `https://www.youtube.com/watch?v=${comp.v}`,
     source: 'YouTube',
     type: 'video',
-    thumbnailUrl: `https://i.ytimg.com/vi/${episode.v}/hqdefault.jpg`,
+    thumbnailUrl: `https://i.ytimg.com/vi/${comp.v}/hqdefault.jpg`,
   }
 }
 
