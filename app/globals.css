@@ -24,6 +24,10 @@
   --interactive-border: #f0f0f0;
   --interactive-citation: #666;
   --interactive-gradient-fade: #EEEDEB;
+  --archive-volume-selector-bar: #EEEDEB;
+  --archive-volume-selector-text: #000000;
+  --archive-volume-selector-active-bg: #000000;
+  --archive-volume-selector-active-text: #FFFFFF;
 
   --font-serif: 'Cormorant Garamond', serif;
   --font-sans:  'Inter', sans-serif;
@@ -54,6 +58,10 @@
   --interactive-border: #E0E0E0;
   --interactive-citation: #333333;
   --interactive-gradient-fade: #E0E0E0;
+  --archive-volume-selector-bar: #E0E0E0;
+  --archive-volume-selector-text: #000000;
+  --archive-volume-selector-active-bg: #000000;
+  --archive-volume-selector-active-text: #FFFFFF;
 }
 
 /* Classical theme hover states — pale slate backgrounds with black text */
@@ -98,6 +106,10 @@
   --interactive-border: #f0f0f0;
   --interactive-citation: #666;
   --interactive-gradient-fade: #000000;
+  --archive-volume-selector-bar: #0D1117;
+  --archive-volume-selector-text: #00FF41;
+  --archive-volume-selector-active-bg: #00FF41;
+  --archive-volume-selector-active-text: #0D1117;
 }
 
 /* Green glow on the masthead title */
@@ -349,6 +361,7 @@ a.case-archive-link:hover .case-archive-tags {
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: flex-start;
+  background: var(--archive-volume-selector-bar);
 }
 
 .archive-volume-selector-button {
@@ -360,7 +373,7 @@ a.case-archive-link:hover .case-archive-tags {
   flex: 0 0 auto;
   border: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--archive-volume-selector-text);
   cursor: pointer;
   padding: 14px 16px 13px;
   text-align: left;
@@ -368,13 +381,12 @@ a.case-archive-link:hover .case-archive-tags {
 }
 
 .archive-volume-selector-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--palette-white);
+  filter: brightness(0.96);
 }
 
 .archive-volume-selector-button.is-active {
-  background: var(--palette-white);
-  color: var(--palette-black);
+  background: var(--archive-volume-selector-active-bg);
+  color: var(--archive-volume-selector-active-text);
 }
 
 .archive-volume-selector-label,
@@ -388,11 +400,11 @@ a.case-archive-link:hover .case-archive-tags {
 }
 
 .archive-volume-selector-year {
-  opacity: 0.7;
+  opacity: 0.72;
 }
 
 .archive-volume-selector-button.is-active .archive-volume-selector-year {
-  opacity: 0.8;
+  opacity: 0.88;
 }
 
 @media (max-width: 640px) {

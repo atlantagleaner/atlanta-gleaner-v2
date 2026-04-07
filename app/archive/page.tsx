@@ -578,7 +578,7 @@ function ArchiveVolumePanel({
   return (
     <div style={volumeShell}>
       <div style={{
-        background: PALETTE.black,
+        background: 'var(--archive-volume-selector-bar)',
         borderBottom: `1px solid ${PALETTE_CSS.border}`,
       }}>
         <div className="archive-volume-selector">
