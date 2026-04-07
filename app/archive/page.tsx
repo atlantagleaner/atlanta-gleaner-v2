@@ -1,17 +1,6 @@
 'use client'
 // ─────────────────────────────────────────────────────────────────────────────
 // app/archive/page.tsx — Atlanta Gleaner Case Law Archive
-//
-// Four volume boxes, each an accordion. Inside each volume, months are
-// sub-accordions. Cases are listed under their month.
-//
-//   Volume I   · 2022–2023
-//   Volume II  · 2024
-//   Volume III · 2025
-//   Volume IV  · 2026 and beyond
-//
-// Aesthetic: IBM Plex Mono labels, warm off-white background, black borders,
-// minimal — consistent with the rest of the Gleaner design system.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useDeferredValue, useMemo, useState } from 'react'
@@ -21,14 +10,14 @@ import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
 import { SearchInput } from '@/src/components/common/SearchInput'
 import {
-  PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL, BOX_HEADER,
-  BOX_PADDING, ITEM_RULE, SPACING, SIZE_SM, SIZE_MD,
+  PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
+  ITEM_RULE, SPACING, SIZE_SM,
   PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION,
 } from '@/src/styles/tokens'
 import { CASES } from '@/src/data/cases'
 import type { CaseLaw } from '@/src/data/types'
 
-// ── Volume definitions ────────────────────────────────────────────────────────
+// ── Volume & Topic Definitions ───────────────────────────────────────────────
 
 const VOLUMES = [
   { number: 'IV',  label: 'Volume IV',  years: [2026, 2027, 2028, 2029, 2030], roman: 'IV' },
@@ -42,6 +31,47 @@ const MONTHS = [
   'July','August','September','October','November','December',
 ]
 
+export interface TopicNode {
+  label: string
+  matchTags?: string[]
+  subTopics?: TopicNode[]
+}
+
+export type GroupedTopic = {
+  label: string
+  cases: CaseLaw[]
+  subTopics?: GroupedTopic[]
+}
+
+const CRIMINAL_TAXONOMY: TopicNode[] = [
+  { label: "Homicide & Violent Crimes", matchTags: ["felony murder", "malice murder", "aggravated assault", "manslaughter", "homicide", "battery", "kidnapping", "rape", "cruelty to children"] },
+  { label: "Property & Drug Offenses", matchTags: ["trafficking", "possession", "burglary", "theft", "rico", "robbery", "drug", "methamphetamine", "cocaine", "marijuana", "forgery"] },
+  { label: "Constitutional Rights & Procedure", matchTags: ["fourth amendment", "search and seizure", "miranda", "right to counsel", "double jeopardy", "due process", "speedy trial", "suppress"] },
+  { label: "Trial Practice & Evidence", matchTags: ["hearsay", "character evidence", "jury instructions", "prosecutorial misconduct", "mutually exclusive verdicts", "expert witness", "cross-examination", "similar transaction", "evidence", "testimony"] },
+  { label: "Post-Conviction & Sentencing", matchTags: ["probation revocation", "habeas corpus", "first offender act", "motion for new trial", "sentencing", "restitution", "appeal", "ineffective assistance"] }
+]
+
+const CIVIL_TAXONOMY: TopicNode[] = [
+  { 
+    label: "Torts & Personal Injury", 
+    subTopics: [
+      { label: "Premises Liability", matchTags: ["slip and fall", "negligent security", "third-party criminal act", "attractive nuisance", "hazard knowledge", "invitee", "licensee", "constructive knowledge", "premises liability"] },
+      { label: "Motor Vehicle & Transit", matchTags: ["auto collision", "commercial trucking", "uninsured motorist", "um", "sudden emergency doctrine", "proximate cause", "marta", "respondeat superior", "motor vehicle", "car accident"] },
+      { label: "Medical Malpractice", matchTags: ["medical malpractice", "ocga", "expert affidavit", "standard of care", "gross negligence", "emergency room", "informed consent", "wrongful death", "medical"] },
+      { label: "Products Liability", matchTags: ["design defect", "manufacturing defect", "failure to warn", "strict liability", "risk-utility", "consumer expectations", "products liability"] },
+      { label: "Intentional Torts & Defamation", matchTags: ["libel", "slander", "defamation", "false imprisonment", "intentional infliction of emotional distress", "iied", "malicious prosecution", "civil assault", "anti-slapp", "intentional tort"] },
+      { label: "Professional Negligence (Non-Medical)", matchTags: ["legal malpractice", "accounting malpractice", "fiduciary duty", "engineering defect", "professional negligence"] },
+      { label: "Damages, Defenses & Apportionment", matchTags: ["apportionment", "punitive damages", "nominal damages", "assumption of risk", "comparative negligence", "spoliation", "damages"] }
+    ] 
+  },
+  { label: "Contracts & Commercial Law", matchTags: ["breach of contract", "fraud", "arbitration", "corporate governance", "contract", "promissory note", "guaranty", "llc", "fiduciary"] },
+  { label: "Government & Administrative Law", matchTags: ["sovereign immunity", "municipal liability", "official immunity", "open records", "zoning", "administrative", "tax", "condemnation"] },
+  { label: "Property & Real Estate", matchTags: ["quiet title", "landlord-tenant", "eminent domain", "foreclosure", "real estate", "property", "easement", "trespass", "nuisance"] },
+  { label: "Employment & Agency", matchTags: ["workers' compensation", "respondeat superior", "non-compete", "employment", "agency", "independent contractor"] },
+  { label: "Family & Domestic Law", matchTags: ["divorce", "child custody", "alimony", "legitimation", "family law", "child support", "parental rights"] },
+  { label: "Insurance Law", matchTags: ["coverage dispute", "uninsured motorist", "bad faith", "insurance", "policy", "insurer"] }
+]
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function getYear(dateStr: string): number | null {
@@ -51,7 +81,7 @@ function getYear(dateStr: string): number | null {
 
 function getMonth(dateStr: string): number | null {
   const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? null : d.getMonth() // 0-indexed
+  return isNaN(d.getTime()) ? null : d.getMonth()
 }
 
 function getArchiveDate(c: Pick<CaseLaw, 'dateDecided' | 'decision_date_iso'>): string {
@@ -86,279 +116,6 @@ function getArchiveDecisionDate(
   }
 
   return ''
-}
-
-function yearLabel(years: number[]): string {
-  if (years.length === 1) return String(years[0])
-  return `${years[0]}–${years[years.length - 1]}`
-}
-
-// ── Style helpers ─────────────────────────────────────────────────────────────
-
-const volumeShell: CSSProperties = {
-  ...BOX_SHELL,
-  marginBottom: SPACING.xl,
-  overflow:     'hidden',
-}
-
-const volumeToggle: CSSProperties = {
-  width:          '100%',
-  background:     PALETTE.black,
-  border:         'none',
-  padding:        `${SPACING.lg} ${SPACING.lg}`,
-  display:        'flex',
-  justifyContent: 'space-between',
-  alignItems:     'center',
-  cursor:         'pointer',
-  textAlign:      'left',
-}
-
-const monthToggle: CSSProperties = {
-  width:          '100%',
-  background:     PALETTE.white,
-  border:         'none',
-  padding:        `${SPACING.md} ${SPACING.lg}`,
-  display:        'flex',
-  justifyContent: 'space-between',
-  alignItems:     'center',
-  cursor:         'pointer',
-  textAlign:      'left',
-  ...ITEM_RULE,
-}
-
-// caseLink styling is handled by .case-archive-link CSS class in globals.css
-
-// ── Month sub-accordion ───────────────────────────────────────────────────────
-
-function MonthShelf({
-  month, year, monthCases, forceOpen = false,
-}: {
-  month:      string
-  year:       number
-  monthCases: CaseLaw[]
-  forceOpen?: boolean
-}) {
-  const [open, setOpen] = useState(false)
-  const isOpen = forceOpen || open
-
-  return (
-    <div>
-      <button
-        onClick={() => {
-          if (!forceOpen) setOpen(v => !v)
-        }}
-        style={monthToggle}
-        aria-expanded={isOpen}
-      >
-        <span style={{
-          ...T.micro,
-          color:         isOpen ? PALETTE.black : PALETTE_CSS.meta,
-        }}>
-          {month} {year}
-          <span style={{
-            marginLeft:    SPACING.sm,
-            ...FONT.mono,
-            fontSize:      SIZE_SM,
-            fontWeight:    400,
-            letterSpacing: '0.10em',
-            color:         PALETTE_CSS.muted,
-          }}>
-            — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
-          </span>
-        </span>
-        <span style={{
-          ...FONT.mono,
-          fontSize:   SIZE_SM,
-          color:      PALETTE_CSS.muted,
-          transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}`,
-          display:    'inline-block',
-          transform:  isOpen ? 'rotate(90deg)' : 'rotate(0)',
-        }}>
-          ▶
-        </span>
-      </button>
-
-      {isOpen && (
-        <div style={{ background: PALETTE.white }}>
-          {monthCases.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/cases/${c.slug}#case-law-box`}
-                className="case-archive-link"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1fr) 280px',
-                  columnGap: SPACING.md,
-                  alignItems: 'start',
-                }}
-              >
-                <div style={{ display: 'contents' }}>
-                  <div className="case-archive-title" style={{
-                    ...T.body,
-                    minWidth: 0,
-                    marginBottom: 0,
-                    gridColumn: '1',
-                    gridRow: '1',
-                  }}>
-                    {c.title}
-                  </div>
-                  {c.tags && c.tags.length > 0 && (
-                    <div style={{
-                    minWidth: 0,
-                    maxWidth: '280px',
-                    gridColumn: '2',
-                    gridRow: '1 / span 3',
-                    alignSelf: 'stretch',
-                  }}>
-                      <div className="case-archive-tags" style={{
-                        ...T.micro,
-                        textAlign: 'right',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        lineHeight: 1.45,
-                        overflow: 'hidden',
-                        overflowWrap: 'anywhere',
-                        paddingLeft: SPACING.md,
-                        borderLeft: `1px solid ${PALETTE_CSS.border}`,
-                      }}>
-                        {c.tags.join(' · ')}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                  <div className="case-archive-meta" style={{
-                    ...T.micro,
-                    fontWeight:    400,
-                    letterSpacing: '0.10em',
-                    marginTop:     0,
-                    gridColumn:    '1',
-                    gridRow:       '2',
-                  }}>
-                    {c.court}
-                  </div>
-                  <div className="case-archive-meta" style={{
-                    ...T.micro,
-                    fontWeight:    400,
-                    letterSpacing: '0.10em',
-                    marginTop:     0,
-                    gridColumn:    '1',
-                    gridRow:       '3',
-                  }}>
-                    {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
-                  </div>
-              </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ── Volume accordion ──────────────────────────────────────────────────────────
-
-function VolumeBox({
-  volume,
-  allCases,
-  defaultOpen,
-  forceOpen = false,
-}: {
-  volume:      typeof VOLUMES[number]
-  allCases:    CaseLaw[]
-  defaultOpen: boolean
-  forceOpen?: boolean
-}) {
-  const [open, setOpen] = useState(defaultOpen)
-  const isOpen = forceOpen || open
-
-  // Filter cases that belong to this volume's year range
-  const volumeCases = allCases.filter((c) => {
-    const y = getYear(getArchiveDate(c))
-    return y !== null && volume.years.includes(y)
-  })
-
-  // Collect months that have cases (newest first)
-  const monthsWithCases: Array<{ year: number; month: number; label: string; cases: CaseLaw[] }> = []
-
-  // Build list ordered newest → oldest
-  for (const year of [...volume.years].reverse()) {
-    for (let m = 11; m >= 0; m--) {
-      const mCases = volumeCases.filter((c) => {
-        const archiveDate = getArchiveDate(c)
-        const y = getYear(archiveDate)
-        const mo = getMonth(archiveDate)
-        return y === year && mo === m
-      })
-      if (mCases.length > 0) {
-        monthsWithCases.push({ year, month: m, label: MONTHS[m], cases: mCases })
-      }
-    }
-  }
-
-  // Year span description
-  const yearSpanLabel = volume.years.length === 1
-    ? String(volume.years[0])
-    : `${volume.years[0]}–${volume.years.filter(y => volumeCases.some(c => getYear(getArchiveDate(c)) === y)).pop() ?? volume.years[volume.years.length - 1]}`
-
-  return (
-    <div style={volumeShell}>
-      {/* Volume header button */}
-      <button
-        onClick={() => {
-          if (!forceOpen) setOpen(v => !v)
-        }}
-        style={volumeToggle}
-        aria-expanded={isOpen}
-      >
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: SPACING.lg }}>
-          <span style={{ ...T.label, color: PALETTE.white, lineHeight: 1 }}>
-            Volume {volume.roman}
-          </span>
-          <span style={{ ...T.micro, color: PALETTE.white, opacity: 0.5 }}>
-            {yearSpanLabel}
-          </span>
-          <span style={{ ...T.micro, color: PALETTE.white, opacity: 0.35, fontWeight: 400 }}>
-            {volumeCases.length} {volumeCases.length === 1 ? 'opinion' : 'opinions'}
-          </span>
-        </div>
-        <span style={{
-          ...FONT.mono,
-          fontSize:   SIZE_SM,
-          color:      PALETTE.white,
-          opacity:    0.5,
-          transition: `transform ${ANIMATION.base} ${ANIMATION.ease}`,
-          display:    'inline-block',
-          transform:  isOpen ? 'rotate(90deg)' : 'rotate(0)',
-        }}>
-          ▶
-        </span>
-      </button>
-
-      {/* Volume body */}
-      {isOpen && (
-        <div style={{ background: PALETTE.warm }}>
-          {monthsWithCases.length === 0 ? (
-            <div style={{
-              ...T.micro,
-              color:   PALETTE_CSS.muted,
-              padding: `${SPACING.lg} ${SPACING.lg}`,
-            }}>
-              No opinions published yet.
-            </div>
-          ) : (
-            monthsWithCases.map(({ year, month, label, cases: mCases }) => (
-              <MonthShelf
-                key={`${year}-${month}`}
-                month={label}
-                year={year}
-                monthCases={mCases}
-                forceOpen={forceOpen}
-              />
-            ))
-          )}
-        </div>
-      )}
-    </div>
-  )
 }
 
 function formatVolumeLabel(volumeCases: CaseLaw[]): string {
@@ -401,6 +158,198 @@ function getVolumeMonths(volumeCases: CaseLaw[], volume: typeof VOLUMES[number])
 
   return monthsWithCases
 }
+
+// ── Taxonomy Logic ────────────────────────────────────────────────────────────
+
+function matchesTags(caseTags: string[], matchWords: string[]): boolean {
+  if (!caseTags || caseTags.length === 0) return false;
+  const lowerCaseTags = caseTags.map(t => t.toLowerCase());
+  return matchWords.some(mw => 
+    lowerCaseTags.some(t => t.includes(mw.toLowerCase()))
+  );
+}
+
+function processTaxonomy(taxonomy: TopicNode[], cases: CaseLaw[]): GroupedTopic[] {
+  const result: GroupedTopic[] = [];
+  
+  for (const node of taxonomy) {
+    if (node.subTopics) {
+      const subResults = processTaxonomy(node.subTopics, cases);
+      const activeSubResults = subResults.filter(sr => sr.cases.length > 0 || (sr.subTopics && sr.subTopics.length > 0));
+      
+      if (activeSubResults.length > 0) {
+        const allCasesInSubTopics = new Set<CaseLaw>();
+        activeSubResults.forEach(sr => sr.cases.forEach(c => allCasesInSubTopics.add(c)));
+        result.push({
+          label: node.label,
+          cases: Array.from(allCasesInSubTopics),
+          subTopics: activeSubResults
+        });
+      }
+    } else if (node.matchTags) {
+      const matchedCases = cases.filter(c => matchesTags(c.tags || c.coreTerms || [], node.matchTags!));
+      if (matchedCases.length > 0) {
+        result.push({
+          label: node.label,
+          cases: matchedCases
+        });
+      }
+    }
+  }
+  
+  return result;
+}
+
+function isCriminalCase(c: CaseLaw): boolean {
+  const criminalTags = CRIMINAL_TAXONOMY.flatMap(t => t.matchTags || []);
+  if (matchesTags(c.tags || c.coreTerms || [], criminalTags)) return true;
+  const title = c.title.toLowerCase();
+  if (title.includes(" v. state") || title.includes("state v. ") || title.includes("warden")) return true;
+  return false;
+}
+
+function isCivilCase(c: CaseLaw): boolean {
+  const civilTags = CIVIL_TAXONOMY.flatMap(t => t.subTopics ? t.subTopics.flatMap(st => st.matchTags || []) : (t.matchTags || []));
+  if (matchesTags(c.tags || c.coreTerms || [], civilTags)) return true;
+  return !isCriminalCase(c);
+}
+
+function getCivilTopics(cases: CaseLaw[]): GroupedTopic[] {
+  const groups = processTaxonomy(CIVIL_TAXONOMY, cases);
+  const categorized = new Set<CaseLaw>();
+  const extract = (topics: GroupedTopic[]) => {
+    for (const t of topics) {
+      t.cases.forEach(c => categorized.add(c));
+      if (t.subTopics) extract(t.subTopics);
+    }
+  }
+  extract(groups);
+  
+  const generalCivilCases = cases.filter(c => isCivilCase(c) && !categorized.has(c));
+  if (generalCivilCases.length > 0) {
+    groups.push({ label: "General Civil Law", cases: generalCivilCases });
+  }
+  return groups;
+}
+
+function getCriminalTopics(cases: CaseLaw[]): GroupedTopic[] {
+  const groups = processTaxonomy(CRIMINAL_TAXONOMY, cases);
+  const categorized = new Set<CaseLaw>();
+  const extract = (topics: GroupedTopic[]) => {
+    for (const t of topics) {
+      t.cases.forEach(c => categorized.add(c));
+      if (t.subTopics) extract(t.subTopics);
+    }
+  }
+  extract(groups);
+  
+  const generalCriminalCases = cases.filter(c => isCriminalCase(c) && !categorized.has(c));
+  if (generalCriminalCases.length > 0) {
+    groups.push({ label: "General Criminal Law", cases: generalCriminalCases });
+  }
+  return groups;
+}
+
+// ── Style helpers ─────────────────────────────────────────────────────────────
+
+const volumeShell: CSSProperties = {
+  ...BOX_SHELL,
+  marginBottom: SPACING.xl,
+  overflow:     'hidden',
+}
+
+const monthToggle: CSSProperties = {
+  width:          '100%',
+  background:     PALETTE.white,
+  border:         'none',
+  padding:        `${SPACING.md} ${SPACING.lg}`,
+  display:        'flex',
+  justifyContent: 'space-between',
+  alignItems:     'center',
+  cursor:         'pointer',
+  textAlign:      'left',
+  ...ITEM_RULE,
+}
+
+// ── Shared Case Link Component ────────────────────────────────────────────────
+
+function CaseArchiveRow({ c }: { c: CaseLaw }) {
+  return (
+    <Link
+      href={`/cases/${c.slug}#case-law-box`}
+      className="case-archive-link"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1fr) 280px',
+        columnGap: SPACING.md,
+        alignItems: 'start',
+      }}
+    >
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '5px',
+        minWidth: 0,
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+      }}>
+        <div className="case-archive-title" style={{
+          ...T.body,
+          lineHeight: 1.15,
+          minWidth: 0,
+          marginBottom: 0,
+          minHeight: '2.3em',
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          overflow: 'hidden',
+        }}>
+          {c.title}
+        </div>
+        <div className="case-archive-meta" style={{
+          ...T.micro,
+          fontWeight: 400,
+          letterSpacing: '0.10em',
+          marginTop: 0,
+          lineHeight: 1.15,
+        }}>
+          {c.court}
+        </div>
+        <div className="case-archive-meta" style={{
+          ...T.micro,
+          fontWeight: 400,
+          letterSpacing: '0.10em',
+          marginTop: 0,
+          lineHeight: 1.15,
+        }}>
+          {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
+        </div>
+      </div>
+      {c.tags && c.tags.length > 0 && (
+        <div style={{
+          minWidth: 0,
+          alignSelf: 'stretch',
+        }}>
+          <div className="case-archive-tags" style={{
+            ...T.micro,
+            textAlign: 'right',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            lineHeight: 1.45,
+            overflow: 'hidden',
+            overflowWrap: 'anywhere',
+            paddingLeft: SPACING.md,
+            borderLeft: `1px solid ${PALETTE_CSS.border}`,
+          }}>
+            {c.tags.join(' · ')}
+          </div>
+        </div>
+      )}
+    </Link>
+  )
+}
+
+// ── Drawers ───────────────────────────────────────────────────────────────────
 
 function VolumeMonthDrawer({
   month,
@@ -452,80 +401,7 @@ function VolumeMonthDrawer({
 
       {isOpen && (
         <div style={{ background: PALETTE.white }}>
-          {monthCases.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/cases/${c.slug}#case-law-box`}
-              className="case-archive-link"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1fr) 280px',
-                columnGap: SPACING.md,
-                alignItems: 'start',
-              }}
-            >
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '5px',
-                minWidth: 0,
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-              }}>
-                <div className="case-archive-title" style={{
-                  ...T.body,
-                  lineHeight: 1.15,
-                  minWidth: 0,
-                  marginBottom: 0,
-                  minHeight: '2.3em',
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 2,
-                  overflow: 'hidden',
-                }}>
-                  {c.title}
-                </div>
-                <div className="case-archive-meta" style={{
-                  ...T.micro,
-                  fontWeight: 400,
-                  letterSpacing: '0.10em',
-                  marginTop: 0,
-                  lineHeight: 1.15,
-                }}>
-                  {c.court}
-                </div>
-                <div className="case-archive-meta" style={{
-                  ...T.micro,
-                  fontWeight: 400,
-                  letterSpacing: '0.10em',
-                  marginTop: 0,
-                  lineHeight: 1.15,
-                }}>
-                  {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
-                </div>
-              </div>
-              {c.tags && c.tags.length > 0 && (
-                <div style={{
-                  minWidth: 0,
-                  alignSelf: 'stretch',
-                }}>
-                  <div className="case-archive-tags" style={{
-                    ...T.micro,
-                    textAlign: 'right',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    lineHeight: 1.45,
-                    overflow: 'hidden',
-                    overflowWrap: 'anywhere',
-                    paddingLeft: SPACING.md,
-                    borderLeft: `1px solid ${PALETTE_CSS.border}`,
-                  }}>
-                    {c.tags.join(' · ')}
-                  </div>
-                </div>
-              )}
-            </Link>
-          ))}
+          {monthCases.map((c) => <CaseArchiveRow key={c.slug} c={c} />)}
         </div>
       )}
     </div>
@@ -560,6 +436,101 @@ function VolumeMonthDrawerList({
   )
 }
 
+function VolumeTopicDrawer({
+  topic,
+  level = 0,
+  isOpen,
+  onToggle,
+}: {
+  topic: GroupedTopic
+  level?: number
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  const isSubDrawer = level > 0;
+  
+  const headerStyle: CSSProperties = {
+    ...monthToggle,
+    paddingLeft: `calc(${SPACING.lg} + ${level * 20}px)`,
+    background: isSubDrawer ? PALETTE.warm : PALETTE.white,
+    borderBottom: isSubDrawer ? 'none' : monthToggle.borderBottom,
+  };
+
+  return (
+    <div>
+      <button
+        onClick={onToggle}
+        style={headerStyle}
+        aria-expanded={isOpen}
+      >
+        <span style={{
+          ...T.micro,
+          color: PALETTE.black,
+        }}>
+          {topic.label}
+          <span style={{
+            marginLeft: SPACING.sm,
+            ...FONT.mono,
+            fontSize: SIZE_SM,
+            fontWeight: 400,
+            letterSpacing: '0.10em',
+            color: PALETTE.black,
+          }}>
+            — {topic.cases.length} {topic.cases.length === 1 ? 'case' : 'cases'}
+          </span>
+        </span>
+        <span style={{
+          ...FONT.mono,
+          fontSize: SIZE_SM,
+          color: PALETTE_CSS.muted,
+          transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}`,
+          display: 'inline-block',
+          transform: isOpen ? 'rotate(90deg)' : 'rotate(0)',
+        }}>
+          ▶
+        </span>
+      </button>
+
+      {isOpen && (
+        <div style={{ background: PALETTE.white }}>
+          {topic.subTopics && topic.subTopics.length > 0 ? (
+            <VolumeTopicDrawerList groupedTopics={topic.subTopics} level={level + 1} />
+          ) : (
+            topic.cases.map((c) => <CaseArchiveRow key={c.slug} c={c} />)
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function VolumeTopicDrawerList({
+  groupedTopics,
+  level = 0,
+}: {
+  groupedTopics: GroupedTopic[]
+  level?: number
+}) {
+  const [openTopic, setOpenTopic] = useState<string | null>(null)
+
+  return (
+    <>
+      {groupedTopics.map((topic) => {
+        const isOpen = openTopic === topic.label
+        return (
+          <VolumeTopicDrawer
+            key={topic.label}
+            topic={topic}
+            level={level}
+            isOpen={isOpen}
+            onToggle={() => setOpenTopic(isOpen ? null : topic.label)}
+          />
+        )
+      })}
+    </>
+  )
+}
+
 function ArchiveVolumePanel({
   volumes,
   cases,
@@ -571,9 +542,15 @@ function ArchiveVolumePanel({
   selectedVolumeNumber: string
   onSelectVolume: (volumeNumber: string) => void
 }) {
-  const selectedVolume = volumes.find((volume) => volume.number === selectedVolumeNumber) ?? volumes[0]
-  const volumeCases = useMemo(() => getVolumeCases(cases, selectedVolume), [cases, selectedVolume.number])
-  const monthsWithCases = useMemo(() => getVolumeMonths(volumeCases, selectedVolume), [volumeCases, selectedVolume.number])
+  const isCivil = selectedVolumeNumber === 'CIVIL'
+  const isCriminal = selectedVolumeNumber === 'CRIMINAL'
+  
+  const selectedVolume = volumes.find((volume) => volume.number === selectedVolumeNumber)
+  const volumeCases = useMemo(() => selectedVolume ? getVolumeCases(cases, selectedVolume) : [], [cases, selectedVolume])
+  
+  const monthsWithCases = useMemo(() => selectedVolume ? getVolumeMonths(volumeCases, selectedVolume) : [], [volumeCases, selectedVolume])
+  const civilTopics = useMemo(() => getCivilTopics(cases), [cases])
+  const criminalTopics = useMemo(() => getCriminalTopics(cases), [cases])
 
   return (
     <div style={volumeShell}>
@@ -583,7 +560,7 @@ function ArchiveVolumePanel({
       }}>
         <div className="archive-volume-selector">
           {volumes.map((volume) => {
-            const isSelected = volume.number === selectedVolume.number
+            const isSelected = volume.number === selectedVolumeNumber
             const volumeLabel = formatVolumeLabel(getVolumeCases(cases, volume))
             return (
               <button
@@ -598,20 +575,52 @@ function ArchiveVolumePanel({
               </button>
             )
           })}
+          
+          <button
+            type="button"
+            onClick={() => onSelectVolume('CIVIL')}
+            aria-pressed={isCivil}
+            className={`archive-volume-selector-button${isCivil ? ' is-active' : ''}`}
+          >
+            <span className="archive-volume-selector-label">Civil Law</span>
+            <span className="archive-volume-selector-year">Topical Index</span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => onSelectVolume('CRIMINAL')}
+            aria-pressed={isCriminal}
+            className={`archive-volume-selector-button${isCriminal ? ' is-active' : ''}`}
+          >
+            <span className="archive-volume-selector-label">Criminal Law</span>
+            <span className="archive-volume-selector-year">Topical Index</span>
+          </button>
         </div>
       </div>
 
-      <div style={{ background: PALETTE.warm }} key={selectedVolume.number}>
-        {monthsWithCases.length === 0 ? (
-          <div style={{
-            ...T.micro,
-            color: PALETTE_CSS.muted,
-            padding: `${SPACING.lg} ${SPACING.lg}`,
-          }}>
-            No opinions published yet.
-          </div>
-        ) : (
-          <VolumeMonthDrawerList key={selectedVolume.number} monthsWithCases={monthsWithCases} />
+      <div style={{ background: PALETTE.warm }} key={selectedVolumeNumber}>
+        {!isCivil && !isCriminal && (
+          monthsWithCases.length === 0 ? (
+            <div style={{ ...T.micro, color: PALETTE_CSS.muted, padding: `${SPACING.lg} ${SPACING.lg}` }}>No opinions published yet.</div>
+          ) : (
+            <VolumeMonthDrawerList key={selectedVolumeNumber + '-chrono'} monthsWithCases={monthsWithCases} />
+          )
+        )}
+        
+        {isCivil && (
+          civilTopics.length === 0 ? (
+            <div style={{ ...T.micro, color: PALETTE_CSS.muted, padding: `${SPACING.lg} ${SPACING.lg}` }}>No civil opinions classified yet.</div>
+          ) : (
+            <VolumeTopicDrawerList key="civil-topics" groupedTopics={civilTopics} />
+          )
+        )}
+        
+        {isCriminal && (
+          criminalTopics.length === 0 ? (
+            <div style={{ ...T.micro, color: PALETTE_CSS.muted, padding: `${SPACING.lg} ${SPACING.lg}` }}>No criminal opinions classified yet.</div>
+          ) : (
+            <VolumeTopicDrawerList key="criminal-topics" groupedTopics={criminalTopics} />
+          )
         )}
       </div>
     </div>
@@ -693,12 +702,11 @@ export default function ArchivePage() {
         { name: 'noticeText', weight: 0.05 },
         { name: 'priorHistory', weight: 0.05 },
       ],
-      threshold: 0.4, // Allows typos/variations
+      threshold: 0.4,
       includeScore: true,
     })
   }, [searchableData])
 
-  // Build and search with Fuse.js
   const { filteredCases, resultCount } = useMemo(() => {
     if (!deferredSearchQuery.trim()) {
       return { filteredCases: CASES, resultCount: CASES.length }
@@ -728,14 +736,12 @@ export default function ArchivePage() {
         padding:  `0 ${SPACING.lg}`,
       }}>
 
-        {/* Page title block */}
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
           <h1 style={{ ...T.pageTitle, paddingTop: '20px' }}>
             Archive
           </h1>
         </div>
 
-        {/* Search box */}
         <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
           <SearchInput
             value={searchQuery}
