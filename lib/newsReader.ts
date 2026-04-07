@@ -6,7 +6,7 @@ import { list, put } from '@vercel/blob'
 import { JSDOM } from 'jsdom'
 import { Readability } from '@mozilla/readability'
 
-const BLOB_PREFIX = 'news-reader/v2/'
+const BLOB_PREFIX = 'news-reader/v3/'
 const TTL_MS = 30 * 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 12_000
 
