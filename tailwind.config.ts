@@ -15,9 +15,9 @@ const config: Config = {
         'mf-glow': 'rgba(245,245,245,0.05)',
       },
       fontFamily: {
-        serif: ['Cormorant Garamond', 'serif'],
-        mono:  ['IBM Plex Mono', 'monospace'],
-        sans:  ['Inter', 'sans-serif'],
+        serif: ['var(--font-serif)', 'serif'],
+        mono:  ['var(--font-mono)', 'monospace'],
+        sans:  ['var(--font-sans)', 'sans-serif'],
       },
       letterSpacing: {
         widest2: '0.25em',

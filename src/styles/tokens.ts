@@ -64,10 +64,10 @@ export const PALETTE_CSS = {
 export const FONT: Record<'mono' | 'serif' | 'sans', CSSProperties> = {
   /** IBM Plex Mono — labels, nav, metadata, headers */
   mono:  { fontFamily: "'IBM Plex Mono', monospace"  },
-  /** Cormorant Garamond — masthead, opinion display, captions */
-  serif: { fontFamily: "'Cormorant Garamond', serif" },
+  /** EB Garamond — masthead, opinion display, captions */
+  serif: { fontFamily: "var(--font-serif), serif" },
   /** Inter — body copy, news items, case law prose */
-  sans:  { fontFamily: "'Inter', sans-serif"         },
+  sans:  { fontFamily: "var(--font-sans), sans-serif" },
 }
 
 
@@ -99,7 +99,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: source names, small metadata badges, placeholder copy
    */
   micro: {
-    ...FONT.mono,
+    fontFamily:    "var(--font-mono), monospace",
     fontSize:      SIZE_SM,
     fontWeight:    600,
     textTransform: 'uppercase',
@@ -111,7 +111,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: box section headers ("News Index", "The Far Side"), bylines
    */
   label: {
-    ...FONT.mono,
+    fontFamily:    "var(--font-mono), monospace",
     fontSize:      SIZE_SM,
     fontWeight:    700,
     textTransform: 'uppercase',
@@ -123,7 +123,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: navbar links, dropdown items, banner tagline + byline
    */
   nav: {
-    ...FONT.mono,
+    fontFamily:    "var(--font-mono), monospace",
     fontSize:      SIZE_SM,
     fontWeight:    500,
     textTransform: 'uppercase',
@@ -135,7 +135,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: "The Atlanta Gleaner" wordmark in the navbar
    */
   site: {
-    ...FONT.mono,
+    fontFamily:    "var(--font-mono), monospace",
     fontSize:      SIZE_SM,
     fontWeight:    600,
     textTransform: 'uppercase',
@@ -149,7 +149,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: news item titles
    */
   body: {
-    ...FONT.sans,
+    fontFamily: "var(--font-sans), sans-serif",
     fontSize:   SIZE_MD,
     fontWeight: 500,
     lineHeight: 1.45,
@@ -160,7 +160,7 @@ export const T: Record<string, CSSProperties> = {
    * Used for: case law summaries, holding text, opinion paragraphs
    */
   prose: {
-    ...FONT.sans,
+    fontFamily: "var(--font-sans), sans-serif",
     fontSize:   SIZE_MD,
     lineHeight: 1.65,
   },
@@ -168,11 +168,11 @@ export const T: Record<string, CSSProperties> = {
   // ── Serif stack ──────────────────────────────────────────────────────────
 
   /**
-   * caption · SIZE_MD Cormorant Garamond italic
+   * caption · SIZE_MD EB Garamond italic
    * Used for: Far Side caption, pull quotes
    */
   caption: {
-    ...FONT.serif,
+    fontFamily: "var(--font-serif), serif",
     fontSize:   SIZE_MD,
     fontStyle:  'italic',
     fontWeight: 600,
@@ -180,12 +180,12 @@ export const T: Record<string, CSSProperties> = {
   },
 
   /**
-   * heading · responsive clamp, Cormorant Garamond bold
+   * heading · responsive clamp, EB Garamond bold
    * Used for: case law box title — large serif case names
    * Sized at 50% of display (banner masthead) for visual hierarchy.
    */
   heading: {
-    ...FONT.serif,
+    fontFamily:    "var(--font-serif), serif",
     fontSize:      'clamp(1.5rem, 9vw, 4.5rem)',
     fontWeight:    700,
     lineHeight:    1.12,
@@ -193,12 +193,12 @@ export const T: Record<string, CSSProperties> = {
   },
 
   /**
-   * display · responsive clamp, Cormorant Garamond
+   * display · responsive clamp, EB Garamond
    * Used for: banner masthead only — "The Atlanta Gleaner."
    * Exception to three-size rule: this is branding, not content text.
    */
   display: {
-    ...FONT.serif,
+    fontFamily:    "var(--font-serif), serif",
     fontSize:      'clamp(3rem, 18vw, 9rem)',
     fontWeight:    700,
     letterSpacing: '-0.03em',
@@ -211,7 +211,7 @@ export const T: Record<string, CSSProperties> = {
    * Same IBM Plex Mono family as "NEWS INDEX" labels — just large.
    */
   pageTitle: {
-    ...FONT.mono,
+    fontFamily:    "var(--font-mono), monospace",
     fontSize:      SIZE_LG,
     fontWeight:    700,
     textTransform: 'uppercase',

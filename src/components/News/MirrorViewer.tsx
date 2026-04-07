@@ -17,7 +17,7 @@ const READER_BODY_CSS = `
   .ag-reader-body h2,
   .ag-reader-body h3,
   .ag-reader-body h4 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif), serif;
     font-variant-numeric: lining-nums;
     font-weight: 700;
     line-height: 1.12;
@@ -35,7 +35,7 @@ const READER_BODY_CSS = `
     text-decoration-color: var(--palette-rule-md);
   }
   .ag-reader-body blockquote {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif), serif;
     font-variant-numeric: lining-nums;
     font-size: 1.1rem;
     font-style: italic;

@@ -29,9 +29,21 @@
   --archive-volume-selector-active-bg: #000000;
   --archive-volume-selector-active-text: #FFFFFF;
 
-  --font-serif: 'Cormorant Garamond', serif;
+  --font-serif: 'EB Garamond', serif;
   --font-sans:  'Inter', sans-serif;
   --font-mono:  'IBM Plex Mono', monospace;
+}
+
+/* Ensure EB Garamond uses lining figures site-wide for consistency */
+[style*="font-family: 'EB Garamond'"],
+[style*="font-family: var(--font-serif)"],
+.font-serif,
+h1, h2, h3, h4,
+.ag-reader-body h2,
+.ag-reader-body h3,
+.ag-reader-body h4,
+.ag-reader-body blockquote {
+  font-variant-numeric: lining-nums !important;
 }
 
 /* ── Classical palette (Vintage) ──────────────────────────────────────────── */
