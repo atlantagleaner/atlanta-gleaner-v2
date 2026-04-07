@@ -176,6 +176,94 @@ async function buildFeaturedSeries(title, channelUrl, slot) {
   };
 }
 
+const GRAB_BAG_CHANNELS = [
+  { id: 'kurzgesagt', url: 'https://www.youtube.com/@kurzgesagt/videos' },
+  { id: 'novapbs', url: 'https://www.youtube.com/@novapbs/videos' },
+  { id: 'PBSDocumentaries', url: 'https://www.youtube.com/@PBSDocumentaries/videos' },
+  { id: 'TheLIUniverse', url: 'https://www.youtube.com/@TheLIUniverse/videos' },
+  { id: 'whatifscienceshow', url: 'https://www.youtube.com/@whatifscienceshow/videos' },
+  { id: 'StarTalk', url: 'https://www.youtube.com/@StarTalk/videos' },
+  { id: 'PBS', url: 'https://www.youtube.com/@PBS/videos' },
+  { id: 'americanmasters', url: 'https://www.youtube.com/@americanmasters/videos' },
+  { id: 'AmericanExperiencePBS', url: 'https://www.youtube.com/@AmericanExperiencePBS/videos' },
+  { id: 'Veritasium', url: 'https://www.youtube.com/@veritasium/videos' },
+  { id: 'SmarterEveryDay', url: 'https://www.youtube.com/@smartereveryday/videos' },
+  { id: 'RealEngineering', url: 'https://www.youtube.com/@RealEngineering/videos' },
+  { id: 'history', url: 'https://www.youtube.com/@history/videos' },
+  { id: 'TimelineChannel', url: 'https://www.youtube.com/@TimelineChannel/videos' },
+  { id: 'TEDEd', url: 'https://www.youtube.com/@TEDEd/videos' },
+];
+
+async function fetchNasaLiveStream() {
+  try {
+    const response = await fetch('https://www.youtube.com/@NASA/streams', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AtlantaGleaner/1.0)' },
+    });
+    if (!response.ok) return null;
+    const html = await response.text();
+    const jsonText = extractJsonObject(html, 'ytInitialData');
+    if (!jsonText) return null;
+    const data = JSON.parse(jsonText);
+    const renderers = collectRenderers(data);
+    for (const renderer of renderers) {
+      const isLive = renderer.thumbnailOverlays?.some(overlay => 
+        overlay.thumbnailOverlayTimeStatusRenderer?.style === 'LIVE' || 
+        overlay.thumbnailOverlayTimeStatusRenderer?.style === 'BADGE_STYLE_TYPE_LIVE_NOW'
+      );
+      if (isLive) {
+        const videoId = renderer.videoId || renderer.navigationEndpoint?.watchEndpoint?.videoId;
+        const title = renderer.title?.simpleText || renderer.title?.runs?.map(r => r.text).join('') || 'NASA Live Stream';
+        if (videoId) {
+          return {
+            title,
+            url: `https://www.youtube.com/watch?v=${videoId}`,
+            source: 'NASA',
+            publishedAt: 'Live Now',
+            type: 'video',
+            videoId,
+            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+          };
+        }
+      }
+    }
+  } catch (e) { console.error('[fetchNasaLiveStream] Error:', e); }
+  return null;
+}
+
+async function buildScienceGrabBag() {
+  const shuffledChannels = [...GRAB_BAG_CHANNELS].sort(() => Math.random() - 0.5);
+  const selectedChannels = shuffledChannels.slice(0, 9);
+  const channelResults = await Promise.all(
+    selectedChannels.map(async (ch) => {
+      try {
+        const eps = await fetchLatestYouTubeEpisodes(ch.id, ch.url);
+        return eps.length > 0 ? eps[Math.floor(Math.random() * eps.length)] : null;
+      } catch(e) { return null; }
+    })
+  );
+  const episodes = channelResults.filter(Boolean).slice(0, 9);
+  const nasaLive = await fetchNasaLiveStream() || {
+    title: 'NASA Live Stream',
+    url: 'https://www.youtube.com/@NASA/live',
+    source: 'NASA',
+    publishedAt: 'Live Now',
+    type: 'video',
+    videoId: '21X5lGlDOfg',
+    thumbnailUrl: '',
+  };
+  if (episodes.length >= 3) { episodes.splice(3, 0, nasaLive); } else { episodes.push(nasaLive); }
+  return {
+    title: 'Science Grab Bag',
+    url: 'https://www.youtube.com/',
+    source: 'Curated Grab Bag',
+    publishedAt: new Date().toISOString(),
+    type: 'series',
+    score: 1000,
+    slot: 'science_grab_bag',
+    episodes,
+  };
+}
+
 async function serperSearch(query, lane) {
   console.log(`🔍 Searching ${lane}: "${query.q}"...`);
   try {
@@ -244,11 +332,12 @@ async function main() {
     queries.forEach(q => allQueries.push({ lane, q }));
   });
 
-  console.log(`📡 Launching ${allQueries.length + 2} concurrent requests (YouTube + Serper)...`);
+  console.log(`📡 Launching ${allQueries.length + 3} concurrent requests (YouTube + Serper)...`);
 
-  const [starTalk, pbs, ...searchResults] = await Promise.all([
+  const [starTalk, pbs, grabBag, ...searchResults] = await Promise.all([
     buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
     buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
+    buildScienceGrabBag(),
     ...allQueries.map(({ lane, q }) => serperSearch(q, lane))
   ]);
 
@@ -262,8 +351,8 @@ async function main() {
   })).sort((a, b) => b.score - a.score);
 
   // 4. Select top unique items
-  const seen = new Set([starTalk.url, pbs.url]);
-  const finalItems = [starTalk, pbs];
+  const seen = new Set([starTalk.url, pbs.url, grabBag.url]);
+  const finalItems = [starTalk, pbs, grabBag];
   
   for (const item of processed) {
     if (finalItems.length >= 15) break;
