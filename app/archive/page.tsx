@@ -361,6 +361,243 @@ function VolumeBox({
   )
 }
 
+function formatVolumeLabel(volume: typeof VOLUMES[number]): string {
+  if (volume.years.length === 1) return String(volume.years[0])
+  return `${volume.years[0]}–${volume.years[volume.years.length - 1]}`
+}
+
+function getVolumeCases(allCases: CaseLaw[], volume: typeof VOLUMES[number]): CaseLaw[] {
+  return allCases.filter((c) => {
+    const y = getYear(getArchiveDate(c))
+    return y !== null && volume.years.includes(y)
+  })
+}
+
+function getVolumeMonths(volumeCases: CaseLaw[], volume: typeof VOLUMES[number]) {
+  const monthsWithCases: Array<{ year: number; month: number; label: string; cases: CaseLaw[] }> = []
+
+  for (const year of [...volume.years].reverse()) {
+    for (let m = 11; m >= 0; m--) {
+      const mCases = volumeCases.filter((c) => {
+        const archiveDate = getArchiveDate(c)
+        const y = getYear(archiveDate)
+        const mo = getMonth(archiveDate)
+        return y === year && mo === m
+      })
+      if (mCases.length > 0) {
+        monthsWithCases.push({ year, month: m, label: MONTHS[m], cases: mCases })
+      }
+    }
+  }
+
+  return monthsWithCases
+}
+
+function VolumeMonthDrawer({
+  month,
+  year,
+  monthCases,
+  isOpen,
+  onToggle,
+}: {
+  month: string
+  year: number
+  monthCases: CaseLaw[]
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div>
+      <button
+        onClick={onToggle}
+        style={monthToggle}
+        aria-expanded={isOpen}
+      >
+        <span style={{
+          ...T.micro,
+          color: isOpen ? PALETTE.black : PALETTE_CSS.meta,
+        }}>
+          {month} {year}
+          <span style={{
+            marginLeft: SPACING.sm,
+            ...FONT.mono,
+            fontSize: SIZE_SM,
+            fontWeight: 400,
+            letterSpacing: '0.10em',
+            color: PALETTE_CSS.muted,
+          }}>
+            — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
+          </span>
+        </span>
+        <span style={{
+          ...FONT.mono,
+          fontSize: SIZE_SM,
+          color: PALETTE_CSS.muted,
+          transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}`,
+          display: 'inline-block',
+          transform: isOpen ? 'rotate(90deg)' : 'rotate(0)',
+        }}>
+          ▶
+        </span>
+      </button>
+
+      {isOpen && (
+        <div style={{ background: PALETTE.white }}>
+          {monthCases.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/cases/${c.slug}#case-law-box`}
+              className="case-archive-link"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0, 1fr) 280px',
+                columnGap: SPACING.md,
+                alignItems: 'start',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: SPACING.xs,
+                minWidth: 0,
+              }}>
+                <div className="case-archive-title" style={{
+                  ...T.body,
+                  minWidth: 0,
+                  marginBottom: 0,
+                }}>
+                  {c.title}
+                </div>
+                <div className="case-archive-meta" style={{
+                  ...T.micro,
+                  fontWeight: 400,
+                  letterSpacing: '0.10em',
+                  marginTop: 0,
+                }}>
+                  {c.court}
+                </div>
+                <div className="case-archive-meta" style={{
+                  ...T.micro,
+                  fontWeight: 400,
+                  letterSpacing: '0.10em',
+                  marginTop: 0,
+                }}>
+                  {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
+                </div>
+              </div>
+              {c.tags && c.tags.length > 0 && (
+                <div style={{
+                  minWidth: 0,
+                  alignSelf: 'stretch',
+                }}>
+                  <div className="case-archive-tags" style={{
+                    ...T.micro,
+                    textAlign: 'right',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    lineHeight: 1.45,
+                    overflow: 'hidden',
+                    overflowWrap: 'anywhere',
+                    paddingLeft: SPACING.md,
+                    borderLeft: `1px solid ${PALETTE_CSS.border}`,
+                  }}>
+                    {c.tags.join(' · ')}
+                  </div>
+                </div>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function VolumeMonthDrawerList({
+  monthsWithCases,
+}: {
+  monthsWithCases: Array<{ year: number; month: number; label: string; cases: CaseLaw[] }>
+}) {
+  const [openMonth, setOpenMonth] = useState<string | null>(null)
+
+  return (
+    <>
+      {monthsWithCases.map(({ year, month, label, cases: monthCases }) => {
+        const monthKey = `${year}-${month}`
+        const isOpen = openMonth === monthKey
+
+        return (
+          <VolumeMonthDrawer
+            key={monthKey}
+            month={label}
+            year={year}
+            monthCases={monthCases}
+            isOpen={isOpen}
+            onToggle={() => setOpenMonth(isOpen ? null : monthKey)}
+          />
+        )
+      })}
+    </>
+  )
+}
+
+function ArchiveVolumePanel({
+  volumes,
+  cases,
+  selectedVolumeNumber,
+  onSelectVolume,
+}: {
+  volumes: typeof VOLUMES
+  cases: CaseLaw[]
+  selectedVolumeNumber: string
+  onSelectVolume: (volumeNumber: string) => void
+}) {
+  const selectedVolume = volumes.find((volume) => volume.number === selectedVolumeNumber) ?? volumes[0]
+  const volumeCases = useMemo(() => getVolumeCases(cases, selectedVolume), [cases, selectedVolume.number])
+  const monthsWithCases = useMemo(() => getVolumeMonths(volumeCases, selectedVolume), [volumeCases, selectedVolume.number])
+
+  return (
+    <div style={volumeShell}>
+      <div style={{
+        background: PALETTE.black,
+        borderBottom: `1px solid ${PALETTE_CSS.border}`,
+      }}>
+        <div className="archive-volume-selector">
+          {volumes.map((volume) => {
+            const isSelected = volume.number === selectedVolume.number
+            return (
+              <button
+                key={volume.number}
+                type="button"
+                onClick={() => onSelectVolume(volume.number)}
+                aria-pressed={isSelected}
+                className={`archive-volume-selector-button${isSelected ? ' is-active' : ''}`}
+              >
+                <span className="archive-volume-selector-label">Volume {volume.roman}</span>
+                <span className="archive-volume-selector-year">{formatVolumeLabel(volume)}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div style={{ background: PALETTE.warm }} key={selectedVolume.number}>
+        {monthsWithCases.length === 0 ? (
+          <div style={{
+            ...T.micro,
+            color: PALETTE_CSS.muted,
+            padding: `${SPACING.lg} ${SPACING.lg}`,
+          }}>
+            No opinions published yet.
+          </div>
+        ) : (
+          <VolumeMonthDrawerList key={selectedVolume.number} monthsWithCases={monthsWithCases} />
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ── Search setup ──────────────────────────────────────────────────────────────
 
 interface SearchableCase {
@@ -411,6 +648,7 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
 
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedVolumeNumber, setSelectedVolumeNumber] = useState<typeof VOLUMES[number]['number']>(VOLUMES[0].number)
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
   const searchableData = useMemo(() => CASES.map(buildSearchableCase), [])
@@ -500,18 +738,12 @@ export default function ArchivePage() {
           </div>
         ) : (
           <div style={{ maxWidth: '760px' }}>
-            {VOLUMES.map((volume, i) => (
-              <VolumeBox
-                key={volume.number}
-                volume={volume}
-                allCases={filteredCases}
-                defaultOpen={i === 0 && !searchActive} // Volume IV (newest) open by default only when browsing
-                forceOpen={searchActive && filteredCases.some((c) => {
-                  const y = getYear(getArchiveDate(c))
-                  return y !== null && volume.years.includes(y)
-                })}
-              />
-            ))}
+            <ArchiveVolumePanel
+              volumes={VOLUMES}
+              cases={filteredCases}
+              selectedVolumeNumber={selectedVolumeNumber}
+              onSelectVolume={setSelectedVolumeNumber}
+            />
           </div>
         )}
 
