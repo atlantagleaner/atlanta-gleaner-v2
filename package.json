@@ -11,17 +11,21 @@
     "fetch-news": "node scripts/fetch-news-local.mjs --sync"
   },
   "dependencies": {
+    "@mozilla/readability": "^0.6.0",
     "@radix-ui/react-accordion": "^1.0.4",
     "@vercel/blob": "^0.23.4",
     "@vercel/edge-config": "^1.4.3",
     "cheerio": "^1.0.0-rc.12",
     "fuse.js": "^7.3.0",
+    "jsdom": "^29.0.2",
     "mammoth": "^1.12.0",
     "next": "^16.2.1",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/jsdom": "^28.0.1",
+    "@types/mozilla-readability": "^0.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
