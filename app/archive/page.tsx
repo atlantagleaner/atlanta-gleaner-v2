@@ -424,7 +424,7 @@ function VolumeMonthDrawer({
       >
         <span style={{
           ...T.micro,
-          color: isOpen ? PALETTE.black : PALETTE_CSS.meta,
+          color: PALETTE.black,
         }}>
           {month} {year}
           <span style={{
@@ -433,7 +433,7 @@ function VolumeMonthDrawer({
             fontSize: SIZE_SM,
             fontWeight: 400,
             letterSpacing: '0.10em',
-            color: PALETTE_CSS.muted,
+            color: PALETTE.black,
           }}>
             — {monthCases.length} {monthCases.length === 1 ? 'case' : 'cases'}
           </span>
