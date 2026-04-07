@@ -8,6 +8,7 @@ tmp/
 next-env.d.ts
 tsconfig.tsbuildinfo
 public/search-index.json
+public/news-local.json
 pilot-review.html
 
 # Python

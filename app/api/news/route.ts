@@ -108,6 +108,25 @@ export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toI
 }
 
 export async function GET() {
+  // Check for local development override
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const localPath = path.join(process.cwd(), 'public', 'news-local.json');
+      if (fs.existsSync(localPath)) {
+        const localData = JSON.parse(fs.readFileSync(localPath, 'utf-8'));
+        return NextResponse.json({
+          ...localData,
+          items: hydrateCacheItems(localData.items),
+          source: 'local_file'
+        });
+      }
+    } catch (e) {
+      console.warn('[news] Local file check failed, falling back to Edge Config');
+    }
+  }
+
   try {
     const cached = await get<CacheEntry | CacheReference>(LIVE_CACHE_KEY)
     const resolved = await resolveFeedEntry(cached)
