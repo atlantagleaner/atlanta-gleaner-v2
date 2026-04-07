@@ -8,7 +8,7 @@
     "start": "next start",
     "parse-opinions": "node scripts/process-cases.js",
     "sync-editorial": "node scripts/build-case-editorial.js",
-    "fetch-news": "node scripts/fetch-news-local.mjs"
+    "fetch-news": "node scripts/fetch-news-local.mjs --sync"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.0.4",

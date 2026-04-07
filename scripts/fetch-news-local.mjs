@@ -22,10 +22,88 @@ function loadEnv() {
 loadEnv();
 
 const SERPER_API_KEY = process.env.SERPER_API_KEY;
+const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
+const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
+const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 
 if (!SERPER_API_KEY) {
   console.error('❌ Error: SERPER_API_KEY is not set in environment or .env file.');
   process.exit(1);
+}
+
+// ── Vercel Production Sync ──────────────────────────────────────────────────
+
+async function syncToProduction(finalItems) {
+  if (!VERCEL_API_TOKEN || !EDGE_CONFIG_ID || !BLOB_READ_WRITE_TOKEN) {
+    console.error('❌ Missing Vercel credentials (VERCEL_API_TOKEN, EDGE_CONFIG_ID, or BLOB_READ_WRITE_TOKEN). Skipping sync.');
+    return;
+  }
+
+  console.log('\n🚀 Syncing to Production (Vercel Blob + Edge Config)...');
+
+  try {
+    const cachedAt = new Date().toISOString();
+    // Replicate hydrateCacheItems/createCacheEntry logic for production format
+    const payload = {
+      cachedAt,
+      items: finalItems.map(item => ({
+        title: item.title,
+        url: item.url,
+        source: item.source,
+        publishedAt: item.publishedAt,
+        type: item.type,
+        slot: item.slot,
+        ...(item.episodes?.length ? {
+          episodes: item.episodes.map(ep => ({
+            t: ep.title,
+            p: ep.publishedAt,
+            v: ep.videoId
+          }))
+        } : {})
+      }))
+    };
+
+    // 1. Upload to Vercel Blob
+    console.log('☁️  Uploading feed to Vercel Blob...');
+    const blobRes = await fetch('https://blob.vercel-storage.com/news-feed/live.json', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${BLOB_READ_WRITE_TOKEN}`,
+        'x-add-random-suffix': '0'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!blobRes.ok) throw new Error(`Blob upload failed: ${await blobRes.text()}`);
+    const blobData = await blobRes.json();
+    console.log(`✅ Blob uploaded: ${blobData.url}`);
+
+    // 2. Update Edge Config
+    console.log('⚙️  Updating Edge Config...');
+    const edgeRes = await fetch(`https://api.vercel.com/v1/edge-config/${EDGE_CONFIG_ID}/items`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${VERCEL_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        items: [{
+          operation: 'upsert',
+          key: 'news_cache',
+          value: {
+            blobUrl: blobData.url,
+            cachedAt
+          }
+        }]
+      })
+    });
+
+    if (!edgeRes.ok) throw new Error(`Edge Config update failed: ${await edgeRes.text()}`);
+    console.log('✅ Edge Config updated successfully! Production is now live.');
+
+  } catch (err) {
+    console.error('💥 Sync failed:', err.message);
+  }
 }
 
 // We'll import the config. Since it's TS, we'll mock the parts we need or read it as a module if possible.
@@ -372,6 +450,11 @@ async function main() {
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
   
   console.log(`\n✅ Success! Saved ${finalItems.length} items to ${outputPath}`);
+
+  // 5. Optional Sync to Production
+  if (process.argv.includes('--sync')) {
+    await syncToProduction(finalItems);
+  }
 }
 
 main().catch(err => {
