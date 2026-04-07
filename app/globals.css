@@ -79,7 +79,8 @@
 }
 
 /* Image treatment — warm vintage tint on Washington */
-[data-theme="classical"] img[alt="George Washington Statue at Federal Hall"] {
+[data-theme="classical"] img[alt="George Washington Statue at Federal Hall"],
+[data-theme="classical"] img[alt="George Washington portrait"] {
   filter: sepia(20%) brightness(1.02) saturate(0.85);
 }
 
@@ -118,7 +119,8 @@
 }
 
 /* Green tint + CRT feel on Washington */
-[data-theme="matrix"] img[alt="George Washington Statue at Federal Hall"] {
+[data-theme="matrix"] img[alt="George Washington Statue at Federal Hall"],
+[data-theme="matrix"] img[alt="George Washington portrait"] {
   filter: grayscale(100%) brightness(0.35) sepia(100%) hue-rotate(80deg) saturate(500%);
 }
 
