@@ -17,6 +17,7 @@ import publisher from 'metascraper-publisher'
 import title from 'metascraper-title'
 import url from 'metascraper-url'
 import readability from 'metascraper-readability'
+import DOMPurify from 'isomorphic-dompurify'
 
 const scraper = metascraper([
   author(),
@@ -99,35 +100,36 @@ function cleanWhitespace(value: string | null | undefined): string | null {
  * and unwanted tags/attributes are stripped.
  */
 function cleanReadabilityHtml(html: string, baseUrl: string): string {
-  const $ = cheerio.load(`<section>${html}</section>`)
+  // 1. Sanitize with DOMPurify (whitelist-based)
+  // This strips all scripts, inline styles, and non-standard attributes
+  const sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      'p', 'br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li', 
+      'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span'
+    ],
+    ALLOWED_ATTR: ['href', 'target', 'rel'],
+    // Ensure all links are forced to be safe
+    ADD_ATTR: ['target', 'rel'],
+    FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed'],
+    FORBID_ATTR: ['style', 'onerror', 'onclick'],
+  })
+
+  // 2. Post-process with Cheerio for absolute URLs and extra cleanup
+  const $ = cheerio.load(`<section>${sanitized}</section>`)
   const base = new URL(baseUrl)
   const $section = $('section').first()
 
-  // Ensure absolute URLs
-  $section.find('[src]').each((_, el) => {
-    const src = $(el).attr('src')
-    if (src) $(el).attr('src', toAbsolute(base, src))
-  })
-
-  $section.find('[href]').each((_, el) => {
+  // Ensure absolute URLs and standard attributes for all links
+  $section.find('a[href]').each((_, el) => {
     const href = $(el).attr('href')
-    if (!href) return
-    $(el).attr('href', toAbsolute(base, href))
-    if (el.tagName === 'a') {
+    if (href) {
+      $(el).attr('href', toAbsolute(base, href))
       $(el).attr('target', '_blank')
       $(el).attr('rel', 'noopener noreferrer')
     }
   })
 
-  // Strip event handlers
-  $section.find('*').each((_, el) => {
-    if (!el.attribs) return
-    for (const attr of Object.keys(el.attribs)) {
-      if (attr.startsWith('on')) delete el.attribs[attr]
-    }
-  })
-
-  // 1. Remove common share containers and labels
+  // Remove common share containers and labels (secondary filter)
   const shareSelectors = [
     '.social-share', '.share-container', '.share-tools', '.share-buttons',
     '.article-share', '.social-links', '.social-icons', '.share-list',
@@ -136,7 +138,7 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
   ];
   $section.find(shareSelectors.join(',')).remove();
 
-  // 2. Remove share links by href patterns
+  // Remove share links by href patterns
   $section.find('a[href]').each((_, el) => {
     const href = $(el).attr('href') || '';
     const isShareLink = 
@@ -153,7 +155,7 @@ function cleanReadabilityHtml(html: string, baseUrl: string): string {
     }
   });
   
-  // 3. Remove SVG icons which are often social icons left behind
+  // Remove SVG icons which are often social icons left behind
   $section.find('svg').remove();
 
   return $section.html() || ''
