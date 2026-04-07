@@ -17,6 +17,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect, useTransition, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import * as Accordion from '@radix-ui/react-accordion'
 import {
   PALETTE, PALETTE_CSS, T,
@@ -46,6 +47,20 @@ interface NewsItem {
     videoId: string
     thumbnailUrl: string
   }>
+}
+
+interface NewsResponse {
+  items: NewsItem[]
+  cachedAt: string
+  count: number
+}
+
+// ── Data Fetching ─────────────────────────────────────────────────────────────
+
+async function fetchNews(): Promise<NewsResponse> {
+  const res = await fetch('/api/news')
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json()
 }
 
 type DrawerState =
@@ -265,31 +280,12 @@ function LoadingSkeleton() {
 // ── Main NewsBox ───────────────────────────────────────────────────────────────
 
 export function NewsBox({ style }: { style?: React.CSSProperties }) {
-  const [items, setItems]     = useState<NewsItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['news-feed'],
+    queryFn: fetchNews,
+  })
 
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      try {
-        const res = await fetch('/api/news')
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        if (!cancelled) {
-          setItems(data.items || [])
-          setLoading(false)
-        }
-      } catch {
-        if (!cancelled) {
-          setError('News unavailable')
-          setLoading(false)
-        }
-      }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
+  const items = data?.items || []
 
   return (
     <>
@@ -306,13 +302,13 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
           <div style={{ padding: BOX_PADDING }}>
             <h2 style={BOX_HEADER}>News Index</h2>
 
-            {loading && <LoadingSkeleton />}
+            {isLoading && <LoadingSkeleton />}
 
-            {error && !loading && (
-              <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>{error}</p>
+            {isError && !isLoading && (
+              <p style={{ ...T.micro, color: PALETTE.black, margin: 0 }}>News unavailable</p>
             )}
 
-            {!loading && !error && (
+            {!isLoading && !isError && (
               <div>
                 {items.map((item) => (
                   <NewsAccordionItem key={item.url} item={item} />
