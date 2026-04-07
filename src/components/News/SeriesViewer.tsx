@@ -8,8 +8,9 @@ export interface SeriesEpisode {
   url: string
   source: string
   publishedAt: string
-  type: 'video'
-  videoId: string
+  type: 'video' | 'audio'
+  videoId?: string
+  spotifyId?: string
   thumbnailUrl: string
 }
 
@@ -30,29 +31,36 @@ export function SeriesViewer({
     paddingBottom: '1px',
   } as const
 
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(episodes[0]?.videoId ?? null)
+  const [selectedId, setSelectedId] = useState<string | null>(
+    episodes[0]?.spotifyId ?? episodes[0]?.videoId ?? null
+  )
   const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
-    setSelectedVideoId(episodes[0]?.videoId ?? null)
+    setSelectedId(episodes[0]?.spotifyId ?? episodes[0]?.videoId ?? null)
   }, [episodes])
 
   const selectedEpisode = useMemo(
-    () => episodes.find((episode) => episode.videoId === selectedVideoId) ?? episodes[0] ?? null,
-    [episodes, selectedVideoId],
+    () => episodes.find((ep) => (ep.spotifyId ?? ep.videoId) === selectedId) ?? episodes[0] ?? null,
+    [episodes, selectedId],
   )
 
+  const isSpotify = selectedEpisode?.type === 'audio' || !!selectedEpisode?.spotifyId
   const embedSrc = selectedEpisode
-    ? `https://www.youtube-nocookie.com/embed/${selectedEpisode.videoId}?modestbranding=1&rel=0`
+    ? isSpotify 
+      ? `https://open.spotify.com/embed/episode/${selectedEpisode.spotifyId}?utm_source=generator`
+      : `https://www.youtube-nocookie.com/embed/${selectedEpisode.videoId}?modestbranding=1&rel=0`
     : null
 
-  const isExpandable = episodes.length > 4
-  const visibleEpisodes = expanded ? episodes : episodes.slice(0, 4)
+  // Collapses to exactly 3 items per user request
+  const INITIAL_COUNT = 3
+  const isExpandable = episodes.length > INITIAL_COUNT
+  const visibleEpisodes = expanded ? episodes : episodes.slice(0, INITIAL_COUNT)
 
   return (
     <div style={{ padding: `0 0 ${SPACING.lg}` }}>
       <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.xs}` }}>
-        Latest uploads
+        {isSpotify ? 'Audio Dispatch' : 'Latest uploads'}
       </p>
 
       <div
@@ -66,13 +74,13 @@ export function SeriesViewer({
       >
         <p style={{ ...T.body, margin: 0 }}>{title}</p>
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
-          {episodes.length} recent uploads
+          {episodes.length} recent {isSpotify ? 'episodes' : 'uploads'}
         </p>
       </div>
 
       {!selectedEpisode || !embedSrc ? (
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
-          No recent uploads were found.
+          No content found.
         </p>
       ) : (
         <>
@@ -80,7 +88,9 @@ export function SeriesViewer({
             style={{
               position: 'relative',
               width: '100%',
-              paddingBottom: '56.25%',
+              // YouTube is 16:9 aspect ratio, Spotify is fixed height
+              paddingBottom: isSpotify ? '0' : '56.25%',
+              height: isSpotify ? '152px' : 'auto',
               overflow: 'hidden',
               marginBottom: SPACING.md,
               background: 'var(--palette-warm)',
@@ -93,26 +103,28 @@ export function SeriesViewer({
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               style={{
-                position: 'absolute',
+                position: isSpotify ? 'relative' : 'absolute',
                 inset: 0,
                 width: '100%',
                 height: '100%',
                 border: 'none',
               }}
+              loading="lazy"
             />
           </div>
 
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
               {visibleEpisodes.map((episode, index) => {
-                const isActive = episode.videoId === selectedEpisode.videoId
+                const epId = episode.spotifyId ?? episode.videoId
+                const isActive = epId === selectedId
 
                 return (
                   <button
-                    key={episode.videoId}
+                    key={epId}
                     type="button"
                     onClick={() => {
-                      setSelectedVideoId(episode.videoId)
+                      setSelectedId(epId!)
                     }}
                     style={{
                       width: '100%',
@@ -124,7 +136,7 @@ export function SeriesViewer({
                     }}
                   >
                     <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.xs}` }}>
-                      {episode.source === 'NASA' ? '🔴 LIVE | ' : `#${index + 1} | `} {episode.publishedAt || 'Recently published'}
+                      {episode.source === 'NASA' ? '🔴 LIVE | ' : `#${index + 1} | `} {episode.source} · {episode.publishedAt || 'Recently'}
                     </p>
                     <p style={{ ...T.body, margin: `0 0 ${SPACING.xs}` }}>
                       <span style={{ color: PALETTE.black }}>{episode.title}</span>
@@ -172,7 +184,7 @@ export function SeriesViewer({
               }}
             >
               <span style={{ ...T.label, color: PALETTE.black }}>
-                {expanded ? 'Collapse' : `Show ${episodes.length - 4} more`}
+                {expanded ? 'Collapse' : `Show ${episodes.length - INITIAL_COUNT} more`}
               </span>
               <span style={{ ...T.label, color: PALETTE.black, opacity: 0.45 }}>
                 {expanded ? '↑' : '↓'}
@@ -189,7 +201,7 @@ export function SeriesViewer({
           rel="noopener noreferrer"
           style={{ ...linkStyle, display: 'inline-block', marginTop: SPACING.md }}
         >
-          {'Open channel ->'}
+          {isSpotify ? 'Open on Spotify ->' : 'Open channel ->'}
         </a>
       )}
     </div>

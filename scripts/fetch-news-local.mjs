@@ -57,7 +57,8 @@ async function syncToProduction(finalItems) {
           episodes: item.episodes.map(ep => ({
             t: ep.title,
             p: ep.publishedAt,
-            v: ep.videoId
+            v: ep.videoId,
+            s: ep.spotifyId
           }))
         } : {})
       }))
@@ -105,10 +106,6 @@ async function syncToProduction(finalItems) {
     console.error('💥 Sync failed:', err.message);
   }
 }
-
-// We'll import the config. Since it's TS, we'll mock the parts we need or read it as a module if possible.
-// For a standalone script, it's often easiest to just define the logic here or use a tool to run TS.
-// But to keep it simple and dependency-free for the user, I will replicate the core scoring/logic.
 
 // Replicate the parts of newsConfig we need since we can't easily import TS in a raw ESM script
 // without extra dependencies like tsx.
@@ -342,6 +339,70 @@ async function buildScienceGrabBag() {
   };
 }
 
+const SPOTIFY_POOL = [
+  { id: '2YvYmS07vLD1o2MvAsv3P3', name: 'The Bill Simmons Podcast', rss: 'https://feeds.megaphone.fm/the-bill-simmons-podcast' },
+  { id: '1lUPomulZRPquVAOOd56EW', name: 'The Rewatchables', rss: 'https://feeds.megaphone.fm/the-rewatchables' },
+  { id: '6id9uS9D2890S97S9S9S9S', name: 'The Big Picture', rss: 'https://feeds.megaphone.fm/the-big-picture' },
+  { id: '71mvXo2OfCExQKsgpXFS4t', name: 'The Michelle Obama Podcast', rss: 'https://feeds.megaphone.fm/WWO6610531024' },
+  { id: '4rXoR4SbsZhbTq6rOqBGMc', name: 'Closer Look (WABE)', rss: 'https://feeds.npr.org/510344/podcast.xml' },
+  { id: '3IM0SVD9ndXmB5KyEpxRYm', name: 'The Daily', rss: 'https://feeds.nytimes.com/nyt-the-daily' },
+  { id: '06fP6O8HkR4NfI3R4lXU5J', name: 'Fresh Air', rss: 'https://feeds.npr.org/381444908/podcast.xml' },
+  { id: '46ST9S0P56Y8p3S5S6MQ', name: 'Throughline', rss: 'https://feeds.npr.org/510333/podcast.xml' },
+  { id: '2m7SipG3T4q0xXBsS6MQiS', name: 'Science Vs', rss: 'https://feeds.megaphone.fm/sciencevs' },
+];
+
+async function fetchPodcastEpisodes(show) {
+  console.log(`🎙️ Fetching Podcast: ${show.name}...`);
+  try {
+    const res = await fetch(show.rss, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const xml = await res.text();
+    
+    const itemRegex = /<item[\s>]([\s\S]*?)<\/item>/gi;
+    const episodes = [];
+    let match;
+    const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+
+    while ((match = itemRegex.exec(xml)) !== null && episodes.length < 1) {
+      const chunk = match[1];
+      const title = chunk.match(/<title>(<!\[CDATA\[)?([\s\S]*?)(]]>)?<\/title>/i)?.[2] || '';
+      const pubDateStr = chunk.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)?.[1] || '';
+      const pubDate = new Date(pubDateStr);
+      
+      if (pubDate >= twoWeeksAgo) {
+        episodes.push({
+          title: title.trim(),
+          url: `https://open.spotify.com/show/${show.id}`,
+          source: show.name,
+          publishedAt: pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          type: 'audio',
+          spotifyId: show.id, 
+          thumbnailUrl: '',
+        });
+      }
+    }
+    return episodes;
+  } catch (e) {
+    console.error(`❌ Podcast fail (${show.name}):`, e.message);
+    return [];
+  }
+}
+
+async function buildPodcastDrawer() {
+  const results = await Promise.all(SPOTIFY_POOL.map(fetchPodcastEpisodes));
+  const episodes = results.flat().sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  
+  return {
+    title: 'Podcasts',
+    url: 'https://open.spotify.com/',
+    source: 'Curated Audio',
+    publishedAt: new Date().toISOString(),
+    type: 'series',
+    score: 1000,
+    slot: 'podcast_pin',
+    episodes: episodes.slice(0, 9),
+  };
+}
+
 async function serperSearch(query, lane) {
   console.log(`🔍 Searching ${lane}: "${query.q}"...`);
   try {
@@ -410,12 +471,13 @@ async function main() {
     queries.forEach(q => allQueries.push({ lane, q }));
   });
 
-  console.log(`📡 Launching ${allQueries.length + 3} concurrent requests (YouTube + Serper)...`);
+  console.log(`📡 Launching ${allQueries.length + 4} concurrent requests (YouTube + Spotify + Serper)...`);
 
-  const [starTalk, pbs, grabBag, ...searchResults] = await Promise.all([
+  const [starTalk, pbs, grabBag, podcasts, ...searchResults] = await Promise.all([
     buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
     buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
     buildScienceGrabBag(),
+    buildPodcastDrawer(),
     ...allQueries.map(({ lane, q }) => serperSearch(q, lane))
   ]);
 
@@ -429,8 +491,8 @@ async function main() {
   })).sort((a, b) => b.score - a.score);
 
   // 4. Select top unique items
-  const seen = new Set([starTalk.url, pbs.url, grabBag.url]);
-  const finalItems = [starTalk, pbs, grabBag];
+  const seen = new Set([starTalk.url, pbs.url, grabBag.url, podcasts.url]);
+  const finalItems = [starTalk, pbs, grabBag, podcasts];
   
   for (const item of processed) {
     if (finalItems.length >= 15) break;
