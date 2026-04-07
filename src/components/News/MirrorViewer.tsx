@@ -88,7 +88,6 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
       {/* ── Metadata Notice Block ────────────────────────────────────────── */}
       <div style={{
         background: PALETTE.warm,
-        borderLeft: `3px solid ${PALETTE.black}`,
         padding: `${SPACING.md} ${SPACING.lg}`,
         margin: `${SPACING.md} 0 ${SPACING.xl}`,
       }}>
