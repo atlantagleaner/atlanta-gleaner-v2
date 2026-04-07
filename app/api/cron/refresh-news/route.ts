@@ -10,8 +10,8 @@
 
 import { EDITORIAL_QUERIES, FEED_TARGETS, SCORING, SOURCE_WEIGHTS } from '@/lib/newsConfig';
 import type { EditorialQuery, SerperEndpoint } from '@/lib/newsConfig';
-import { createCacheEntry } from '@/app/api/news/route';
-import type { CacheEntry, GleanerItem } from '@/app/api/news/route';
+import { createCacheEntry } from '@/lib/news/utils';
+import type { CacheEntry, GleanerItem } from '@/lib/news/types';
 import { resolveFeedEntry, saveFeedEntry } from '@/lib/newsFeedCache';
 import type { CacheReference } from '@/lib/newsFeedCache';
 import { ensureReaderDocument } from '@/lib/newsReader';

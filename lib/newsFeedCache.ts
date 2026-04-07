@@ -1,7 +1,7 @@
 'use server'
 
 import { put } from '@vercel/blob'
-import type { CacheEntry } from '@/app/api/news/route'
+import type { CacheEntry } from '@/lib/news/types'
 
 const FEED_PREFIX = 'news-feed/'
 
