@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 import { put, head } from '@vercel/blob'
 import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 
 // ── Configuration ─────────────────────────────────────────────────────────────
 
@@ -75,22 +75,27 @@ function wordCountFromHtml(bodyHtml: string): number {
 }
 
 // ── HTML Cleaning ─────────────────────────────────────────────────────────────
+// Server-side sanitizer: use sanitize-html (htmlparser2) instead of isomorphic-dompurify,
+// which pulls jsdom and hits ERR_REQUIRE_ESM for @exodus/bytes on Vercel serverless.
+
+const READABILITY_SANITIZE_OPTS: NonNullable<Parameters<typeof sanitizeHtml>[1]> = {
+  allowedTags: [
+    'p', 'br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li',
+    'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span',
+  ],
+  allowedAttributes: {
+    a: ['href', 'target', 'rel'],
+  },
+  allowedSchemes: ['http', 'https', 'mailto'],
+  allowProtocolRelative: false,
+}
 
 function cleanReadabilityHtml(html: string, baseUrl: string): string {
   let sanitized = html
   try {
-    sanitized = DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: [
-        'p', 'br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li', 
-        'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span'
-      ],
-      ALLOWED_ATTR: ['href', 'target', 'rel'],
-      ADD_ATTR: ['target', 'rel'],
-      FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed'],
-      FORBID_ATTR: ['style', 'onerror', 'onclick'],
-    })
+    sanitized = sanitizeHtml(html, READABILITY_SANITIZE_OPTS)
   } catch (err) {
-    console.error('[cleanReadabilityHtml] DOMPurify failed:', err)
+    console.error('[cleanReadabilityHtml] sanitize-html failed:', err)
   }
 
   const $ = cheerio.load(`<section>${sanitized}</section>`)

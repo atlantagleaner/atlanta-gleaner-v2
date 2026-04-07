@@ -19,7 +19,6 @@
     "@vercel/edge-config": "^1.4.3",
     "cheerio": "^1.0.0-rc.12",
     "fuse.js": "^7.3.0",
-    "isomorphic-dompurify": "^3.2.0",
     "linkedom": "^0.18.12",
     "mammoth": "^1.12.0",
     "metascraper": "^5.50.0",
@@ -34,13 +33,15 @@
     "metascraper-url": "^5.50.0",
     "next": "^16.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sanitize-html": "^2.17.2"
   },
   "devDependencies": {
     "@types/mozilla-readability": "^0.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/sanitize-html": "^2.16.1",
     "autoprefixer": "^10.4.19",
     "jszip": "^3.10.1",
     "postcss": "^8.4.38",

@@ -40,7 +40,6 @@ const nextConfig = {
     'metascraper-url',
     'metascraper-readability',
     're2',
-    'isomorphic-dompurify'
   ],
 }
 
