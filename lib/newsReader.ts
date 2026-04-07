@@ -246,9 +246,9 @@ async function buildReaderDocument(
   const metadata = await scraper({ html: rawHtml, url: rawUrl })
   
   // 2. Body extraction (from metascraper-readability or fallback)
-  const article = metadata.readability || null
+  let article = metadata.readability as any || null
   
-  if (!article || !article.content || !article.textContent || article.textContent.length < 300) {
+  if (!article || typeof article !== 'object' || !article.content || !article.textContent || article.textContent.length < 300) {
     // If metascraper-readability fails, try raw Readability as a fallback
     const { document } = parseHTML(rawHtml)
     const reader = new Readability(document)
@@ -258,8 +258,7 @@ async function buildReaderDocument(
       throw new Error('Extraction produced insufficient article body')
     }
     
-    // Map fallback to article structure
-    Object.assign(article || {}, fallback)
+    article = fallback
   }
 
   const articleContent = article?.content || ''
