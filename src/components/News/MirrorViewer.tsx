@@ -85,59 +85,78 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
     <article style={{ padding: `0 0 ${SPACING.lg}`, maxWidth: '700px', margin: '0 auto' }}>
       <style>{READER_BODY_CSS}</style>
 
-      {/* ── Metadata Notice Block ────────────────────────────────────────── */}
-      <div style={{
-        background: PALETTE.warm,
-        padding: `${SPACING.md} ${SPACING.lg}`,
-        margin: `${SPACING.md} 0 ${SPACING.xl}`,
-      }}>
-        <div style={{ ...T.micro, color: PALETTE_CSS.meta, marginBottom: SPACING.xs }}>
-          {document.source}
-        </div>
-        <h1 style={{ 
-          ...FONT.serif, 
-          fontSize: '1.8rem', 
-          fontWeight: 700, 
-          lineHeight: 1.1, 
-          margin: `0 0 ${SPACING.sm}`,
-          color: PALETTE.black 
-        }}>
-          {document.title}
-        </h1>
-        {document.byline && (
-          <div style={{ ...T.label, color: PALETTE.black }}>
-            {document.byline}
-          </div>
-        )}
-      </div>
-
       <header style={{ marginBottom: SPACING.lg }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
             gap: SPACING.xl,
             paddingBottom: SPACING.xs,
             borderBottom: `1px solid ${PALETTE_CSS.rule}`,
           }}
         >
-          <button
-            type="button"
-            onClick={() => setMode('reader')}
-            style={tabButtonStyle(mode === 'reader')}
+          <div style={{ display: 'flex', gap: SPACING.xl }}>
+            <button
+              type="button"
+              onClick={() => setMode('reader')}
+              style={tabButtonStyle(mode === 'reader')}
+            >
+              Article
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('pictures')}
+              style={tabButtonStyle(mode === 'pictures')}
+            >
+              Gallery
+            </button>
+          </div>
+          <a
+            href={document.readFullUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              ...T.micro,
+              color: PALETTE_CSS.meta,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: SPACING.xs,
+            }}
           >
-            Article
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('pictures')}
-            style={tabButtonStyle(mode === 'pictures')}
-          >
-            Gallery
-          </button>
+            <span>Source: {new URL(document.readFullUrl).hostname}</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
         </div>
       </header>
+
+      {mode === 'reader' && (
+        <div style={{
+          background: PALETTE.warm,
+          padding: `${SPACING.md} ${SPACING.lg}`,
+          margin: `0 0 ${SPACING.xl}`,
+        }}>
+          <div style={{ ...T.micro, color: PALETTE_CSS.meta, marginBottom: SPACING.xs }}>
+            {document.source}
+          </div>
+          <h1 style={{ 
+            ...FONT.serif, 
+            fontSize: '1.8rem', 
+            fontWeight: 700, 
+            lineHeight: 1.1, 
+            margin: `0 0 ${SPACING.sm}`,
+            color: PALETTE.black 
+          }}>
+            {document.title}
+          </h1>
+          {document.byline && (
+            <div style={{ ...T.label, color: PALETTE.black }}>
+              {document.byline}
+            </div>
+          )}
+        </div>
+      )}
 
       {mode === 'reader' ? (
         <>
@@ -238,30 +257,6 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
           )}
         </section>
       )}
-
-      {/* ── Colophon ─────────────────────────────────────────────────────── */}
-      <footer style={{ 
-        marginTop: SPACING.xxl, 
-        paddingTop: SPACING.lg, 
-        borderTop: `1px solid ${PALETTE_CSS.rule}` 
-      }}>
-        <a
-          href={document.readFullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            ...T.micro,
-            color: PALETTE_CSS.meta,
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: SPACING.xs,
-          }}
-        >
-          <span>Source: {new URL(document.readFullUrl).hostname}</span>
-          <span style={{ fontSize: '12px' }}>↗</span>
-        </a>
-      </footer>
     </article>
   )
 }
