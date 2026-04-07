@@ -63,6 +63,16 @@ async function fetchNews(): Promise<NewsResponse> {
   return res.json()
 }
 
+async function gleanItem(item: NewsItem): Promise<GleanResult> {
+  const res = await gleanArticle(item.url, {
+    title: item.title,
+    source: item.source,
+    type: item.type,
+  })
+  if ('error' in res) throw new Error(res.error)
+  return res
+}
+
 type DrawerState =
   | { status: 'idle' }
   | { status: 'loading' }
@@ -86,28 +96,14 @@ const SLOT_BADGE: Record<string, string | null> = {
 // loading skeleton on cache-miss.
 
 function MirrorDrawer({ item }: { item: NewsItem }) {
-  const [drawer, setDrawer]   = useState<DrawerState>({ status: 'idle' })
-  const [, startTransition]   = useTransition()
-
-  useEffect(() => {
-    setDrawer({ status: 'loading' })
-    startTransition(async () => {
-      const result = await gleanArticle(item.url, {
-        title:  item.title,
-        source: item.source,
-        type:   item.type,
-      })
-      if ('error' in result) {
-        setDrawer({ status: 'error', message: result.error })
-      } else {
-        setDrawer({ status: 'done', result })
-      }
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item.url])
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['glean', item.url],
+    queryFn: () => gleanItem(item),
+    staleTime: 1000 * 60 * 60, // 1 hour
+  })
 
   // ── Loading ────────────────────────────────────────────────────────────────
-  if (drawer.status === 'idle' || drawer.status === 'loading') {
+  if (isLoading) {
     return (
       <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
         <p style={{
@@ -133,7 +129,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
   }
 
   // ── Error ──────────────────────────────────────────────────────────────────
-  if (drawer.status === 'error') {
+  if (error) {
     return (
       <div style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
         <p style={{ ...T.micro, color: PALETTE_CSS.muted, margin: 0 }}>
@@ -152,7 +148,8 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
   }
 
   // ── Result ─────────────────────────────────────────────────────────────────
-  return <MirrorViewer result={drawer.result} />
+  if (!data) return null
+  return <MirrorViewer result={data} />
 }
 
 function SeriesDrawer({ item }: { item: NewsItem }) {

@@ -1,5 +1,3 @@
-'use server'
-
 import * as cheerio from 'cheerio'
 import { createHash } from 'crypto'
 import { list, put } from '@vercel/blob'
@@ -102,17 +100,22 @@ function cleanWhitespace(value: string | null | undefined): string | null {
 function cleanReadabilityHtml(html: string, baseUrl: string): string {
   // 1. Sanitize with DOMPurify (whitelist-based)
   // This strips all scripts, inline styles, and non-standard attributes
-  const sanitized = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      'p', 'br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li', 
-      'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span'
-    ],
-    ALLOWED_ATTR: ['href', 'target', 'rel'],
-    // Ensure all links are forced to be safe
-    ADD_ATTR: ['target', 'rel'],
-    FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed'],
-    FORBID_ATTR: ['style', 'onerror', 'onclick'],
-  })
+  let sanitized = html
+  try {
+    sanitized = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        'p', 'br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li', 
+        'h2', 'h3', 'h4', 'blockquote', 'section', 'div', 'span'
+      ],
+      ALLOWED_ATTR: ['href', 'target', 'rel'],
+      // Ensure all links are forced to be safe
+      ADD_ATTR: ['target', 'rel'],
+      FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed'],
+      FORBID_ATTR: ['style', 'onerror', 'onclick'],
+    })
+  } catch (err) {
+    console.error('[cleanReadabilityHtml] DOMPurify failed, falling back to raw html:', err)
+  }
 
   // 2. Post-process with Cheerio for absolute URLs and extra cleanup
   const $ = cheerio.load(`<section>${sanitized}</section>`)
@@ -361,17 +364,27 @@ export async function fetchReaderDocument(
   }
 
   const rawHtml = await response.text()
-  return await buildReaderDocument(rawHtml, url, input)
+  try {
+    return await buildReaderDocument(rawHtml, url, input)
+  } catch (err) {
+    console.error(`[fetchReaderDocument] buildReaderDocument failed for ${url}:`, err)
+    throw err
+  }
 }
 
 export async function ensureReaderDocument(
   url: string,
   input: ReaderExtractionInput,
 ): Promise<ReaderDocument> {
-  const cached = await getCachedReader(url)
-  if (cached) return cached
+  try {
+    const cached = await getCachedReader(url)
+    if (cached) return cached
 
-  const document = await fetchReaderDocument(url, input)
-  await saveCachedReader(url, document)
-  return document
+    const document = await fetchReaderDocument(url, input)
+    await saveCachedReader(url, document)
+    return document
+  } catch (err) {
+    console.error(`[ensureReaderDocument] Failed for ${url}:`, err)
+    throw err
+  }
 }
