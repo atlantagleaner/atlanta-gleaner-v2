@@ -115,7 +115,7 @@ const volumeToggle: CSSProperties = {
 
 const monthToggle: CSSProperties = {
   width:          '100%',
-  background:     'transparent',
+  background:     PALETTE.white,
   border:         'none',
   padding:        `${SPACING.md} ${SPACING.lg}`,
   display:        'flex',
@@ -361,9 +361,18 @@ function VolumeBox({
   )
 }
 
-function formatVolumeLabel(volume: typeof VOLUMES[number]): string {
-  if (volume.years.length === 1) return String(volume.years[0])
-  return `${volume.years[0]}–${volume.years[volume.years.length - 1]}`
+function formatVolumeLabel(volumeCases: CaseLaw[]): string {
+  const representedYears = Array.from(
+    new Set(
+      volumeCases
+        .map((c) => getYear(getArchiveDate(c)))
+        .filter((year): year is number => year !== null)
+    )
+  ).sort((a, b) => a - b)
+
+  if (representedYears.length === 0) return ''
+  if (representedYears.length === 1) return String(representedYears[0])
+  return `${representedYears[0]}–${representedYears[representedYears.length - 1]}`
 }
 
 function getVolumeCases(allCases: CaseLaw[], volume: typeof VOLUMES[number]): CaseLaw[] {
@@ -458,13 +467,21 @@ function VolumeMonthDrawer({
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: SPACING.xs,
+                gap: '5px',
                 minWidth: 0,
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
               }}>
                 <div className="case-archive-title" style={{
                   ...T.body,
+                  lineHeight: 1.15,
                   minWidth: 0,
                   marginBottom: 0,
+                  minHeight: '2.3em',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 2,
+                  overflow: 'hidden',
                 }}>
                   {c.title}
                 </div>
@@ -473,6 +490,7 @@ function VolumeMonthDrawer({
                   fontWeight: 400,
                   letterSpacing: '0.10em',
                   marginTop: 0,
+                  lineHeight: 1.15,
                 }}>
                   {c.court}
                 </div>
@@ -481,6 +499,7 @@ function VolumeMonthDrawer({
                   fontWeight: 400,
                   letterSpacing: '0.10em',
                   marginTop: 0,
+                  lineHeight: 1.15,
                 }}>
                   {[c.docketNumber, getArchiveDecisionDate(c)].filter(Boolean).join(' · ')}
                 </div>
@@ -565,6 +584,7 @@ function ArchiveVolumePanel({
         <div className="archive-volume-selector">
           {volumes.map((volume) => {
             const isSelected = volume.number === selectedVolume.number
+            const volumeLabel = formatVolumeLabel(getVolumeCases(cases, volume))
             return (
               <button
                 key={volume.number}
@@ -574,7 +594,7 @@ function ArchiveVolumePanel({
                 className={`archive-volume-selector-button${isSelected ? ' is-active' : ''}`}
               >
                 <span className="archive-volume-selector-label">Volume {volume.roman}</span>
-                <span className="archive-volume-selector-year">{formatVolumeLabel(volume)}</span>
+                <span className="archive-volume-selector-year">{volumeLabel}</span>
               </button>
             )
           })}
