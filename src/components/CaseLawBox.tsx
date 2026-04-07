@@ -292,7 +292,7 @@ const metaLabel: CSSProperties = {
 
 const metaValue: CSSProperties = {
   ...T.prose,               // SIZE_MD (14px), consistent with body copy
-  fontWeight: 700,
+  fontWeight: 400,
   lineHeight: 1.4,
   color:      PALETTE.black,
 }
@@ -475,27 +475,19 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
             <button
               onClick={() => setShowPagination(!showPagination)}
               style={{
-                ...(showPagination ? {
-                  ...T.micro,
-                  background: PALETTE.black,
-                  color: PALETTE.white,
-                  padding: `2px ${SPACING.sm}`,
-                  margin: '0',
-                  transition: 'background 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-block',
-                } : {
-                  ...metaLabel,
-                  background: 'none',
-                  padding: '0',
-                  margin: '0',
-                  transition: 'opacity 0.15s ease',
-                }),
+                ...T.micro,
+                background: showPagination ? PALETTE.black : 'transparent',
+                color: showPagination ? PALETTE.white : PALETTE_CSS.meta,
+                padding: '4px 10px',
+                marginLeft: '-10px',
                 border: 'none',
                 cursor: 'pointer',
+                transition: 'background 0.2s ease, color 0.2s ease',
+                whiteSpace: 'nowrap',
+                display: 'inline-block',
                 lineHeight: '1',
-                verticalAlign: 'baseline',
                 textAlign: 'left',
+                verticalAlign: 'baseline',
               }}
               onMouseEnter={(e) => {
                 if (!showPagination) {
