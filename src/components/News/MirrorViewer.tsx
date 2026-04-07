@@ -18,6 +18,7 @@ const READER_BODY_CSS = `
   .ag-reader-body h3,
   .ag-reader-body h4 {
     font-family: 'Cormorant Garamond', serif;
+    font-variant-numeric: lining-nums;
     font-weight: 700;
     line-height: 1.12;
     margin: 1.5em 0 0.6em;
@@ -35,6 +36,7 @@ const READER_BODY_CSS = `
   }
   .ag-reader-body blockquote {
     font-family: 'Cormorant Garamond', serif;
+    font-variant-numeric: lining-nums;
     font-size: 1.1rem;
     font-style: italic;
     line-height: 1.55;
@@ -153,7 +155,8 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
             fontWeight: 700, 
             lineHeight: 1.1, 
             margin: `0 0 ${SPACING.sm}`,
-            color: PALETTE.black 
+            color: PALETTE.black,
+            fontVariantNumeric: 'lining-nums'
           }}>
             {document.title}
           </h1>
