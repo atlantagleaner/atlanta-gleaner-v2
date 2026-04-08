@@ -148,57 +148,68 @@ export async function getShowEpisodes(showId: string, limit: number = 10): Promi
   return getShowEpisodesWithToken(showId, token, limit);
 }
 
-// Helper: Execute promises with limited concurrency
+// Helper: Execute tasks with staggered delays to avoid rate limiting
+// Runs up to `limit` tasks concurrently, staggering starts by `delayMs`
 async function executeWithLimit<T>(
   tasks: (() => Promise<T>)[],
-  limit: number = 5,
+  limit: number = 2,
+  delayMs: number = 300,
 ): Promise<PromiseSettledResult<T>[]> {
-  const results: PromiseSettledResult<T>[] = [];
-  const executing: Promise<void>[] = [];
+  const results: PromiseSettledResult<T>[] = new Array(tasks.length);
 
-  for (const [index, task] of tasks.entries()) {
-    const promise = Promise.resolve().then(task).then(
-      (value) => {
-        results[index] = { status: 'fulfilled', value };
-      },
-      (reason) => {
-        results[index] = { status: 'rejected', reason };
-      },
+  for (let i = 0; i < tasks.length; i += limit) {
+    const batch = tasks.slice(i, i + limit);
+    const batchResults = await Promise.allSettled(
+      batch.map((task, idx) =>
+        new Promise<T>((resolve, reject) => {
+          // Stagger task start within the batch
+          setTimeout(
+            () => task().then(resolve, reject),
+            idx * delayMs
+          );
+        })
+      )
     );
 
-    executing.push(promise);
+    batchResults.forEach((result, idx) => {
+      results[i + idx] = result;
+    });
 
-    if (executing.length >= limit) {
-      await Promise.race(executing);
-      executing.splice(executing.findIndex((p) => p === promise), 1);
+    // Delay between batches
+    if (i + limit < tasks.length) {
+      await new Promise(r => setTimeout(r, delayMs * limit));
     }
   }
 
-  await Promise.all(executing);
   return results;
 }
 
 // Get latest episodes from multiple shows (with limited concurrency to avoid rate limiting)
 export async function getLatestEpisodes(showIds: string[]): Promise<SpotifyEpisode[]> {
-  console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows`);
+  console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows with rate limiting`);
 
   // Get token once to avoid making 30+ auth requests
   const token = await getSpotifyAccessToken();
 
-  // Create tasks with limited concurrency (5 at a time) to avoid Spotify rate limits
+  // Create tasks with conservative concurrency (2 at a time) and staggered delays
+  // Spotify rate limit is ~180 requests per minute, but we back off aggressively
   const tasks = showIds.map((id) => () => getShowEpisodesWithToken(id, token, 1));
-  const results = await executeWithLimit(tasks, 5);
+  const results = await executeWithLimit(tasks, 2, 300); // 2 concurrent, 300ms stagger
 
   const successCount = results.filter(r => r.status === 'fulfilled').length;
   const failureCount = results.filter(r => r.status === 'rejected').length;
 
   if (failureCount > 0) {
-    console.log(`[getLatestEpisodes] WARNING: ${failureCount} shows failed to fetch`);
+    console.error(`[getLatestEpisodes] ERROR: ${failureCount}/${showIds.length} shows failed to fetch`);
     results.forEach((result, idx) => {
       if (result.status === 'rejected') {
-        console.log(`  - Show ${idx}: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}`);
+        const showId = showIds[idx];
+        const errorMsg = result.reason instanceof Error ? result.reason.message : String(result.reason);
+        console.error(`  - Show ${showId}: ${errorMsg}`);
       }
     });
+  } else {
+    console.log(`[getLatestEpisodes] ✓ All ${successCount} shows fetched successfully`);
   }
 
   // Filter for successful results and flatten
