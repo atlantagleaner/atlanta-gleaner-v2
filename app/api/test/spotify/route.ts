@@ -28,7 +28,26 @@ export async function GET() {
     };
     console.log('[test/spotify] Single show test result:', debug.singleShowTest);
 
-    // Second test: full build
+    // Second test: try with first 5 shows
+    console.log('[test/spotify] Testing with 5 shows...');
+    const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig');
+    const first5Shows = SPOTIFY_SHOW_IDS_ARRAY.slice(0, 5);
+    const firstFiveEpisodes = await Promise.allSettled(
+      first5Shows.map(id => getLatestEpisodes([id]))
+    );
+    const successCount = firstFiveEpisodes.filter(r => r.status === 'fulfilled').length;
+    const failureCount = firstFiveEpisodes.filter(r => r.status === 'rejected').length;
+    debug.first5ShowsTest = {
+      showsRequested: first5Shows.length,
+      successCount,
+      failureCount,
+      totalEpisodes: firstFiveEpisodes
+        .filter(r => r.status === 'fulfilled')
+        .reduce((sum, r) => sum + (r.status === 'fulfilled' ? r.value.length : 0), 0),
+    };
+    console.log('[test/spotify] First 5 shows test result:', debug.first5ShowsTest);
+
+    // Third test: full build
     console.log('[test/spotify] Calling buildAudioDispatchItem...');
     const result = await buildAudioDispatchItem();
     return Response.json({
