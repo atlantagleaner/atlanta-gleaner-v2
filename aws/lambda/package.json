@@ -1,0 +1,18 @@
+{
+  "name": "@atlanta-gleaner/lambda-news-refresh",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for Atlanta Gleaner news feed backup refresh",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild news-feed-refresh.ts --bundle --platform=node --target=node18 --outfile=index.js --external:stream",
+    "zip": "npm run build && zip -r function.zip index.js node_modules/",
+    "deploy": "npm run zip && aws lambda update-function-code --function-name atlanta-gleaner-news-refresh --zip-file fileb://function.zip",
+    "test": "aws lambda invoke --function-name atlanta-gleaner-news-refresh --payload '{}' response.json && cat response.json",
+    "logs": "aws logs tail /aws/lambda/atlanta-gleaner-news-refresh --follow",
+    "errors": "aws logs filter-log-events --log-group-name /aws/lambda/atlanta-gleaner-news-refresh --filter-pattern ERROR"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "@types/node": "^18.0.0"
+  }
+}
