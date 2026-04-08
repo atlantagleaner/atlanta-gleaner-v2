@@ -13,6 +13,11 @@ import { ensureReaderDocument } from '@/lib/newsReader';
 import { LIVE_CACHE_KEY, PREPARE_DELAY_MS, STAGED_CACHE_KEY, STATUS_CACHE_KEY } from '@/lib/newsRefresh';
 import type { RefreshFailure, RefreshStatus } from '@/lib/newsRefresh';
 import { get } from '@vercel/edge-config';
+import {
+  buildFeaturedSeriesItem,
+  buildScienceGrabBagItem,
+  FEATURED_YOUTUBE_CHANNELS,
+} from '@/lib/youtubeFeed';
 
 export const runtime = 'nodejs';
 
@@ -20,101 +25,6 @@ const SERPER_API_KEY = process.env.SERPER_API_KEY;
 const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const MAX_STATUS_FAILURES = 12;
-
-const FEATURED_CHANNELS = {
-  starTalk: {
-    title: 'StarTalk',
-    url: 'https://www.youtube.com/@StarTalk/videos',
-  },
-  pbsSpaceTime: {
-    title: 'PBS Space Time',
-    url: 'https://www.youtube.com/@pbsspacetime/videos',
-  },
-} as const;
-
-// ── YouTube Logic (Simplified/Robust) ─────────────────────────────────────────
-
-function extractJsonObject(text: string, marker: string): string | null {
-  const start = text.indexOf(marker);
-  if (start === -1) return null;
-  const braceStart = text.indexOf('{', start);
-  if (braceStart === -1) return null;
-  let depth = 0; let inString = false; let escaped = false;
-  for (let i = braceStart; i < text.length; i += 1) {
-    const char = text[i];
-    if (inString) {
-      if (escaped) { escaped = false; continue; }
-      if (char === '\\') { escaped = true; continue; }
-      if (char === '"') inString = false;
-      continue;
-    }
-    if (char === '"') { inString = true; continue; }
-    if (char === '{') { depth += 1; continue; }
-    if (char === '}') {
-      depth -= 1;
-      if (depth === 0) return text.slice(braceStart, i + 1);
-    }
-  }
-  return null;
-}
-
-function collectRenderers(value: any, output: any[] = []): any[] {
-  if (!value || typeof value !== 'object') return output;
-  if (Array.isArray(value)) {
-    for (const entry of value) collectRenderers(entry, output);
-    return output;
-  }
-  if (value.gridVideoRenderer) output.push(value.gridVideoRenderer);
-  if (value.videoRenderer) output.push(value.videoRenderer);
-  for (const child of Object.values(value)) collectRenderers(child, output);
-  return output;
-}
-
-function rendererToEpisode(renderer: any) {
-  const videoId = renderer.videoId || renderer.navigationEndpoint?.watchEndpoint?.videoId || null;
-  const title = renderer.title?.simpleText || renderer.title?.runs?.map((r: any) => r.text).join('') || '';
-  const publishedAt = renderer.publishedTimeText?.simpleText || '';
-  if (!videoId || !title) return null;
-  return {
-    title,
-    url: `https://www.youtube.com/watch?v=${videoId}`,
-    source: 'YouTube',
-    publishedAt,
-    type: 'video' as const,
-    videoId,
-    thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-  };
-}
-
-async function fetchLatestYouTubeEpisodes(channelTitle: string, channelUrl: string) {
-  const response = await fetch(channelUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AtlantaGleaner/1.0)' },
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const html = await response.text();
-  const jsonText = extractJsonObject(html, 'ytInitialData');
-  if (!jsonText) throw new Error(`ytInitialData not found`);
-  const data = JSON.parse(jsonText);
-  const episodes = collectRenderers(data)
-    .map(rendererToEpisode)
-    .filter(Boolean)
-    .slice(0, 3);
-  return episodes;
-}
-
-async function buildFeaturedSeries(title: string, channelUrl: string, slot: string): Promise<GleanerItem> {
-  const episodes = await fetchLatestYouTubeEpisodes(title, channelUrl);
-  return {
-    title,
-    url: channelUrl,
-    source: `Official ${title} uploads`,
-    publishedAt: episodes[0]?.publishedAt || '',
-    type: 'series',
-    score: 1000,
-    slot,
-    episodes: episodes as any,
-  };
-}
 
 // ── Serper Logic ─────────────────────────────────────────────────────────────
 
@@ -149,10 +59,21 @@ async function serperSearch(query: EditorialQuery): Promise<GleanerItem[]> {
 async function buildNewsFeed(options?: { prewarmReaders?: boolean }) {
   const failures: RefreshFailure[] = [];
   
-  // 1. Fetch Featured
-  const [starTalk, pbs] = await Promise.all([
-    buildFeaturedSeries(FEATURED_CHANNELS.starTalk.title, FEATURED_CHANNELS.starTalk.url, 'science_pin'),
-    buildFeaturedSeries(FEATURED_CHANNELS.pbsSpaceTime.title, FEATURED_CHANNELS.pbsSpaceTime.url, 'science_pin'),
+  // 1. Featured series (YouTube Data API when YOUTUBE_API_KEY is set; else HTML scrape fallback)
+  const [starTalk, pbs, grabBag] = await Promise.all([
+    buildFeaturedSeriesItem(
+      FEATURED_YOUTUBE_CHANNELS.starTalk.title,
+      FEATURED_YOUTUBE_CHANNELS.starTalk.url,
+      FEATURED_YOUTUBE_CHANNELS.starTalk.channelId,
+      'science_pin',
+    ),
+    buildFeaturedSeriesItem(
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.title,
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.url,
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.channelId,
+      'science_pin',
+    ),
+    buildScienceGrabBagItem(),
   ]);
 
   // 2. Fetch News Pool
@@ -166,8 +87,8 @@ async function buildNewsFeed(options?: { prewarmReaders?: boolean }) {
   })).sort((a, b) => b.score - a.score);
 
   // 3. Selection with Source Diversity
-  const seen = new Set([starTalk.url, pbs.url]);
-  const finalItems: GleanerItem[] = [starTalk, pbs];
+  const seen = new Set([starTalk.url, pbs.url, grabBag.url]);
+  const finalItems: GleanerItem[] = [starTalk, pbs, grabBag];
   const sourceCounts: Record<string, number> = {};
 
   for (const item of processed) {

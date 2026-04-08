@@ -3,6 +3,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createCacheEntry, scoreItem, inferSlot } from '../lib/news/utils';
 import { EDITORIAL_QUERIES, FEED_TARGETS } from '../lib/newsConfig';
+import {
+  buildFeaturedSeriesItem,
+  buildScienceGrabBagItem,
+  FEATURED_YOUTUBE_CHANNELS,
+} from '../lib/youtubeFeed';
 
 // ── Environment ─────────────────────────────────────────────────────────────
 
@@ -10,7 +15,6 @@ const SERPER_API_KEY = process.env.SERPER_API_KEY;
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const EDGE_CONFIG_ID = process.env.EDGE_CONFIG_ID;
 const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 if (!SERPER_API_KEY) {
   console.error('❌ Error: SERPER_API_KEY is not set.');
@@ -65,89 +69,6 @@ async function syncToProduction(finalItems: any[]) {
   } catch (err: any) {
     console.error('💥 Sync failed:', err.message);
   }
-}
-
-// ── YouTube Integration ─────────────────────────────────────────────────────
-
-const CHANNEL_IDS = {
-  starTalk: 'UCv8u5797wK4_YtZ89Y8088A',
-  pbsSpaceTime: 'UC7_gcs09iThXybpVgjHZ_7g',
-};
-
-async function fetchYouTubeChannelVideos(channelId: string, maxResults = 5) {
-  if (!YOUTUBE_API_KEY) {
-    console.warn(`⚠️ No YOUTUBE_API_KEY. Channel ${channelId} will be empty.`);
-    return [];
-  }
-
-  try {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`
-    );
-    if (!res.ok) throw new Error(`YouTube API ${res.status}`);
-    const data = (await res.json()) as any;
-
-    return (data.items || []).map((item: any) => ({
-      title: item.snippet.title,
-      url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-      source: 'YouTube',
-      publishedAt: item.snippet.publishedAt,
-      type: 'video' as const,
-      videoId: item.id.videoId,
-      thumbnailUrl: item.snippet.thumbnails?.high?.url || `https://i.ytimg.com/vi/${item.id.videoId}/hqdefault.jpg`,
-    }));
-  } catch (e: any) {
-    console.error(`❌ YouTube fetch failed for ${channelId}:`, e.message);
-    return [];
-  }
-}
-
-async function buildFeaturedSeries(title: string, channelId: string, slot: string) {
-  const episodes = await fetchYouTubeChannelVideos(channelId, 3);
-  return {
-    title,
-    url: `https://www.youtube.com/channel/${channelId}`,
-    source: `Official ${title} uploads`,
-    publishedAt: episodes[0]?.publishedAt || '',
-    type: 'series' as const,
-    score: 1000,
-    slot,
-    episodes,
-  };
-}
-
-// ── Grab Bag Drawer ──────────────────────────────────────────────────────────
-
-const GRAB_BAG_CHANNELS = [
-  { id: 'kurzgesagt', url: 'https://www.youtube.com/@kurzgesagt/videos', cid: 'UCsXVk37bltUXD1fauIDKJgQ' },
-  { id: 'novapbs', url: 'https://www.youtube.com/@novapbs/videos', cid: 'UC9uD-W5zkVUUnp6VByI_zSg' },
-  { id: 'PBSDocumentaries', url: 'https://www.youtube.com/@PBSDocumentaries/videos', cid: 'UC4E98t898F908z98S9S9S9S' }, // Placeholder CID
-  { id: 'Veritasium', url: 'https://www.youtube.com/@veritasium/videos', cid: 'UCHnyfMqiRRG1u-2MsSQLbXA' },
-  { id: 'SmarterEveryDay', url: 'https://www.youtube.com/@smartereveryday/videos', cid: 'UC6107grRI4K0o2-umHBVMwA' },
-  { id: 'RealEngineering', url: 'https://www.youtube.com/@RealEngineering/videos', cid: 'UCR1IuLEqb6UEAofA8UZ161A' },
-];
-
-async function buildScienceGrabBag() {
-  console.log('📦 Building Science Grab Bag...');
-  const shuffled = [...GRAB_BAG_CHANNELS].sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, 3);
-  
-  const episodesResults = await Promise.all(
-    selected.map(ch => fetchYouTubeChannelVideos(ch.cid, 2))
-  );
-  
-  const episodes = episodesResults.flat().slice(0, 9);
-  
-  return {
-    title: 'Grab Bag',
-    url: 'https://www.youtube.com/',
-    source: 'Curated Grab Bag',
-    publishedAt: new Date().toISOString(),
-    type: 'series' as const,
-    score: 1000,
-    slot: 'grab_bag',
-    episodes,
-  };
 }
 
 // ── Podcast Drawer ───────────────────────────────────────────────────────────
@@ -226,9 +147,19 @@ async function main() {
   });
 
   const [starTalk, pbs, grabBag, podcasts, ...searchResults] = await Promise.all([
-    buildFeaturedSeries('StarTalk', CHANNEL_IDS.starTalk, 'science_pin'),
-    buildFeaturedSeries('PBS Space Time', CHANNEL_IDS.pbsSpaceTime, 'science_pin'),
-    buildScienceGrabBag(),
+    buildFeaturedSeriesItem(
+      FEATURED_YOUTUBE_CHANNELS.starTalk.title,
+      FEATURED_YOUTUBE_CHANNELS.starTalk.url,
+      FEATURED_YOUTUBE_CHANNELS.starTalk.channelId,
+      'science_pin',
+    ),
+    buildFeaturedSeriesItem(
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.title,
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.url,
+      FEATURED_YOUTUBE_CHANNELS.pbsSpaceTime.channelId,
+      'science_pin',
+    ),
+    buildScienceGrabBagItem(),
     buildPodcastDrawer(),
     ...allQueries.map(({ lane, q }) => serperSearch(q, lane))
   ]);
