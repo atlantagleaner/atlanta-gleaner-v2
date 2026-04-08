@@ -1,15 +1,15 @@
 /**
- * AWS Lambda function for Atlanta Gleaner news feed backup refresh.
+ * AWS Lambda function for Atlanta Gleaner news feed PRIMARY refresh.
  *
- * Scheduled to run via EventBridge at 5 PM UTC daily (12 hours after Vercel cron).
- * Builds fresh news feed and saves to Vercel Blob with 'backup' prefix.
+ * Scheduled to run via EventBridge at 6 AM & 7 AM UTC daily.
+ * Builds complete 20-item news feed with featured series (YouTube + Spotify) + news articles.
  *
- * This provides a secondary, independent backup refresh to ensure feed availability
- * even if the primary Vercel cron fails.
+ * This is the PRIMARY refresh mechanism, providing independent reliability.
+ * Vercel Cron (4-5 AM UTC) serves as automatic backup.
  *
  * Environment variables required:
  * - SERPER_API_KEY: Google Serper API key for news search
- * - YOUTUBE_API_KEY: YouTube Data API v3 key (optional, fallback to scrape)
+ * - YOUTUBE_API_KEY: YouTube Data API v3 key
  * - SPOTIFY_CLIENT_ID: Spotify API client ID
  * - SPOTIFY_CLIENT_SECRET: Spotify API client secret
  * - SPOTIFY_SHOW_IDS: Comma-separated Spotify show IDs for Audio Dispatch
@@ -233,40 +233,140 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
 // Feed Building
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function buildNewsFeed(): Promise<GleanerItem[]> {
-  const items: GleanerItem[] = [];
+// Fetch YouTube videos for a channel
+async function fetchYoutubeVideos(channelId: string, limit: number = 3): Promise<GleanerEpisode[]> {
+  if (!process.env.YOUTUBE_API_KEY) return [];
 
-  // Fetch from key editorial queries
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=${limit}&key=${process.env.YOUTUBE_API_KEY}&type=video`;
+    const response = await fetchWithTimeout(url, {
+      timeoutMs: FETCH_TIMEOUTS.YOUTUBE,
+      label: `YouTubeChannel:${channelId}`,
+    });
+
+    if (!response.ok) return [];
+
+    const data = (await response.json()) as any;
+    return (data.items || [])
+      .map((item: any) => ({
+        title: item.snippet.title,
+        url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+        source: 'YouTube',
+        publishedAt: item.snippet.publishedAt,
+        type: 'video' as const,
+        videoId: item.id.videoId,
+        thumbnailUrl: item.snippet.thumbnails.high?.url || '',
+      }))
+      .slice(0, limit);
+  } catch (error) {
+    console.warn(`[fetchYoutubeVideos] Error for channel ${channelId}:`, error);
+    return [];
+  }
+}
+
+async function buildNewsFeed(): Promise<GleanerItem[]> {
+  const finalItems: GleanerItem[] = [];
+
+  console.log('[buildNewsFeed] Fetching featured series...');
+
+  // 1. FEATURED SERIES (Drawers)
+  // StarTalk
+  const starTalkVideos = await fetchYoutubeVideos('UCfV36TX5AejfAGIBtwTc8Zw', 3);
+  if (starTalkVideos.length > 0) {
+    finalItems.push({
+      title: 'StarTalk',
+      url: 'https://www.youtube.com/@StarTalk/videos',
+      source: 'YouTube',
+      publishedAt: new Date().toISOString(),
+      type: 'series',
+      score: 1000,
+      slot: 'science_pin',
+      episodes: starTalkVideos,
+    });
+  }
+
+  // PBS Space Time
+  const pbsVideos = await fetchYoutubeVideos('UCxmkLd4JfSQNEtQ05ngeB3A', 3);
+  if (pbsVideos.length > 0) {
+    finalItems.push({
+      title: 'PBS Space Time',
+      url: 'https://www.youtube.com/@pbsspacetime/videos',
+      source: 'YouTube',
+      publishedAt: new Date().toISOString(),
+      type: 'series',
+      score: 1000,
+      slot: 'science_pin',
+      episodes: pbsVideos,
+    });
+  }
+
+  // Grab Bag (science variety)
+  const grabBagChannels = [
+    { id: 'UCJic7bfKsKA-IYM_zXC-7vQ', name: 'Kurzgesagt' },
+    { id: 'UCO0jGfsQ35gPCYAspkEKDOA', name: 'NOVA PBS Official' },
+  ];
+  const grabBagVideos: GleanerEpisode[] = [];
+  for (const channel of grabBagChannels) {
+    const videos = await fetchYoutubeVideos(channel.id, 4);
+    grabBagVideos.push(...videos);
+  }
+  if (grabBagVideos.length > 0) {
+    finalItems.push({
+      title: 'Grab Bag',
+      url: 'https://www.youtube.com/',
+      source: 'YouTube',
+      publishedAt: new Date().toISOString(),
+      type: 'series',
+      score: 1000,
+      slot: 'grab_bag',
+      episodes: grabBagVideos.slice(0, 8),
+    });
+  }
+
+  // Audio Dispatch (Spotify)
+  console.log('[buildNewsFeed] Fetching Spotify episodes...');
+  const spotify = await fetchSpotifyEpisodes();
+  if (spotify) {
+    finalItems.push(spotify);
+  }
+
+  // 2. NEWS ARTICLES
+  console.log('[buildNewsFeed] Fetching news articles...');
+  const newsPool: GleanerItem[] = [];
+
   const queries = [
-    { query: 'Atlanta news WSB', boost: 70 },
-    { query: 'Georgia local news', boost: 72 },
-    { query: 'CNN news today', boost: 18 },
-    { query: 'Atlanta business news', boost: 65 },
-    { query: 'Georgia tech news', boost: 40 },
-    { query: 'Atlanta real estate', boost: 50 },
+    { query: 'Atlanta news WSB', boost: 80 },
+    { query: 'Georgia local news', boost: 75 },
+    { query: 'CNN breaking news', boost: 65 },
+    { query: 'Atlanta business', boost: 60 },
+    { query: 'Georgia politics', boost: 58 },
+    { query: 'Atlanta legal news', boost: 55 },
   ];
 
   for (const { query, boost } of queries) {
     const results = await serperSearch(query, boost);
-    items.push(...results);
+    newsPool.push(...results);
   }
 
-  // Add Spotify
-  const spotify = await fetchSpotifyEpisodes();
-  if (spotify) {
-    items.push(spotify);
-  }
-
-  // Simple scoring and deduplication
+  // Deduplicate news
   const seen = new Set<string>();
-  const unique = items.filter((item) => {
-    if (seen.has(item.url)) return false;
-    seen.add(item.url);
-    return true;
-  });
+  seen.add('https://www.youtube.com');
+  seen.add('https://open.spotify.com');
 
-  // Sort by score and limit to 20
-  return unique.sort((a, b) => b.score - a.score).slice(0, 20);
+  for (const item of finalItems) {
+    seen.add(item.url);
+  }
+
+  // Add news articles up to 20 total items (4 drawers + 16 news)
+  for (const item of newsPool.sort((a, b) => b.score - a.score)) {
+    if (finalItems.length >= 20) break;
+    if (seen.has(item.url)) continue;
+    seen.add(item.url);
+    finalItems.push(item);
+  }
+
+  console.log(`[buildNewsFeed] Built feed: ${finalItems.length} items`);
+  return finalItems;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
