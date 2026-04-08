@@ -349,10 +349,13 @@ export async function fetchReaderDocument(
 export async function ensureReaderDocument(
   url: string,
   input: ReaderExtractionInput,
+  options?: { force?: boolean }
 ): Promise<ReaderDocument> {
   try {
-    const cached = await getCachedReader(url)
-    if (cached) return cached
+    if (!options?.force) {
+      const cached = await getCachedReader(url)
+      if (cached) return cached
+    }
 
     const document = await fetchReaderDocument(url, input)
     await saveCachedReader(url, document)
