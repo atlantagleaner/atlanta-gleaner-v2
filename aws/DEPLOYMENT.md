@@ -86,15 +86,17 @@ Once the function is created, update environment variables (safer than CLI):
 aws lambda update-function-configuration \
   --function-name atlanta-gleaner-news-refresh \
   --environment Variables='{
-    "SERPER_API_KEY": "b04b7cb801551769c8a0c9258798c4ef0baad2e6",
-    "SPOTIFY_CLIENT_ID": "8cdac4f42033411bbb0c11b8ebc354dd",
-    "SPOTIFY_CLIENT_SECRET": "4ccd2a342b534d83963218cff7456482",
-    "SPOTIFY_SHOW_IDS": "07SjDmKb9iliEzpNcN2xGD,1lUPomulZRPquVAOOd56EW,6mTel3azvnK8isLs4VujvF,3IcA76e8ZV0NNSJ81XHQUg,4hI3rQ4C0e15rP3YKLKPut,7Cvsbcjhtur7nplC148TWy,4Zkj8TTa7XAZYI6aFetlec,3Lk9LufHHM9AzVoyYvcI7R,2ejvdShhn5D9tlVbb5vj9B,05lvdf9T77KE6y4gyMGEsD,3iCqE2fH3ETuXx67BWqFPV,34RuD4w8IVNm49Ge9qzjwT,6Z0jGDQp46d69cja0EUFQe,1mNsuXfG95Lf76YQeVMuo1,5nvRkVMH58SelKZYZFZx1S,2hmkzUtix0qTqvtpPcMzEL,2rTT1klKUoQNuaW2Ah19Pa,6Ijz5uEUxN6FvJI49ZGJAJ,0QCiNINmwgA6X4Z4nlnh5G,5lY4b5PGOvMuOYOjOVEcb9,0ofXAdFIQQRsCYj9754UFx,2VRS1IJCTn2Nlkg33ZVfkM,4ZTHlQzCm7ipnRn1ypnl1Z,08F60fHBihlcqWZTr7Thzc,1vfOw64nKjQ8LzZDPCfRaO,1sgWaKtQxwfjUpZnnK8r7J,6XKe8xy5P16OLrkBW9oz0k,08F60fHBihlcqWZTr7Thzc,6Mwp0XM22DGXDva9SE3J8x,269rqhbJIyaCbIzEI4BzCz",
+    "SERPER_API_KEY": "YOUR_SERPER_API_KEY",
+    "SPOTIFY_CLIENT_ID": "YOUR_SPOTIFY_CLIENT_ID",
+    "SPOTIFY_CLIENT_SECRET": "YOUR_SPOTIFY_CLIENT_SECRET",
+    "SPOTIFY_SHOW_IDS": "comma-separated-spotify-show-ids",
     "BLOB_READ_WRITE_TOKEN": "YOUR_VERCEL_BLOB_TOKEN",
     "EDGE_CONFIG_ID": "YOUR_EDGE_CONFIG_ID",
-    "VERCEL_API_TOKEN": "YOUR_VERCEL_API_TOKEN"
+    "VERCEL_API_TOKEN": "REDACTED_TOKEN"
   }'
 ```
+
+Fill in your actual API keys and tokens for each environment variable.
 
 ### 4. Create EventBridge Trigger
 

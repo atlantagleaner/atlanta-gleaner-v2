@@ -111,15 +111,14 @@ Go to AWS CloudWatch:
 
 ### Manual Test
 ```bash
-export AWS_ACCESS_KEY_ID=REDACTED_AWS_KEY
-export AWS_SECRET_ACCESS_KEY=REDACTED_AWS_SECRET
-export AWS_DEFAULT_REGION=us-east-2
+# Configure AWS credentials first
+aws configure
 
 # View logs
-python -m awscli logs tail /aws/lambda/atlanta-gleaner-news-refresh --follow
+aws logs tail /aws/lambda/atlanta-gleaner-news-refresh --follow
 
 # Invoke manually
-python -m awscli lambda invoke --function-name atlanta-gleaner-news-refresh response.json
+aws lambda invoke --function-name atlanta-gleaner-news-refresh response.json
 cat response.json
 ```
 
