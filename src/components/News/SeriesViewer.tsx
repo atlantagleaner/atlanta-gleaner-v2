@@ -40,8 +40,6 @@ export function SeriesViewer({
     ...T.micro,
     color: PALETTE.black,
     textDecoration: 'none',
-    borderBottom: `1px solid ${PALETTE.black}`,
-    paddingBottom: '1px',
   } as const
 
   const [selectedId, setSelectedId] = useState<string | null>(
