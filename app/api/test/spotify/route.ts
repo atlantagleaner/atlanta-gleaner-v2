@@ -1,14 +1,10 @@
 // Debug endpoint to test Spotify integration
-import { buildAudioDispatchItem, getLatestEpisodes } from '@/lib/spotifyFeed';
+import { buildAudioDispatchItem, getLatestEpisodes, getShowEpisodes } from '@/lib/spotifyFeed';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 export async function GET() {
-  console.log('[test/spotify] Starting debug...');
-  console.log('[test/spotify] SPOTIFY_CLIENT_ID:', process.env.SPOTIFY_CLIENT_ID ? `✓ set (${process.env.SPOTIFY_CLIENT_ID.substring(0, 8)}...)` : '✗ missing');
-  console.log('[test/spotify] SPOTIFY_CLIENT_SECRET:', process.env.SPOTIFY_CLIENT_SECRET ? `✓ set (${process.env.SPOTIFY_CLIENT_SECRET.substring(0, 8)}...)` : '✗ missing');
-
   const debug: Record<string, any> = {
     envVars: {
       clientIdSet: !!process.env.SPOTIFY_CLIENT_ID,
@@ -17,19 +13,32 @@ export async function GET() {
   };
 
   try {
-    // First test: try fetching a single show's episodes
-    console.log('[test/spotify] Testing with sample show ID...');
-    const testShowId = '1mNsuXfG95Lf76YQeVMuo1'; // StarTalk Radio
-    const singleShowEpisodes = await getLatestEpisodes([testShowId]);
+    // Test 0: Try a raw getShowEpisodes call
+    console.log('[test/spotify] Test 0: Raw getShowEpisodes call...');
+    try {
+      const episodes = await getShowEpisodes('1mNsuXfG95Lf76YQeVMuo1', 1);
+      debug.rawShowEpisodesTest = {
+        success: true,
+        episodesReturned: episodes.length,
+      };
+    } catch (e: any) {
+      debug.rawShowEpisodesTest = {
+        success: false,
+        error: e.message,
+      };
+    }
+
+    // Test 1: Single show via getLatestEpisodes
+    console.log('[test/spotify] Test 1: Single show...');
+    const singleShowEpisodes = await getLatestEpisodes(['1mNsuXfG95Lf76YQeVMuo1']);
     debug.singleShowTest = {
-      showId: testShowId,
+      showId: '1mNsuXfG95Lf76YQeVMuo1',
       episodesReturned: singleShowEpisodes.length,
       success: singleShowEpisodes.length > 0,
     };
-    console.log('[test/spotify] Single show test result:', debug.singleShowTest);
 
-    // Second test: try loading config
-    console.log('[test/spotify] Trying to import config...');
+    // Test 2: Config load
+    console.log('[test/spotify] Test 2: Load config...');
     let SPOTIFY_SHOW_IDS_ARRAY: string[] = [];
     try {
       const config = await import('@/lib/newsConfig');
@@ -38,7 +47,6 @@ export async function GET() {
         success: true,
         showIdCount: SPOTIFY_SHOW_IDS_ARRAY?.length || 0,
       };
-      console.log('[test/spotify] Config loaded, array length:', SPOTIFY_SHOW_IDS_ARRAY.length);
     } catch (importErr: any) {
       debug.configTest = {
         success: false,
@@ -47,8 +55,8 @@ export async function GET() {
       throw importErr;
     }
 
-    // Test 2b: try fetching all 30 shows
-    console.log('[test/spotify] Testing with all 30 shows...');
+    // Test 3: All 30 shows
+    console.log('[test/spotify] Test 3: All 30 shows...');
     const start30 = Date.now();
     const all30Episodes = await getLatestEpisodes(SPOTIFY_SHOW_IDS_ARRAY);
     const end30 = Date.now();
@@ -58,19 +66,17 @@ export async function GET() {
       durationMs: end30 - start30,
       success: all30Episodes.length > 0,
     };
-    console.log('[test/spotify] All 30 shows test result:', debug.all30ShowsTest);
 
-    // Third test: full build
-    console.log('[test/spotify] Calling buildAudioDispatchItem with 30 shows...');
-    const startTime = Date.now();
+    // Test 4: Full build
+    console.log('[test/spotify] Test 4: Full buildAudioDispatchItem...');
+    const startFull = Date.now();
     const result = await buildAudioDispatchItem();
-    const endTime = Date.now();
+    const endFull = Date.now();
     debug.fullBuildTest = {
-      durationMs: endTime - startTime,
+      durationMs: endFull - startFull,
       episodesReturned: result.episodes?.length || 0,
       success: (result.episodes?.length || 0) > 0,
     };
-    console.log('[test/spotify] Full build took', endTime - startTime, 'ms, got', result.episodes?.length, 'episodes');
 
     return Response.json({
       ok: true,
