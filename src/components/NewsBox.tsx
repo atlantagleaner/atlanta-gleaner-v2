@@ -27,6 +27,7 @@ import { gleanArticle }         from '@/app/actions/glean'
 import type { GleanResult }     from '@/app/actions/glean'
 import { MirrorViewer }         from '@/src/components/News/MirrorViewer'
 import { SeriesViewer }         from '@/src/components/News/SeriesViewer'
+import { formatRelativeTime }   from '@/lib/utils/date'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -179,7 +180,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: PALETTE.black, textUnderlineOffset: '2px' }}
+            style={{ color: PALETTE.black, textDecoration: 'none' }}
           >
             {'Open directly ->'}
           </a>
@@ -203,7 +204,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: PALETTE.black, textUnderlineOffset: '2px' }}
+            style={{ color: PALETTE.black, textDecoration: 'none' }}
           >
             {'Open directly ->'}
           </a>
@@ -215,7 +216,7 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
     )
   }
 
-  return <MirrorViewer result={data.result} />
+  return <MirrorViewer result={data.result} publishedAt={item.publishedAt} />
 }
 
 function SeriesDrawer({ item }: { item: NewsItem }) {
@@ -250,12 +251,18 @@ function SeriesDrawer({ item }: { item: NewsItem }) {
 
 function NewsAccordionItem({ item }: { item: NewsItem }) {
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const badge      = SLOT_BADGE[item.slot] ?? null
   const isSeries   = item.type === 'series' || (item.episodes && item.episodes.length > 0)
   const isYouTube  = item.type === 'video' || /youtube\.com|youtu\.be/i.test(item.url)
   const isSpotify  = /spotify\.com/i.test(item.url)
   const mediaLabel = isYouTube ? ' · YouTube' : isSpotify ? ' · Spotify' : ''
+  const age        = mounted ? formatRelativeTime(item.publishedAt) : ''
 
   const handleChange = useCallback((val: string) => {
     setOpen(val === item.url)
@@ -309,7 +316,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                   display:   'block',
                   marginTop: SPACING.xs,
                 }}>
-                  {item.source}{mediaLabel}
+                  {item.source}{mediaLabel}{age && ` · ${age}`}
                 </span>
               )}
             </span>

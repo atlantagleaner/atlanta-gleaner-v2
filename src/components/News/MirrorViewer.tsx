@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { GleanResult } from '@/app/actions/glean'
 import { PALETTE, PALETTE_CSS, T, FONT, SPACING, ANIMATION, ITEM_RULE } from '@/src/styles/tokens'
+import { formatRelativeTime } from '@/lib/utils/date'
 
 const COLLAPSE_WORD_THRESHOLD = 1200
 
@@ -64,13 +65,29 @@ function stripMediaFromLegacyReaderHtml(bodyHtml: string): string {
     .replace(/<figcaption[\s\S]*?<\/figcaption>/gi, '')
 }
 
-function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader' }> }) {
+function ReaderFrame({ 
+  result, 
+  publishedAt 
+}: { 
+  result: Extract<GleanResult, { type: 'reader' }>,
+  publishedAt?: string 
+}) {
   const { document } = result
   const isLong = document.wordCount >= COLLAPSE_WORD_THRESHOLD
   const [expanded, setExpanded] = useState(!isLong)
   const [mode, setMode] = useState<'reader' | 'pictures'>('reader')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const images = Array.isArray(document.images) ? document.images : []
   const readerBodyHtml = stripMediaFromLegacyReaderHtml(document.bodyHtml)
+
+  // Use document.publishedAt if available, otherwise fallback to item-level publishedAt
+  const effectivePublishedAt = document.publishedAt || publishedAt
+  const age = mounted ? formatRelativeTime(effectivePublishedAt) : ''
 
   let displayHostname = ''
   try {
@@ -146,7 +163,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
                 }}
               />
             )}
-            <span>Source: {displayHostname}</span>
+            <span>Source: {displayHostname}{age && ` · ${age}`}</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
@@ -172,7 +189,7 @@ function ReaderFrame({ result }: { result: Extract<GleanResult, { type: 'reader'
               />
             )}
             <div style={{ ...T.micro, color: PALETTE_CSS.meta }}>
-              {document.publisher || document.source}
+              {document.publisher || document.source}{age && ` · ${age}`}
             </div>
           </div>
           <h1 style={{ 
@@ -302,12 +319,23 @@ function VideoEmbed({
   title,
   source,
   readFullUrl,
-}: Extract<GleanResult, { type: 'video' }>) {
+  publishedAt,
+}: Extract<GleanResult, { type: 'video' }> & { publishedAt?: string }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const age = mounted ? formatRelativeTime(publishedAt) : ''
+
   if (!videoId) {
     return (
       <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
         <p style={{ ...T.body, margin: `0 0 ${SPACING.sm}` }}>{title}</p>
-        <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.md}` }}>{source}</p>
+        <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.md}` }}>
+          {source}{age && ` · ${age}`}
+        </p>
         <a
           href={readFullUrl}
           target="_blank"
@@ -355,15 +383,17 @@ function VideoEmbed({
         />
       </div>
 
-      <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>{source}</p>
+      <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
+        {source}{age && ` · ${age}`}
+      </p>
     </div>
   )
 }
 
-export function MirrorViewer({ result }: { result: GleanResult }) {
+export function MirrorViewer({ result, publishedAt }: { result: GleanResult, publishedAt?: string }) {
   if (result.type === 'video') {
-    return <VideoEmbed {...result} />
+    return <VideoEmbed {...result} publishedAt={publishedAt} />
   }
 
-  return <ReaderFrame result={result} />
+  return <ReaderFrame result={result} publishedAt={publishedAt} />
 }

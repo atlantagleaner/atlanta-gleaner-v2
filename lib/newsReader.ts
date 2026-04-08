@@ -216,6 +216,12 @@ async function buildReaderDocument(
   const twitterImage = $('meta[name="twitter:image"]').attr('content')
   const heroImageUrl = ogImage || twitterImage || null
 
+  const publishedAt = 
+    $('meta[property="article:published_time"]').attr('content') ||
+    $('meta[name="published_time"]').attr('content') ||
+    $('meta[name="date"]').attr('content') ||
+    null
+
   const extracted = extractImagesAndStrip(cleanedHtml, null, null)
   
   if (heroImageUrl) {
@@ -233,7 +239,7 @@ async function buildReaderDocument(
     source: articleSource,
     publisher: articleSource,
     logo: null, // Hard to get reliably without metascraper
-    publishedAt: null, 
+    publishedAt, 
     readFullUrl: rawUrl,
     heroImageUrl: heroImageUrl ? toAbsolute(new URL(rawUrl), heroImageUrl) : null,
     heroImageAlt: articleTitle,
