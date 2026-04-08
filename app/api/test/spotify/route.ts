@@ -28,24 +28,22 @@ export async function GET() {
     };
     console.log('[test/spotify] Single show test result:', debug.singleShowTest);
 
-    // Second test: try with first 5 shows
-    console.log('[test/spotify] Testing with 5 shows...');
-    const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig');
-    const first5Shows = SPOTIFY_SHOW_IDS_ARRAY.slice(0, 5);
-    const firstFiveEpisodes = await Promise.allSettled(
-      first5Shows.map(id => getLatestEpisodes([id]))
-    );
-    const successCount = firstFiveEpisodes.filter(r => r.status === 'fulfilled').length;
-    const failureCount = firstFiveEpisodes.filter(r => r.status === 'rejected').length;
-    debug.first5ShowsTest = {
-      showsRequested: first5Shows.length,
-      successCount,
-      failureCount,
-      totalEpisodes: firstFiveEpisodes
-        .filter(r => r.status === 'fulfilled')
-        .reduce((sum, r) => sum + (r.status === 'fulfilled' ? r.value.length : 0), 0),
-    };
-    console.log('[test/spotify] First 5 shows test result:', debug.first5ShowsTest);
+    // Second test: try loading config
+    console.log('[test/spotify] Trying to import config...');
+    try {
+      const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig');
+      debug.configTest = {
+        success: true,
+        showIdCount: SPOTIFY_SHOW_IDS_ARRAY?.length || 0,
+      };
+      console.log('[test/spotify] Config loaded, array length:', SPOTIFY_SHOW_IDS_ARRAY.length);
+    } catch (importErr: any) {
+      debug.configTest = {
+        success: false,
+        error: importErr.message,
+      };
+      throw importErr;
+    }
 
     // Third test: full build
     console.log('[test/spotify] Calling buildAudioDispatchItem...');
