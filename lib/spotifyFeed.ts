@@ -35,12 +35,17 @@ async function getSpotifyAccessToken(): Promise<string> {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
+  console.log('[getSpotifyAccessToken] Checking env vars...');
+  console.log('[getSpotifyAccessToken] clientId exists:', !!clientId);
+  console.log('[getSpotifyAccessToken] clientSecret exists:', !!clientSecret);
+
   if (!clientId || !clientSecret) {
     throw new Error('Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET');
   }
 
   const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
+  console.log('[getSpotifyAccessToken] Making auth request to Spotify...');
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -50,11 +55,14 @@ async function getSpotifyAccessToken(): Promise<string> {
     body: 'grant_type=client_credentials',
   });
 
+  console.log('[getSpotifyAccessToken] Auth response status:', response.status);
+
   if (!response.ok) {
     throw new Error(`Spotify auth failed: ${response.statusText}`);
   }
 
   const data = (await response.json()) as { access_token: string };
+  console.log('[getSpotifyAccessToken] Got access token');
   return data.access_token;
 }
 
@@ -86,6 +94,7 @@ export async function searchSpotifyShow(query: string): Promise<SpotifyShow | nu
 
 // Get latest episodes from a show
 export async function getShowEpisodes(showId: string, limit: number = 10): Promise<SpotifyEpisode[]> {
+  console.log(`[getShowEpisodes] Fetching ${limit} episodes for show ${showId}`);
   const token = await getSpotifyAccessToken();
 
   const response = await fetch(
@@ -97,6 +106,8 @@ export async function getShowEpisodes(showId: string, limit: number = 10): Promi
     }
   );
 
+  console.log(`[getShowEpisodes] Response status: ${response.status}`);
+
   if (!response.ok) {
     throw new Error(`Failed to fetch episodes: ${response.statusText}`);
   }
@@ -105,14 +116,18 @@ export async function getShowEpisodes(showId: string, limit: number = 10): Promi
     items: SpotifyEpisode[];
   };
 
+  console.log(`[getShowEpisodes] Got ${data.items.length} episodes`);
   return data.items;
 }
 
 // Get latest episodes from multiple shows
 export async function getLatestEpisodes(showIds: string[]): Promise<SpotifyEpisode[]> {
+  console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows`);
   const episodePromises = showIds.map((id) => getShowEpisodes(id, 1));
   const results = await Promise.all(episodePromises);
-  return results.flat().sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+  const flattened = results.flat().sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+  console.log(`[getLatestEpisodes] Got ${flattened.length} episodes total`);
+  return flattened;
 }
 
 // Helper: Search for all podcasts and return their IDs
@@ -139,10 +154,14 @@ export async function searchAllPodcasts(podcastNames: string[]): Promise<Record<
 // Build audio dispatch drawer with latest podcast episodes
 export async function buildAudioDispatchItem(): Promise<GleanerItem> {
   try {
+    console.log('[buildAudioDispatchItem] Starting Spotify fetch...');
     const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig');
+    console.log(`[buildAudioDispatchItem] Loaded ${SPOTIFY_SHOW_IDS_ARRAY.length} show IDs`);
 
     // Fetch latest episode from each show
+    console.log('[buildAudioDispatchItem] Calling getLatestEpisodes...');
     const spotifyEpisodes = await getLatestEpisodes(SPOTIFY_SHOW_IDS_ARRAY);
+    console.log(`[buildAudioDispatchItem] Got ${spotifyEpisodes.length} episodes`);
 
     // Transform to SeriesViewer-compatible format
     const episodes = spotifyEpisodes.slice(0, 8).map((ep) => ({
@@ -154,6 +173,8 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
       spotifyId: ep.id,
       thumbnailUrl: ep.images?.[0]?.url || '',
     }));
+
+    console.log(`[buildAudioDispatchItem] Transformed ${episodes.length} episodes for display`);
 
     // Return GleanerItem-compatible structure
     return {
