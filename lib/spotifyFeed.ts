@@ -167,7 +167,11 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
       episodes,
     };
   } catch (error) {
-    console.error('[buildAudioDispatchItem] Error:', error);
+    console.error('[buildAudioDispatchItem] Spotify fetch failed:', {
+      error: String(error),
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
       title: 'Audio Dispatch',
       url: 'https://open.spotify.com',
