@@ -124,9 +124,30 @@ export async function getShowEpisodes(showId: string, limit: number = 10): Promi
 export async function getLatestEpisodes(showIds: string[]): Promise<SpotifyEpisode[]> {
   console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows`);
   const episodePromises = showIds.map((id) => getShowEpisodes(id, 1));
-  const results = await Promise.all(episodePromises);
-  const flattened = results.flat().sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
-  console.log(`[getLatestEpisodes] Got ${flattened.length} episodes total`);
+
+  // Use allSettled so one failed show doesn't break the entire feed
+  const results = await Promise.allSettled(episodePromises);
+
+  const successCount = results.filter(r => r.status === 'fulfilled').length;
+  const failureCount = results.filter(r => r.status === 'rejected').length;
+
+  if (failureCount > 0) {
+    console.log(`[getLatestEpisodes] WARNING: ${failureCount} shows failed to fetch`);
+    results.forEach((result, idx) => {
+      if (result.status === 'rejected') {
+        console.log(`  - Show ${idx}: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}`);
+      }
+    });
+  }
+
+  // Filter for successful results and flatten
+  const flattened = results
+    .filter((result) => result.status === 'fulfilled')
+    .map((result) => result.status === 'fulfilled' ? result.value : [])
+    .flat()
+    .sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+
+  console.log(`[getLatestEpisodes] Got ${flattened.length} episodes from ${successCount}/${showIds.length} successful shows`);
   return flattened;
 }
 
