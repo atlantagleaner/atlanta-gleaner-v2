@@ -93,9 +93,8 @@ export async function searchSpotifyShow(query: string): Promise<SpotifyShow | nu
 }
 
 // Get latest episodes from a show (with exponential backoff for rate limiting)
-export async function getShowEpisodes(showId: string, limit: number = 10, retries: number = 3): Promise<SpotifyEpisode[]> {
+async function getShowEpisodesWithToken(showId: string, token: string, limit: number = 10, retries: number = 3): Promise<SpotifyEpisode[]> {
   console.log(`[getShowEpisodes] Fetching ${limit} episodes for show ${showId}`);
-  const token = await getSpotifyAccessToken();
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     const response = await fetch(
@@ -136,6 +135,12 @@ export async function getShowEpisodes(showId: string, limit: number = 10, retrie
   throw new Error('Failed to fetch episodes: max retries exceeded');
 }
 
+// Get latest episodes from a show (public API, gets its own token)
+export async function getShowEpisodes(showId: string, limit: number = 10): Promise<SpotifyEpisode[]> {
+  const token = await getSpotifyAccessToken();
+  return getShowEpisodesWithToken(showId, token, limit);
+}
+
 // Helper: Execute promises with limited concurrency
 async function executeWithLimit<T>(
   tasks: (() => Promise<T>)[],
@@ -170,8 +175,11 @@ async function executeWithLimit<T>(
 export async function getLatestEpisodes(showIds: string[]): Promise<SpotifyEpisode[]> {
   console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows`);
 
+  // Get token once to avoid making 30+ auth requests
+  const token = await getSpotifyAccessToken();
+
   // Create tasks with limited concurrency (5 at a time) to avoid Spotify rate limits
-  const tasks = showIds.map((id) => () => getShowEpisodes(id, 1));
+  const tasks = showIds.map((id) => () => getShowEpisodesWithToken(id, token, 1));
   const results = await executeWithLimit(tasks, 5);
 
   const successCount = results.filter(r => r.status === 'fulfilled').length;
