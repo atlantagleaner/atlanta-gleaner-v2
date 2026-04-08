@@ -727,7 +727,7 @@ export default function ArchivePage() {
 
   return (
     <main style={{
-      minHeight:   '100vh',
+      minHeight:   '1230px', // Golden Ratio Folio: 760px (module width) * 1.618
       background:  PALETTE.warm,
       paddingBottom: '80px',
     }}>
