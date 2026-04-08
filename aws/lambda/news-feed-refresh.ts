@@ -219,7 +219,7 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
   }
 
   return withRetry(async () => {
-    // Authenticate
+    // Get access token
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
     const authRes = await fetchWithTimeout('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -238,72 +238,78 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
 
     const { access_token } = (await authRes.json()) as { access_token: string };
 
-    // Fetch latest episode from all 30 shows
-    const allEpisodes: Array<GleanerEpisode & { showId: string; showName: string; publishDate: Date }> = [];
-    for (const showId of ALL_SPOTIFY_SHOW_IDS) {
-      try {
-        const episodeRes = await fetchWithTimeout(
-          `https://api.spotify.com/v1/shows/${showId}/episodes?limit=1`,
-          {
-            headers: { 'Authorization': `Bearer ${access_token}` },
-            timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
-            label: `SpotifyEpisodes:${showId}`,
+    // Fetch episodes from all shows in parallel with rate limiting
+    console.log(`[fetchSpotifyEpisodes] Fetching from ${ALL_SPOTIFY_SHOW_IDS.length} shows...`);
+    const episodeResults = await Promise.allSettled(
+      ALL_SPOTIFY_SHOW_IDS.map((showId) =>
+        (async () => {
+          const episodeRes = await fetchWithTimeout(
+            `https://api.spotify.com/v1/shows/${showId}/episodes?limit=1`,
+            {
+              headers: { 'Authorization': `Bearer ${access_token}` },
+              timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
+              label: `SpotifyEpisodes:${showId}`,
+            }
+          );
+
+          if (!episodeRes.ok) {
+            throw new Error(`HTTP ${episodeRes.status} for show ${showId}`);
           }
-        );
 
-        if (!episodeRes.ok) continue;
+          const data = (await episodeRes.json()) as { items?: Array<any> };
+          return data.items?.[0] ? { showId, episode: data.items[0] } : null;
+        })()
+      )
+    );
 
-        const data = (await episodeRes.json()) as { items?: Array<any> };
-        if (data.items?.[0]) {
-          const ep = data.items[0];
-          const publishDate = new Date(ep.release_date || new Date().toISOString());
+    // Extract successful episodes
+    const allEpisodes: Array<GleanerEpisode & { publishDate: Date }> = [];
+    let failureCount = 0;
 
-          allEpisodes.push({
-            title: ep.name,
-            url: ep.external_urls?.spotify || '',
-            source: ep.show?.name || 'Spotify',
-            publishedAt: publishDate.toISOString(),
-            type: 'audio',
-            spotifyId: ep.id,
-            thumbnailUrl: ep.images?.[0]?.url || '',
-            showId,
-            showName: ep.show?.name || 'Unknown',
-            publishDate,
-          });
-        }
-      } catch (err) {
-        console.warn(`[fetchSpotifyEpisodes] Failed for show ${showId}:`, err);
-        continue;
+    for (const result of episodeResults) {
+      if (result.status === 'fulfilled' && result.value) {
+        const { episode } = result.value;
+        const publishDate = new Date(episode.release_date || new Date().toISOString());
+
+        allEpisodes.push({
+          title: episode.name,
+          url: episode.external_urls?.spotify || '',
+          source: episode.show?.name || 'Spotify',
+          publishedAt: publishDate.toISOString(),
+          type: 'audio',
+          spotifyId: episode.id,
+          thumbnailUrl: episode.images?.[0]?.url || '',
+          publishDate,
+        });
+      } else if (result.status === 'rejected') {
+        failureCount++;
       }
+    }
+
+    if (failureCount > 0) {
+      console.warn(`[fetchSpotifyEpisodes] ${failureCount}/${ALL_SPOTIFY_SHOW_IDS.length} shows failed`);
     }
 
     if (allEpisodes.length === 0) {
       throw new Error('No Spotify episodes found');
     }
 
-    // Score episodes: prioritize freshness + source diversity
+    // Score episodes by freshness and pick top 8
     const now = new Date();
-    const episodeScores = allEpisodes.map((ep) => {
-      // Freshness score: newer episodes score higher
-      // Episodes from past 7 days get full freshness score
+    const scored = allEpisodes.map((ep) => {
       const ageMs = now.getTime() - ep.publishDate.getTime();
       const ageDays = ageMs / (1000 * 60 * 60 * 24);
       const freshnessScore = ageDays < 7 ? 100 : Math.max(0, 100 - ageDays * 2);
 
-      return {
-        ...ep,
-        freshnessScore,
-        totalScore: freshnessScore,
-      };
+      return { ...ep, freshnessScore };
     });
 
-    // Sort by freshness score and pick top 8
-    const curated = episodeScores
-      .sort((a, b) => b.totalScore - a.totalScore)
+    const curated = scored
+      .sort((a, b) => b.freshnessScore - a.freshnessScore)
       .slice(0, 8)
-      .map(({ freshnessScore, totalScore, showId, showName, publishDate, ...ep }) => ep);
+      .map(({ publishDate, freshnessScore, ...ep }) => ep);
 
-    console.log(`[fetchSpotifyEpisodes] Curated 8 from ${allEpisodes.length} episodes`);
+    console.log(`[fetchSpotifyEpisodes] ✓ Curated 8 from ${allEpisodes.length} episodes`);
 
     return {
       title: 'Audio Dispatch',
@@ -316,7 +322,7 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
       episodes: curated,
     };
   }, 'SpotifyEpisodes', 2).catch((error) => {
-    console.warn('[fetchSpotifyEpisodes] Failed after retries:', error);
+    console.error('[fetchSpotifyEpisodes] Failed after retries:', error);
     return null;
   });
 }

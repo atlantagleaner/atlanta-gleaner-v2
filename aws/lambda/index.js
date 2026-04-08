@@ -486,57 +486,61 @@ async function fetchSpotifyEpisodes() {
       throw new Error(`Spotify auth failed: ${authRes.statusText}`);
     }
     const { access_token } = await authRes.json();
-    const allEpisodes = [];
-    for (const showId of ALL_SPOTIFY_SHOW_IDS) {
-      try {
-        const episodeRes = await fetchWithTimeout(
-          `https://api.spotify.com/v1/shows/${showId}/episodes?limit=1`,
-          {
-            headers: { "Authorization": `Bearer ${access_token}` },
-            timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
-            label: `SpotifyEpisodes:${showId}`
+    console.log(`[fetchSpotifyEpisodes] Fetching from ${ALL_SPOTIFY_SHOW_IDS.length} shows...`);
+    const episodeResults = await Promise.allSettled(
+      ALL_SPOTIFY_SHOW_IDS.map(
+        (showId) => (async () => {
+          const episodeRes = await fetchWithTimeout(
+            `https://api.spotify.com/v1/shows/${showId}/episodes?limit=1`,
+            {
+              headers: { "Authorization": `Bearer ${access_token}` },
+              timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
+              label: `SpotifyEpisodes:${showId}`
+            }
+          );
+          if (!episodeRes.ok) {
+            throw new Error(`HTTP ${episodeRes.status} for show ${showId}`);
           }
-        );
-        if (!episodeRes.ok)
-          continue;
-        const data = await episodeRes.json();
-        if (data.items?.[0]) {
-          const ep = data.items[0];
-          const publishDate = new Date(ep.release_date || (/* @__PURE__ */ new Date()).toISOString());
-          allEpisodes.push({
-            title: ep.name,
-            url: ep.external_urls?.spotify || "",
-            source: ep.show?.name || "Spotify",
-            publishedAt: publishDate.toISOString(),
-            type: "audio",
-            spotifyId: ep.id,
-            thumbnailUrl: ep.images?.[0]?.url || "",
-            showId,
-            showName: ep.show?.name || "Unknown",
-            publishDate
-          });
-        }
-      } catch (err) {
-        console.warn(`[fetchSpotifyEpisodes] Failed for show ${showId}:`, err);
-        continue;
+          const data = await episodeRes.json();
+          return data.items?.[0] ? { showId, episode: data.items[0] } : null;
+        })()
+      )
+    );
+    const allEpisodes = [];
+    let failureCount = 0;
+    for (const result of episodeResults) {
+      if (result.status === "fulfilled" && result.value) {
+        const { episode } = result.value;
+        const publishDate = new Date(episode.release_date || (/* @__PURE__ */ new Date()).toISOString());
+        allEpisodes.push({
+          title: episode.name,
+          url: episode.external_urls?.spotify || "",
+          source: episode.show?.name || "Spotify",
+          publishedAt: publishDate.toISOString(),
+          type: "audio",
+          spotifyId: episode.id,
+          thumbnailUrl: episode.images?.[0]?.url || "",
+          publishDate
+        });
+      } else if (result.status === "rejected") {
+        failureCount++;
       }
+    }
+    if (failureCount > 0) {
+      console.warn(`[fetchSpotifyEpisodes] ${failureCount}/${ALL_SPOTIFY_SHOW_IDS.length} shows failed`);
     }
     if (allEpisodes.length === 0) {
       throw new Error("No Spotify episodes found");
     }
     const now = /* @__PURE__ */ new Date();
-    const episodeScores = allEpisodes.map((ep) => {
+    const scored = allEpisodes.map((ep) => {
       const ageMs = now.getTime() - ep.publishDate.getTime();
       const ageDays = ageMs / (1e3 * 60 * 60 * 24);
       const freshnessScore = ageDays < 7 ? 100 : Math.max(0, 100 - ageDays * 2);
-      return {
-        ...ep,
-        freshnessScore,
-        totalScore: freshnessScore
-      };
+      return { ...ep, freshnessScore };
     });
-    const curated = episodeScores.sort((a, b) => b.totalScore - a.totalScore).slice(0, 8).map(({ freshnessScore, totalScore, showId, showName, publishDate, ...ep }) => ep);
-    console.log(`[fetchSpotifyEpisodes] Curated 8 from ${allEpisodes.length} episodes`);
+    const curated = scored.sort((a, b) => b.freshnessScore - a.freshnessScore).slice(0, 8).map(({ publishDate, freshnessScore, ...ep }) => ep);
+    console.log(`[fetchSpotifyEpisodes] \u2713 Curated 8 from ${allEpisodes.length} episodes`);
     return {
       title: "Audio Dispatch",
       url: "https://open.spotify.com",
@@ -548,7 +552,7 @@ async function fetchSpotifyEpisodes() {
       episodes: curated
     };
   }, "SpotifyEpisodes", 2).catch((error) => {
-    console.warn("[fetchSpotifyEpisodes] Failed after retries:", error);
+    console.error("[fetchSpotifyEpisodes] Failed after retries:", error);
     return null;
   });
 }
