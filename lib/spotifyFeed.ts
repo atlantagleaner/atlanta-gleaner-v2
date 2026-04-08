@@ -92,41 +92,87 @@ export async function searchSpotifyShow(query: string): Promise<SpotifyShow | nu
   return data.shows.items[0] || null;
 }
 
-// Get latest episodes from a show
-export async function getShowEpisodes(showId: string, limit: number = 10): Promise<SpotifyEpisode[]> {
+// Get latest episodes from a show (with exponential backoff for rate limiting)
+export async function getShowEpisodes(showId: string, limit: number = 10, retries: number = 3): Promise<SpotifyEpisode[]> {
   console.log(`[getShowEpisodes] Fetching ${limit} episodes for show ${showId}`);
   const token = await getSpotifyAccessToken();
 
-  const response = await fetch(
-    `https://api.spotify.com/v1/shows/${showId}/episodes?limit=${limit}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const response = await fetch(
+      `https://api.spotify.com/v1/shows/${showId}/episodes?limit=${limit}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(`[getShowEpisodes] Response status: ${response.status} (attempt ${attempt}/${retries})`);
+
+    // Handle rate limiting with exponential backoff
+    if (response.status === 429) {
+      if (attempt < retries) {
+        const delayMs = Math.pow(2, attempt) * 100; // 200ms, 400ms, 800ms
+        console.log(`[getShowEpisodes] Rate limited (429), retrying after ${delayMs}ms...`);
+        await new Promise(r => setTimeout(r, delayMs));
+        continue;
+      } else {
+        throw new Error(`Failed to fetch episodes after ${retries} attempts: Rate limited (429)`);
+      }
     }
-  );
 
-  console.log(`[getShowEpisodes] Response status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch episodes: ${response.statusText}`);
+    }
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch episodes: ${response.statusText}`);
+    const data = (await response.json()) as {
+      items: SpotifyEpisode[];
+    };
+
+    console.log(`[getShowEpisodes] Got ${data.items.length} episodes`);
+    return data.items;
   }
 
-  const data = (await response.json()) as {
-    items: SpotifyEpisode[];
-  };
-
-  console.log(`[getShowEpisodes] Got ${data.items.length} episodes`);
-  return data.items;
+  throw new Error('Failed to fetch episodes: max retries exceeded');
 }
 
-// Get latest episodes from multiple shows
+// Helper: Execute promises with limited concurrency
+async function executeWithLimit<T>(
+  tasks: (() => Promise<T>)[],
+  limit: number = 5,
+): Promise<PromiseSettledResult<T>[]> {
+  const results: PromiseSettledResult<T>[] = [];
+  const executing: Promise<void>[] = [];
+
+  for (const [index, task] of tasks.entries()) {
+    const promise = Promise.resolve().then(task).then(
+      (value) => {
+        results[index] = { status: 'fulfilled', value };
+      },
+      (reason) => {
+        results[index] = { status: 'rejected', reason };
+      },
+    );
+
+    executing.push(promise);
+
+    if (executing.length >= limit) {
+      await Promise.race(executing);
+      executing.splice(executing.findIndex((p) => p === promise), 1);
+    }
+  }
+
+  await Promise.all(executing);
+  return results;
+}
+
+// Get latest episodes from multiple shows (with limited concurrency to avoid rate limiting)
 export async function getLatestEpisodes(showIds: string[]): Promise<SpotifyEpisode[]> {
   console.log(`[getLatestEpisodes] Fetching latest from ${showIds.length} shows`);
-  const episodePromises = showIds.map((id) => getShowEpisodes(id, 1));
 
-  // Use allSettled so one failed show doesn't break the entire feed
-  const results = await Promise.allSettled(episodePromises);
+  // Create tasks with limited concurrency (5 at a time) to avoid Spotify rate limits
+  const tasks = showIds.map((id) => () => getShowEpisodes(id, 1));
+  const results = await executeWithLimit(tasks, 5);
 
   const successCount = results.filter(r => r.status === 'fulfilled').length;
   const failureCount = results.filter(r => r.status === 'rejected').length;
