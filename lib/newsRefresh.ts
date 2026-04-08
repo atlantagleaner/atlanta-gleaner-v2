@@ -1,4 +1,6 @@
-export const LIVE_CACHE_KEY = 'news_cache'
+export const LIVE_CACHE_KEY = 'news_cache_live'
+export const PREVIOUS_CACHE_KEY = 'news_cache_previous'
+export const BACKUP_CACHE_KEY = 'news_cache_backup'
 export const STAGED_CACHE_KEY = 'news_cache_staged'
 export const STATUS_CACHE_KEY = 'news_refresh_status'
 export const PREPARE_DELAY_MS = 1500

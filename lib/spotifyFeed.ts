@@ -2,7 +2,8 @@
 // Spotify Feed Integration
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { GleanerItem } from '@/lib/news/types';
+import type { GleanerItem } from '@/lib/news/types'
+import { fetchWithTimeout, FETCH_TIMEOUTS } from '@/lib/fetchWithTimeout';
 
 export interface SpotifyShow {
   id: string;
@@ -46,13 +47,15 @@ async function getSpotifyAccessToken(): Promise<string> {
   const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
   console.log('[getSpotifyAccessToken] Making auth request to Spotify...');
-  const response = await fetch('https://accounts.spotify.com/api/token', {
+  const response = await fetchWithTimeout('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${auth}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: 'grant_type=client_credentials',
+    timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
+    label: 'SpotifyAuth',
   });
 
   console.log('[getSpotifyAccessToken] Auth response status:', response.status);
@@ -70,12 +73,14 @@ async function getSpotifyAccessToken(): Promise<string> {
 export async function searchSpotifyShow(query: string): Promise<SpotifyShow | null> {
   const token = await getSpotifyAccessToken();
 
-  const response = await fetch(
+  const response = await fetchWithTimeout(
     `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=show&limit=1`,
     {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
+      timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
+      label: `SpotifySearch:${query}`,
     }
   );
 
@@ -97,12 +102,14 @@ async function getShowEpisodesWithToken(showId: string, token: string, limit: nu
   console.log(`[getShowEpisodes] Fetching ${limit} episodes for show ${showId}`);
 
   for (let attempt = 1; attempt <= retries; attempt++) {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `https://api.spotify.com/v1/shows/${showId}/episodes?limit=${limit}`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
+        timeoutMs: FETCH_TIMEOUTS.SPOTIFY,
+        label: `SpotifyEpisodes:${showId}`,
       }
     );
 

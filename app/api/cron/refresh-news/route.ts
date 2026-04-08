@@ -7,12 +7,14 @@ import { EDITORIAL_QUERIES, FEED_TARGETS } from '@/lib/newsConfig';
 import type { EditorialQuery } from '@/lib/newsConfig';
 import { createCacheEntry, scoreItem, inferSlot } from '@/lib/news/utils';
 import type { CacheEntry, GleanerItem } from '@/lib/news/types';
-import { resolveFeedEntry, saveFeedEntry } from '@/lib/newsFeedCache';
+import { resolveFeedEntry, saveFeedEntry, archiveCurrentLive } from '@/lib/newsFeedCache';
 import type { CacheReference } from '@/lib/newsFeedCache';
 import { ensureReaderDocument } from '@/lib/newsReader';
-import { LIVE_CACHE_KEY, PREPARE_DELAY_MS, STAGED_CACHE_KEY, STATUS_CACHE_KEY } from '@/lib/newsRefresh';
+import { LIVE_CACHE_KEY, PREVIOUS_CACHE_KEY, BACKUP_CACHE_KEY, PREPARE_DELAY_MS, STAGED_CACHE_KEY, STATUS_CACHE_KEY } from '@/lib/newsRefresh';
 import type { RefreshFailure, RefreshStatus } from '@/lib/newsRefresh';
 import { get } from '@vercel/edge-config';
+import { fetchWithTimeout, FETCH_TIMEOUTS } from '@/lib/fetchWithTimeout';
+import { executeWithRetry } from '@/lib/retryWithBackoff';
 import {
   buildFeaturedSeriesItem,
   buildScienceGrabBagItem,
@@ -32,10 +34,12 @@ const MAX_STATUS_FAILURES = 12;
 async function serperSearch(query: EditorialQuery): Promise<GleanerItem[]> {
   if (!SERPER_API_KEY) return [];
   try {
-    const res = await fetch(`https://google.serper.dev/${query.endpoint}`, {
+    const res = await fetchWithTimeout(`https://google.serper.dev/${query.endpoint}`, {
       method: 'POST',
       headers: { 'X-API-KEY': SERPER_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ q: query.q, num: query.num }),
+      timeoutMs: FETCH_TIMEOUTS.SERPER,
+      label: `SerperSearch:${query.q.slice(0, 30)}`,
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
@@ -150,43 +154,76 @@ export async function GET(request: Request) {
 
   try {
     if (mode === 'prepare') {
-      const { items, failures } = await buildNewsFeed({ prewarmReaders: true });
+      // Retry logic for prepare: execute with exponential backoff
+      const { items, failures } = await executeWithRetry(
+        () => buildNewsFeed({ prewarmReaders: true }),
+        { maxRetries: 2, initialDelayMs: 1000, label: 'prepare-feed' }
+      );
       const stagedEntry = createCacheEntry(items);
       const stagedRef = await saveFeedEntry('staged', stagedEntry);
-      
+
       await writeToEdgeConfigItems([
-        { key: STAGED_CACHE_KEY, value: stagedRef },
-        { key: STATUS_CACHE_KEY, value: { 
-            phase: 'prepare', 
-            preparedAt: new Date().toISOString(), 
+        { key: STAGED_CACHE_KEY, value: stagedRef as unknown },
+        {
+          key: STATUS_CACHE_KEY,
+          value: {
+            phase: 'prepare' as const,
+            preparedAt: new Date().toISOString(),
             failures: failures.slice(0, MAX_STATUS_FAILURES),
+            omittedFailures: failures.length > MAX_STATUS_FAILURES ? failures.length - MAX_STATUS_FAILURES : undefined,
             counts: { selected: items.length, failures: failures.length }
           }
         }
-      ]);
+      ] as Array<{ key: string; value: unknown }>);
 
       return Response.json({ ok: true, mode, count: items.length });
     }
 
-    // Publish
+    // Publish: Archive current live cache before publishing new one
+    console.log('[cron/refresh-news] Archiving current live cache...');
+    const previousRef = await archiveCurrentLive();
+    if (previousRef) {
+      console.log('[cron/refresh-news] Previous cache archived:', previousRef.blobUrl);
+    }
+
+    // Resolve staged feed
     const staged = await get<CacheReference>(STAGED_CACHE_KEY);
     let liveEntry = await resolveFeedEntry(staged);
 
     if (!liveEntry?.items.length) {
-      const built = await buildNewsFeed({ prewarmReaders: false });
+      console.log('[cron/refresh-news] Staged entry empty, building fresh feed...');
+      const built = await executeWithRetry(
+        () => buildNewsFeed({ prewarmReaders: false }),
+        { maxRetries: 2, initialDelayMs: 1000, label: 'publish-feed' }
+      );
       liveEntry = createCacheEntry(built.items);
     }
 
+    // Save live cache
     const liveRef = await saveFeedEntry('live', liveEntry);
-    await writeToEdgeConfigItems([
+
+    // Also save as backup for AWS fallback
+    const backupRef = await saveFeedEntry('backup', liveEntry);
+    console.log('[cron/refresh-news] Backup cache saved:', backupRef.blobUrl);
+
+    // Update Edge Config with all three references
+    const edgeConfigUpdates: Array<{ key: string; value: unknown }> = [
       { key: LIVE_CACHE_KEY, value: liveRef },
-      { key: STATUS_CACHE_KEY, value: { 
-          phase: 'publish', 
-          publishedAt: new Date().toISOString(), 
-          counts: { selected: liveEntry.items.length, failures: 0 } 
-        } 
+      { key: BACKUP_CACHE_KEY, value: backupRef },
+    ];
+    if (previousRef) {
+      edgeConfigUpdates.push({ key: PREVIOUS_CACHE_KEY, value: previousRef });
+    }
+    edgeConfigUpdates.push({
+      key: STATUS_CACHE_KEY,
+      value: {
+        phase: 'publish' as const,
+        publishedAt: new Date().toISOString(),
+        counts: { selected: liveEntry.items.length, failures: 0 }
       }
-    ]);
+    });
+
+    await writeToEdgeConfigItems(edgeConfigUpdates);
 
     return Response.json({ ok: true, mode, count: liveEntry.items.length });
   } catch (error: any) {

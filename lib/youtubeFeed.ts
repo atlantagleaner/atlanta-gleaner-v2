@@ -3,6 +3,7 @@
 // nothing after YouTube page/consent changes.
 
 import type { GleanerEpisode, GleanerItem } from '@/lib/news/types'
+import { fetchWithTimeout, FETCH_TIMEOUTS } from '@/lib/fetchWithTimeout'
 
 // ── Scrape helpers (fallback) ─────────────────────────────────────────────────
 
@@ -87,12 +88,14 @@ async function scrapeYouTubeChannelVideos(
   maxResults: number,
 ): Promise<GleanerEpisode[]> {
   try {
-    const response = await fetch(channelUrl, {
+    const response = await fetchWithTimeout(channelUrl, {
       headers: {
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
       redirect: 'follow',
+      timeoutMs: FETCH_TIMEOUTS.YOUTUBE,
+      label: `YouTubeScrape:${channelTitle}`,
     })
     if (!response.ok) {
       console.warn(`[youtubeFeed] scrape HTTP ${response.status} for ${channelTitle}`)
@@ -133,7 +136,10 @@ export async function fetchYouTubeChannelVideosApi(
     u.searchParams.set('maxResults', String(Math.min(maxResults, 50)))
     u.searchParams.set('type', 'video')
 
-    const res = await fetch(u.toString())
+    const res = await fetchWithTimeout(u.toString(), {
+      timeoutMs: FETCH_TIMEOUTS.YOUTUBE,
+      label: 'YouTubeAPI',
+    })
     if (!res.ok) {
       const t = await res.text()
       console.error('[youtubeFeed] YouTube API HTTP', res.status, t.slice(0, 240))
