@@ -1,17 +1,23 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Atlanta Gleaner — NewsBox (Mirror Proxy Edition)
+// Atlanta Gleaner — NewsBox (20-Item Feed with Audio Dispatch)
 // ─────────────────────────────────────────────────────────────────────────────
-// Fetches the 15-item news feed from /api/news (Edge Config, no Serper calls
-// on the client). Each item expands via a Radix UI Accordion.
+// Fetches the 20-item feed from /api/news:
+//   1. StarTalk (3 recent videos, auto-updating)
+//   2. PBS Space Time (3 recent videos, auto-updating)
+//   3. Grab Bag (8 videos: NASA livestream + science/history/international)
+//   4. Audio Dispatch (8 Spotify podcast episodes)
+//   5. News articles (16 editorially curated items from Georgia/international sources)
 //
+// Feed structure: All items expand via Radix UI Accordion.
 // On expand:
-//   • Video items  → MirrorViewer renders a clean YouTube embed immediately.
-//   • Text items   → gleanArticle() checks the 24-hour Vercel Blob cache.
-//                    Cache hit  → instant drawer (no spinner).
-//                    Cache miss → "Gleaning original source…" skeleton while
-//                                 the proxy fetches and Cheerio cleans the HTML.
+//   • Series items (StarTalk/PBS/GrabBag/AudioDispatch) → SeriesViewer shows 3 visible
+//                  with expand/collapse for remaining. Spotify embeds for audio.
+//   • Video items → MirrorViewer renders clean YouTube embed immediately.
+//   • Text items  → gleanArticle() checks 24-hour Vercel Blob cache.
+//                   Cache hit  → instant drawer (no spinner).
+//                   Cache miss → "Gleaning original source…" skeleton.
 //
 // Design: all styling via tokens.ts — no new CSS classes.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -44,8 +50,9 @@ interface NewsItem {
     url: string
     source: string
     publishedAt: string
-    type: 'video'
-    videoId: string
+    type: 'video' | 'audio'
+    videoId?: string
+    spotifyId?: string
     thumbnailUrl: string
     channelHandle?: string
   }>
@@ -127,6 +134,7 @@ const SLOT_BADGE: Record<string, string | null> = {
   science_nova:         '◉',
   letterman:            '★',
   podcast_pin:          '🎙️',
+  audio_dispatch:       '🎙️',
   news:                 null,
   'news-international': null,
 }

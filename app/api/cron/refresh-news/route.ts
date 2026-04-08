@@ -18,6 +18,7 @@ import {
   buildScienceGrabBagItem,
   FEATURED_YOUTUBE_CHANNELS,
 } from '@/lib/youtubeFeed';
+import { buildAudioDispatchItem } from '@/lib/spotifyFeed';
 
 export const runtime = 'nodejs';
 
@@ -58,9 +59,10 @@ async function serperSearch(query: EditorialQuery): Promise<GleanerItem[]> {
 
 async function buildNewsFeed(options?: { prewarmReaders?: boolean }) {
   const failures: RefreshFailure[] = [];
-  
+
   // 1. Featured series (YouTube Data API when YOUTUBE_API_KEY is set; else HTML scrape fallback)
-  const [starTalk, pbs, grabBag] = await Promise.all([
+  // 2. Audio Dispatch (Spotify podcasts)
+  const [starTalk, pbs, grabBag, audioDispatch] = await Promise.all([
     buildFeaturedSeriesItem(
       FEATURED_YOUTUBE_CHANNELS.starTalk.title,
       FEATURED_YOUTUBE_CHANNELS.starTalk.url,
@@ -74,25 +76,28 @@ async function buildNewsFeed(options?: { prewarmReaders?: boolean }) {
       'science_pin',
     ),
     buildScienceGrabBagItem(),
+    buildAudioDispatchItem(),
   ]);
 
-  // 2. Fetch News Pool
+  // 3. Fetch News Pool
   const allQueries: EditorialQuery[] = Object.values(EDITORIAL_QUERIES).flat();
   const searchResults = await Promise.all(allQueries.map(serperSearch));
-  
+
   const processed = searchResults.flat().map(item => ({
     ...item,
     score: scoreItem(item),
     slot: inferSlot(item)
   })).sort((a, b) => b.score - a.score);
 
-  // 3. Selection with Source Diversity
+  // 4. Selection with Source Diversity
+  // Start with 4 drawer items (StarTalk, PBS, GrabBag, AudioDispatch) + need 16 news articles = 20 total
   const seen = new Set([starTalk.url, pbs.url, grabBag.url]);
-  const finalItems: GleanerItem[] = [starTalk, pbs, grabBag];
+  const finalItems: GleanerItem[] = [starTalk, pbs, grabBag, audioDispatch];
   const sourceCounts: Record<string, number> = {};
+  const newsTarget = FEED_TARGETS.news; // 16 news articles
 
   for (const item of processed) {
-    if (finalItems.length >= FEED_TARGETS.total) break;
+    if (finalItems.length >= (4 + newsTarget)) break; // 4 drawers + 16 news = 20
     if (seen.has(item.url)) continue;
 
     const source = item.source || 'Web';

@@ -308,6 +308,17 @@ const termChip: CSSProperties = {
   marginBottom: SPACING.xs,
 }
 
+const metadataBadge: CSSProperties = {
+  ...T.micro,
+  background:   PALETTE.black,
+  color:        PALETTE.white,
+  padding:      `2px ${SPACING.sm}`,
+  lineHeight:   '18px',
+  display:      'inline-block',
+  marginRight:  SPACING.sm,
+  borderRadius: '2px',
+}
+
 const pendingChip: CSSProperties = {
   ...T.micro,
   background:   PALETTE_CSS.subtle,
@@ -317,30 +328,16 @@ const pendingChip: CSSProperties = {
   display:      'inline-block',
 }
 
-const counselValueContainer: CSSProperties = {
-  display:      'flex',
-  alignItems:   'flex-start',
-  gap:          '8px',
-  width:        '100%',
-}
-
 const counselChevron: CSSProperties = {
   ...T.prose,
   color:        PALETTE.black,
-  flexShrink:   0,
   cursor:       'pointer',
   userSelect:   'none',
   lineHeight:   1.4,
   transition:   `transform ${ANIMATION.base} ${ANIMATION.ease}`,
-}
-
-const counselValue: CSSProperties = {
-  ...T.prose,
-  fontWeight: 700,
-  lineHeight:   1.4,
-  color:        PALETTE.black,
-  flex:         1,
-  wordBreak:    'break-word',
+  display:      'inline-block',
+  marginRight:  SPACING.xs,
+  verticalAlign: 'baseline',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -515,28 +512,21 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
         {disposition && (
           <div style={metadataRow}>
             <span style={metaLabel}>Disposition</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={metaValue}>
               {disposition_structured?.disposition_type && (
-                <span style={{
-                  ...T.micro,
-                  background: PALETTE.black,
-                  color: PALETTE.white,
-                  padding: `2px 8px`,
-                  lineHeight: '18px',
-                  borderRadius: '2px',
-                }}>
+                <span style={metadataBadge}>
                   {disposition_structured.disposition_type}
                 </span>
               )}
-              <span style={metaValue}>{disposition}</span>
-            </div>
+              {disposition}
+            </span>
           </div>
         )}
         {noticeText && <MetadataRow label="Notice" value={noticeText} />}
         {counsel && counsel.entries && counsel.entries.length > 0 && (
           <div style={{ ...metadataRow, marginTop: '2px', borderBottom: 'none' }}>
             <span style={metaLabel}>Counsel</span>
-            <div style={counselValueContainer}>
+            <span style={metaValue}>
               <button
                 onClick={() => setCounselExpanded(!counselExpanded)}
                 style={{
@@ -545,23 +535,18 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   background: 'none',
                   border: 'none',
                   padding: '0',
-                  margin: '0',
-                  lineHeight: 1.4,
-                  fontSize: '14px',
                 }}
                 aria-expanded={counselExpanded}
                 aria-label="Toggle counsel details"
               >
                 ↓
               </button>
-              <span style={counselValue}>
-                {(() => {
-                  const fullText = formatCounselData(counsel)
-                  const { text, truncated } = truncateToTwoLines(fullText)
-                  return counselExpanded ? fullText : text
-                })()}
-              </span>
-            </div>
+              {(() => {
+                const fullText = formatCounselData(counsel)
+                const { text, truncated } = truncateToTwoLines(fullText)
+                return counselExpanded ? fullText : text
+              })()}
+            </span>
           </div>
         )}
       </section>

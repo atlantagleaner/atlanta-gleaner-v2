@@ -24,8 +24,10 @@ export interface EditorialQuery extends SearchQuery {
 }
 
 export const FEED_TARGETS = {
-  featured: 3,
-  total: 15,
+  featured: 3,           // StarTalk, PBS Space Time, Grab Bag (now counts separately)
+  audioDispatch: 8,      // Spotify podcasts
+  news: 16,              // News articles (increased from 15)
+  total: 20,             // StarTalk(1) + PBS(1) + GrabBag(1) + AudioDispatch(1) + News(16) = 20
 } as const;
 
 export const EDITORIAL_QUERIES = {
@@ -68,14 +70,6 @@ export const EDITORIAL_QUERIES = {
       endpoint: 'search',
       num: 8,
       boost: 64,
-      maxAgeDays: 10,
-    },
-    {
-      label: 'AJC',
-      q: 'site:ajc.com Atlanta Journal-Constitution local news Georgia',
-      endpoint: 'news',
-      num: 8,
-      boost: 62,
       maxAgeDays: 10,
     },
     {
@@ -318,6 +312,41 @@ export const SCORING = {
     'box score',
   ],
 } as const;
+
+export const SPOTIFY_SHOW_IDS = {
+  "The Bill Simmons Podcast": "07SjDmKb9iliEzpNcN2xGD",
+  "The Rewatchables": "1lUPomulZRPquVAOOd56EW",
+  "The Big Picture": "6mTel3azvnK8isLs4VujvF",
+  "The Watch": "3IcA76e8ZV0NNSJ81XHQUg",
+  "Higher Learning": "4hI3rQ4C0e15rP3YKLKPut",
+  "The Rest is History": "7Cvsbcjhtur7nplC148TWy",
+  "Stuff You Missed in History Class": "4Zkj8TTa7XAZYI6aFetlec",
+  "Our Fake History": "3Lk9LufHHM9AzVoyYvcI7R",
+  "Behind the Bastards": "2ejvdShhn5D9tlVbb5vj9B",
+  "Revolutions": "05lvdf9T77KE6y4gyMGEsD",
+  "Stuff You Didn't Know About": "3iCqE2fH3ETuXx67BWqFPV",
+  "Cabinet of Curiosities": "34RuD4w8IVNm49Ge9qzjwT",
+  "The Bugle": "6Z0jGDQp46d69cja0EUFQe",
+  "StarTalk Radio": "1mNsuXfG95Lf76YQeVMuo1",
+  "Ologies": "5nvRkVMH58SelKZYZFZx1S",
+  "Radiolab": "2hmkzUtix0qTqvtpPcMzEL",
+  "Short Wave": "2rTT1klKUoQNuaW2Ah19Pa",
+  "The Infinite Monkey Cage": "6Ijz5uEUxN6FvJI49ZGJAJ",
+  "Sawbones": "0QCiNINmwgA6X4Z4nlnh5G",
+  "Science Vs": "5lY4b5PGOvMuOYOjOVEcb9",
+  "Stuff You Should Know": "0ofXAdFIQQRsCYj9754UFx",
+  "99% Invisible": "2VRS1IJCTn2Nlkg33ZVfkM",
+  "The New Yorker Radio Hour": "4ZTHlQzCm7ipnRn1ypnl1Z",
+  "On Being": "08F60fHBihlcqWZTr7Thzc",
+  "TED Radio Hour": "1vfOw64nKjQ8LzZDPCfRaO",
+  "Switched On Pop": "1sgWaKtQxwfjUpZnnK8r7J",
+  "Articles of Interest": "6XKe8xy5P16OLrkBW9oz0k",
+  "The Ezra Klein Show": "08F60fHBihlcqWZTr7Thzc",
+  "Kerning Cultures": "6Mwp0XM22DGXDva9SE3J8x",
+  "Unexplained": "269rqhbJIyaCbIzEI4BzCz",
+} as const;
+
+export const SPOTIFY_SHOW_IDS_ARRAY = Object.values(SPOTIFY_SHOW_IDS);
 
 export function flattenEditorialQueries() {
   return [
