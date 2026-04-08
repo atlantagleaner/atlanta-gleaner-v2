@@ -115,11 +115,16 @@ async function getShowEpisodesWithToken(showId: string, token: string, limit: nu
 
     console.log(`[getShowEpisodes] Response status: ${response.status} (attempt ${attempt}/${retries})`);
 
-    // Handle rate limiting with exponential backoff
+    // Handle rate limiting with exponential backoff + Retry-After header
     if (response.status === 429) {
       if (attempt < retries) {
-        const delayMs = Math.pow(2, attempt) * 100; // 200ms, 400ms, 800ms
-        console.log(`[getShowEpisodes] Rate limited (429), retrying after ${delayMs}ms...`);
+        // Check Spotify's Retry-After header first, then fall back to exponential backoff
+        const retryAfter = response.headers.get('Retry-After');
+        const delayMs = retryAfter
+          ? parseInt(retryAfter, 10) * 1000 // Spotify returns seconds
+          : Math.pow(2, attempt) * 100; // 200ms, 400ms, 800ms fallback
+
+        console.warn(`[getShowEpisodes] Rate limited (429), retrying after ${delayMs}ms (Retry-After: ${retryAfter || 'none'})...`);
         await new Promise(r => setTimeout(r, delayMs));
         continue;
       } else {
@@ -128,7 +133,7 @@ async function getShowEpisodesWithToken(showId: string, token: string, limit: nu
     }
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch episodes: ${response.statusText}`);
+      throw new Error(`Failed to fetch episodes: ${response.status} ${response.statusText}`);
     }
 
     const data = (await response.json()) as {
@@ -254,7 +259,11 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
     // Fetch latest episode from each show
     console.log('[buildAudioDispatchItem] Calling getLatestEpisodes...');
     const spotifyEpisodes = await getLatestEpisodes(SPOTIFY_SHOW_IDS_ARRAY);
-    console.log(`[buildAudioDispatchItem] Got ${spotifyEpisodes.length} episodes`);
+    console.log(`[buildAudioDispatchItem] Got ${spotifyEpisodes.length} episodes from Spotify API`);
+
+    if (spotifyEpisodes.length === 0) {
+      console.error('[buildAudioDispatchItem] WARNING: No episodes returned from Spotify. This may indicate API errors, rate limiting, or invalid show IDs.');
+    }
 
     // Transform to SeriesViewer-compatible format
     const episodes = spotifyEpisodes.slice(0, 8).map((ep) => ({
@@ -270,7 +279,7 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
     console.log(`[buildAudioDispatchItem] Transformed ${episodes.length} episodes for display`);
 
     // Return GleanerItem-compatible structure
-    return {
+    const item: GleanerItem = {
       title: 'Audio Dispatch',
       url: 'https://open.spotify.com',
       source: 'Spotify',
@@ -280,11 +289,15 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
       slot: 'audio_dispatch',
       episodes,
     };
+
+    console.log(`[buildAudioDispatchItem] Returning item with ${item.episodes?.length || 0} episodes`);
+    return item;
   } catch (error) {
-    console.error('[buildAudioDispatchItem] Spotify fetch failed:', {
+    console.error('[buildAudioDispatchItem] FATAL ERROR during Spotify fetch:', {
       error: String(error),
       message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
+      code: error instanceof Error && 'code' in error ? (error as any).code : undefined,
+      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 5).join('\n') : undefined,
     });
     return {
       title: 'Audio Dispatch',
