@@ -33,6 +33,7 @@ import { gleanArticle }         from '@/app/actions/glean'
 import type { GleanResult }     from '@/app/actions/glean'
 import { MirrorViewer }         from '@/src/components/News/MirrorViewer'
 import { SeriesViewer }         from '@/src/components/News/SeriesViewer'
+import { GrabBagDrawer }        from '@/src/components/GrabBagDrawer'
 import { formatRelativeTime }   from '@/lib/utils/date'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -248,6 +249,15 @@ function SeriesDrawer({ item }: { item: NewsItem }) {
             View on platform →
           </a>
         </p>
+      </div>
+    )
+  }
+
+  // Use GrabBagDrawer for grab_bag slot instead of SeriesViewer
+  if (item.slot === 'grab_bag') {
+    return (
+      <div style={{ padding: `${SPACING.sm} 0 ${SPACING.lg}` }}>
+        <GrabBagDrawer episodes={item.episodes} />
       </div>
     )
   }

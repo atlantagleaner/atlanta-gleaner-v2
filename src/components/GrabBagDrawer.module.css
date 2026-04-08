@@ -1,0 +1,215 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Grab Bag Video Scroll Drawer — CSS Module
+
+   Classical newspaper archive aesthetic. All colors, spacing, and animation
+   use tokens from src/styles/tokens.ts, mapped to CSS variables in globals.css.
+   Supports all themes (default, classical, matrix) automatically.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.grabBagWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--palette-white);
+  border: 0.5px solid var(--palette-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ── Scroll Container ──────────────────────────────────────────────────────── */
+/* Fixed height, hide scrollbar, snap to video centers via arrow clicks */
+
+.scrollContainer {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+
+  /* Approximation: 1 full video card height + caption + small peek of next */
+  /* Adjust based on typical video aspect ratio (16:9 ≈ ~450-500px on desktop) */
+  height: clamp(400px, 60vh, 700px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide scrollbar in Chrome/Safari */
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Video Card ────────────────────────────────────────────────────────────── */
+/* Single unit: player + caption (scrolls as one) */
+
+.videoCard {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  /* Ensure card takes reasonable height for centering */
+  min-height: fit-content;
+}
+
+/* ── Video Player ──────────────────────────────────────────────────────────── */
+/* Container for YouTube/Spotify embeds or thumbnail */
+
+.videoPlayer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000000;
+  border-bottom: 0.5px solid var(--palette-border);
+  overflow: hidden;
+}
+
+.playerFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.playerPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Caption Block ─────────────────────────────────────────────────────────── */
+/* Title + metadata (newspaper byline style) */
+
+.caption {
+  padding: 1rem 1rem;
+  background-color: var(--palette-white);
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.captionTitle {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--palette-black);
+  margin: 0 0 0.5rem 0;
+  word-wrap: break-word;
+}
+
+.captionMetadata {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--palette-meta);
+  margin: 0;
+  word-wrap: break-word;
+}
+
+/* ── Scroll Controls (Arrows) ──────────────────────────────────────────────── */
+/* Restrained, archival, centered below caption */
+
+.scrollControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  background-color: var(--palette-white);
+  border-top: 0.5px solid var(--palette-border);
+}
+
+.scrollBtn {
+  width: 48px; /* Touch target: ≥ 48px */
+  height: 48px;
+  padding: 0;
+
+  font-family: var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--palette-meta);
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: color 0.2s ease;
+
+  /* Remove default button styles */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.scrollBtn:hover:not(.disabled) {
+  color: var(--palette-black);
+}
+
+.scrollBtn:active:not(.disabled) {
+  opacity: 0.8;
+}
+
+.scrollBtn.disabled {
+  color: var(--palette-subtle);
+  cursor: not-allowed;
+}
+
+/* ── Responsive Adjustments ───────────────────────────────────────────────── */
+
+/* Mobile: adjust spacing and touch targets */
+@media (max-width: 768px) {
+  .scrollContainer {
+    /* On mobile, reduce fixed height and use more viewport space */
+    height: clamp(350px, 55vh, 600px);
+  }
+
+  .caption {
+    padding: 1rem 0.875rem;
+  }
+
+  .captionTitle {
+    font-size: 15px;
+  }
+
+  .captionMetadata {
+    font-size: 12px;
+  }
+
+  .scrollControls {
+    padding: 0.75rem 0;
+    gap: 0.375rem;
+  }
+
+  .scrollBtn {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet and above: slightly larger spacing */
+@media (min-width: 1024px) {
+  .caption {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .captionTitle {
+    margin-bottom: 0.75rem;
+  }
+}
