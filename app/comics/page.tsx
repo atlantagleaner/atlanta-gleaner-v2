@@ -1,7 +1,7 @@
 import { Banner } from '@/src/components/Banner'
 import {
   FONT, T, PALETTE, PALETTE_CSS, SPACING,
-  SIZE_SM, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK,
+  SIZE_SM, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -100,6 +100,18 @@ function ComicFrame({ series, caption, imageUrl, publishedAt, frameNo }: typeof 
 export default function ComicsPage() {
   return (
     <>
+      <style>{`
+        @media (max-width: 767px) {
+          .ag-comics-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+        }
+        @media (min-width: 768px) {
+          .ag-comics-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
+        }
+      `}</style>
       <Banner />
       <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
@@ -108,7 +120,7 @@ export default function ComicsPage() {
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
+      <div className="ag-comics-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${SPACING.xl}` }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: SPACING.xl }}>
           {COMICS.map(c => <ComicFrame key={c.id} {...c} />)}
         </div>

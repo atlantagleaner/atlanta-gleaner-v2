@@ -6,7 +6,7 @@
 // Data source: src/data/cases.ts (which consolidates the generated cases.json)
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { PALETTE }         from '@/src/styles/tokens'
+import { PALETTE, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE }         from '@/src/styles/tokens'
 import { Banner }          from '@/src/components/Banner'
 import { NewsBox }         from '@/src/components/NewsBox'
 import CaseLawBox          from '@/src/components/CaseLawBox'
@@ -32,24 +32,38 @@ export default function HomePage() {
   const featured = getFeaturedCase()
 
   return (
-    <main style={{ minHeight: '100vh', background: PALETTE.warm }}>
-      <Banner />
-      <ResizablePanels
-        left={{
-          label: 'Latest News',
-          node:  <NewsBox />,
-        }}
-        center={{
-          label: 'Case Law Updates',
-          node:  <CaseLawBox caseData={featured} label="Case Law Updates" />,
-        }}
-        right={{
-          label: 'The Far Side',
-          node:  <FarSideBox />,
-        }}
-        mobileInitialOpen={{ 0: true, 1: true, 2: false }}
-        mobileOrder={[2, 0, 1]}
-      />
-    </main>
+    <>
+      <style>{`
+        @media (max-width: 767px) {
+          .ag-home-main {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+        }
+        @media (min-width: 768px) {
+          .ag-home-main {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
+        }
+      `}</style>
+      <main className="ag-home-main" style={{ minHeight: '100vh', background: PALETTE.warm }}>
+        <Banner />
+        <ResizablePanels
+          left={{
+            label: 'Latest News',
+            node:  <NewsBox />,
+          }}
+          center={{
+            label: 'Case Law Updates',
+            node:  <CaseLawBox caseData={featured} label="Case Law Updates" />,
+          }}
+          right={{
+            label: 'The Far Side',
+            node:  <FarSideBox />,
+          }}
+          mobileInitialOpen={{ 0: true, 1: true, 2: false }}
+          mobileOrder={[2, 0, 1]}
+        />
+      </main>
+    </>
   )
 }

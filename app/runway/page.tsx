@@ -1,7 +1,7 @@
 import { Banner } from '@/src/components/Banner'
 import {
   FONT, T, PALETTE, PALETTE_CSS, SPACING,
-  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK,
+  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -111,6 +111,9 @@ export default function RunwayPage() {
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 767px) {
+          .ag-runway-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
           .ag-runway-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -119,6 +122,9 @@ export default function RunwayPage() {
           }
         }
         @media (min-width: 768px) {
+          .ag-runway-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
           .ag-runway-grid {
             display: grid;
             grid-template-columns: repeat(24, 1fr);
@@ -149,7 +155,7 @@ export default function RunwayPage() {
           }
         }
       `}} />
-      <div style={{ padding: `0 0 ${SPACING.xxxxl}` }}>
+      <div className="ag-runway-container" style={{ padding: 0 }}>
         <div className="ag-runway-grid">
           {VIDEOS.map(v => (
             <div key={v.id} className="ag-runway-item" style={{ transition: 'transform 0.3s ease' }}>

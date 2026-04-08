@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { Banner } from '@/src/components/Banner'
 import {
   FONT, T, PALETTE, PALETTE_CSS, SPACING,
-  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK, ANIMATION,
+  SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK, ANIMATION, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
 // Future: Shopify Storefront API products query
@@ -136,6 +136,18 @@ function ProductCard({ name, description, price, imageUrl, shopifyUrl, tag }: ty
 export default function VaultPage() {
   return (
     <>
+      <style>{`
+        @media (max-width: 767px) {
+          .ag-vault-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+        }
+        @media (min-width: 768px) {
+          .ag-vault-container {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
+        }
+      `}</style>
       <Banner />
       <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
@@ -144,7 +156,7 @@ export default function VaultPage() {
           </h1>
         </div>
       </div>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: `0 ${SPACING.xl} ${SPACING.xxxxl}` }}>
+      <div className="ag-vault-container" style={{ maxWidth: '1100px', margin: '0 auto', padding: `0 ${SPACING.xl}` }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: SPACING.xl }}>
           {PRODUCTS.map(p => <ProductCard key={p.id} {...p} />)}
         </div>

@@ -85,6 +85,13 @@ export const SIZE_LG = 'clamp(1.2rem, 2.8vw, 2rem)'   // page title blocks
 /** Standard max-width used by every page content wrapper + title block. */
 export const PAGE_MAX_W = '1600px'
 
+/** Bottom padding for pages, sized proportional to NewsBox default collapsed height (~580px).
+ * Desktop: 360px (NewsBox height × 0.618, the inverse golden ratio)
+ * Mobile: Responsive, capped at 30vh to prevent scroll fatigue on small screens, min 200px
+ */
+export const PAGE_BOTTOM_PADDING_DESKTOP = '360px'
+export const PAGE_BOTTOM_PADDING_MOBILE = 'max(200px, min(360px, 30vh))'
+
 
 // ─── Type scale ───────────────────────────────────────────────────────────────
 // Spread these into style props, then add color / margin as needed.

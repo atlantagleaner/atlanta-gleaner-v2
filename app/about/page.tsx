@@ -6,7 +6,7 @@ import { useMobileDetect } from '@/src/hooks'
 import {
   T, PALETTE, SPACING, ANIMATION,
   PAGE_MAX_W, PAGE_TITLE_BLOCK,
-  BOX_SHELL, BOX_HEADER, BOX_PADDING,
+  BOX_SHELL, BOX_HEADER, BOX_PADDING, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
 const PORTRAIT_SRC = '/george-washington-athenaeum-portrait.png'
@@ -101,6 +101,18 @@ function PortraitModule() {
 export default function AboutPage() {
   return (
     <main className="about-page">
+      <style>{`
+        @media (max-width: 767px) {
+          .about-page {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+        }
+        @media (min-width: 768px) {
+          .about-page {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
+        }
+      `}</style>
       <Banner />
 
       <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}` }}>
@@ -163,7 +175,6 @@ export default function AboutPage() {
         .about-page {
           min-height: 100vh;
           background: ${PALETTE.warm};
-          padding-bottom: ${SPACING.xxxxl};
         }
 
         .about-grid {

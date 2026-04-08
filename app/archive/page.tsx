@@ -13,7 +13,7 @@ import { useMobileDetect } from '@/src/hooks'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
   ITEM_RULE, SPACING, SIZE_SM,
-  PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION,
+  PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 import { CASES } from '@/src/data/cases'
 import type { CaseLaw } from '@/src/data/types'
@@ -726,19 +726,30 @@ export default function ArchivePage() {
   const searchNoResults = searchActive && resultCount === 0
 
   return (
-    <main style={{
-      minHeight:   '100vh',
-      background:  PALETTE.warm,
-      paddingBottom: '80px',
-    }}>
-      <Banner />
-
-      <div style={{
-        maxWidth: PAGE_MAX_W,
-        margin:   '0 auto',
-        padding:  `0 ${SPACING.lg}`,
-        minHeight: '1230px', // Golden Ratio Folio: 760px (module width) * 1.618
+    <>
+      <style>{`
+        @media (max-width: 767px) {
+          .ag-archive-main {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+        }
+        @media (min-width: 768px) {
+          .ag-archive-main {
+            padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP};
+          }
+        }
+      `}</style>
+      <main className="ag-archive-main" style={{
+        minHeight:   '100vh',
+        background:  PALETTE.warm,
       }}>
+        <Banner />
+
+        <div style={{
+          maxWidth: PAGE_MAX_W,
+          margin:   '0 auto',
+          padding:  `0 ${SPACING.xl}`,
+        }}>
 
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
           <h1 style={{ ...T.pageTitle, paddingTop: '20px' }}>
@@ -777,7 +788,8 @@ export default function ArchivePage() {
           </div>
         )}
 
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }
