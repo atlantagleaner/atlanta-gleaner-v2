@@ -30,8 +30,10 @@ export async function GET() {
 
     // Second test: try loading config
     console.log('[test/spotify] Trying to import config...');
+    let SPOTIFY_SHOW_IDS_ARRAY: string[] = [];
     try {
-      const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig');
+      const config = await import('@/lib/newsConfig');
+      SPOTIFY_SHOW_IDS_ARRAY = config.SPOTIFY_SHOW_IDS_ARRAY;
       debug.configTest = {
         success: true,
         showIdCount: SPOTIFY_SHOW_IDS_ARRAY?.length || 0,
@@ -45,9 +47,31 @@ export async function GET() {
       throw importErr;
     }
 
+    // Test 2b: try fetching all 30 shows
+    console.log('[test/spotify] Testing with all 30 shows...');
+    const start30 = Date.now();
+    const all30Episodes = await getLatestEpisodes(SPOTIFY_SHOW_IDS_ARRAY);
+    const end30 = Date.now();
+    debug.all30ShowsTest = {
+      showsRequested: SPOTIFY_SHOW_IDS_ARRAY.length,
+      episodesReturned: all30Episodes.length,
+      durationMs: end30 - start30,
+      success: all30Episodes.length > 0,
+    };
+    console.log('[test/spotify] All 30 shows test result:', debug.all30ShowsTest);
+
     // Third test: full build
-    console.log('[test/spotify] Calling buildAudioDispatchItem...');
+    console.log('[test/spotify] Calling buildAudioDispatchItem with 30 shows...');
+    const startTime = Date.now();
     const result = await buildAudioDispatchItem();
+    const endTime = Date.now();
+    debug.fullBuildTest = {
+      durationMs: endTime - startTime,
+      episodesReturned: result.episodes?.length || 0,
+      success: (result.episodes?.length || 0) > 0,
+    };
+    console.log('[test/spotify] Full build took', endTime - startTime, 'ms, got', result.episodes?.length, 'episodes');
+
     return Response.json({
       ok: true,
       debug,
