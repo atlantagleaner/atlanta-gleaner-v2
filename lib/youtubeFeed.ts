@@ -200,6 +200,12 @@ export const FEATURED_YOUTUBE_CHANNELS = {
   },
 } as const
 
+/** Strict @handle from `youtube.com/@handle/...` (used for grab-bag episode labels). */
+function youtubeHandleFromChannelUrl(channelUrl: string): string | undefined {
+  const m = channelUrl.match(/youtube\.com\/@([^/?#]+)/i)
+  return m ? `@${m[1]}` : undefined
+}
+
 /** Curated science channels — 3 picked at random per refresh, 2 videos each → up to 9 in drawer */
 export const GRAB_BAG_CHANNELS = [
   { id: 'kurzgesagt', url: 'https://www.youtube.com/@kurzgesagt/videos', cid: 'UCsXVk37bltUXD1fauIDKJgQ' },
@@ -220,7 +226,7 @@ export async function buildFeaturedSeriesItem(
   return {
     title,
     url: channelUrl,
-    source: `Official ${title} uploads`,
+    source: 'YouTube',
     publishedAt: episodes[0]?.publishedAt || '',
     type: 'series',
     score: 1000,
@@ -233,13 +239,17 @@ export async function buildScienceGrabBagItem(): Promise<GleanerItem> {
   const shuffled = [...GRAB_BAG_CHANNELS].sort(() => Math.random() - 0.5)
   const selected = shuffled.slice(0, 3)
   const episodesResults = await Promise.all(
-    selected.map((ch) => fetchChannelEpisodesWithFallback(ch.cid, ch.url, ch.id, 2)),
+    selected.map(async (ch) => {
+      const eps = await fetchChannelEpisodesWithFallback(ch.cid, ch.url, ch.id, 2)
+      const handle = youtubeHandleFromChannelUrl(ch.url)
+      return eps.map((ep) => (handle ? { ...ep, channelHandle: handle } : ep))
+    }),
   )
   const episodes = episodesResults.flat().slice(0, 9)
   return {
     title: 'Grab Bag',
     url: 'https://www.youtube.com/',
-    source: 'Curated Grab Bag',
+    source: 'YouTube',
     publishedAt: new Date().toISOString(),
     type: 'series',
     score: 1000,

@@ -11,7 +11,20 @@ export interface SeriesEpisode {
   type: 'video' | 'audio'
   videoId?: string
   spotifyId?: string
+  /** Grab-bag only — strict @handle from channel URL */
+  channelHandle?: string
   thumbnailUrl: string
+}
+
+function episodeMetaLine(episode: SeriesEpisode): string {
+  const date = episode.publishedAt || 'Recently'
+  if (episode.source === 'NASA') {
+    return `🔴 LIVE | ${episode.source} · ${date}`
+  }
+  if (episode.channelHandle) {
+    return `${episode.source} · ${episode.channelHandle} · ${date}`
+  }
+  return `${episode.source} · ${date}`
 }
 
 export function SeriesViewer({
@@ -58,26 +71,11 @@ export function SeriesViewer({
   const visibleEpisodes = expanded ? episodes : episodes.slice(0, INITIAL_COUNT)
 
   return (
-    <div style={{ padding: `0 0 ${SPACING.lg}` }}>
-      <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.xs}` }}>
-        {isSpotify ? 'Audio Dispatch' : 'Latest uploads'}
-      </p>
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          gap: SPACING.sm,
-          marginBottom: SPACING.xs,
-        }}
-      >
-        <p style={{ ...T.body, margin: 0 }}>{title}</p>
-        <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
-          {episodes.length} recent {isSpotify ? 'episodes' : 'uploads'}
-        </p>
-      </div>
-
+    <div
+      role="region"
+      aria-label={title}
+      style={{ padding: `0 0 ${SPACING.lg}` }}
+    >
       {!selectedEpisode || !embedSrc ? (
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
           No content found.
@@ -115,7 +113,7 @@ export function SeriesViewer({
 
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
-              {visibleEpisodes.map((episode, index) => {
+              {visibleEpisodes.map((episode) => {
                 const epId = episode.spotifyId ?? episode.videoId
                 const isActive = epId === selectedId
 
@@ -136,7 +134,7 @@ export function SeriesViewer({
                     }}
                   >
                     <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.xs}` }}>
-                      {episode.source === 'NASA' ? '🔴 LIVE | ' : `#${index + 1} | `} {episode.source} · {episode.publishedAt || 'Recently'}
+                      {episodeMetaLine(episode)}
                     </p>
                     <p style={{ ...T.body, margin: `0 0 ${SPACING.xs}` }}>
                       <span style={{ color: PALETTE.black }}>{episode.title}</span>

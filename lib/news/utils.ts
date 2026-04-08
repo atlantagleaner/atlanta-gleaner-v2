@@ -51,6 +51,7 @@ export function hydrateEpisode(episode: GleanerEpisode | CompactEpisode): Gleane
     source: 'YouTube',
     type: 'video',
     thumbnailUrl: `https://i.ytimg.com/vi/${comp.v}/hqdefault.jpg`,
+    ...(comp.h ? { channelHandle: comp.h } : {}),
   }
 }
 
@@ -79,6 +80,7 @@ export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toI
               p: episode.publishedAt,
               v: episode.videoId,
               s: episode.spotifyId,
+              ...(episode.channelHandle ? { h: episode.channelHandle } : {}),
             })),
           }
         : {}),

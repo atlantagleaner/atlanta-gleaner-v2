@@ -9,6 +9,8 @@ export interface GleanerEpisode {
   spotifyId?: string
   url?: string
   source?: string
+  /** YouTube @handle from channel URL — grab-bag episodes only */
+  channelHandle?: string
   type?: 'video' | 'audio'
   thumbnailUrl?: string
 }
@@ -31,6 +33,8 @@ export interface CompactEpisode {
   p: string
   v?: string
   s?: string
+  /** channelHandle — grab-bag */
+  h?: string
 }
 
 export interface CompactItem {

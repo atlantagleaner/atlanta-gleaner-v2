@@ -46,6 +46,7 @@ interface NewsItem {
     type: 'video'
     videoId: string
     thumbnailUrl: string
+    channelHandle?: string
   }>
 }
 
@@ -309,16 +310,6 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
                   marginTop: SPACING.xs,
                 }}>
                   {item.source}{mediaLabel}
-                </span>
-              )}
-              {isSeries && (
-                <span style={{
-                  ...T.micro,
-                  color:     PALETTE_CSS.meta,
-                  display:   'block',
-                  marginTop: SPACING.xs,
-                }}>
-                  {item.source} · Gallery
                 </span>
               )}
             </span>
