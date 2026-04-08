@@ -727,7 +727,7 @@ export default function ArchivePage() {
 
   return (
     <main style={{
-      minHeight:   '1230px', // Golden Ratio Folio: 760px (module width) * 1.618
+      minHeight:   '100vh',
       background:  PALETTE.warm,
       paddingBottom: '80px',
     }}>
@@ -737,6 +737,7 @@ export default function ArchivePage() {
         maxWidth: PAGE_MAX_W,
         margin:   '0 auto',
         padding:  `0 ${SPACING.lg}`,
+        minHeight: '1230px', // Golden Ratio Folio: 760px (module width) * 1.618
       }}>
 
         <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
