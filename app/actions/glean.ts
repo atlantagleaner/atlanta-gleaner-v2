@@ -1,10 +1,11 @@
 'use server'
 
-import { ensureReaderDocument, type ReaderDocument } from '@/lib/newsReader'
+import { ensureReaderDocument, getCachedReader, type ReaderDocument } from '@/lib/newsReader'
+import { head } from '@vercel/blob'
 
 export type GleanResult =
-  | { type: 'reader'; document: ReaderDocument }
-  | { type: 'video'; videoId: string | null; title: string; source: string; readFullUrl: string }
+  | { type: 'reader'; document: ReaderDocument; updatedAt?: string }
+  | { type: 'video'; videoId: string | null; title: string; source: string; readFullUrl: string; updatedAt?: string }
 
 export interface GleanItemMeta {
   title: string
@@ -71,9 +72,19 @@ export async function gleanArticle(
       source: itemMeta.source,
     })
 
+    // Try to get actual blob timestamp if possible for "Updated X ago" fallback
+    let updatedAt: string | undefined
+    try {
+      const crypto = await import('crypto')
+      const hash = crypto.createHash('sha256').update(url).digest('hex').slice(0, 32)
+      const blob = await head(`news-reader/v4/${hash}.json`)
+      if (blob) updatedAt = blob.uploadedAt.toISOString()
+    } catch {}
+
     return {
       type: 'reader',
       document,
+      updatedAt,
     }
   } catch (error: unknown) {
     console.error(`[gleanArticle] Failed for ${url}:`, error);

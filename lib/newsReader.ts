@@ -216,11 +216,51 @@ async function buildReaderDocument(
   const twitterImage = $('meta[name="twitter:image"]').attr('content')
   const heroImageUrl = ogImage || twitterImage || null
 
-  const publishedAt = 
+  let publishedAt = 
     $('meta[property="article:published_time"]').attr('content') ||
+    $('meta[property="og:published_time"]').attr('content') ||
     $('meta[name="published_time"]').attr('content') ||
     $('meta[name="date"]').attr('content') ||
+    $('meta[name="pubdate"]').attr('content') ||
+    $('meta[name="publish-date"]').attr('content') ||
+    $('meta[name="dc.date"]').attr('content') ||
+    $('meta[name="dc.date.issued"]').attr('content') ||
+    $('meta[name="dc.date.created"]').attr('content') ||
     null
+
+  // Try LD+JSON if still null
+  if (!publishedAt) {
+    try {
+      $('script[type="application/ld+json"]').each((_, el) => {
+        try {
+          const json = JSON.parse($(el).html() || '')
+          const search = (obj: any): string | null => {
+            if (!obj || typeof obj !== 'object') return null
+            if (obj.datePublished) return obj.datePublished
+            if (obj.dateModified) return obj.dateModified
+            if (obj.dateCreated) return obj.dateCreated
+            if (Array.isArray(obj)) {
+              for (const item of obj) {
+                const found = search(item)
+                if (found) return found
+              }
+            } else {
+              for (const key in obj) {
+                const found = search(obj[key])
+                if (found) return found
+              }
+            }
+            return null
+          }
+          const found = search(json)
+          if (found) {
+            publishedAt = found
+            return false // break each
+          }
+        } catch {}
+      })
+    } catch {}
+  }
 
   const extracted = extractImagesAndStrip(cleanedHtml, null, null)
   

@@ -67,10 +67,12 @@ function stripMediaFromLegacyReaderHtml(bodyHtml: string): string {
 
 function ReaderFrame({ 
   result, 
-  publishedAt 
+  publishedAt,
+  updatedAt,
 }: { 
   result: Extract<GleanResult, { type: 'reader' }>,
-  publishedAt?: string 
+  publishedAt?: string,
+  updatedAt?: string,
 }) {
   const { document } = result
   const isLong = document.wordCount >= COLLAPSE_WORD_THRESHOLD
@@ -88,6 +90,7 @@ function ReaderFrame({
   // Use document.publishedAt if available, otherwise fallback to item-level publishedAt
   const effectivePublishedAt = document.publishedAt || publishedAt
   const age = mounted ? formatRelativeTime(effectivePublishedAt) : ''
+  const updatedAge = mounted && !age ? `Updated ${formatRelativeTime(updatedAt)}` : ''
 
   let displayHostname = ''
   try {
@@ -163,7 +166,7 @@ function ReaderFrame({
                 }}
               />
             )}
-            <span>Source: {displayHostname}{age && ` · ${age}`}</span>
+            <span>Source: {displayHostname}{(age || updatedAge) && ` · ${age || updatedAge}`}</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
@@ -189,7 +192,7 @@ function ReaderFrame({
               />
             )}
             <div style={{ ...T.micro, color: PALETTE_CSS.meta }}>
-              {document.publisher || document.source}{age && ` · ${age}`}
+              {document.publisher || document.source}{(age || updatedAge) && ` · ${age || updatedAge}`}
             </div>
           </div>
           <h1 style={{ 
@@ -320,7 +323,8 @@ function VideoEmbed({
   source,
   readFullUrl,
   publishedAt,
-}: Extract<GleanResult, { type: 'video' }> & { publishedAt?: string }) {
+  updatedAt,
+}: Extract<GleanResult, { type: 'video' }> & { publishedAt?: string, updatedAt?: string }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -328,13 +332,15 @@ function VideoEmbed({
   }, [])
 
   const age = mounted ? formatRelativeTime(publishedAt) : ''
+  const updatedAge = mounted && !age ? `Updated ${formatRelativeTime(updatedAt)}` : ''
+  const displayAge = age || updatedAge
 
   if (!videoId) {
     return (
       <div style={{ padding: `${SPACING.md} 0 ${SPACING.lg}` }}>
         <p style={{ ...T.body, margin: `0 0 ${SPACING.sm}` }}>{title}</p>
         <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: `0 0 ${SPACING.md}` }}>
-          {source}{age && ` · ${age}`}
+          {source}{displayAge && ` · ${displayAge}`}
         </p>
         <a
           href={readFullUrl}
@@ -384,16 +390,24 @@ function VideoEmbed({
       </div>
 
       <p style={{ ...T.micro, color: PALETTE_CSS.meta, margin: 0 }}>
-        {source}{age && ` · ${age}`}
+        {source}{displayAge && ` · ${displayAge}`}
       </p>
     </div>
   )
 }
 
-export function MirrorViewer({ result, publishedAt }: { result: GleanResult, publishedAt?: string }) {
+export function MirrorViewer({ 
+  result, 
+  publishedAt, 
+  updatedAt 
+}: { 
+  result: GleanResult, 
+  publishedAt?: string,
+  updatedAt?: string,
+}) {
   if (result.type === 'video') {
-    return <VideoEmbed {...result} publishedAt={publishedAt} />
+    return <VideoEmbed {...result} publishedAt={publishedAt} updatedAt={updatedAt} />
   }
 
-  return <ReaderFrame result={result} publishedAt={publishedAt} />
+  return <ReaderFrame result={result} publishedAt={publishedAt} updatedAt={updatedAt} />
 }

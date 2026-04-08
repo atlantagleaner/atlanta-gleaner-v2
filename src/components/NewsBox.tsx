@@ -136,7 +136,7 @@ const SLOT_BADGE: Record<string, string | null> = {
 // Video items resolve synchronously (no network); text items may show a brief
 // loading skeleton on cache-miss.
 
-function MirrorDrawer({ item }: { item: NewsItem }) {
+function MirrorDrawer({ item, feedUpdatedAt }: { item: NewsItem, feedUpdatedAt?: string }) {
   const { data, isLoading, error } = useQuery<DrawerResult>({
     queryKey: ['glean', item.url],
     queryFn: () => gleanItem(item),
@@ -216,7 +216,13 @@ function MirrorDrawer({ item }: { item: NewsItem }) {
     )
   }
 
-  return <MirrorViewer result={data.result} publishedAt={item.publishedAt} />
+  return (
+    <MirrorViewer 
+      result={data.result} 
+      publishedAt={item.publishedAt} 
+      updatedAt={data.result.updatedAt || feedUpdatedAt} 
+    />
+  )
 }
 
 function SeriesDrawer({ item }: { item: NewsItem }) {
@@ -249,7 +255,7 @@ function SeriesDrawer({ item }: { item: NewsItem }) {
 
 // ── Individual accordion item ─────────────────────────────────────────────────
 
-function NewsAccordionItem({ item }: { item: NewsItem }) {
+function NewsAccordionItem({ item, feedUpdatedAt }: { item: NewsItem, feedUpdatedAt?: string }) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -342,7 +348,7 @@ function NewsAccordionItem({ item }: { item: NewsItem }) {
         {/* ── Content ─────────────────────────────────────────────────────── */}
         <Accordion.Content className="gleaner-accordion-content">
           <div style={{ paddingBottom: SPACING.sm }}>
-            {open && (isSeries ? <SeriesDrawer item={item} /> : <MirrorDrawer item={item} />)}
+            {open && (isSeries ? <SeriesDrawer item={item} /> : <MirrorDrawer item={item} feedUpdatedAt={feedUpdatedAt} />)}
           </div>
         </Accordion.Content>
       </Accordion.Item>
@@ -426,7 +432,11 @@ export function NewsBox({ style }: { style?: React.CSSProperties }) {
             {!isLoading && !isError && items.length > 0 && (
               <div>
                 {items.map((item) => (
-                  <NewsAccordionItem key={item.url} item={item} />
+                  <NewsAccordionItem 
+                    key={item.url} 
+                    item={item} 
+                    feedUpdatedAt={data?.cachedAt} 
+                  />
                 ))}
               </div>
             )}
