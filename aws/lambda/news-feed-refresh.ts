@@ -19,6 +19,7 @@
  */
 
 import { Readable } from 'stream';
+import retry from 'async-retry';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -66,6 +67,46 @@ const FETCH_TIMEOUTS = {
   SPOTIFY: 20_000,
 };
 
+// All 30 Spotify shows (editorial source pool)
+// Audio Dispatch curates 8 episodes from these 30 based on editorial voice
+const ALL_SPOTIFY_SHOW_IDS = [
+  // Bill Simmons Universe (5)
+  '07SjDmKb9iliEzpNcN2xGD',  // The Bill Simmons Podcast
+  '1lUPomulZRPquVAOOd56EW',  // The Rewatchables
+  '6mTel3azvnK8isLs4VujvF',  // The Big Picture
+  '3IcA76e8ZV0NNSJ81XHQUg',  // The Watch
+  '4hI3rQ4C0e15rP3YKLKPut',  // Higher Learning
+  // History (8)
+  '7Cvsbcjhtur7nplC148TWy',  // The Rest is History
+  '4Zkj8TTa7XAZYI6aFetlec',  // Stuff You Missed in History Class
+  '3Lk9LufHHM9AzVoyYvcI7R',  // Our Fake History
+  '2ejvdShhn5D9tlVbb5vj9B',  // Behind the Bastards
+  '05lvdf9T77KE6y4gyMGEsD',  // Revolutions
+  '3iCqE2fH3ETuXx67BWqFPV',  // Stuff You Didn't Know About
+  '34RuD4w8IVNm49Ge9qzjwT',  // Cabinet of Curiosities
+  '6Z0jGDQp46d69cja0EUFQe',  // The Bugle
+  // Science (8)
+  '1mNsuXfG95Lf76YQeVMuo1',  // StarTalk Radio
+  '5nvRkVMH58SelKZYZFZx1S',  // Ologies
+  '2hmkzUtix0qTqvtpPcMzEL',  // Radiolab
+  '2rTT1klKUoQNuaW2Ah19Pa',  // Short Wave
+  '6Ijz5uEUxN6FvJI49ZGJAJ',  // The Infinite Monkey Cage
+  '0QCiNINmwgA6X4Z4nlnh5G',  // Sawbones
+  '5lY4b5PGOvMuOYOjOVEcb9',  // Science Vs
+  '0ofXAdFIQQRsCYj9754UFx',  // Stuff You Should Know
+  // Culture & Analysis (7)
+  '2VRS1IJCTn2Nlkg33ZVfkM',  // 99% Invisible
+  '4ZTHlQzCm7ipnRn1ypnl1Z',  // The New Yorker Radio Hour
+  '08F60fHBihlcqWZTr7Thzc',  // On Being
+  '1vfOw64nKjQ8LzZDPCfRaO',  // TED Radio Hour
+  '1sgWaKtQxwfjUpZnnK8r7J',  // Switched On Pop
+  '6XKe8xy5P16OLrkBW9oz0k',  // Articles of Interest
+  '08F60fHBihlcqWZTr7Thzc',  // The Ezra Klein Show
+  // International & Depth (2)
+  '6Mwp0XM22DGXDva9SE3J8x',  // Kerning Cultures
+  '269rqhbJIyaCbIzEI4BzCz',  // Unexplained
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Fetch Utilities
 // ─────────────────────────────────────────────────────────────────────────────
@@ -98,6 +139,30 @@ async function fetchWithTimeout(
   }
 }
 
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  label: string,
+  retries: number = 3
+): Promise<T> {
+  return retry(async (bail) => {
+    try {
+      return await fn();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.warn(`[retry] ${label} failed: ${error.message}`);
+      }
+      throw error;
+    }
+  }, {
+    retries,
+    minTimeout: 500,
+    maxTimeout: 2000,
+    onRetry: (err, attempt) => {
+      console.log(`[retry] ${label} attempt ${attempt} after: ${err.message}`);
+    },
+  });
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // API Integrations
 // ─────────────────────────────────────────────────────────────────────────────
@@ -108,7 +173,7 @@ async function serperSearch(query: string, boost: number): Promise<GleanerItem[]
     return [];
   }
 
-  try {
+  return withRetry(async () => {
     const res = await fetchWithTimeout(`https://google.serper.dev/news`, {
       method: 'POST',
       headers: {
@@ -121,8 +186,7 @@ async function serperSearch(query: string, boost: number): Promise<GleanerItem[]
     });
 
     if (!res.ok) {
-      console.error(`[serperSearch] HTTP ${res.status} for "${query}"`);
-      return [];
+      throw new Error(`HTTP ${res.status} for "${query}"`);
     }
 
     const data = (await res.json()) as { news?: Array<any> };
@@ -139,23 +203,22 @@ async function serperSearch(query: string, boost: number): Promise<GleanerItem[]
         slot: 'news',
       }))
       .filter((item: any) => item.title && item.url);
-  } catch (error) {
-    console.error(`[serperSearch] Error for query "${query}":`, error);
+  }, `SerperSearch:${query.slice(0, 30)}`).catch((error) => {
+    console.error(`[serperSearch] Failed after retries for query "${query}":`, error);
     return [];
-  }
+  });
 }
 
 async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  const showIds = (process.env.SPOTIFY_SHOW_IDS || '').split(',').filter(Boolean);
 
-  if (!clientId || !clientSecret || showIds.length === 0) {
+  if (!clientId || !clientSecret || ALL_SPOTIFY_SHOW_IDS.length === 0) {
     console.warn('[fetchSpotifyEpisodes] Missing Spotify credentials or show IDs');
     return null;
   }
 
-  try {
+  return withRetry(async () => {
     // Authenticate
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
     const authRes = await fetchWithTimeout('https://accounts.spotify.com/api/token', {
@@ -175,9 +238,9 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
 
     const { access_token } = (await authRes.json()) as { access_token: string };
 
-    // Fetch episodes with limited concurrency
-    const episodes: GleanerEpisode[] = [];
-    for (const showId of showIds.slice(0, 8)) {
+    // Fetch latest episode from all 30 shows
+    const allEpisodes: Array<GleanerEpisode & { showId: string; showName: string; publishDate: Date }> = [];
+    for (const showId of ALL_SPOTIFY_SHOW_IDS) {
       try {
         const episodeRes = await fetchWithTimeout(
           `https://api.spotify.com/v1/shows/${showId}/episodes?limit=1`,
@@ -193,14 +256,19 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
         const data = (await episodeRes.json()) as { items?: Array<any> };
         if (data.items?.[0]) {
           const ep = data.items[0];
-          episodes.push({
+          const publishDate = new Date(ep.release_date || new Date().toISOString());
+
+          allEpisodes.push({
             title: ep.name,
             url: ep.external_urls?.spotify || '',
             source: ep.show?.name || 'Spotify',
-            publishedAt: ep.release_date || new Date().toISOString(),
+            publishedAt: publishDate.toISOString(),
             type: 'audio',
             spotifyId: ep.id,
             thumbnailUrl: ep.images?.[0]?.url || '',
+            showId,
+            showName: ep.show?.name || 'Unknown',
+            publishDate,
           });
         }
       } catch (err) {
@@ -209,24 +277,48 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
       }
     }
 
-    if (episodes.length === 0) {
-      return null;
+    if (allEpisodes.length === 0) {
+      throw new Error('No Spotify episodes found');
     }
+
+    // Score episodes: prioritize freshness + source diversity
+    const now = new Date();
+    const episodeScores = allEpisodes.map((ep) => {
+      // Freshness score: newer episodes score higher
+      // Episodes from past 7 days get full freshness score
+      const ageMs = now.getTime() - ep.publishDate.getTime();
+      const ageDays = ageMs / (1000 * 60 * 60 * 24);
+      const freshnessScore = ageDays < 7 ? 100 : Math.max(0, 100 - ageDays * 2);
+
+      return {
+        ...ep,
+        freshnessScore,
+        totalScore: freshnessScore,
+      };
+    });
+
+    // Sort by freshness score and pick top 8
+    const curated = episodeScores
+      .sort((a, b) => b.totalScore - a.totalScore)
+      .slice(0, 8)
+      .map(({ freshnessScore, totalScore, showId, showName, publishDate, ...ep }) => ep);
+
+    console.log(`[fetchSpotifyEpisodes] Curated 8 from ${allEpisodes.length} episodes`);
 
     return {
       title: 'Audio Dispatch',
       url: 'https://open.spotify.com',
       source: 'Spotify',
-      publishedAt: episodes[0]?.publishedAt || new Date().toISOString(),
+      publishedAt: curated[0]?.publishedAt || new Date().toISOString(),
       type: 'series',
       score: 1000,
       slot: 'audio_dispatch',
-      episodes,
+      episodes: curated,
     };
-  } catch (error) {
-    console.error('[fetchSpotifyEpisodes] Error:', error);
+  }, 'SpotifyEpisodes', 2).catch((error) => {
+    console.warn('[fetchSpotifyEpisodes] Failed after retries:', error);
     return null;
-  }
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -237,14 +329,16 @@ async function fetchSpotifyEpisodes(): Promise<GleanerItem | null> {
 async function fetchYoutubeVideos(channelId: string, limit: number = 3): Promise<GleanerEpisode[]> {
   if (!process.env.YOUTUBE_API_KEY) return [];
 
-  try {
+  return withRetry(async () => {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=${limit}&key=${process.env.YOUTUBE_API_KEY}&type=video`;
     const response = await fetchWithTimeout(url, {
       timeoutMs: FETCH_TIMEOUTS.YOUTUBE,
       label: `YouTubeChannel:${channelId}`,
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} for channel ${channelId}`);
+    }
 
     const data = (await response.json()) as any;
     return (data.items || [])
@@ -258,10 +352,10 @@ async function fetchYoutubeVideos(channelId: string, limit: number = 3): Promise
         thumbnailUrl: item.snippet.thumbnails.high?.url || '',
       }))
       .slice(0, limit);
-  } catch (error) {
-    console.warn(`[fetchYoutubeVideos] Error for channel ${channelId}:`, error);
+  }, `YouTubeChannel:${channelId}`, 2).catch((error) => {
+    console.warn(`[fetchYoutubeVideos] Failed after retries for channel ${channelId}:`, error);
     return [];
-  }
+  });
 }
 
 async function buildNewsFeed(): Promise<GleanerItem[]> {
@@ -381,23 +475,25 @@ async function saveToBlob(
     throw new Error('Missing BLOB_READ_WRITE_TOKEN');
   }
 
-  const response = await fetchWithTimeout(`https://blob.vercel-storage.com/${path}`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${BLOB_READ_WRITE_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-    timeoutMs: 30_000,
-    label: 'BlobUpload',
-  });
+  return withRetry(async () => {
+    const response = await fetchWithTimeout(`https://blob.vercel-storage.com/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${BLOB_READ_WRITE_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      timeoutMs: 30_000,
+      label: 'BlobUpload',
+    });
 
-  if (!response.ok) {
-    throw new Error(`Blob upload failed: ${response.statusText}`);
-  }
+    if (!response.ok) {
+      throw new Error(`Blob upload failed: ${response.statusText}`);
+    }
 
-  const result = (await response.json()) as { url: string };
-  return result.url;
+    const result = (await response.json()) as { url: string };
+    return result.url;
+  }, 'BlobUpload', 3);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -412,25 +508,27 @@ async function updateEdgeConfig(
     throw new Error('Missing Edge Config credentials');
   }
 
-  const response = await fetchWithTimeout(
-    `https://api.vercel.com/v1/edge-config/${EDGE_CONFIG_ID}/items`,
-    {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${VERCEL_API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        items: [{ operation: 'upsert', key, value }],
-      }),
-      timeoutMs: 30_000,
-      label: 'EdgeConfigUpdate',
-    }
-  );
+  return withRetry(async () => {
+    const response = await fetchWithTimeout(
+      `https://api.vercel.com/v1/edge-config/${EDGE_CONFIG_ID}/items`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${VERCEL_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: [{ operation: 'upsert', key, value }],
+        }),
+        timeoutMs: 30_000,
+        label: 'EdgeConfigUpdate',
+      }
+    );
 
-  if (!response.ok) {
-    throw new Error(`Edge Config update failed: ${await response.text()}`);
-  }
+    if (!response.ok) {
+      throw new Error(`Edge Config update failed: ${await response.text()}`);
+    }
+  }, 'EdgeConfigUpdate', 3);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
