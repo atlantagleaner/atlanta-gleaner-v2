@@ -362,11 +362,13 @@ export async function handler(event: any) {
     const blobUrl = await saveToBlob('news-feed/backup.json', cacheEntry);
     console.log('[news-feed-refresh] Blob saved:', blobUrl);
 
-    // Update Edge Config with backup reference
+    // Update Edge Config with backup reference (PRIMARY - Lambda provides the source of truth via Blob)
     console.log('[news-feed-refresh] Updating Edge Config...');
     await updateEdgeConfig('news_cache_backup', {
       blobUrl,
       cachedAt: cacheEntry.cachedAt,
+      count: cacheEntry.items.length,
+      source: 'lambda-primary',
     });
 
     const duration = Date.now() - startTime;
