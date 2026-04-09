@@ -486,6 +486,10 @@ a.case-archive-link:hover .case-archive-tags {
   color: var(--saturn-gold) !important;
   text-shadow: 0 0 10px rgba(184,134,11,0.45) !important;
 }
+/* Time text on Saturn: increase opacity */
+[data-saturn] .ag-nav-wrapper .ag-nav a > div:nth-child(2) {
+  opacity: 0.75 !important;
+}
 [data-saturn] .ag-nav-wrapper .ag-plus-btn {
   color: var(--saturn-gold) !important;
   text-shadow: 0 0 10px rgba(184,134,11,0.50) !important;
