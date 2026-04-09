@@ -17,9 +17,9 @@ const CR          = 13   // coin radius
 const CD          = CR * 2
 
 // Layout boxes — for Preset C (1:1 square) with flex-based betting station
-// Coins positioned relative to their parent column container
-const PB = { x: 8,  y: 24, w: 100, h: 85 }  // player coin box (relative to left column)
-const WB = { x: 8,  y: 24, w: 100, h: 85 }  // wager box (relative to right column)
+// Coins positioned INSIDE box divs with these relative coordinates
+const PB = { x: 8,  y: 8, w: 84, h: 84 }  // player coin box (relative to box container, with padding)
+const WB = { x: 8,  y: 8, w: 84, h: 84 }  // wager box (relative to box container, with padding)
 const SB = { x: 304, y: 328, w: 64,  h: 90  }  // split-wager (dynamic)
 const IB = { x: 304, y: 328, w: 64,  h: 90  }  // insurance (same pos, mutually exclusive)
 
@@ -923,7 +923,7 @@ export function BlackjackModule() {
       <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(12px, 3%, 20px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)', position: 'relative' }}>
 
         {/* Left Column: Coins */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', position: 'relative' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Coins</span>
           <div style={{
             position:   'relative',
@@ -931,19 +931,19 @@ export function BlackjackModule() {
             minHeight: 'clamp(60px, 12vw, 100px)',
             border:    '1px solid rgba(184,134,11,0.18)',
             background: 'rgba(11,8,32,0.35)',
-          }} />
-
-          {/* Coins rendered in left column (player box) */}
-          {state.coins
-            .filter(c => c.container === 'player' && (!drag || c.id !== drag.coinId))
-            .map(coin => (
-              <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
-            ))
-          }
+          }}>
+            {/* Coins rendered inside box (position: relative container) */}
+            {state.coins
+              .filter(c => c.container === 'player' && (!drag || c.id !== drag.coinId))
+              .map(coin => (
+                <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
+              ))
+            }
+          </div>
         </div>
 
         {/* Right Column: Wager */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', position: 'relative' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Wager</span>
           <div style={{
             position:   'relative',
@@ -953,7 +953,15 @@ export function BlackjackModule() {
             background: 'rgba(11,8,32,0.45)',
             boxShadow: wagerCoins.length > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
             transition: 'border-color 0.2s, box-shadow 0.2s',
-          }} />
+          }}>
+            {/* Coins rendered inside box (position: relative container) */}
+            {state.coins
+              .filter(c => c.container !== 'player' && (!drag || c.id !== drag.coinId))
+              .map(coin => (
+                <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
+              ))
+            }
+          </div>
           {needForDouble > 0 && (
             <div style={{
               fontSize: 'clamp(7px, 0.85vw, 9px)',
@@ -963,14 +971,6 @@ export function BlackjackModule() {
               +{needForDouble} to double
             </div>
           )}
-
-          {/* Coins rendered in right column (wager box) */}
-          {state.coins
-            .filter(c => c.container !== 'player' && (!drag || c.id !== drag.coinId))
-            .map(coin => (
-              <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
-            ))
-          }
         </div>
       </div>
 
