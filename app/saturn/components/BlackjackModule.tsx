@@ -187,7 +187,6 @@ export function BlackjackModule() {
       playerValue:      bestVal(right.playerValue as { hi: number; lo: number }),
       dealerValue:      bestVal(s.dealerValue as { hi: number; lo: number }),
       scatteredCoins:   [],
-      wagerCoins:       [],
       result:           null,
       availableActions: (right.availableActions ?? {}) as unknown as AvailableActions,
       showHint:         false,
