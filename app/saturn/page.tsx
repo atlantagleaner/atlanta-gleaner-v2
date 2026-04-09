@@ -102,8 +102,26 @@ export default function SaturnPage() {
             margin: 0,
             letterSpacing: '0.20em',
             textShadow: '0 0 16px rgba(184,134,11,0.50), 0 0 32px rgba(184,134,11,0.25)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1ch',
           }}>
-            ♄ Saturn
+            <svg width="32" height="32" viewBox="0 0 32 32" style={{ display: 'inline-block', flexShrink: 0 }}>
+              <defs>
+                <filter id="saturn-glow">
+                  <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Rings */}
+              <ellipse cx="16" cy="16" rx="20" ry="6" fill="none" stroke="#B8860B" strokeWidth="1.5" opacity="0.7" filter="url(#saturn-glow)" />
+              {/* Planet */}
+              <circle cx="16" cy="16" r="10" fill="#B8860B" opacity="0.9" filter="url(#saturn-glow)" />
+            </svg>
+            Saturn
           </h1>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, ReactNode } from 'react'
+import { useState, useRef, useCallback, useEffect, ReactNode } from 'react'
 
 interface DraggableModuleProps {
   id: string
@@ -12,6 +12,8 @@ interface DraggableModuleProps {
   defaultHeight: number
   minWidth: number
   minHeight: number
+  maxWidth: number
+  maxHeight: number
 }
 
 const Z_INDEX_BASE = 10
@@ -26,6 +28,8 @@ export function DraggableModule({
   defaultHeight,
   minWidth,
   minHeight,
+  maxWidth,
+  maxHeight,
 }: DraggableModuleProps) {
   const [pos, setPos] = useState({ x: defaultX, y: defaultY })
   const [size, setSize] = useState({ w: defaultWidth, h: defaultHeight })
@@ -83,28 +87,28 @@ export function DraggableModule({
       switch (isResizing) {
         case 'se': // bottom-right
           setSize({
-            w: Math.max(minWidth, startW + dx),
-            h: Math.max(minHeight, startH + dy),
+            w: Math.min(maxWidth, Math.max(minWidth, startW + dx)),
+            h: Math.min(maxHeight, Math.max(minHeight, startH + dy)),
           })
           break
         case 'sw': // bottom-left
           setSize({
-            w: Math.max(minWidth, startW - dx),
-            h: Math.max(minHeight, startH + dy),
+            w: Math.min(maxWidth, Math.max(minWidth, startW - dx)),
+            h: Math.min(maxHeight, Math.max(minHeight, startH + dy)),
           })
           setPos({ x: startX + dx, y: pos.y })
           break
         case 'ne': // top-right
           setSize({
-            w: Math.max(minWidth, startW + dx),
-            h: Math.max(minHeight, startH - dy),
+            w: Math.min(maxWidth, Math.max(minWidth, startW + dx)),
+            h: Math.min(maxHeight, Math.max(minHeight, startH - dy)),
           })
           setPos({ x: pos.x, y: startY + dy })
           break
         case 'nw': // top-left
           setSize({
-            w: Math.max(minWidth, startW - dx),
-            h: Math.max(minHeight, startH - dy),
+            w: Math.min(maxWidth, Math.max(minWidth, startW - dx)),
+            h: Math.min(maxHeight, Math.max(minHeight, startH - dy)),
           })
           setPos({
             x: startX + dx,
@@ -114,23 +118,23 @@ export function DraggableModule({
         case 'n': // top
           setSize({
             w: size.w,
-            h: Math.max(minHeight, startH - dy),
+            h: Math.min(maxHeight, Math.max(minHeight, startH - dy)),
           })
           setPos({ x: pos.x, y: startY + dy })
           break
         case 's': // bottom
-          setSize({ w: size.w, h: Math.max(minHeight, startH + dy) })
+          setSize({ w: size.w, h: Math.min(maxHeight, Math.max(minHeight, startH + dy)) })
           break
         case 'e': // right
-          setSize({ w: Math.max(minWidth, startW + dx), h: size.h })
+          setSize({ w: Math.min(maxWidth, Math.max(minWidth, startW + dx)), h: size.h })
           break
         case 'w': // left
-          setSize({ w: Math.max(minWidth, startW - dx), h: size.h })
+          setSize({ w: Math.min(maxWidth, Math.max(minWidth, startW - dx)), h: size.h })
           setPos({ x: startX + dx, y: pos.y })
           break
       }
     }
-  }, [isDragging, isResizing, minWidth, minHeight, pos])
+  }, [isDragging, isResizing, minWidth, minHeight, maxWidth, maxHeight, pos])
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
@@ -138,7 +142,7 @@ export function DraggableModule({
   }, [])
 
   // Mount listeners
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
@@ -147,7 +151,7 @@ export function DraggableModule({
         window.removeEventListener('mouseup', handleMouseUp)
       }
     }
-  })
+  }, [handleMouseMove, handleMouseUp])
 
   const ResizeHandle = ({ direction }: { direction: string }) => (
     <div
