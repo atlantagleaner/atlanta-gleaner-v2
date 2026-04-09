@@ -16,9 +16,10 @@ const KARMA_LIMIT = 8
 const CR          = 13   // coin radius
 const CD          = CR * 2
 
-// Layout boxes — all coords relative to content area
-const PB = { x: 12,  y: 318, w: 204, h: 112 }  // player coin box
-const WB = { x: 228, y: 328, w: 64,  h: 90  }  // wager box
+// Layout boxes — for Preset C (1:1 square) with flex-based betting station
+// Coins positioned relative to their parent column container
+const PB = { x: 8,  y: 24, w: 100, h: 85 }  // player coin box (relative to left column)
+const WB = { x: 8,  y: 24, w: 100, h: 85 }  // wager box (relative to right column)
 const SB = { x: 304, y: 328, w: 64,  h: 90  }  // split-wager (dynamic)
 const IB = { x: 304, y: 328, w: 64,  h: 90  }  // insurance (same pos, mutually exclusive)
 
@@ -44,6 +45,7 @@ interface Coin {
   y:         number
   container: 'player' | 'wager' | 'split' | 'insurance'
   locked:    boolean
+  returning?: boolean  // For return animation + glow
 }
 
 type Prompt = 'more-coins' | 'odds' | null
@@ -281,7 +283,7 @@ function reducer(state: S, action: A): S {
       return {
         ...state,
         coins: state.coins.map(c =>
-          c.id === action.id ? { ...c, container: 'player', x: nx, y: ny, locked: false } : c
+          c.id === action.id ? { ...c, container: 'player', x: nx, y: ny, locked: false, returning: true } : c
         ),
       }
     }
@@ -294,9 +296,10 @@ function reducer(state: S, action: A): S {
       const added    = 4 * GOLD + 2 * BRONZE   // 10 pts
       const newDebt  = state.karmaDebt + added
       const trigOdds = !state.showOdds && newDebt >= KARMA_LIMIT
+      const newCoins = scatter(specs, PB, 'player').map(c => ({ ...c, returning: true }))
       return {
         ...state,
-        coins:     [...coinsIn(state.coins, 'player'), ...scatter(specs, PB, 'player')],
+        coins:     [...coinsIn(state.coins, 'player'), ...newCoins],
         karmaDebt: newDebt,
         stage:     'ready',
         prompt:    trigOdds ? 'odds' : null,
@@ -382,6 +385,8 @@ function CoinEl({ coin, onDown }: {
   onDown:  (e: React.MouseEvent | React.TouchEvent, id: string) => void
 }) {
   const gold = coin.type === 'gold'
+  const isReturning = coin.returning
+
   return (
     <div
       onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
@@ -393,11 +398,9 @@ function CoinEl({ coin, onDown }: {
         width:        CD,
         height:       CD,
         borderRadius: '50%',
-        background:   gold
-          ? 'radial-gradient(circle at 38% 35%, #FFD700, #B8860B 65%, #7A5C00)'
-          : 'radial-gradient(circle at 38% 35%, #D4956A, #8B4513 65%, #4A2400)',
-        border:       `1.5px solid ${gold ? 'rgba(255,215,0,0.55)' : 'rgba(205,133,63,0.55)'}`,
-        boxShadow:    '0 2px 4px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.18)',
+        background:   gold ? '#D4AF37' : '#8B7765',
+        border:       `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
+        boxShadow:    `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3)`,
         cursor:       coin.locked ? 'default' : 'grab',
         touchAction:  'none',
         userSelect:   'none',
@@ -405,18 +408,35 @@ function CoinEl({ coin, onDown }: {
         display:      'flex',
         alignItems:   'center',
         justifyContent: 'center',
+        overflow:     'hidden',
+        animation:    isReturning
+          ? 'bj-coin-glow 0.6s ease-in-out forwards'
+          : 'bj-coin-glow 1.5s ease-in-out infinite',
+        transition:   isReturning ? 'none' : 'box-shadow 0.2s ease',
       }}
     >
+      {/* Greek coin profile relief */}
+      <svg style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5 }} viewBox="0 0 26 26">
+        {/* Profile head facing left */}
+        <circle cx="7" cy="13" r="4" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6" />
+        <path d="M 11 10 Q 12 11 12 13 Q 12 15 11 16" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
+        {/* Circular border engraving */}
+        <circle cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
+      </svg>
+
+      {/* Greek letter */}
       <span style={{
-        fontFamily:  "'IBM Plex Mono',monospace",
-        fontSize:     6,
+        fontFamily:  "'Georgia',serif",
+        fontSize:     9,
         fontWeight:   700,
-        color:        gold ? 'rgba(11,8,32,0.65)' : 'rgba(245,241,232,0.55)',
+        color:        gold ? 'rgba(50,40,15,0.8)' : 'rgba(240,235,220,0.7)',
         letterSpacing: 0,
         lineHeight:    1,
         pointerEvents: 'none',
+        textShadow:   '0 0.5px 1px rgba(0,0,0,0.4)',
+        zIndex:       1,
       }}>
-        {gold ? '◆' : '●'}
+        {gold ? 'Φ' : 'Ψ'}
       </span>
     </div>
   )
@@ -500,6 +520,24 @@ export function BlackjackModule() {
   const [drag, setDrag] = useState<{ coinId: string; x: number; y: number } | null>(null)
   const dragStateRef = useRef(drag)
   useEffect(() => { dragStateRef.current = drag }, [drag])
+
+  // ── Clear returning flag after glow animation completes ──────────────────────
+  useEffect(() => {
+    const returningCoins = state.coins.filter(c => c.returning)
+    if (returningCoins.length === 0) return
+
+    const timer = setTimeout(() => {
+      dispatch({
+        type: 'SYNC',
+        eng: gameRef.current?.getState(),
+        overrides: {
+          coins: state.coins.map(c => c.returning ? { ...c, returning: false } : c),
+        },
+      })
+    }, 600)
+
+    return () => clearTimeout(timer)
+  }, [state.coins])
 
   // ── Content-area coordinate conversion ──────────────────────────────────────
   function toContent(px: number, py: number): { x: number; y: number } {
@@ -697,11 +735,25 @@ export function BlackjackModule() {
   return (
     <div
       ref={contentRef}
-      style={{ position: 'relative', width: '100%', height: '100%', background: '#1A1A2E', overflow: 'hidden', userSelect: 'none' }}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        aspectRatio: '1 / 1',
+        background: '#1A1A2E',
+        overflow: 'hidden',
+        userSelect: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 'clamp(8px, 2%, 16px)',
+        gap: 'clamp(8px, 1.2%, 14px)',
+        fontSize: 'clamp(10px, 1.8vw, 16px)',
+        touchAction: drag ? 'none' : 'auto',
+      }}
     >
 
       {/* ── Dealer zone ── */}
-      <div style={{ padding: '14px 16px 10px', minHeight: 148 }}>
+      <div style={{ flex: '0 0 18%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(4px, 0.8%, 8px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span style={SECT_LABEL}>Dealer</span>
           {state.dealerCards.length > 0 && (
@@ -747,7 +799,7 @@ export function BlackjackModule() {
       <div style={DIVIDER} />
 
       {/* ── Player zone ── */}
-      <div style={{ padding: '10px 16px', minHeight: 148 }}>
+      <div style={{ flex: '0 0 26%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 'clamp(6px, 1%, 10px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span style={SECT_LABEL}>Player</span>
           {state.handRight?.playerValue && (
@@ -805,145 +857,125 @@ export function BlackjackModule() {
             </div>
           )}
         </div>
-      </div>
 
-      <div style={DIVIDER} />
-
-      {/* ── Betting zone ── */}
-      <div style={{ position: 'relative', height: 148 }}>
-        {/* Labels */}
-        <span style={{ ...SECT_LABEL, position: 'absolute', top: 8, left: PB.x }}>
-          Coins
-        </span>
-        <span style={{ ...SECT_LABEL, position: 'absolute', top: 8, left: WB.x }}>
-          Wager
-        </span>
-        {state.showSplit && (
-          <span style={{ ...SECT_LABEL, position: 'absolute', top: 8, left: SB.x }}>
-            Split
-          </span>
-        )}
-        {state.showIns && (
-          <span style={{ ...SECT_LABEL, position: 'absolute', top: 8, left: IB.x }}>
-            Insurance
-          </span>
-        )}
-
-        {/* Player coin box */}
-        <div style={{
-          position:   'absolute',
-          left:        PB.x,
-          top:         PB.y - (state.stage === 'ready' || isDone ? 318 : 318) + 318,
-          width:       PB.w,
-          height:      PB.h,
-          border:      '1px solid rgba(184,134,11,0.18)',
-          background:  'rgba(11,8,32,0.35)',
-        }} />
-
-        {/* Wager box */}
-        <div style={{
-          position:   'absolute',
-          left:        WB.x,
-          top:         WB.y - 318 + 318,
-          width:       WB.w,
-          height:      WB.h,
-          border:      `1px solid rgba(184,134,11,${wagerCoins.length > 0 ? '0.45' : '0.22'})`,
-          background:  'rgba(11,8,32,0.45)',
-          boxShadow:   wagerCoins.length > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
-          transition:  'border-color 0.2s, box-shadow 0.2s',
-        }} />
-
-        {/* Split wager box — materializes */}
-        {state.showSplit && (
-          <div style={{
-            position:   'absolute',
-            left:        SB.x,
-            top:         SB.y - 318 + 318,
-            width:       SB.w,
-            height:      SB.h,
-            border:      `1px solid rgba(184,134,11,${splitCoins.length > 0 ? '0.45' : '0.22'})`,
-            background:  'rgba(11,8,32,0.45)',
-            animation:   'bj-fade-in 0.3s ease',
-          }} />
-        )}
-
-        {/* Insurance box — materializes */}
-        {state.showIns && (
-          <div style={{
-            position:   'absolute',
-            left:        IB.x,
-            top:         IB.y - 318 + 318,
-            width:       IB.w,
-            height:      IB.h,
-            border:      '1px solid rgba(184,134,11,0.35)',
-            background:  'rgba(11,8,32,0.45)',
-            animation:   'bj-fade-in 0.3s ease',
-          }} />
-        )}
-
-        {/* Double hint */}
-        {needForDouble > 0 && (
-          <div style={{
-            position:    'absolute',
-            left:         WB.x,
-            top:          WB.y - 318 + 318 + WB.h + 4,
-            fontFamily:  "'IBM Plex Mono',monospace",
-            fontSize:     8,
-            color:        'rgba(184,134,11,0.55)',
-            letterSpacing: '0.08em',
+        {/* Dialogue footer */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 10 }}>
+          <p style={{
+            fontFamily:   "'Cormorant Garamond',serif",
+            fontStyle:    'italic',
+            fontSize:     13,
+            color:        'rgba(245,241,232,0.75)',
+            margin:       0,
+            lineHeight:   1.4,
+            letterSpacing: '0.02em',
+            flex: 1,
           }}>
-            +{needForDouble} to double
-          </div>
-        )}
+            {state.dialogue}
+          </p>
 
-        {/* Coins rendered absolutely in content area */}
-        {state.coins
-          .filter(c => !drag || c.id !== drag.coinId)
-          .map(coin => (
-            <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
-          ))
-        }
+          {/* Yes / No prompts */}
+          {state.prompt && !state.gameOver && (
+            <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+              <button
+                onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_YES' }) : () => dispatch({ type: 'ODDS_YES' })}
+                style={{
+                  fontFamily:    "'IBM Plex Mono',monospace",
+                  fontSize:      9,
+                  fontWeight:    700,
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '0.12em',
+                  color:         '#00D9FF',
+                  background:    'transparent',
+                  border:        '1px solid rgba(0,217,255,0.5)',
+                  padding:       '6px 12px',
+                  cursor:        'pointer',
+                  transition:    'border-color 0.15s, color 0.15s',
+                }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_NO' }) : () => dispatch({ type: 'ODDS_NO' })}
+                style={{
+                  fontFamily:    "'IBM Plex Mono',monospace",
+                  fontSize:      9,
+                  fontWeight:    700,
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '0.12em',
+                  color:         '#00D9FF',
+                  background:    'transparent',
+                  border:        '1px solid rgba(0,217,255,0.5)',
+                  padding:       '6px 12px',
+                  cursor:        'pointer',
+                  transition:    'border-color 0.15s, color 0.15s',
+                }}
+              >
+                No
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={DIVIDER} />
 
-      {/* ── Dialogue zone ── */}
-      <div style={{ padding: '10px 16px', height: 60, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
-        <p style={{
-          fontFamily:   "'Cormorant Garamond',serif",
-          fontStyle:    'italic',
-          fontSize:     13,
-          color:        'rgba(245,241,232,0.75)',
-          margin:       0,
-          lineHeight:   1.4,
-          letterSpacing: '0.02em',
-        }}>
-          {state.dialogue}
-        </p>
+      {/* ── Betting Station (Unified) ── */}
+      <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(12px, 3%, 20px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)', position: 'relative' }}>
 
-        {/* Yes / No prompts */}
-        {state.prompt && !state.gameOver && (
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_YES' }) : () => dispatch({ type: 'ODDS_YES' })}
-              style={YES_BTN}
-            >
-              Yes
-            </button>
-            <button
-              onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_NO' }) : () => dispatch({ type: 'ODDS_NO' })}
-              style={NO_BTN}
-            >
-              No
-            </button>
-          </div>
-        )}
+        {/* Left Column: Coins */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', position: 'relative' }}>
+          <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Coins</span>
+          <div style={{
+            position:   'relative',
+            flex: 1,
+            minHeight: 'clamp(60px, 12vw, 100px)',
+            border:    '1px solid rgba(184,134,11,0.18)',
+            background: 'rgba(11,8,32,0.35)',
+          }} />
+
+          {/* Coins rendered in left column (player box) */}
+          {state.coins
+            .filter(c => c.container === 'player' && (!drag || c.id !== drag.coinId))
+            .map(coin => (
+              <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
+            ))
+          }
+        </div>
+
+        {/* Right Column: Wager */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', position: 'relative' }}>
+          <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Wager</span>
+          <div style={{
+            position:   'relative',
+            flex: 1,
+            minHeight: 'clamp(60px, 12vw, 100px)',
+            border:    `1px solid rgba(184,134,11,${wagerCoins.length > 0 ? '0.45' : '0.22'})`,
+            background: 'rgba(11,8,32,0.45)',
+            boxShadow: wagerCoins.length > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
+            transition: 'border-color 0.2s, box-shadow 0.2s',
+          }} />
+          {needForDouble > 0 && (
+            <div style={{
+              fontSize: 'clamp(7px, 0.85vw, 9px)',
+              color: 'rgba(184,134,11,0.55)',
+              letterSpacing: '0.08em',
+            }}>
+              +{needForDouble} to double
+            </div>
+          )}
+
+          {/* Coins rendered in right column (wager box) */}
+          {state.coins
+            .filter(c => c.container !== 'player' && (!drag || c.id !== drag.coinId))
+            .map(coin => (
+              <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
+            ))
+          }
+        </div>
       </div>
-
-      <div style={DIVIDER} />
 
       {/* ── Action buttons ── */}
-      <div style={{ padding: '8px 16px', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      <div style={{ flex: '0 0 16%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', gap: 'clamp(4px, 1%, 8px)', flexWrap: 'wrap', alignContent: 'flex-start' }}>
         <ActBtn label="Hit"       onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')}   disabled={!isPlaying || (isPlayerRight ? !avR.hit  : !avL.hit)}  />
         <ActBtn label="Stand"     onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} disabled={!isPlaying || (isPlayerRight ? !avR.stand : !avL.stand)} />
         <ActBtn label="Double"    onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} disabled={!isPlaying || !doubleReady} />
@@ -952,33 +984,31 @@ export function BlackjackModule() {
         <ActBtn label="Surrender" onClick={handleSurrender} disabled={!isPlayerRight || !avR.surrender} />
       </div>
 
-      <div style={DIVIDER} />
-
       {/* ── Bottom bar ── */}
-      <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ flex: '0 0 12%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(8px, 0.9vw, 11px)' }}>
         {/* Deal / Reset */}
         {state.gameOver ? (
-          <button onClick={() => dispatch({ type: 'RESET' })} style={DEAL_BTN}>
+          <button onClick={() => dispatch({ type: 'RESET' })} style={{...DEAL_BTN, fontSize: 'clamp(8px, 1vw, 10px)', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)'}}>
             Reset
           </button>
         ) : isDone || isReady ? (
           <button
             onClick={handleDeal}
             disabled={wagerVal === 0 || !!state.prompt}
-            style={{ ...DEAL_BTN, opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1 }}
+            style={{ ...DEAL_BTN, opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1, fontSize: 'clamp(8px, 1vw, 10px)', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)' }}
           >
             Deal
           </button>
         ) : (
-          <div style={{ width: 60 }} />
+          <div style={{ width: 'clamp(40px, 5vw, 60px)' }} />
         )}
 
         {/* Karma debt */}
         <div style={{ textAlign: 'right' }}>
-          <span style={{ ...SECT_LABEL, display: 'block', marginBottom: 2 }}>Karma Debt</span>
+          <span style={{ ...SECT_LABEL, display: 'block', marginBottom: 'clamp(2px, 0.5%, 4px)', fontSize: 'clamp(7px, 0.9vw, 9px)' }}>Karma Debt</span>
           <span style={{
             fontFamily:    "'IBM Plex Mono',monospace",
-            fontSize:       11,
+            fontSize:       'clamp(9px, 1vw, 12px)',
             color:          state.karmaDebt > 0 ? 'rgba(200,80,80,0.85)' : 'rgba(245,241,232,0.30)',
             letterSpacing: '0.08em',
           }}>
@@ -994,7 +1024,31 @@ export function BlackjackModule() {
       })()}
 
       <style>{`
-        @keyframes bj-fade-in { from { opacity:0 } to { opacity:1 } }
+        @keyframes bj-fade-in {
+          from { opacity: 0 }
+          to { opacity: 1 }
+        }
+
+        @keyframes bj-coin-glow {
+          0%, 100% {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3);
+          }
+          50% {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 14px rgba(184,134,11,0.5), 0 0 28px rgba(184,134,11,0.2);
+          }
+        }
+
+        @keyframes bj-coin-arc {
+          0% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
       `}</style>
     </div>
   )
