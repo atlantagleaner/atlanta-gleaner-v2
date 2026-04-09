@@ -247,7 +247,7 @@ export function DraggableModule({
       </div>
 
       {/* Content */}
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{ flex: 1, overflow: 'hidden' }}>
         {children}
       </div>
 

@@ -98,7 +98,7 @@ export function DraggableModuleWrapper() {
       style={{
         position: 'relative',
         zIndex: 10,
-        minHeight: '1200px',
+        minHeight: '1600px',
         maxWidth: '100vw',
         padding: `0 ${SPACING.lg} ${PAGE_BOTTOM_PADDING_DESKTOP}`,
       }}
