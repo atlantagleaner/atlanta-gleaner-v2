@@ -197,7 +197,7 @@ export function DraggableModule({
         backgroundColor: '#1A1A2E',
         display: 'flex',
         flexDirection: 'column',
-        boxShadow: 'inset 0 0 40px rgba(11,8,32,0.6), 0 0 24px rgba(184,134,11,0.15)',
+        boxShadow: '0 0 24px rgba(184,134,11,0.15)',
         transition: isDragging || isResizing ? 'none' : 'box-shadow 0.2s ease',
         cursor: isDragging ? 'grabbing' : 'auto',
       }}
@@ -207,7 +207,7 @@ export function DraggableModule({
         onMouseDown={handleHeaderMouseDown}
         style={{
           padding: '12px 16px',
-          backgroundColor: 'rgba(184,134,11,0.08)',
+          backgroundColor: 'rgba(184,134,11,0.10)',
           borderBottom: '1px solid rgba(184,134,11,0.15)',
           cursor: isDragging ? 'grabbing' : 'grab',
           userSelect: 'none',
@@ -242,7 +242,7 @@ export function DraggableModule({
             textTransform: 'uppercase',
             letterSpacing: '0.14em',
             color: '#B8860B',
-            textShadow: '0 0 8px rgba(184,134,11,0.40)',
+            textShadow: '0 0 10px rgba(184,134,11,0.50)',
             flex: 1,
           }}
         >

@@ -474,44 +474,44 @@ a.case-archive-link:hover .case-archive-tags {
   background-color: var(--saturn-bg) !important;
 }
 
-/* Saturn nav: full gold-on-dark palette */
+/* Saturn nav: transparent gold aesthetic matching mobile panels */
 [data-saturn] .ag-nav-wrapper {
-  background: var(--saturn-surface) !important;
+  background: rgba(184,134,11,0.10) !important;
   border-bottom: 1px solid rgba(184,134,11,0.25) !important;
-  box-shadow: 0 1px 16px rgba(184,134,11,0.12), 0 2px 4px rgba(11,8,32,0.60) !important;
 }
 [data-saturn] .ag-nav-wrapper .ag-nav a,
 [data-saturn] .ag-nav-wrapper .ag-nav a div,
 [data-saturn] .ag-nav-wrapper .ag-nav a span {
-  color: var(--saturn-gold) !important;
-  text-shadow: 0 0 10px rgba(184,134,11,0.45) !important;
+  color: #B8860B !important;
+  text-shadow: 0 0 10px rgba(184,134,11,0.50) !important;
 }
 /* Time text on Saturn: increase opacity */
 [data-saturn] .ag-nav-wrapper .ag-nav a > div:nth-child(2) {
   opacity: 0.75 !important;
 }
 [data-saturn] .ag-nav-wrapper .ag-plus-btn {
-  color: var(--saturn-gold) !important;
+  color: #B8860B !important;
   text-shadow: 0 0 10px rgba(184,134,11,0.50) !important;
 }
 [data-saturn] .ag-dropdown {
-  background: var(--saturn-surface) !important;
-  border-color: rgba(184,134,11,0.25) !important;
+  background: rgba(184,134,11,0.10) !important;
+  border: 1px solid rgba(184,134,11,0.25) !important;
+  border-top: none !important;
 }
 /* Saturn dropdown box-shadow — desktop only (mobile full-width, doesn't need shadow) */
 @media (min-width: 768px) {
   [data-saturn] .ag-dropdown {
-    box-shadow: 0 4px 24px rgba(11,8,32,0.70) !important;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.15) !important;
   }
 }
 [data-saturn] .ag-dropdown-link {
-  color: rgba(245,241,232,0.75) !important;
-  border-bottom-color: rgba(184,134,11,0.12) !important;
+  color: #B8860B !important;
+  border-bottom-color: rgba(184,134,11,0.15) !important;
 }
 [data-saturn] .ag-dropdown-link:hover {
-  background: rgba(184,134,11,0.12) !important;
-  color: var(--saturn-gold) !important;
-  text-shadow: 0 0 8px rgba(184,134,11,0.40) !important;
+  background: rgba(184,134,11,0.15) !important;
+  color: #B8860B !important;
+  text-shadow: 0 0 10px rgba(184,134,11,0.50) !important;
 }
 
 /* Saturn banner: all text gets gold + glow */
