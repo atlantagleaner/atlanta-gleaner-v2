@@ -247,6 +247,28 @@ export function BlackjackModule() {
     })
   }, [])
 
+  const handleCoinTouchStart = useCallback((coinId: string, e: React.TouchEvent) => {
+    if (e.touches.length === 0) return
+    e.preventDefault()
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+
+    // Store offset from touch to coin center so coin doesn't jump
+    const coinEl = e.currentTarget as HTMLElement
+    const coinRect = coinEl.getBoundingClientRect()
+    const touch = e.touches[0]
+    dragOffsetRef.current = {
+      x: touch.clientX - (coinRect.left + coinRect.width / 2),
+      y: touch.clientY - (coinRect.top + coinRect.height / 2),
+    }
+
+    setDragging(coinId)
+    setDragPos({
+      x: touch.clientX - containerRect.left - dragOffsetRef.current.x,
+      y: touch.clientY - containerRect.top  - dragOffsetRef.current.y,
+    })
+  }, [])
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!dragging) return
     const containerRect = containerRef.current?.getBoundingClientRect()
@@ -254,6 +276,17 @@ export function BlackjackModule() {
     setDragPos({
       x: e.clientX - containerRect.left - dragOffsetRef.current.x,
       y: e.clientY - containerRect.top  - dragOffsetRef.current.y,
+    })
+  }, [dragging])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!dragging || e.touches.length === 0) return
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+    const touch = e.touches[0]
+    setDragPos({
+      x: touch.clientX - containerRect.left - dragOffsetRef.current.x,
+      y: touch.clientY - containerRect.top  - dragOffsetRef.current.y,
     })
   }, [dragging])
 
@@ -286,6 +319,50 @@ export function BlackjackModule() {
       if (areaRect) {
         const newX = e.clientX - areaRect.left - areaRect.width  / 2
         const newY = e.clientY - areaRect.top  - areaRect.height / 2
+        const id = dragging
+        setUi(prev => ({
+          ...prev,
+          scatteredCoins: prev.scatteredCoins.map(c =>
+            c.id === id ? { ...c, x: newX, y: newY } : c
+          ),
+        }))
+      }
+    }
+
+    setDragging(null)
+    setDragPos(null)
+  }, [dragging, dragPos, ui.wagerCoins.length])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!dragging || !dragPos || e.changedTouches.length === 0) return
+    const touch = e.changedTouches[0]
+
+    // Check if dropped on wager zone
+    const wagerZone = containerRef.current?.querySelector('[data-wager-zone]')
+    const wagerRect  = wagerZone?.getBoundingClientRect()
+
+    if (
+      wagerRect &&
+      touch.clientX >= wagerRect.left &&
+      touch.clientX <= wagerRect.right &&
+      touch.clientY >= wagerRect.top &&
+      touch.clientY <= wagerRect.bottom
+    ) {
+      if (ui.wagerCoins.length < MAX_COINS) {
+        const id = dragging
+        setUi(prev => ({
+          ...prev,
+          wagerCoins:     [...prev.wagerCoins, id],
+          scatteredCoins: prev.scatteredCoins.filter(c => c.id !== id),
+        }))
+      }
+    } else {
+      // Coin dropped outside wager zone — update its position in scattered area
+      const scatteredEl = containerRef.current?.querySelector('[data-scattered-area]')
+      const areaRect    = scatteredEl?.getBoundingClientRect()
+      if (areaRect) {
+        const newX = touch.clientX - areaRect.left - areaRect.width  / 2
+        const newY = touch.clientY - areaRect.top  - areaRect.height / 2
         const id = dragging
         setUi(prev => ({
           ...prev,
@@ -405,14 +482,16 @@ export function BlackjackModule() {
           </p>
         )}
 
-        {/* Betting zone — wager square on top, scattered coins below */}
-        {isBetting && (
+        {/* Betting zone & wager display — visible in all stages when coins wagered */}
+        {(isBetting || wagerCoins.length > 0) && (
           <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
-            style={{ position: 'relative' as const, userSelect: 'none' as const }}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ position: 'relative', userSelect: 'none' }}
           >
             {/* Wager zone — centered square */}
             <div
@@ -440,7 +519,7 @@ export function BlackjackModule() {
                 wagerCoins.map((coinId, idx) => (
                   <div
                     key={idx}
-                    onClick={() => handleRemoveCoin(coinId)}
+                    onClick={() => isBetting && handleRemoveCoin(coinId)}
                     style={{
                       width:        '36px',
                       height:       '36px',
@@ -448,89 +527,96 @@ export function BlackjackModule() {
                       background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
                       border:       '2px solid #B8860B',
                       boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)',
-                      cursor:       'pointer',
+                      cursor:       isBetting ? 'pointer' : 'default',
                       flexShrink:   0,
+                      opacity:      isBetting ? 1 : 0.7,
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                    onMouseEnter={(e) => isBetting && (e.currentTarget.style.transform = 'scale(1.1)')}
+                    onMouseLeave={(e) => isBetting && (e.currentTarget.style.transform = 'scale(1)')}
                   />
                 ))
               )}
             </div>
 
-            {/* Hint text */}
-            {showHint && (
-              <p style={{ ...MUTED_TEXT, textAlign: 'center' as const, margin: '0 0 8px', fontSize: '9px' }}>
-                Looks like someone left their coins behind.
-              </p>
-            )}
+            {/* Only show betting UI during betting stage */}
+            {isBetting && (
+              <>
+                {/* Hint text */}
+                {showHint && (
+                  <p style={{ ...MUTED_TEXT, textAlign: 'center' as const, margin: '0 0 8px', fontSize: '9px' }}>
+                    Looks like someone left their coins behind.
+                  </p>
+                )}
 
-            {/* Scattered coins area */}
-            <div
-              data-scattered-area
-              style={{
-                position:       'relative' as const,
-                height:         '140px',
-                background:     'rgba(184,134,11,0.03)',
-                border:         '1px dashed rgba(184,134,11,0.15)',
-                overflow:       'visible',
-              }}
-            >
-              {scatteredCoins.map(coin => (
+                {/* Scattered coins area */}
                 <div
-                  key={coin.id}
-                  onMouseDown={(e) => handleCoinMouseDown(coin.id, e)}
+                  data-scattered-area
                   style={{
-                    position:   'absolute' as const,
-                    left:       `calc(50% + ${coin.x}px)`,
-                    top:        `calc(50% + ${coin.y}px)`,
-                    transform:  'translate(-50%, -50%)',
-                    cursor:     dragging === coin.id ? 'grabbing' : 'grab',
-                    opacity:    dragging === coin.id ? 0 : 1,
-                    transition: dragging === coin.id ? 'none' : 'opacity 0.1s',
+                    position:       'relative' as const,
+                    height:         '140px',
+                    background:     'rgba(184,134,11,0.03)',
+                    border:         '1px dashed rgba(184,134,11,0.15)',
+                    overflow:       'visible',
                   }}
                 >
-                  <div style={{
-                    width:        '32px',
-                    height:       '32px',
-                    borderRadius: '50%',
-                    background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
-                    border:       '2px solid rgba(184,134,11,0.8)',
-                    boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.4)',
-                  }} />
+                  {scatteredCoins.map(coin => (
+                    <div
+                      key={coin.id}
+                      onMouseDown={(e) => handleCoinMouseDown(coin.id, e)}
+                      onTouchStart={(e) => handleCoinTouchStart(coin.id, e)}
+                      style={{
+                        position:   'absolute' as const,
+                        left:       `calc(50% + ${coin.x}px)`,
+                        top:        `calc(50% + ${coin.y}px)`,
+                        transform:  'translate(-50%, -50%)',
+                        cursor:     dragging === coin.id ? 'grabbing' : 'grab',
+                        opacity:    dragging === coin.id ? 0 : 1,
+                        transition: dragging === coin.id ? 'none' : 'opacity 0.1s',
+                      }}
+                    >
+                      <div style={{
+                        width:        '32px',
+                        height:       '32px',
+                        borderRadius: '50%',
+                        background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
+                        border:       '2px solid rgba(184,134,11,0.8)',
+                        boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.4)',
+                      }} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Drag ghost — follows cursor in real time */}
-            {dragging && dragPos && (
-              <div
-                style={{
-                  position:      'absolute' as const,
-                  left:          dragPos.x,
-                  top:           dragPos.y,
-                  transform:     'translate(-50%, -50%)',
-                  pointerEvents: 'none',
-                  zIndex:        100,
-                }}
-              >
-                <div style={{
-                  width:        '32px',
-                  height:       '32px',
-                  borderRadius: '50%',
-                  background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
-                  border:       '2px solid rgba(184,134,11,0.9)',
-                  boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.5)',
-                  transform:    'scale(1.15)',
-                }} />
-              </div>
-            )}
+                {/* Drag ghost — follows cursor in real time */}
+                {dragging && dragPos && (
+                  <div
+                    style={{
+                      position:      'absolute' as const,
+                      left:          dragPos.x,
+                      top:           dragPos.y,
+                      transform:     'translate(-50%, -50%)',
+                      pointerEvents: 'none',
+                      zIndex:        100,
+                    }}
+                  >
+                    <div style={{
+                      width:        '32px',
+                      height:       '32px',
+                      borderRadius: '50%',
+                      background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
+                      border:       '2px solid rgba(184,134,11,0.9)',
+                      boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.5)',
+                      transform:    'scale(1.15)',
+                    }} />
+                  </div>
+                )}
 
-            {/* Deal button */}
-            {wagerCoins.length > 0 && (
-              <button onClick={handleDeal} style={{ ...BTN_PRIMARY, marginTop: '14px', width: '100%' }}>
-                Deal
-              </button>
+                {/* Deal button */}
+                {wagerCoins.length > 0 && (
+                  <button onClick={handleDeal} style={{ ...BTN_PRIMARY, marginTop: '14px', width: '100%' }}>
+                    Deal
+                  </button>
+                )}
+              </>
             )}
           </div>
         )}
