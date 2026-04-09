@@ -481,17 +481,16 @@ export function BlackjackModule() {
           </p>
         )}
 
-        {/* Betting zone & wager display — visible in all stages when coins wagered */}
-        {(wagerCoins.length > 0 || isBetting) && (
-          <div
-            ref={containerRef}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            style={{ position: 'relative', userSelect: 'none' }}
-          >
+        {/* Betting zone & wager display — always visible */}
+        <div
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ position: 'relative', userSelect: 'none' }}
+        >
             {/* Wager zone — centered square */}
             <div
               data-wager-zone
@@ -618,7 +617,7 @@ export function BlackjackModule() {
               </>
             )}
           </div>
-        )}
+        </div>
 
         {/* Playing actions */}
         {isPlaying && (
