@@ -489,7 +489,7 @@ export function BlackjackModule() {
           onMouseLeave={handleMouseUp}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{ position: 'relative', userSelect: 'none', touchAction: 'none' }}
+          style={{ position: 'relative', userSelect: 'none' }}
         >
             {/* Wager zone — centered square */}
             <div
@@ -507,6 +507,7 @@ export function BlackjackModule() {
                 gap:            '6px',
                 padding:        '12px',
                 transition:     'all 0.2s ease',
+                touchAction:    'none',
               }}
             >
               {wagerCoins.length === 0 ? (
@@ -555,6 +556,7 @@ export function BlackjackModule() {
                     background:     'rgba(184,134,11,0.03)',
                     border:         '1px dashed rgba(184,134,11,0.15)',
                     overflow:       'visible',
+                    touchAction:    'none',
                   }}
                 >
                   {scatteredCoins.map(coin => (
