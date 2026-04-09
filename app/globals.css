@@ -489,3 +489,9 @@ a.case-archive-link:hover .case-archive-tags {
   background: rgba(184,134,11,0.12) !important;
   color: var(--saturn-text) !important;
 }
+
+/* Saturn banner: title fills gold */
+[data-theme="saturn"] header h1 {
+  color: var(--saturn-gold) !important;
+  text-shadow: 0 0 40px rgba(184,134,11,0.25) !important;
+}

@@ -95,8 +95,8 @@ function resolveResult(state: ReturnType<InstanceType<typeof Game>['getState']>,
 function generateScatteredCoins(count: number): Array<{ id: string; x: number; y: number }> {
   return Array.from({ length: count }).map((_, i) => ({
     id: `coin-${i}-${Math.random()}`,
-    x:  Math.random() * 240 - 120,  // -120 to +120 px from center
-    y:  Math.random() * 160 - 80,   // -80 to +80 px from center
+    x:  Math.random() * 200 - 100,  // -100 to +100 px from center
+    y:  Math.random() * 100 - 50,   // -50 to +50 px from center
   }))
 }
 
@@ -108,7 +108,7 @@ const INITIAL: UIState = {
   dealerCards:        [],
   playerValue:        0,
   dealerValue:        0,
-  scatteredCoins:     [], // Initialize empty; populated in useEffect to avoid hydration mismatch
+  scatteredCoins:     [], // populated in useEffect to avoid hydration mismatch
   wagerCoins:         [],
   karmaDue:           0,
   gameLog:            [],
@@ -118,14 +118,21 @@ const INITIAL: UIState = {
 }
 
 export function BlackjackModule() {
-  const gameRef  = useRef<InstanceType<typeof Game> | null>(null)
-  const [ui, setUi] = useState<UIState>(INITIAL)
+  const gameRef      = useRef<InstanceType<typeof Game> | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const hasDealtRef  = useRef(false)
+  const dragOffsetRef = useRef({ x: 0, y: 0 })
+
+  const [ui, setUi]         = useState<UIState>(INITIAL)
   const [dragging, setDragging] = useState<string | null>(null)
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [dragPos, setDragPos]   = useState<{ x: number; y: number } | null>(null)
 
   // Generate scattered coins on client mount to avoid hydration mismatch
   useEffect(() => {
-    setUi(prev => prev.scatteredCoins.length === 0 ? { ...prev, scatteredCoins: generateScatteredCoins(4) } : prev)
+    setUi(prev => prev.scatteredCoins.length === 0
+      ? { ...prev, scatteredCoins: generateScatteredCoins(4) }
+      : prev
+    )
   }, [])
 
   const syncFromGame = useCallback((result: string | null, bet: number, doubled = false) => {
@@ -166,6 +173,7 @@ export function BlackjackModule() {
 
   const handleDeal = useCallback(() => {
     if (!canDeal) return
+    hasDealtRef.current = true
     const g = new Game()
     gameRef.current = g
     g.dispatch(actions.deal({ bet: currentBet }))
@@ -210,66 +218,95 @@ export function BlackjackModule() {
     gameRef.current = null
     setUi(prev => ({
       ...INITIAL,
+      scatteredCoins: generateScatteredCoins(4),
       karmaDue:   prev.karmaDue,
       gameLog:    prev.gameLog,
+      showHint:   !hasDealtRef.current,  // stays false once any hand has been dealt
     }))
   }, [])
 
   // ─── Drag handlers ────────────────────────────────────────────────────────
 
-  const handleCoinMouseDown = (coinId: string, e: React.MouseEvent) => {
+  const handleCoinMouseDown = useCallback((coinId: string, e: React.MouseEvent) => {
     e.preventDefault()
-    const rect = (e.currentTarget as HTMLElement).parentElement?.getBoundingClientRect()
-    if (!rect) return
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+
+    // Store offset from mouse to coin center so coin doesn't jump
+    const coinEl = e.currentTarget as HTMLElement
+    const coinRect = coinEl.getBoundingClientRect()
+    dragOffsetRef.current = {
+      x: e.clientX - (coinRect.left + coinRect.width / 2),
+      y: e.clientY - (coinRect.top + coinRect.height / 2),
+    }
+
     setDragging(coinId)
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+    setDragPos({
+      x: e.clientX - containerRect.left - dragOffsetRef.current.x,
+      y: e.clientY - containerRect.top  - dragOffsetRef.current.y,
     })
-  }
+  }, [])
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!dragging) return
-    const containerRect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    // Update position (handled via CSS during drag)
-  }
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+    setDragPos({
+      x: e.clientX - containerRect.left - dragOffsetRef.current.x,
+      y: e.clientY - containerRect.top  - dragOffsetRef.current.y,
+    })
+  }, [dragging])
 
-  const handleMouseUp = (e: React.MouseEvent) => {
-    if (!dragging) return
-    setDragging(null)
+  const handleMouseUp = useCallback((e: React.MouseEvent) => {
+    if (!dragging || !dragPos) return
 
-    // Check if coin is over wager zone
-    const wagerZone = (e.currentTarget as HTMLElement).querySelector('[data-wager-zone]')
-    if (!wagerZone) return
-
-    const wagerRect = wagerZone.getBoundingClientRect()
-    const mouseX = e.clientX
-    const mouseY = e.clientY
+    // Check if dropped on wager zone
+    const wagerZone = containerRef.current?.querySelector('[data-wager-zone]')
+    const wagerRect  = wagerZone?.getBoundingClientRect()
 
     if (
-      mouseX >= wagerRect.left &&
-      mouseX <= wagerRect.right &&
-      mouseY >= wagerRect.top &&
-      mouseY <= wagerRect.bottom
+      wagerRect &&
+      e.clientX >= wagerRect.left &&
+      e.clientX <= wagerRect.right &&
+      e.clientY >= wagerRect.top &&
+      e.clientY <= wagerRect.bottom
     ) {
-      // Add coin to wager if under max
       if (ui.wagerCoins.length < MAX_COINS) {
+        const id = dragging
         setUi(prev => ({
           ...prev,
-          wagerCoins: [...prev.wagerCoins, dragging],
-          scatteredCoins: prev.scatteredCoins.filter(c => c.id !== dragging),
+          wagerCoins:     [...prev.wagerCoins, id],
+          scatteredCoins: prev.scatteredCoins.filter(c => c.id !== id),
+        }))
+      }
+    } else {
+      // Coin dropped outside wager zone — update its position in scattered area
+      const scatteredEl = containerRef.current?.querySelector('[data-scattered-area]')
+      const areaRect    = scatteredEl?.getBoundingClientRect()
+      if (areaRect) {
+        const newX = e.clientX - areaRect.left - areaRect.width  / 2
+        const newY = e.clientY - areaRect.top  - areaRect.height / 2
+        const id = dragging
+        setUi(prev => ({
+          ...prev,
+          scatteredCoins: prev.scatteredCoins.map(c =>
+            c.id === id ? { ...c, x: newX, y: newY } : c
+          ),
         }))
       }
     }
-  }
 
-  const handleRemoveCoin = (coinId: string) => {
+    setDragging(null)
+    setDragPos(null)
+  }, [dragging, dragPos, ui.wagerCoins.length])
+
+  const handleRemoveCoin = useCallback((coinId: string) => {
     setUi(prev => ({
       ...prev,
-      scatteredCoins: [...prev.scatteredCoins, { id: coinId, x: Math.random() * 240 - 120, y: Math.random() * 160 - 80 }],
+      scatteredCoins: [...prev.scatteredCoins, { id: coinId, x: Math.random() * 200 - 100, y: Math.random() * 100 - 50 }],
       wagerCoins: prev.wagerCoins.filter(c => c !== coinId),
     }))
-  }
+  }, [])
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
@@ -367,28 +404,77 @@ export function BlackjackModule() {
           </p>
         )}
 
-        {/* Betting zone (drag and drop) */}
+        {/* Betting zone — wager square on top, scattered coins below */}
         {isBetting && (
-          <div onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} style={{ position: 'relative' as const }}>
+          <div
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            style={{ position: 'relative' as const, userSelect: 'none' as const }}
+          >
+            {/* Wager zone — centered square */}
+            <div
+              data-wager-zone
+              style={{
+                width:          '160px',
+                height:         '160px',
+                margin:         '0 auto 12px',
+                background:     wagerCoins.length > 0 ? 'rgba(184,134,11,0.12)' : 'rgba(184,134,11,0.04)',
+                border:         `2px ${wagerCoins.length > 0 ? 'solid' : 'dashed'} rgba(184,134,11,${wagerCoins.length > 0 ? '0.40' : '0.20'})`,
+                display:        'flex',
+                flexWrap:       'wrap' as const,
+                alignItems:     'center',
+                justifyContent: 'center',
+                gap:            '6px',
+                padding:        '12px',
+                transition:     'all 0.2s ease',
+              }}
+            >
+              {wagerCoins.length === 0 ? (
+                <span style={{ ...MUTED_TEXT, fontSize: '9px', textAlign: 'center' as const }}>
+                  Drag coins here
+                </span>
+              ) : (
+                wagerCoins.map((coinId, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => handleRemoveCoin(coinId)}
+                    style={{
+                      width:        '36px',
+                      height:       '36px',
+                      borderRadius: '50%',
+                      background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
+                      border:       '2px solid #B8860B',
+                      boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)',
+                      cursor:       'pointer',
+                      flexShrink:   0,
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  />
+                ))
+              )}
+            </div>
+
+            {/* Hint text */}
             {showHint && (
-              <p style={{ ...MUTED_TEXT, textAlign: 'center' as const, margin: '0 0 16px', fontSize: '9px' }}>
+              <p style={{ ...MUTED_TEXT, textAlign: 'center' as const, margin: '0 0 8px', fontSize: '9px' }}>
                 Looks like someone left their coins behind.
               </p>
             )}
 
             {/* Scattered coins area */}
-            <div style={{
-              position:      'relative' as const,
-              height:        '160px',
-              background:    'rgba(184,134,11,0.04)',
-              border:        '1px dashed rgba(184,134,11,0.20)',
-              borderRadius:  '4px',
-              marginBottom:  '16px',
-              overflow:      'visible',
-              display:       'flex',
-              alignItems:    'center',
-              justifyContent: 'center',
-            }}>
+            <div
+              data-scattered-area
+              style={{
+                position:       'relative' as const,
+                height:         '140px',
+                background:     'rgba(184,134,11,0.03)',
+                border:         '1px dashed rgba(184,134,11,0.15)',
+                overflow:       'visible',
+              }}
+            >
               {scatteredCoins.map(coin => (
                 <div
                   key={coin.id}
@@ -398,8 +484,9 @@ export function BlackjackModule() {
                     left:       `calc(50% + ${coin.x}px)`,
                     top:        `calc(50% + ${coin.y}px)`,
                     transform:  'translate(-50%, -50%)',
-                    cursor:     'grab',
-                    userSelect: 'none',
+                    cursor:     dragging === coin.id ? 'grabbing' : 'grab',
+                    opacity:    dragging === coin.id ? 0 : 1,
+                    transition: dragging === coin.id ? 'none' : 'opacity 0.1s',
                   }}
                 >
                   <div style={{
@@ -409,55 +496,38 @@ export function BlackjackModule() {
                     background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
                     border:       '2px solid rgba(184,134,11,0.8)',
                     boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.4)',
-                    transition:   'transform 0.1s',
-                    opacity:      dragging === coin.id ? 0.7 : 1,
                   }} />
                 </div>
               ))}
             </div>
 
-            {/* Wager zone */}
-            <div
-              data-wager-zone
-              style={{
-                minHeight:     '100px',
-                background:    wagerCoins.length > 0 ? 'rgba(184,134,11,0.15)' : 'rgba(184,134,11,0.06)',
-                border:        '2px solid rgba(184,134,11,0.30)',
-                borderRadius:  '4px',
-                padding:       '16px',
-                display:       'flex',
-                flexWrap:      'wrap' as const,
-                alignItems:    'center',
-                justifyContent: 'flex-start',
-                gap:           '8px',
-              }}
-            >
-              {wagerCoins.length === 0 ? (
-                <span style={{ ...MUTED_TEXT, fontSize: '10px' }}>Drag coins here</span>
-              ) : (
-                wagerCoins.map((coinId, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => handleRemoveCoin(coinId)}
-                    style={{
-                      width:        '40px',
-                      height:       '40px',
-                      borderRadius: '50%',
-                      background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
-                      border:       '2px solid #B8860B',
-                      boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)',
-                      cursor:       'pointer',
-                      transition:   'transform 0.1s',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                  />
-                ))
-              )}
-            </div>
+            {/* Drag ghost — follows cursor in real time */}
+            {dragging && dragPos && (
+              <div
+                style={{
+                  position:      'absolute' as const,
+                  left:          dragPos.x,
+                  top:           dragPos.y,
+                  transform:     'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  zIndex:        100,
+                }}
+              >
+                <div style={{
+                  width:        '32px',
+                  height:       '32px',
+                  borderRadius: '50%',
+                  background:   'radial-gradient(circle at 30% 30%, #D4AF37, #B8860B)',
+                  border:       '2px solid rgba(184,134,11,0.9)',
+                  boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.5)',
+                  transform:    'scale(1.15)',
+                }} />
+              </div>
+            )}
 
+            {/* Deal button */}
             {wagerCoins.length > 0 && (
-              <button onClick={handleDeal} style={{ ...BTN_PRIMARY, marginTop: '16px', width: '100%' }}>
+              <button onClick={handleDeal} style={{ ...BTN_PRIMARY, marginTop: '14px', width: '100%' }}>
                 Deal
               </button>
             )}
@@ -467,9 +537,9 @@ export function BlackjackModule() {
         {/* Playing actions */}
         {isPlaying && (
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' as const }}>
-            {availableActions.hit      && <button onClick={handleHit}      style={BTN_PRIMARY}>Hit</button>}
-            {availableActions.stand    && <button onClick={handleStand}    style={BTN_GHOST}>Stand</button>}
-            {availableActions.double   && <button onClick={handleDouble}   style={BTN_GHOST}>Double</button>}
+            {availableActions.hit       && <button onClick={handleHit}       style={BTN_PRIMARY}>Hit</button>}
+            {availableActions.stand     && <button onClick={handleStand}     style={BTN_GHOST}>Stand</button>}
+            {availableActions.double    && <button onClick={handleDouble}    style={BTN_GHOST}>Double</button>}
             {availableActions.surrender && <button onClick={handleSurrender} style={BTN_GHOST}>Surrender</button>}
           </div>
         )}
