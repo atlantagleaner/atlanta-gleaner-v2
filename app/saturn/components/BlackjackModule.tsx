@@ -24,6 +24,12 @@ interface AvailableActions {
   surrender: boolean
 }
 
+interface WagerCoin {
+  id: string
+  x:  number   // position within wager box
+  y:  number
+}
+
 interface UIState {
   stage:              string
   playerCards:        PlayingCard[]
@@ -31,12 +37,14 @@ interface UIState {
   playerValue:        number
   dealerValue:        number
   scatteredCoins:     Array<{ id: string; x: number; y: number }>
-  wagerCoins:         string[]
+  wagerCoins:         WagerCoin[]
   karmaDue:           number
   gameLog:            string[]
   result:             string | null
   availableActions:   AvailableActions
   showHint:           boolean
+  hasBeenBroke:       boolean   // first time player ran out of coins
+  showMorePrompt:     boolean   // show "More?" dialog
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -90,13 +98,11 @@ function resolveResult(state: ReturnType<InstanceType<typeof Game>['getState']>,
   return 'loss'
 }
 
-// ─── Initial scattered coins ──────────────────────────────────────────────────
-
 function generateScatteredCoins(count: number): Array<{ id: string; x: number; y: number }> {
   return Array.from({ length: count }).map((_, i) => ({
-    id: `coin-${i}-${Math.random()}`,
-    x:  Math.random() * 200 - 100,  // -100 to +100 px from center
-    y:  Math.random() * 100 - 50,   // -50 to +50 px from center
+    id: `coin-${i}-${Date.now()}-${Math.random()}`,
+    x:  Math.random() * 200 - 100,
+    y:  Math.random() * 100 - 50,
   }))
 }
 
@@ -108,32 +114,52 @@ const INITIAL: UIState = {
   dealerCards:        [],
   playerValue:        0,
   dealerValue:        0,
-  scatteredCoins:     [], // populated in useEffect to avoid hydration mismatch
+  scatteredCoins:     [],
   wagerCoins:         [],
   karmaDue:           0,
   gameLog:            [],
   result:             null,
   availableActions:   { hit: false, stand: false, double: false, split: false, insurance: false, surrender: false },
   showHint:           true,
+  hasBeenBroke:       false,
+  showMorePrompt:     false,
 }
 
 export function BlackjackModule() {
-  const gameRef      = useRef<InstanceType<typeof Game> | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const hasDealtRef  = useRef(false)
+  const gameRef       = useRef<InstanceType<typeof Game> | null>(null)
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const wagerZoneRef  = useRef<HTMLDivElement>(null)
+  const hasDealtRef   = useRef(false)
   const dragOffsetRef = useRef({ x: 0, y: 0 })
 
-  const [ui, setUi]         = useState<UIState>(INITIAL)
+  const [ui, setUi]           = useState<UIState>(INITIAL)
   const [dragging, setDragging] = useState<string | null>(null)
   const [dragPos, setDragPos]   = useState<{ x: number; y: number } | null>(null)
 
-  // Generate scattered coins on client mount to avoid hydration mismatch
+  // Generate scattered coins on client mount
   useEffect(() => {
     setUi(prev => prev.scatteredCoins.length === 0
       ? { ...prev, scatteredCoins: generateScatteredCoins(4) }
       : prev
     )
   }, [])
+
+  // Check if player is out of coins after a hand resolves
+  useEffect(() => {
+    if (ui.stage !== 'done') return
+    if (ui.scatteredCoins.length > 0 || ui.wagerCoins.length > 0) return
+
+    if (!ui.hasBeenBroke) {
+      // First time broke — show "More?" prompt
+      setUi(prev => ({ ...prev, showMorePrompt: true }))
+    } else {
+      // Subsequent — auto-replenish
+      setUi(prev => ({
+        ...prev,
+        scatteredCoins: generateScatteredCoins(4),
+      }))
+    }
+  }, [ui.stage, ui.scatteredCoins.length, ui.wagerCoins.length, ui.hasBeenBroke])
 
   const syncFromGame = useCallback((result: string | null, bet: number, doubled = false) => {
     const g = gameRef.current
@@ -169,7 +195,7 @@ export function BlackjackModule() {
   }, [])
 
   const currentBet = ui.wagerCoins.length * COIN_VALUE
-  const canDeal = currentBet > 0 && ui.stage === 'betting'
+  const canDeal    = currentBet > 0 && ui.stage === 'betting'
 
   const handleDeal = useCallback(() => {
     if (!canDeal) return
@@ -194,98 +220,116 @@ export function BlackjackModule() {
     }))
   }, [currentBet, canDeal])
 
-  const handleHit = useCallback(() => {
-    gameRef.current?.dispatch(actions.hit({ position: 'right' }))
-    syncFromGame(null, currentBet)
-  }, [syncFromGame, currentBet])
-
-  const handleStand = useCallback(() => {
-    gameRef.current?.dispatch(actions.stand({ position: 'right' }))
-    syncFromGame(null, currentBet)
-  }, [syncFromGame, currentBet])
-
-  const handleDouble = useCallback(() => {
-    gameRef.current?.dispatch(actions.double({ position: 'right' }))
-    syncFromGame(null, currentBet, true)
-  }, [syncFromGame, currentBet])
-
-  const handleSurrender = useCallback(() => {
-    gameRef.current?.dispatch(actions.surrender())
-    syncFromGame('surrender', currentBet)
-  }, [syncFromGame, currentBet])
+  const handleHit      = useCallback(() => { gameRef.current?.dispatch(actions.hit({ position: 'right' }));      syncFromGame(null, currentBet) }, [syncFromGame, currentBet])
+  const handleStand    = useCallback(() => { gameRef.current?.dispatch(actions.stand({ position: 'right' }));    syncFromGame(null, currentBet) }, [syncFromGame, currentBet])
+  const handleDouble   = useCallback(() => { gameRef.current?.dispatch(actions.double({ position: 'right' }));   syncFromGame(null, currentBet, true) }, [syncFromGame, currentBet])
+  const handleSurrender= useCallback(() => { gameRef.current?.dispatch(actions.surrender());                      syncFromGame('surrender', currentBet) }, [syncFromGame, currentBet])
 
   const handleNewHand = useCallback(() => {
     gameRef.current = null
     setUi(prev => ({
       ...INITIAL,
       scatteredCoins: generateScatteredCoins(4),
-      karmaDue:   prev.karmaDue,
-      gameLog:    prev.gameLog,
-      showHint:   !hasDealtRef.current,  // stays false once any hand has been dealt
+      karmaDue:    prev.karmaDue,
+      gameLog:     prev.gameLog,
+      hasBeenBroke: prev.hasBeenBroke,
+      showHint:    !hasDealtRef.current,
     }))
   }, [])
 
-  // ─── Drag handlers ────────────────────────────────────────────────────────
+  const handleMoreYes = useCallback(() => {
+    setUi(prev => ({
+      ...prev,
+      showMorePrompt: false,
+      hasBeenBroke:   true,
+      scatteredCoins: generateScatteredCoins(4),
+    }))
+  }, [])
 
-  const handleCoinMouseDown = useCallback((coinId: string, e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleMoreNo = useCallback(() => {
+    setUi(prev => ({ ...prev, showMorePrompt: false, hasBeenBroke: true }))
+  }, [])
+
+  // ─── Drag helpers ─────────────────────────────────────────────────────────
+
+  const getClientXY = (e: MouseEvent | TouchEvent): { x: number; y: number } => {
+    if ('touches' in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY }
+    }
+    return { x: e.clientX, y: e.clientY }
+  }
+
+  const startDrag = useCallback((coinId: string, clientX: number, clientY: number, coinEl: HTMLElement) => {
     const containerRect = containerRef.current?.getBoundingClientRect()
     if (!containerRect) return
 
-    // Store offset from mouse to coin center so coin doesn't jump
-    const coinEl = e.currentTarget as HTMLElement
     const coinRect = coinEl.getBoundingClientRect()
     dragOffsetRef.current = {
-      x: e.clientX - (coinRect.left + coinRect.width / 2),
-      y: e.clientY - (coinRect.top + coinRect.height / 2),
+      x: clientX - (coinRect.left + coinRect.width  / 2),
+      y: clientY - (coinRect.top  + coinRect.height / 2),
     }
 
     setDragging(coinId)
     setDragPos({
-      x: e.clientX - containerRect.left - dragOffsetRef.current.x,
-      y: e.clientY - containerRect.top  - dragOffsetRef.current.y,
+      x: clientX - containerRect.left - dragOffsetRef.current.x,
+      y: clientY - containerRect.top  - dragOffsetRef.current.y,
     })
   }, [])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  const handleCoinMouseDown = useCallback((coinId: string, e: React.MouseEvent) => {
+    e.preventDefault()
+    startDrag(coinId, e.clientX, e.clientY, e.currentTarget as HTMLElement)
+  }, [startDrag])
+
+  const handleCoinTouchStart = useCallback((coinId: string, e: React.TouchEvent) => {
+    e.preventDefault()
+    const t = e.touches[0]
+    startDrag(coinId, t.clientX, t.clientY, e.currentTarget as HTMLElement)
+  }, [startDrag])
+
+  const moveDrag = useCallback((clientX: number, clientY: number) => {
     if (!dragging) return
     const containerRect = containerRef.current?.getBoundingClientRect()
     if (!containerRect) return
     setDragPos({
-      x: e.clientX - containerRect.left - dragOffsetRef.current.x,
-      y: e.clientY - containerRect.top  - dragOffsetRef.current.y,
+      x: clientX - containerRect.left - dragOffsetRef.current.x,
+      y: clientY - containerRect.top  - dragOffsetRef.current.y,
     })
   }, [dragging])
 
-  const handleMouseUp = useCallback((e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent) => moveDrag(e.clientX, e.clientY), [moveDrag])
+  const handleTouchMove = useCallback((e: React.TouchEvent) => { e.preventDefault(); moveDrag(e.touches[0].clientX, e.touches[0].clientY) }, [moveDrag])
+
+  const dropCoin = useCallback((clientX: number, clientY: number) => {
     if (!dragging || !dragPos) return
 
-    // Check if dropped on wager zone
-    const wagerZone = containerRef.current?.querySelector('[data-wager-zone]')
-    const wagerRect  = wagerZone?.getBoundingClientRect()
+    const wagerRect = wagerZoneRef.current?.getBoundingClientRect()
 
     if (
       wagerRect &&
-      e.clientX >= wagerRect.left &&
-      e.clientX <= wagerRect.right &&
-      e.clientY >= wagerRect.top &&
-      e.clientY <= wagerRect.bottom
+      clientX >= wagerRect.left &&
+      clientX <= wagerRect.right &&
+      clientY >= wagerRect.top  &&
+      clientY <= wagerRect.bottom
     ) {
       if (ui.wagerCoins.length < MAX_COINS) {
         const id = dragging
+        // Position relative to wager zone center
+        const wx = clientX - wagerRect.left
+        const wy = clientY - wagerRect.top
         setUi(prev => ({
           ...prev,
-          wagerCoins:     [...prev.wagerCoins, id],
+          wagerCoins:     [...prev.wagerCoins, { id, x: wx, y: wy }],
           scatteredCoins: prev.scatteredCoins.filter(c => c.id !== id),
         }))
       }
     } else {
-      // Coin dropped outside wager zone — update its position in scattered area
+      // Drop back into scattered area (only if not already a wager coin)
       const scatteredEl = containerRef.current?.querySelector('[data-scattered-area]')
       const areaRect    = scatteredEl?.getBoundingClientRect()
       if (areaRect) {
-        const newX = e.clientX - areaRect.left - areaRect.width  / 2
-        const newY = e.clientY - areaRect.top  - areaRect.height / 2
+        const newX = clientX - areaRect.left - areaRect.width  / 2
+        const newY = clientY - areaRect.top  - areaRect.height / 2
         const id = dragging
         setUi(prev => ({
           ...prev,
@@ -300,18 +344,25 @@ export function BlackjackModule() {
     setDragPos(null)
   }, [dragging, dragPos, ui.wagerCoins.length])
 
+  const handleMouseUp   = useCallback((e: React.MouseEvent)  => dropCoin(e.clientX, e.clientY), [dropCoin])
+  const handleTouchEnd  = useCallback((e: React.TouchEvent)  => {
+    const t = e.changedTouches[0]
+    dropCoin(t.clientX, t.clientY)
+  }, [dropCoin])
+
   const handleRemoveCoin = useCallback((coinId: string) => {
     setUi(prev => ({
       ...prev,
       scatteredCoins: [...prev.scatteredCoins, { id: coinId, x: Math.random() * 200 - 100, y: Math.random() * 100 - 50 }],
-      wagerCoins: prev.wagerCoins.filter(c => c !== coinId),
+      wagerCoins: prev.wagerCoins.filter(c => c.id !== coinId),
     }))
   }, [])
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
   const { stage, playerCards, dealerCards, playerValue, dealerValue,
-          scatteredCoins, wagerCoins, karmaDue, gameLog, result, availableActions, showHint } = ui
+          scatteredCoins, wagerCoins, karmaDue, gameLog, result,
+          availableActions, showHint, showMorePrompt } = ui
 
   const isBetting = stage === 'betting'
   const isPlaying = stage === 'playing'
@@ -341,11 +392,6 @@ export function BlackjackModule() {
 
   return (
     <div style={MODULE_SHELL}>
-      {/* Header */}
-      <div style={MODULE_HEADER}>
-        <span style={LABEL}>IV. The Accounting</span>
-      </div>
-      <div style={DIVIDER} />
 
       <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '14px' }}>
 
@@ -356,7 +402,7 @@ export function BlackjackModule() {
             {dealerCards.length === 0
               ? <span style={PLACEHOLDER}>—</span>
               : dealerCards.map((c, i) => (
-                  <span key={i} style={{ ...CARD_CHIP, color: c.color === 'R' ? '#CF6679' : '#F5F1E8' }}>
+                  <span key={i} style={{ ...CARD_CHIP, color: c.color === 'R' ? '#CF6679' : '#0B0820' }}>
                     {cardDisplay(c)}
                   </span>
                 ))
@@ -376,7 +422,7 @@ export function BlackjackModule() {
             {playerCards.length === 0
               ? <span style={PLACEHOLDER}>—</span>
               : playerCards.map((c, i) => (
-                  <span key={i} style={{ ...CARD_CHIP, color: c.color === 'R' ? '#CF6679' : '#F5F1E8' }}>
+                  <span key={i} style={{ ...CARD_CHIP, color: c.color === 'R' ? '#CF6679' : '#0B0820' }}>
                     {cardDisplay(c)}
                   </span>
                 ))
@@ -405,17 +451,40 @@ export function BlackjackModule() {
           </p>
         )}
 
-        {/* Betting zone — wager square on top, scattered coins below */}
-        {isBetting && (
+        {/* More? prompt */}
+        {showMorePrompt && (
+          <div style={{ textAlign: 'center' as const, padding: '12px 0' }}>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: '18px',
+              fontStyle: 'italic',
+              color: '#F5F1E8',
+              margin: '0 0 14px',
+              textShadow: '0 0 8px rgba(184,134,11,0.30)',
+            }}>
+              More?
+            </p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button onClick={handleMoreYes} style={BTN_PRIMARY}>Yes</button>
+              <button onClick={handleMoreNo}  style={BTN_GHOST}>No</button>
+            </div>
+          </div>
+        )}
+
+        {/* Betting zone */}
+        {isBetting && !showMorePrompt && (
           <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
-            style={{ position: 'relative' as const, userSelect: 'none' as const }}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ position: 'relative' as const, userSelect: 'none' as const, touchAction: 'none' }}
           >
-            {/* Wager zone — centered square */}
+            {/* Wager zone — free-float coins land where dropped */}
             <div
+              ref={wagerZoneRef}
               data-wager-zone
               style={{
                 width:          '160px',
@@ -423,25 +492,30 @@ export function BlackjackModule() {
                 margin:         '0 auto 12px',
                 background:     wagerCoins.length > 0 ? 'rgba(184,134,11,0.12)' : 'rgba(184,134,11,0.04)',
                 border:         `2px ${wagerCoins.length > 0 ? 'solid' : 'dashed'} rgba(184,134,11,${wagerCoins.length > 0 ? '0.40' : '0.20'})`,
-                display:        'flex',
-                flexWrap:       'wrap' as const,
-                alignItems:     'center',
-                justifyContent: 'center',
-                gap:            '6px',
-                padding:        '12px',
+                position:       'relative' as const,
                 transition:     'all 0.2s ease',
               }}
             >
               {wagerCoins.length === 0 ? (
-                <span style={{ ...MUTED_TEXT, fontSize: '9px', textAlign: 'center' as const }}>
-                  Drag coins here
-                </span>
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  pointerEvents: 'none',
+                }}>
+                  <span style={{ ...MUTED_TEXT, fontSize: '9px', textAlign: 'center' as const }}>
+                    Drag coins here
+                  </span>
+                </div>
               ) : (
-                wagerCoins.map((coinId, idx) => (
+                wagerCoins.map((coin) => (
                   <div
-                    key={idx}
-                    onClick={() => handleRemoveCoin(coinId)}
+                    key={coin.id}
+                    onClick={() => handleRemoveCoin(coin.id)}
                     style={{
+                      position:     'absolute' as const,
+                      left:         `${coin.x}px`,
+                      top:          `${coin.y}px`,
+                      transform:    'translate(-50%, -50%)',
                       width:        '36px',
                       height:       '36px',
                       borderRadius: '50%',
@@ -449,19 +523,18 @@ export function BlackjackModule() {
                       border:       '2px solid #B8860B',
                       boxShadow:    'inset -2px -2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)',
                       cursor:       'pointer',
-                      flexShrink:   0,
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'translate(-50%, -50%)')}
                   />
                 ))
               )}
             </div>
 
-            {/* Hint text */}
+            {/* Hint */}
             {showHint && (
               <p style={{ ...MUTED_TEXT, textAlign: 'center' as const, margin: '0 0 8px', fontSize: '9px' }}>
-                Looks like someone left their coins behind.
+                Looks like someone left their coins behind...
               </p>
             )}
 
@@ -469,17 +542,18 @@ export function BlackjackModule() {
             <div
               data-scattered-area
               style={{
-                position:       'relative' as const,
-                height:         '140px',
-                background:     'rgba(184,134,11,0.03)',
-                border:         '1px dashed rgba(184,134,11,0.15)',
-                overflow:       'visible',
+                position:   'relative' as const,
+                height:     '140px',
+                background: 'rgba(184,134,11,0.03)',
+                border:     '1px dashed rgba(184,134,11,0.15)',
+                overflow:   'visible',
               }}
             >
               {scatteredCoins.map(coin => (
                 <div
                   key={coin.id}
                   onMouseDown={(e) => handleCoinMouseDown(coin.id, e)}
+                  onTouchStart={(e) => handleCoinTouchStart(coin.id, e)}
                   style={{
                     position:   'absolute' as const,
                     left:       `calc(50% + ${coin.x}px)`,
@@ -488,6 +562,7 @@ export function BlackjackModule() {
                     cursor:     dragging === coin.id ? 'grabbing' : 'grab',
                     opacity:    dragging === coin.id ? 0 : 1,
                     transition: dragging === coin.id ? 'none' : 'opacity 0.1s',
+                    touchAction: 'none',
                   }}
                 >
                   <div style={{
@@ -502,18 +577,16 @@ export function BlackjackModule() {
               ))}
             </div>
 
-            {/* Drag ghost — follows cursor in real time */}
+            {/* Drag ghost */}
             {dragging && dragPos && (
-              <div
-                style={{
-                  position:      'absolute' as const,
-                  left:          dragPos.x,
-                  top:           dragPos.y,
-                  transform:     'translate(-50%, -50%)',
-                  pointerEvents: 'none',
-                  zIndex:        100,
-                }}
-              >
+              <div style={{
+                position:      'absolute' as const,
+                left:          dragPos.x,
+                top:           dragPos.y,
+                transform:     'translate(-50%, -50%)',
+                pointerEvents: 'none',
+                zIndex:        100,
+              }}>
                 <div style={{
                   width:        '32px',
                   height:       '32px',
@@ -526,7 +599,6 @@ export function BlackjackModule() {
               </div>
             )}
 
-            {/* Deal button */}
             {wagerCoins.length > 0 && (
               <button onClick={handleDeal} style={{ ...BTN_PRIMARY, marginTop: '14px', width: '100%' }}>
                 Deal
@@ -545,7 +617,7 @@ export function BlackjackModule() {
           </div>
         )}
 
-        {isDone && (
+        {isDone && !showMorePrompt && (
           <button onClick={handleNewHand} style={{ ...BTN_PRIMARY, width: '100%' }}>
             New Hand
           </button>
@@ -642,25 +714,23 @@ const MUTED_TEXT: React.CSSProperties = {
 }
 
 const CARD_CHIP: React.CSSProperties = {
-  fontFamily:  "'IBM Plex Mono', monospace",
-  fontSize:    '32px',
-  fontWeight:  700,
-  background:  'linear-gradient(135deg, rgba(245,241,232,0.95) 0%, rgba(220,210,190,0.95) 100%)',
-  border:      '2px solid rgba(184,134,11,0.40)',
-  padding:     '8px 6px',
-  minWidth:    '56px',
-  width:       '56px',
-  height:      '88px',
-  textAlign:   'center' as const,
-  display:     'inline-flex',
-  alignItems:  'center',
+  fontFamily:     "'IBM Plex Mono', monospace",
+  fontSize:       '32px',
+  fontWeight:     700,
+  background:     'linear-gradient(135deg, rgba(245,241,232,0.95) 0%, rgba(220,210,190,0.95) 100%)',
+  border:         '2px solid rgba(184,134,11,0.40)',
+  padding:        '8px 6px',
+  minWidth:       '56px',
+  width:          '56px',
+  height:         '88px',
+  textAlign:      'center' as const,
+  display:        'inline-flex',
+  alignItems:     'center',
   justifyContent: 'center',
-  letterSpacing: '0.02em',
-  borderRadius: '4px',
-  color:       '#0B0820',
-  boxShadow:   'inset 0 1px 2px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.3)',
-  aspectRatio: '63/100',
-  flexShrink:  0,
+  letterSpacing:  '0.02em',
+  borderRadius:   '4px',
+  boxShadow:      'inset 0 1px 2px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.3)',
+  flexShrink:     0,
 }
 
 const VALUE_BADGE: React.CSSProperties = {

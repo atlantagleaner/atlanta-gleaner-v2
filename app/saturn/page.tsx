@@ -1,7 +1,3 @@
-import { TarotModule }      from './components/TarotModule'
-import { AstrologyModule }  from './components/AstrologyModule'
-import { CrystalBallModule }from './components/CrystalBallModule'
-import { BlackjackModule }  from './components/BlackjackModule'
 import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
 import { Banner }           from '@/src/components/Banner'
 import {
@@ -16,7 +12,7 @@ export const metadata = {
 
 export default function SaturnPage() {
   return (
-    <div data-theme="saturn" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflow: 'hidden' }}>
+    <div data-theme="saturn" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Space background with pulsing nebula effect */}
       <div style={{
         position: 'fixed',
@@ -109,17 +105,6 @@ export default function SaturnPage() {
           }}>
             ♄ Saturn
           </h1>
-          <p style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '10px',
-            color: 'rgba(245,241,232,0.45)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            margin: `${SPACING.sm} 0 0`,
-            textShadow: '0 0 8px rgba(184,134,11,0.30)',
-          }}>
-            Divination Suite — Navigate the Systems of Knowing
-          </p>
         </div>
       </div>
 

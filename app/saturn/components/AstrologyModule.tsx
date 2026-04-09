@@ -76,11 +76,6 @@ export function AstrologyModule() {
 
   return (
     <div style={MODULE_SHELL}>
-      {/* Header */}
-      <div style={MODULE_HEADER}>
-        <span style={LABEL}>II. The Wheel</span>
-      </div>
-      <div style={DIVIDER} />
 
       {/* Sign selector — 12 symbols in a row */}
       <div style={{

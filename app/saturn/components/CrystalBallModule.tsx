@@ -88,12 +88,6 @@ export function CrystalBallModule() {
     <div style={MODULE_SHELL}>
       <style>{BALL_CSS}</style>
 
-      {/* Header */}
-      <div style={MODULE_HEADER}>
-        <span style={LABEL}>III. The Sphere</span>
-      </div>
-      <div style={DIVIDER} />
-
       {/* Ball + fortune area */}
       <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', flex: 1 }}>
 

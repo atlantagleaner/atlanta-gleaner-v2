@@ -468,30 +468,56 @@ a.case-archive-link:hover .case-archive-tags {
 }
 
 /* Override AnalogShell / body background on Saturn page */
-[data-theme="saturn"] body,
-[data-theme="saturn"] .ag-analog-shell {
+/* html gets data-theme="saturn" via useEffect — lets us target ancestors of the page div */
+html[data-theme="saturn"] body,
+html[data-theme="saturn"] .ag-analog-shell {
   background-color: var(--saturn-bg) !important;
 }
 
-/* Saturn nav: keep readable over dark background */
+/* Saturn nav: full gold-on-dark palette */
 [data-theme="saturn"] .ag-nav-wrapper {
   background: var(--saturn-surface) !important;
-  border-bottom: 1px solid var(--palette-border) !important;
+  border-bottom: 1px solid rgba(184,134,11,0.25) !important;
+  box-shadow: 0 1px 16px rgba(184,134,11,0.12), 0 2px 4px rgba(11,8,32,0.60) !important;
 }
-[data-theme="saturn"] .ag-nav-wrapper * {
-  color: var(--saturn-text) !important;
+[data-theme="saturn"] .ag-nav-wrapper .ag-nav a,
+[data-theme="saturn"] .ag-nav-wrapper .ag-nav a div,
+[data-theme="saturn"] .ag-nav-wrapper .ag-nav a span {
+  color: var(--saturn-gold) !important;
+  text-shadow: 0 0 10px rgba(184,134,11,0.45) !important;
+}
+[data-theme="saturn"] .ag-nav-wrapper .ag-plus-btn {
+  color: var(--saturn-gold) !important;
+  text-shadow: 0 0 10px rgba(184,134,11,0.50) !important;
 }
 [data-theme="saturn"] .ag-dropdown {
   background: var(--saturn-surface) !important;
-  border-color: var(--palette-border) !important;
+  border-color: rgba(184,134,11,0.25) !important;
+  box-shadow: 0 4px 24px rgba(11,8,32,0.70) !important;
+}
+[data-theme="saturn"] .ag-dropdown-link {
+  color: rgba(245,241,232,0.75) !important;
+  border-bottom-color: rgba(184,134,11,0.12) !important;
 }
 [data-theme="saturn"] .ag-dropdown-link:hover {
   background: rgba(184,134,11,0.12) !important;
-  color: var(--saturn-text) !important;
+  color: var(--saturn-gold) !important;
+  text-shadow: 0 0 8px rgba(184,134,11,0.40) !important;
 }
 
-/* Saturn banner: title fills gold */
+/* Saturn banner: all text gets gold + glow */
 [data-theme="saturn"] header h1 {
   color: var(--saturn-gold) !important;
-  text-shadow: 0 0 40px rgba(184,134,11,0.25) !important;
+  text-shadow: 0 0 16px rgba(184,134,11,0.55), 0 0 40px rgba(184,134,11,0.25) !important;
+}
+[data-theme="saturn"] header p {
+  color: var(--saturn-gold) !important;
+  opacity: 0.75 !important;
+  text-shadow: 0 0 10px rgba(184,134,11,0.40) !important;
+}
+
+/* Saturn Washington: dark cosmic bronze filter */
+[data-theme="saturn"] img[alt="George Washington Statue at Federal Hall"],
+[data-theme="saturn"] img[alt="George Washington portrait"] {
+  filter: sepia(40%) hue-rotate(320deg) saturate(160%) brightness(0.65) contrast(1.05) !important;
 }

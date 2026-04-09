@@ -84,11 +84,6 @@ export function TarotModule() {
 
   return (
     <div style={MODULE_SHELL}>
-      {/* Header */}
-      <div style={MODULE_HEADER}>
-        <span style={LABEL}>I. The Cards</span>
-      </div>
-      <div style={DIVIDER} />
 
       {/* Body */}
       <div style={{ padding: '20px', flex: 1 }}>
@@ -100,7 +95,7 @@ export function TarotModule() {
               Click to reveal each.
             </p>
             <button onClick={handleDraw} style={BTN_PRIMARY}>
-              Draw the Spread
+              Draw
             </button>
           </div>
         ) : (
@@ -185,7 +180,7 @@ export function TarotModule() {
                 </p>
 
                 <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '13px', color: '#F5F1E8', lineHeight: 1.6, margin: '0 0 8px' }}>
-                  "{drawnCard.card.fortune_telling[0]}"
+                  {drawnCard.card.fortune_telling[0]}
                 </p>
 
                 <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '12px', color: 'rgba(245,241,232,0.75)', lineHeight: 1.55, margin: 0 }}>
