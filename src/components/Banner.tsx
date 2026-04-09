@@ -30,24 +30,24 @@ export function Banner() {
   const themeIdx = useRef(0)
 
   useEffect(() => {
-    // Check theme on mount
-    setIsSaturn(document.documentElement.dataset.theme === 'saturn')
-
-    // Listen for theme changes
-    const handleMutation = () => {
-      setIsSaturn(document.documentElement.dataset.theme === 'saturn')
+    // Check if we're inside a Saturn page container
+    const checkSaturn = () => {
+      setIsSaturn(document.querySelector('[data-saturn]') !== null)
     }
 
-    const observer = new MutationObserver(handleMutation)
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    checkSaturn()
+
+    // Listen for DOM changes that might add/remove the Saturn container
+    const observer = new MutationObserver(checkSaturn)
+    observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['data-saturn'] })
 
     return () => observer.disconnect()
   }, [])
 
   function cycleTheme() {
-    const html = document.documentElement
     // Don't cycle theme if we're on Saturn page
-    if (html.dataset.theme === 'saturn') return
+    if (document.querySelector('[data-saturn]')) return
+    const html = document.documentElement
 
     themeIdx.current = (themeIdx.current + 1) % THEMES.length
     const next = THEMES[themeIdx.current]

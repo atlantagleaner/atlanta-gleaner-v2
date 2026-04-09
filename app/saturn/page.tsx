@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function SaturnPage() {
   return (
-    <div data-theme="saturn" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
+    <div data-saturn="true" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Space background with pulsing nebula effect */}
       <div style={{
         position: 'fixed',

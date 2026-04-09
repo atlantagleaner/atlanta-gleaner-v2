@@ -74,12 +74,6 @@ function SaturnMobilePanel({ label, children }: { label: string; children: React
 export function DraggableModuleWrapper() {
   const isMobile = useMobileDetect(768)
 
-  // Force Saturn theme on this page
-  useEffect(() => {
-    const html = document.documentElement
-    html.dataset.theme = 'saturn'
-  }, [])
-
   if (isMobile) {
     return (
       <div style={{ padding: `0 12px ${PAGE_BOTTOM_PADDING_DESKTOP}`, position: 'relative', zIndex: 10 }}>
