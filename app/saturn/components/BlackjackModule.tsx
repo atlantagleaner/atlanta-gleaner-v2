@@ -482,7 +482,7 @@ export function BlackjackModule() {
         )}
 
         {/* Betting zone & wager display — visible in all stages when coins wagered */}
-        {(isBetting || wagerCoins.length > 0) && (
+        {(wagerCoins.length > 0 || isBetting) && (
           <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
