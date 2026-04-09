@@ -399,6 +399,7 @@ export function BlackjackModule() {
             color:      RESULT_COLOR[result] ?? '#A9A9A9',
             margin:     0,
             lineHeight: 1.4,
+            textShadow: `0 0 10px ${RESULT_COLOR[result] ?? '#A9A9A9'}40`,
           }}>
             {RESULT_MSGS[result] ?? result}
           </p>
@@ -555,13 +556,14 @@ export function BlackjackModule() {
         {/* Karma debt ledger */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '10px' }}>
-            <p style={{ ...MUTED_TEXT, margin: 0 }}>Karma Debt Due</p>
+            <p style={{ ...MUTED_TEXT, margin: 0, textShadow: '0 0 8px rgba(184,134,11,0.40)' }}>Karma Debt Due</p>
             <span style={{
               fontFamily:    "'IBM Plex Mono', monospace",
               fontSize:      '18px',
               fontWeight:    700,
               letterSpacing: '0.04em',
               color:         karmaDue > 0 ? '#CF6679' : karmaDue < 0 ? '#4CAF50' : '#A9A9A9',
+              textShadow:    karmaDue > 0 ? '0 0 12px rgba(207,102,121,0.50)' : karmaDue < 0 ? '0 0 12px rgba(76,175,80,0.50)' : 'none',
             }}>
               {karmaDue > 0 ? '+' : ''}{karmaDue} pts
             </span>
@@ -619,6 +621,7 @@ const LABEL: React.CSSProperties = {
   textTransform: 'uppercase' as const,
   letterSpacing: '0.16em',
   color:         '#B8860B',
+  textShadow:    '0 0 12px rgba(184,134,11,0.60), 0 0 24px rgba(184,134,11,0.30)',
 }
 
 const DIVIDER: React.CSSProperties = {
@@ -640,15 +643,24 @@ const MUTED_TEXT: React.CSSProperties = {
 
 const CARD_CHIP: React.CSSProperties = {
   fontFamily:  "'IBM Plex Mono', monospace",
-  fontSize:    '16px',
-  fontWeight:  600,
-  background:  'rgba(184,134,11,0.08)',
-  border:      '1px solid rgba(184,134,11,0.22)',
-  padding:     '4px 8px',
-  minWidth:    '40px',
+  fontSize:    '32px',
+  fontWeight:  700,
+  background:  'linear-gradient(135deg, rgba(245,241,232,0.95) 0%, rgba(220,210,190,0.95) 100%)',
+  border:      '2px solid rgba(184,134,11,0.40)',
+  padding:     '8px 6px',
+  minWidth:    '56px',
+  width:       '56px',
+  height:      '88px',
   textAlign:   'center' as const,
-  display:     'inline-block',
+  display:     'inline-flex',
+  alignItems:  'center',
+  justifyContent: 'center',
   letterSpacing: '0.02em',
+  borderRadius: '4px',
+  color:       '#0B0820',
+  boxShadow:   'inset 0 1px 2px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.3)',
+  aspectRatio: '63/100',
+  flexShrink:  0,
 }
 
 const VALUE_BADGE: React.CSSProperties = {

@@ -29,9 +29,12 @@ export function Banner() {
   const themeIdx = useRef(0)
 
   function cycleTheme() {
+    const html = document.documentElement
+    // Don't cycle theme if we're on Saturn page
+    if (html.dataset.theme === 'saturn') return
+
     themeIdx.current = (themeIdx.current + 1) % THEMES.length
     const next = THEMES[themeIdx.current]
-    const html = document.documentElement
     if (next === 'default') {
       html.removeAttribute('data-theme')
     } else {

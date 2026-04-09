@@ -134,6 +134,7 @@ export function CrystalBallModule() {
                 color: '#F5F1E8',
                 lineHeight: 1.65,
                 margin: 0,
+                textShadow: '0 0 8px rgba(184,134,11,0.40)',
               }}
             >
               "{fortune}"
@@ -180,6 +181,7 @@ const LABEL: React.CSSProperties = {
   textTransform: 'uppercase' as const,
   letterSpacing: '0.16em',
   color:         '#B8860B',
+  textShadow:    '0 0 12px rgba(184,134,11,0.60), 0 0 24px rgba(184,134,11,0.30)',
 }
 
 const DIVIDER: React.CSSProperties = {
