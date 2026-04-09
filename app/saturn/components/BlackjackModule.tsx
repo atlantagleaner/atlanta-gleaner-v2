@@ -467,7 +467,7 @@ function DragGhost({ coin, x, y }: { coin: Coin; x: number; y: number }) {
 }
 
 // ─── Action button ─────────────────────────────────────────────────────────────
-function ActBtn({ label, onClick, disabled }: { label: string; onClick: () => void; disabled: boolean }) {
+function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: () => void; disabled?: boolean }) {
   return (
     <button
       onClick={onClick}
@@ -732,6 +732,31 @@ export function BlackjackModule() {
   const needForDouble = isPlaying && avR.double && wagerVal < state.initialBet * 2
     ? state.initialBet * 2 - wagerVal : 0
 
+  // ── Button visibility logic (state-based, no ghost slots) ──
+  const isFirstMove = activeHand?.cards?.length === 2
+  const playerTotal = activeHand?.playerValue?.hi ?? 0
+  const dealerUpCard = state.dealerCards?.[0]
+  const dealerIsAce = dealerUpCard?.value === 1 // Ace = 1 in engine
+  const av = isPlayerLeft ? avL : avR // Current available actions for active hand
+
+  // HIT / STAND: Active hand + total < 21
+  const showHitStand = isPlaying && playerTotal < 21 && av.hit && av.stand
+
+  // DOUBLE: First move + 2 cards + valid total (9, 10, 11) + available
+  const showDouble = isFirstMove && av.double &&
+    [9, 10, 11].includes(playerTotal)
+
+  // SPLIT: First move + pair + available
+  const showSplit = isFirstMove && av.split &&
+    activeHand?.cards?.length === 2 &&
+    activeHand.cards[0]?.value === activeHand.cards[1]?.value
+
+  // INSURANCE: First move + dealer Ace + available
+  const showInsurance = isFirstMove && av.insurance && !!dealerUpCard && dealerIsAce
+
+  // SURRENDER: First move + hand active + available
+  const showSurrender = isFirstMove && av.surrender && isPlaying
+
   return (
     <div
       ref={contentRef}
@@ -974,14 +999,26 @@ export function BlackjackModule() {
         </div>
       </div>
 
-      {/* ── Action buttons ── */}
+      {/* ── Action buttons (state-based visibility) ── */}
       <div style={{ flex: '0 0 16%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', gap: 'clamp(4px, 1%, 8px)', flexWrap: 'wrap', alignContent: 'flex-start' }}>
-        <ActBtn label="Hit"       onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')}   disabled={!isPlaying || (isPlayerRight ? !avR.hit  : !avL.hit)}  />
-        <ActBtn label="Stand"     onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} disabled={!isPlaying || (isPlayerRight ? !avR.stand : !avL.stand)} />
-        <ActBtn label="Double"    onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} disabled={!isPlaying || !doubleReady} />
-        <ActBtn label="Split"     onClick={handleSplit}    disabled={!isPlayerRight || !splitReady} />
-        <ActBtn label="Insurance" onClick={handleInsuranceYes} disabled={!state.showIns || !isPlayerRight} />
-        <ActBtn label="Surrender" onClick={handleSurrender} disabled={!isPlayerRight || !avR.surrender} />
+        {showHitStand && (
+          <ActBtn label="Hit" onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')} />
+        )}
+        {showHitStand && (
+          <ActBtn label="Stand" onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} />
+        )}
+        {showDouble && (
+          <ActBtn label="Double" onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} />
+        )}
+        {showSplit && (
+          <ActBtn label="Split" onClick={handleSplit} />
+        )}
+        {showInsurance && (
+          <ActBtn label="Insurance" onClick={handleInsuranceYes} />
+        )}
+        {showSurrender && (
+          <ActBtn label="Surrender" onClick={handleSurrender} />
+        )}
       </div>
 
       {/* ── Bottom bar ── */}
