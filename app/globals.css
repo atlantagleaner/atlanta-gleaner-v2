@@ -497,7 +497,12 @@ a.case-archive-link:hover .case-archive-tags {
 [data-saturn] .ag-dropdown {
   background: var(--saturn-surface) !important;
   border-color: rgba(184,134,11,0.25) !important;
-  box-shadow: 0 4px 24px rgba(11,8,32,0.70) !important;
+}
+/* Saturn dropdown box-shadow — desktop only (mobile full-width, doesn't need shadow) */
+@media (min-width: 768px) {
+  [data-saturn] .ag-dropdown {
+    box-shadow: 0 4px 24px rgba(11,8,32,0.70) !important;
+  }
 }
 [data-saturn] .ag-dropdown-link {
   color: rgba(245,241,232,0.75) !important;
