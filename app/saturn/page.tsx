@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect } from 'react'
 import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
 import { Banner }           from '@/src/components/Banner'
 import {
@@ -5,12 +8,12 @@ import {
   PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
-export const metadata = {
-  title:       'Saturn | Atlanta Gleaner',
-  description: 'A celestial archive of divinations and games of chance.',
-}
-
 export default function SaturnPage() {
+  // Apply Saturn theme to entire document (including navbar)
+  useEffect(() => {
+    document.documentElement.setAttribute('data-saturn', 'true')
+    return () => document.documentElement.removeAttribute('data-saturn')
+  }, [])
   return (
     <div data-saturn="true" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Space background with pulsing nebula effect */}
