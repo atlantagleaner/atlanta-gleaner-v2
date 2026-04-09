@@ -489,7 +489,7 @@ export function BlackjackModule() {
           onMouseLeave={handleMouseUp}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{ position: 'relative', userSelect: 'none' }}
+          style={{ position: 'relative', userSelect: 'none', touchAction: 'none' }}
         >
             {/* Wager zone — centered square */}
             <div
