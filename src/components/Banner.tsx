@@ -123,7 +123,7 @@ export function Banner() {
           cursor:         'pointer',
           opacity:        isSaturn ? 0.75 : (logoHover ? 0.82 : 1),
           transition:     'opacity 0.15s',
-          filter:         'drop-shadow(0 0 20px rgba(184,134,11,0.40)) drop-shadow(0 0 40px rgba(184,134,11,0.20))',
+          filter:         isSaturn ? 'drop-shadow(0 0 20px rgba(184,134,11,0.40)) drop-shadow(0 0 40px rgba(184,134,11,0.20))' : 'none',
         }}
       />
     </header>
