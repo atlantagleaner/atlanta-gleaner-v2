@@ -28,6 +28,9 @@ export function Banner() {
   const isMobile = useMobileDetect(768)
   const themeIdx = useRef(0)
 
+  // Dynamically check if we're on Saturn theme
+  const isSaturn = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'saturn'
+
   function cycleTheme() {
     const html = document.documentElement
     // Don't cycle theme if we're on Saturn page
@@ -105,7 +108,7 @@ export function Banner() {
           objectFit:      'cover',
           objectPosition: 'center top',
           cursor:         'pointer',
-          opacity:        logoHover ? 0.82 : 1,
+          opacity:        isSaturn ? 0.75 : (logoHover ? 0.82 : 1),
           transition:     'opacity 0.15s',
           filter:         'drop-shadow(0 0 20px rgba(184,134,11,0.40)) drop-shadow(0 0 40px rgba(184,134,11,0.20))',
         }}
