@@ -616,7 +616,6 @@ export function BlackjackModule() {
                 )}
               </>
             )}
-          </div>
         </div>
 
         {/* Playing actions */}
