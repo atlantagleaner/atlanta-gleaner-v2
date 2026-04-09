@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { PALETTE, T, SPACING } from '@/src/styles/tokens'
 import { useMobileDetect } from '@/src/hooks'
 
@@ -25,11 +25,24 @@ const TAGLINE_STYLE = {
 export function Banner() {
   const [imgSrc,    setImgSrc]    = useState('/washington.png')
   const [logoHover, setLogoHover] = useState(false)
+  const [isSaturn,  setIsSaturn]  = useState(false)
   const isMobile = useMobileDetect(768)
   const themeIdx = useRef(0)
 
-  // Dynamically check if we're on Saturn theme
-  const isSaturn = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'saturn'
+  useEffect(() => {
+    // Check theme on mount
+    setIsSaturn(document.documentElement.dataset.theme === 'saturn')
+
+    // Listen for theme changes
+    const handleMutation = () => {
+      setIsSaturn(document.documentElement.dataset.theme === 'saturn')
+    }
+
+    const observer = new MutationObserver(handleMutation)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+    return () => observer.disconnect()
+  }, [])
 
   function cycleTheme() {
     const html = document.documentElement
