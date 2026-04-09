@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { TarotModule } from './TarotModule'
 import { AstrologyModule } from './AstrologyModule'
 import { CrystalBallModule } from './CrystalBallModule'
+import { BlackjackModule } from './BlackjackModule'
 import { DraggableModule } from './DraggableModule'
 import { SPACING, PAGE_BOTTOM_PADDING_DESKTOP, ANIMATION } from '@/src/styles/tokens'
 import { useMobileDetect } from '@/src/hooks'
@@ -12,6 +13,7 @@ const MODULES = [
   { id: 'tarot',     label: 'Tarot',      defaultX: 32,  defaultY: 120, defaultWidth: 340, defaultHeight: 460, minWidth: 280, minHeight: 360, maxWidth: 850, maxHeight: 1150, Component: TarotModule },
   { id: 'astrology', label: 'The Wheel',  defaultX: 420, defaultY: 140, defaultWidth: 320, defaultHeight: 420, minWidth: 260, minHeight: 340, maxWidth: 800, maxHeight: 1050, Component: AstrologyModule },
   { id: 'crystal',   label: 'The Sphere', defaultX: 780, defaultY: 160, defaultWidth: 300, defaultHeight: 400, minWidth: 240, minHeight: 320, maxWidth: 750, maxHeight: 1000, Component: CrystalBallModule },
+  { id: 'blackjack', label: 'Blackjack',  defaultX: 1120, defaultY: 130, defaultWidth: 490, defaultHeight: 660, minWidth: 420, minHeight: 560, maxWidth: 580, maxHeight: 800, Component: BlackjackModule },
 ]
 
 function SaturnMobilePanel({ label, children }: { label: string; children: React.ReactNode }) {
