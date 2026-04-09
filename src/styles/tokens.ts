@@ -330,6 +330,20 @@ export const PAGE_TITLE_BLOCK: CSSProperties = {
 }
 
 
+// ─── Film artifact colors ─────────────────────────────────────────────────────
+// Hardcoded colors for FilmFrame decorative effects (vintage microfiche aesthetics).
+// These are NOT theme-aware intentionally — they represent analog film characteristics.
+
+export const FILM_ARTIFACTS = {
+  scratchBright: 'rgba(255,252,235,1)',    // Emulsion scraped bright spot
+  scratchDark:   'rgba(6,4,1,1)',           // Deposit dark spot on film
+  dustParticle:  'rgba(12,8,2,1)',          // Dust speck color
+  hairStrand:    'rgba(12,8,2,1)',          // Hair strand color (same as dust)
+  exposureBright: '#fffbdc',                // Bright exposure hotspot
+  filmTint:      'rgba(190, 160, 85, 1)',   // Warm film tint (multiply blend)
+} as const
+
+
 // ─── Opinion formatting + fidelity specification ──────────────────────────────
 //
 // This specification governs every component that renders a published judicial

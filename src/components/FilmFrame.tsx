@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect, useMemo, type ReactNode, type CSSProperties } from 'react'
+import { FILM_ARTIFACTS } from '@/src/styles/tokens'
 
 // ── Deterministic LCG pseudo-random ──────────────────────────────────────────
 function lcg(seed: number) {
@@ -86,7 +87,7 @@ function generate(seed: number): Artifacts {
       points,
       width:   0.22 + r() * 0.68,
       opacity: 0.14 + r() * 0.32,
-      color:   r() > 0.50 ? 'rgba(255,252,235,1)' : 'rgba(6,4,1,1)',
+      color:   r() > 0.50 ? FILM_ARTIFACTS.scratchBright : FILM_ARTIFACTS.scratchDark,
     }
   })
 
@@ -151,7 +152,7 @@ export function FilmFrame({ children, style }: FilmFrameProps) {
         <div style={{
           position:      'absolute',
           inset:         0,
-          background:    `rgba(190, 160, 85, ${a.filmTint})`,
+          background:    `rgba(190, 160, 85, ${a.filmTint})`, // FILM_ARTIFACTS base color
           pointerEvents: 'none',
           mixBlendMode:  'multiply',
           zIndex:        1,
@@ -188,11 +189,11 @@ export function FilmFrame({ children, style }: FilmFrameProps) {
             >
               <stop
                 offset="0%"
-                stopColor={a.spotBright ? '#fffbdc' : '#000000'}
+                stopColor={a.spotBright ? FILM_ARTIFACTS.exposureBright : '#000000'}
                 stopOpacity={a.spotOpacity}
               />
               <stop offset="100%"
-                stopColor={a.spotBright ? '#fffbdc' : '#000000'}
+                stopColor={a.spotBright ? FILM_ARTIFACTS.exposureBright : '#000000'}
                 stopOpacity="0"
               />
             </radialGradient>
@@ -226,7 +227,7 @@ export function FilmFrame({ children, style }: FilmFrameProps) {
               cx={d.x} cy={d.y}
               rx={d.rx} ry={d.ry}
               transform={`rotate(${d.angle} ${d.x} ${d.y})`}
-              fill="rgba(12,8,2,1)"
+              fill={FILM_ARTIFACTS.dustParticle}
               opacity={d.opacity}
             />
           ))}
@@ -236,7 +237,7 @@ export function FilmFrame({ children, style }: FilmFrameProps) {
             <path
               key={i}
               d={h.d}
-              stroke="rgba(12,8,2,1)"
+              stroke={FILM_ARTIFACTS.hairStrand}
               strokeWidth={h.width}
               fill="none"
               opacity={h.opacity}

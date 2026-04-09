@@ -6,14 +6,8 @@ import { usePathname } from 'next/navigation'
 import { PALETTE, T, SIZE_SM } from '@/src/styles/tokens'
 import { useDateTime } from '@/src/hooks'
 
-// Saturn-specific colors (from globals.css)
-const SATURN_COLORS = {
-  surface: '#1A1A2E',
-  gold: '#B8860B',
-  borderColor: 'rgba(184,134,11,0.25)',
-  glowColor: 'rgba(184,134,11,0.12)',
-  shadowColor: 'rgba(11,8,32,0.60)',
-}
+// Saturn detection — uses CSS variables defined in globals.css [data-saturn]
+// No need for hardcoded SATURN_COLORS; styles use var(--saturn-gold), var(--saturn-surface), etc.
 
 const NAV_LINKS = [
   { label: 'Archive', href: '/archive' },
@@ -76,9 +70,9 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         .ag-nav-wrapper {
           position: relative;
           z-index: 200;
-          background: ${isSaturn ? SATURN_COLORS.surface : PALETTE.white};
-          border-bottom: 1px solid ${isSaturn ? SATURN_COLORS.borderColor : 'var(--palette-rule-md)'};
-          ${isSaturn ? `box-shadow: 0 1px 16px ${SATURN_COLORS.glowColor}, 0 2px 4px ${SATURN_COLORS.shadowColor};` : ''}
+          background: ${isSaturn ? 'var(--saturn-surface)' : PALETTE.white};
+          border-bottom: 1px solid ${isSaturn ? 'var(--palette-border)' : 'var(--palette-rule-md)'};
+          ${isSaturn ? `box-shadow: 0 1px 16px var(--saturn-glow), 0 2px 4px rgba(11,8,32,0.60);` : ''}
         }
         @media (max-width: 767px) {
           .ag-nav-wrapper { position: sticky; top: 0; }
@@ -91,8 +85,8 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           left: 0;
           right: 0;
           z-index: 10;
-          background: ${isSaturn ? SATURN_COLORS.surface : PALETTE.white};
-          border-bottom: 1px solid ${isSaturn ? SATURN_COLORS.borderColor : 'var(--palette-rule-md)'};
+          background: ${isSaturn ? 'var(--saturn-surface)' : PALETTE.white};
+          border-bottom: 1px solid ${isSaturn ? 'var(--palette-border)' : 'var(--palette-rule-md)'};
           transform-origin: top center;
           transition: transform 0.24s cubic-bezier(0.4,0,0.2,1), opacity 0.20s cubic-bezier(0.4,0,0.2,1);
         }
@@ -102,9 +96,9 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           transition: background 0.1s;
           display: block;
           text-decoration: none;
-          border-bottom: 1px solid ${isSaturn ? 'rgba(184,134,11,0.12)' : 'var(--palette-rule)'};
+          border-bottom: 1px solid ${isSaturn ? 'var(--saturn-glow)' : 'var(--palette-rule)'};
         }
-        .ag-dropdown-link:hover { background: ${isSaturn ? 'rgba(184,134,11,0.12)' : PALETTE.warm} !important; }
+        .ag-dropdown-link:hover { background: ${isSaturn ? 'var(--saturn-glow)' : PALETTE.warm} !important; }
 
         @media (max-width: 767px) {
           .ag-dropdown-link { padding: 16px 20px !important; }
@@ -112,8 +106,8 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
         @media (min-width: 768px) {
           .ag-dropdown {
             left: auto; right: 16px; width: 160px;
-            border-radius: 2px; border: 1px solid ${isSaturn ? SATURN_COLORS.borderColor : 'var(--palette-border)'};
-            box-shadow: 0 4px 16px ${isSaturn ? SATURN_COLORS.glowColor : 'var(--palette-rule-md)'};
+            border-radius: 2px; border: 1px solid ${isSaturn ? 'var(--palette-border)' : 'var(--palette-border)'};
+            box-shadow: 0 4px 16px ${isSaturn ? 'var(--saturn-glow)' : 'var(--palette-rule-md)'};
           }
           .ag-dropdown-link { padding: 11px 14px !important; }
         }
@@ -129,15 +123,15 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {showDatetime ? (
               <>
-                <div style={{ ...T.site, color: isSaturn ? SATURN_COLORS.gold : PALETTE.black, fontSize: SIZE_SM, textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
+                <div style={{ ...T.site, color: isSaturn ? 'var(--saturn-gold)' : PALETTE.black, fontSize: SIZE_SM, textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
                   {dateStr}
                 </div>
-                <div style={{ ...T.nav, color: isSaturn ? SATURN_COLORS.gold : PALETTE.black, fontSize: SIZE_SM, opacity: isSaturn ? 0.75 : 0.6, fontVariantNumeric: 'tabular-nums', textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
+                <div style={{ ...T.nav, color: isSaturn ? 'var(--saturn-gold)' : PALETTE.black, fontSize: SIZE_SM, opacity: isSaturn ? 0.75 : 0.6, fontVariantNumeric: 'tabular-nums', textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
                   {timeStr}
                 </div>
               </>
             ) : (
-              <span style={{ ...T.site, color: isSaturn ? SATURN_COLORS.gold : PALETTE.black, textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
+              <span style={{ ...T.site, color: isSaturn ? 'var(--saturn-gold)' : PALETTE.black, textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.45)` : 'none' }}>
                 The Atlanta Gleaner
               </span>
             )}
@@ -150,7 +144,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
             aria-expanded={open}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              padding: '4px 8px', color: isSaturn ? SATURN_COLORS.gold : PALETTE.black,
+              padding: '4px 8px', color: isSaturn ? 'var(--saturn-gold)' : PALETTE.black,
               fontSize: '24px', fontWeight: 300, lineHeight: 1,
               display: 'flex', alignItems: 'center',
               textShadow: isSaturn ? `0 0 10px rgba(184,134,11,0.50)` : 'none',
@@ -168,7 +162,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
                 style={{
                   ...T.nav,
                   fontWeight: active ? 700 : 500,
-                  color: isSaturn ? SATURN_COLORS.gold : PALETTE.black,
+                  color: isSaturn ? 'var(--saturn-gold)' : PALETTE.black,
                   textShadow: isSaturn ? `0 0 8px rgba(184,134,11,0.40)` : 'none',
                 }}
               >

@@ -49,7 +49,7 @@ function renderOpinionHtml(
       `href="#${slug}-fn-${key}" ` +
       `class="fn-ref" ` +
       `style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;` +
-      `color:#000;text-decoration:none;vertical-align:super;"` +
+      `color:var(--palette-black);text-decoration:none;vertical-align:super;"` +
       `>${n}</a></sup>`
     )
   })
