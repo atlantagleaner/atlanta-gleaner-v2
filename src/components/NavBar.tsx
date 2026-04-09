@@ -9,7 +9,7 @@ import { useDateTime } from '@/src/hooks'
 const NAV_LINKS = [
   { label: 'Archive', href: '/archive' },
   { label: 'Runway',  href: '/runway'  },
-  { label: 'Comics',  href: '/comics'  },
+  { label: 'Saturn',  href: '/saturn'  },
   { label: 'Vault',   href: '/vault'   },
   { label: 'About',   href: '/about'   },
 ]

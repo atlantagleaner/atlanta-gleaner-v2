@@ -430,3 +430,62 @@ a.case-archive-link:hover .case-archive-tags {
 }
 
 /* ── Case Law expan */
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SATURN — Celestial Archive Theme
+   Deep indigo · Burnished gold · Aged parchment
+   ════════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="saturn"] {
+  --palette-white:   #F5F1E8;   /* bone white — primary text, parchment        */
+  --palette-warm:    #1A1A2E;   /* charcoal — module surfaces                  */
+  --palette-black:   #0B0820;   /* deep indigo — page background               */
+  --palette-accent:  #B8860B;   /* burnished gold                              */
+
+  /* Gold-based derived values */
+  --palette-border:   rgba(184,134,11,0.20);
+  --palette-rule:     rgba(184,134,11,0.10);
+  --palette-rule-sm:  rgba(184,134,11,0.06);
+  --palette-rule-md:  rgba(184,134,11,0.14);
+  --palette-rule-lg:  rgba(184,134,11,0.20);
+  --palette-meta:     rgba(245,241,232,0.45);
+  --palette-muted:    rgba(245,241,232,0.35);
+  --palette-subtle:   rgba(184,134,11,0.08);
+
+  /* Saturn-specific custom properties */
+  --saturn-gold:       #B8860B;
+  --saturn-gold-light: #D4AF37;
+  --saturn-crimson:    #5C1A1A;
+  --saturn-bg:         #0B0820;
+  --saturn-surface:    #1A1A2E;
+  --saturn-text:       #F5F1E8;
+  --saturn-gray:       #A9A9A9;
+  --saturn-glow:       rgba(184,134,11,0.15);
+  --saturn-glow-strong: rgba(184,134,11,0.35);
+
+  background-color: var(--saturn-bg);
+  color: var(--saturn-text);
+}
+
+/* Override AnalogShell / body background on Saturn page */
+[data-theme="saturn"] body,
+[data-theme="saturn"] .ag-analog-shell {
+  background-color: var(--saturn-bg) !important;
+}
+
+/* Saturn nav: keep readable over dark background */
+[data-theme="saturn"] .ag-nav-wrapper {
+  background: var(--saturn-surface) !important;
+  border-bottom: 1px solid var(--palette-border) !important;
+}
+[data-theme="saturn"] .ag-nav-wrapper * {
+  color: var(--saturn-text) !important;
+}
+[data-theme="saturn"] .ag-dropdown {
+  background: var(--saturn-surface) !important;
+  border-color: var(--palette-border) !important;
+}
+[data-theme="saturn"] .ag-dropdown-link:hover {
+  background: rgba(184,134,11,0.12) !important;
+  color: var(--saturn-text) !important;
+}
