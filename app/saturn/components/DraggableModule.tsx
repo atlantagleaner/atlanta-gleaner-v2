@@ -113,18 +113,19 @@ export function DraggableModule({
           break
         case 'n': // top
           setSize({
+            w: size.w,
             h: Math.max(minHeight, startH - dy),
           })
           setPos({ x: pos.x, y: startY + dy })
           break
         case 's': // bottom
-          setSize({ h: Math.max(minHeight, startH + dy) })
+          setSize({ w: size.w, h: Math.max(minHeight, startH + dy) })
           break
         case 'e': // right
-          setSize({ w: Math.max(minWidth, startW + dx) })
+          setSize({ w: Math.max(minWidth, startW + dx), h: size.h })
           break
         case 'w': // left
-          setSize({ w: Math.max(minWidth, startW - dx) })
+          setSize({ w: Math.max(minWidth, startW - dx), h: size.h })
           setPos({ x: startX + dx, y: pos.y })
           break
       }
