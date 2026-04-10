@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
 import { Banner }           from '@/src/components/Banner'
 import {
@@ -8,11 +8,35 @@ import {
   PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
+interface Star {
+  id: string
+  x: number
+  y: number
+  size: number
+  duration: number
+  delay: number
+}
+
 export default function SaturnPage() {
+  const [stars, setStars] = useState<Star[]>([])
+
   // Apply Saturn theme to entire document (including navbar)
   useEffect(() => {
     document.documentElement.setAttribute('data-saturn', 'true')
     return () => document.documentElement.removeAttribute('data-saturn')
+  }, [])
+
+  // Generate stars only on client after hydration (Mount Pattern)
+  useEffect(() => {
+    const randomStars = Array.from({ length: 120 }).map((_, i) => ({
+      id: `star-${i}`,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 1.5 + 0.5,
+      duration: Math.random() * 3 + 2,
+      delay: Math.random() * 2,
+    }))
+    setStars(randomStars)
   }, [])
   return (
     <div data-saturn="true" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
@@ -62,32 +86,20 @@ export default function SaturnPage() {
           }
         `}</style>
         <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-          {Array.from({ length: 120 }).map((_, i) => {
-            // Use index-based pseudo-random for deterministic server/client values
-            const pseudoRandom = (seed: number) => {
-              const x = Math.sin(seed) * 10000
-              return x - Math.floor(x)
-            }
-            const x = pseudoRandom(i * 1.234) * 100
-            const y = pseudoRandom(i * 2.567) * 100
-            const size = pseudoRandom(i * 3.891) * 1.5 + 0.5
-            const duration = pseudoRandom(i * 4.123) * 3 + 2
-            const delay = pseudoRandom(i * 5.456) * 2
-            return (
-              <circle
-                key={i}
-                cx={`${x}%`}
-                cy={`${y}%`}
-                r={size}
-                fill="#F5F1E8"
-                opacity="0.6"
-                style={{
-                  animation: `saturn-star-twinkle ${duration}s ease-in-out infinite`,
-                  animationDelay: `${delay}s`,
-                }}
-              />
-            )
-          })}
+          {stars.map((star) => (
+            <circle
+              key={star.id}
+              cx={`${star.x}%`}
+              cy={`${star.y}%`}
+              r={star.size}
+              fill="#F5F1E8"
+              opacity="0.6"
+              style={{
+                animation: `saturn-star-twinkle ${star.duration}s ease-in-out infinite`,
+                animationDelay: `${star.delay}s`,
+              }}
+            />
+          ))}
         </svg>
       </div>
 
