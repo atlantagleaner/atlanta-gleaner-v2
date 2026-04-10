@@ -7,25 +7,43 @@ import {
   SIZE_SM, SIZE_MD, SIZE_LG, PAGE_MAX_W, PAGE_TITLE_BLOCK
 } from '@/src/styles/tokens'
 
-// Videos for the orbital scene (same titles as Gemini reference)
+// Videos for the orbital scene
 const ORBITAL_VIDEOS = [
   {
     id: 'video0',
-    title: 'Spring Collection',
-    youtubeId: 'jfKfPfyJRdk',
+    title: 'Track 1',
+    youtubeId: '-l6wrTvMcbY',
     angle: 0
   },
   {
     id: 'video1',
-    title: 'Backstage Pass',
-    youtubeId: 'aqz-KE-bpKQ',
-    angle: 120
+    title: 'Track 2',
+    youtubeId: 'jtTjzDTpx8o',
+    angle: 60
   },
   {
     id: 'video2',
-    title: 'Designer Interview',
-    youtubeId: 'Bey4XXJAqS8',
+    title: 'Track 3',
+    youtubeId: 'Tg9cN2A7-cA',
+    angle: 120
+  },
+  {
+    id: 'video3',
+    title: 'Track 4',
+    youtubeId: '_GT9SmA1vlI',
+    angle: 180
+  },
+  {
+    id: 'video4',
+    title: 'Track 5',
+    youtubeId: '-W20dfeNCmI',
     angle: 240
+  },
+  {
+    id: 'video5',
+    title: 'Track 6',
+    youtubeId: '9Y4wk-J3x7w',
+    angle: 300
   }
 ]
 
