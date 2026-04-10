@@ -267,11 +267,13 @@ function reducer(state: S, action: A): S {
 
     case 'DROP': {
       const { id, container, gridIndex } = action
+      // Validate gridIndex to prevent off-screen positioning
+      const validGridIndex = Math.max(0, gridIndex)
       return {
         ...state,
         coins: state.coins.map(c =>
           c.id === id
-            ? { ...c, container, gridIndex, locked: container !== 'player' }
+            ? { ...c, container, gridIndex: validGridIndex, locked: container !== 'player' }
             : c
         ),
       }
@@ -354,19 +356,57 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
     return (
       <div className={`${styles['bj-card']} ${styles['hidden']}`}>
         <svg viewBox="0 0 44 62" className={styles['bj-card-back-svg']}>
-          <rect x="3" y="3" width="38" height="56" fill="none" stroke="#B8860B" strokeWidth="1"/>
-          <circle cx="22" cy="31" r="8" fill="none" stroke="#B8860B" strokeWidth="0.7"/>
+          {/* Outer border */}
+          <rect x="2" y="2" width="40" height="58" fill="none" stroke="#B8860B" strokeWidth="0.8"/>
+          {/* Inner border */}
+          <rect x="4" y="4" width="36" height="54" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.6"/>
+          {/* Center circle with inner rings */}
+          <circle cx="22" cy="31" r="10" fill="none" stroke="#B8860B" strokeWidth="0.7" opacity="0.7"/>
+          <circle cx="22" cy="31" r="6" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.5"/>
+          {/* Decorative diamond pattern */}
+          <line x1="22" y1="20" x2="22" y2="42" stroke="#B8860B" strokeWidth="0.4" opacity="0.5"/>
+          <line x1="11" y1="31" x2="33" y2="31" stroke="#B8860B" strokeWidth="0.4" opacity="0.5"/>
         </svg>
       </div>
     )
   }
   return (
     <div className={styles['bj-card']}>
-      <div className={styles['bj-card-text']} style={{ color: card.color }}>
+      {/* Corner marker - top-left */}
+      <div style={{
+        position: 'absolute',
+        top: '2px',
+        left: '2px',
+        fontSize: 'clamp(6px, 0.8vw, 10px)',
+        fontWeight: 700,
+        color: card.color,
+        lineHeight: 1,
+        opacity: 0.9,
+      }}>
         {card.text}
       </div>
-      <div className={styles['bj-card-suite']} style={{ color: card.color }}>
-        {card.suite}
+      {/* Main card content - centered */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+        <div className={styles['bj-card-text']} style={{ color: card.color }}>
+          {card.text}
+        </div>
+        <div className={styles['bj-card-suite']} style={{ color: card.color }}>
+          {card.suite}
+        </div>
+      </div>
+      {/* Corner marker - bottom-right (rotated) */}
+      <div style={{
+        position: 'absolute',
+        bottom: '2px',
+        right: '2px',
+        fontSize: 'clamp(6px, 0.8vw, 10px)',
+        fontWeight: 700,
+        color: card.color,
+        lineHeight: 1,
+        opacity: 0.9,
+        transform: 'rotate(180deg)',
+      }}>
+        {card.text}
       </div>
     </div>
   )
@@ -1032,6 +1072,7 @@ function CoinEl({ coin, onDown, returning }: { coin: Coin; onDown: (e: React.Mou
         top: gridY - CR,
         width: CD,
         height: CD,
+        zIndex: coin.gridIndex,  // Higher gridIndex = higher z-index for proper stacking
       }}
     >
       <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
