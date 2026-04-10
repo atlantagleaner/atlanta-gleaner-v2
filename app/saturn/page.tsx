@@ -63,10 +63,16 @@ export default function SaturnPage() {
         `}</style>
         <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
           {Array.from({ length: 120 }).map((_, i) => {
-            const x = Math.random() * 100
-            const y = Math.random() * 100
-            const size = Math.random() * 1.5 + 0.5
-            const duration = Math.random() * 3 + 2
+            // Use index-based pseudo-random for deterministic server/client values
+            const pseudoRandom = (seed: number) => {
+              const x = Math.sin(seed) * 10000
+              return x - Math.floor(x)
+            }
+            const x = pseudoRandom(i * 1.234) * 100
+            const y = pseudoRandom(i * 2.567) * 100
+            const size = pseudoRandom(i * 3.891) * 1.5 + 0.5
+            const duration = pseudoRandom(i * 4.123) * 3 + 2
+            const delay = pseudoRandom(i * 5.456) * 2
             return (
               <circle
                 key={i}
@@ -77,7 +83,7 @@ export default function SaturnPage() {
                 opacity="0.6"
                 style={{
                   animation: `saturn-star-twinkle ${duration}s ease-in-out infinite`,
-                  animationDelay: `${Math.random() * 2}s`,
+                  animationDelay: `${delay}s`,
                 }}
               />
             )
