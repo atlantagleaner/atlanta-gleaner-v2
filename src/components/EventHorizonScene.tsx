@@ -16,6 +16,8 @@ interface Video {
 
 interface EventHorizonSceneProps {
   videos: Video[]
+  showTitles?: boolean
+  onVideoSelect?: (videoId: string) => void
 }
 
 // Helper to get CSS variable color
@@ -42,7 +44,7 @@ function getCSSVariableColor(varName: string): number {
   return 0xFFAA55 // Fallback
 }
 
-export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
+export default function EventHorizonScene({ videos, showTitles = true, onVideoSelect }: EventHorizonSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<{
     webglRenderer?: THREE.WebGLRenderer
@@ -59,8 +61,19 @@ export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
   useEffect(() => {
     if (!containerRef.current) return
 
-    const width = containerRef.current.clientWidth
-    const height = containerRef.current.clientHeight
+    // Get dimensions with fallbacks for when layout isn't computed yet
+    let width = containerRef.current.clientWidth
+    let height = containerRef.current.clientHeight
+
+    // If container has no height, try to get parent's dimensions
+    if (height === 0 && containerRef.current.parentElement) {
+      const rect = containerRef.current.parentElement.getBoundingClientRect()
+      if (rect.height > 0) height = rect.height
+    }
+
+    // Fallback to window size if still invalid
+    if (width === 0) width = window.innerWidth
+    if (height === 0) height = window.innerHeight - 140
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Setup Camera
@@ -217,15 +230,14 @@ export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
       cssRenderer.domElement.remove()
       webglRenderer.domElement.remove()
     }
-  }, [videos])
+  }, [videos, showTitles])
 
   return (
     <div
       ref={containerRef}
       data-orbital-scene
       style={{
-        width: '100%',
-        height: '100%',
+        flex: 1,
         position: 'relative',
         overflow: 'hidden'
       }}
