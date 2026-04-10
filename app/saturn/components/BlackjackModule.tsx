@@ -76,6 +76,7 @@ type A =
   | { type: 'ODDS_NO'         }
   | { type: 'RESET'           }
   | { type: 'FORGIVE_KARMA'   }
+  | { type: 'CLEAR_RETURNING' }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 let _cid = 0
@@ -314,6 +315,9 @@ function reducer(state: S, action: A): S {
     case 'FORGIVE_KARMA':
       return { ...state, karmaDebt: 0 }
 
+    case 'CLEAR_RETURNING':
+      return { ...state, coins: state.coins.map(c => ({ ...c, returning: false })) }
+
     case 'RESET':
       return initState()
 
@@ -450,14 +454,10 @@ export function BlackjackModule() {
 
   // Clear "returning" flag after animation completes
   useEffect(() => {
-    const coins = state.coins.filter(c => c.returning)
-    if (coins.length === 0) return
+    const hasReturning = state.coins.some(c => c.returning)
+    if (!hasReturning) return
     const timer = setTimeout(() => {
-      dispatch({
-        type: 'SYNC',
-        eng: gameRef.current.getState(),
-        overrides: { coins: state.coins.map(c => ({ ...c, returning: false })) }
-      })
+      dispatch({ type: 'CLEAR_RETURNING' })
     }, 600)
     return () => clearTimeout(timer)
   }, [state.coins])
@@ -470,32 +470,32 @@ export function BlackjackModule() {
     // Check player box
     if (playerBoxRef.current) {
       const rect = playerBoxRef.current.getBoundingClientRect()
-      const relX = x - (contentRect.left - rect.left)
-      const relY = y - (contentRect.top - rect.top)
+      const relX = x - (rect.left - contentRect.left)
+      const relY = y - (rect.top - contentRect.top)
       if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'player'
     }
 
     // Check wager box
     if (wagerBoxRef.current) {
       const rect = wagerBoxRef.current.getBoundingClientRect()
-      const relX = x - (contentRect.left - rect.left)
-      const relY = y - (contentRect.top - rect.top)
+      const relX = x - (rect.left - contentRect.left)
+      const relY = y - (rect.top - contentRect.top)
       if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'wager'
     }
 
     // Check split box (if available)
     if (state.showSplit && splitBoxRef.current) {
       const rect = splitBoxRef.current.getBoundingClientRect()
-      const relX = x - (contentRect.left - rect.left)
-      const relY = y - (contentRect.top - rect.top)
+      const relX = x - (rect.left - contentRect.left)
+      const relY = y - (rect.top - contentRect.top)
       if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'split'
     }
 
     // Check insurance box (if available)
     if (state.showIns && insuranceBoxRef.current) {
       const rect = insuranceBoxRef.current.getBoundingClientRect()
-      const relX = x - (contentRect.left - rect.left)
-      const relY = y - (contentRect.top - rect.top)
+      const relX = x - (rect.left - contentRect.left)
+      const relY = y - (rect.top - contentRect.top)
       if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'insurance'
     }
 
@@ -568,8 +568,8 @@ export function BlackjackModule() {
         const rect = box.getBoundingClientRect()
         const contentRect = contentRef.current?.getBoundingClientRect()
         if (contentRect) {
-          const relX = clamp(cx - (contentRect.left - rect.left), CR, rect.width - CR)
-          const relY = clamp(cy - (contentRect.top - rect.top), CR, rect.height - CR)
+          const relX = clamp(cx - (rect.left - contentRect.left), CR, rect.width - CR)
+          const relY = clamp(cy - (rect.top - contentRect.top), CR, rect.height - CR)
           dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
         }
       }
@@ -618,8 +618,8 @@ export function BlackjackModule() {
           const rect = box.getBoundingClientRect()
           const contentRect = contentRef.current?.getBoundingClientRect()
           if (contentRect) {
-            const relX = clamp(cx - (contentRect.left - rect.left), CR, rect.width - CR)
-            const relY = clamp(cy - (contentRect.top - rect.top), CR, rect.height - CR)
+            const relX = clamp(cx - (rect.left - contentRect.left), CR, rect.width - CR)
+            const relY = clamp(cy - (rect.top - contentRect.top), CR, rect.height - CR)
             dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
           }
         }
@@ -737,7 +737,6 @@ export function BlackjackModule() {
       style={{
         position: 'relative',
         width: '100%',
-        height: '100%',
         aspectRatio: '1 / 1',
         background: '#1A1A2E',
         overflow: 'hidden',
@@ -894,12 +893,22 @@ export function BlackjackModule() {
                 />
               )
             })}
+            {needForDouble > 0 && (
+              <div style={{
+                position: 'absolute',
+                bottom: 4,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+                fontSize: 'clamp(7px, 0.85vw, 9px)',
+                color: 'rgba(184,134,11,0.55)',
+                letterSpacing: '0.08em',
+                pointerEvents: 'none',
+              }}>
+                +{needForDouble} to double
+              </div>
+            )}
           </div>
-          {needForDouble > 0 && (
-            <div style={{ fontSize: 'clamp(7px, 0.85vw, 9px)', color: 'rgba(184,134,11,0.55)', letterSpacing: '0.08em' }}>
-              +{needForDouble} to double
-            </div>
-          )}
         </div>
 
         {/* Split Box (conditional) */}
