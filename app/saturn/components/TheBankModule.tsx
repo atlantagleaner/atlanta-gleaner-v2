@@ -430,7 +430,7 @@ function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: 
 }
 
 // ─── Main Stable Component ─────────────────────────────────────────────────────
-export function BlackjackModule2() {
+export function TheBankModule() {
   const [state, dispatch] = useReducer(reducer, initState())
   const [drag, setDrag] = useState<{ coinId: string; x: number; y: number } | null>(null)
 

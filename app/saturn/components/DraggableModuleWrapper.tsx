@@ -4,17 +4,15 @@ import { useState } from 'react'
 import { TarotModule } from './TarotModule'
 import { AstrologyModule } from './AstrologyModule'
 import { CrystalBallModule } from './CrystalBallModule'
-import { BlackjackModule } from './BlackjackModule'
-import { BlackjackModule2 } from './BlackjackModule2'
+import { TheBankModule } from './TheBankModule'
 import { DraggableModule } from './DraggableModule'
 import { SPACING, PAGE_BOTTOM_PADDING_DESKTOP } from '@/src/styles/tokens'
 
 const MODULES = [
-  { id: 'tarot',     label: 'Tarot',      defaultX: 32,  defaultY: 120, defaultWidth: 340, defaultHeight: 460, minWidth: 280, minHeight: 360, maxWidth: 850, maxHeight: 1150, Component: TarotModule },
+  { id: 'tarot',   label: 'Tarot',      defaultX: 32,  defaultY: 120, defaultWidth: 340, defaultHeight: 460, minWidth: 280, minHeight: 360, maxWidth: 850, maxHeight: 1150, Component: TarotModule },
   { id: 'astrology', label: 'The Wheel',  defaultX: 420, defaultY: 140, defaultWidth: 320, defaultHeight: 420, minWidth: 260, minHeight: 340, maxWidth: 800, maxHeight: 1050, Component: AstrologyModule },
-  { id: 'crystal',   label: 'The Sphere', defaultX: 780, defaultY: 160, defaultWidth: 300, defaultHeight: 400, minWidth: 240, minHeight: 320, maxWidth: 750, maxHeight: 1000, Component: CrystalBallModule },
-  { id: 'blackjack', label: 'Blackjack',  defaultX: 1120, defaultY: 130, defaultWidth: 680, defaultHeight: 680, minWidth: 520, minHeight: 580, maxWidth: 1125, maxHeight: 1125, Component: BlackjackModule },
-  { id: 'blackjack2', label: 'Blackjack II', defaultX: 1820, defaultY: 130, defaultWidth: 680, defaultHeight: 680, minWidth: 520, minHeight: 580, maxWidth: 1125, maxHeight: 1125, Component: BlackjackModule2 },
+  { id: 'crystal', label: 'The Sphere', defaultX: 780, defaultY: 160, defaultWidth: 300, defaultHeight: 400, minWidth: 240, minHeight: 320, maxWidth: 750, maxHeight: 1000, Component: CrystalBallModule },
+  { id: 'thebank', label: 'The Bank',   defaultX: 1120, defaultY: 130, defaultWidth: 680, defaultHeight: 680, minWidth: 520, minHeight: 580, maxWidth: 1125, maxHeight: 1125, Component: TheBankModule },
 ]
 
 function SaturnMobilePanel({ label, children }: { label: string; children: React.ReactNode }) {
