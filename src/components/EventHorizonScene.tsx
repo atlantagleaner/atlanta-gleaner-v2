@@ -55,6 +55,7 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
     controls?: OrbitControls
     accretionDisks?: Array<{ mesh: THREE.Points; speed: number }>
     videoTargets?: Record<string, { camPos: THREE.Vector3; targetPos: THREE.Vector3 }>
+    cssVideoObjects?: CSS3DObject[]
     animationId?: number
   }>({})
 
@@ -133,7 +134,7 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
     buildStars(webglScene)
 
     // Build video billboards
-    buildVideoBillboards(webglScene, cssScene, videos, videoTargets)
+    const cssVideoObjects = buildVideoBillboards(webglScene, cssScene, videos, videoTargets)
 
     // Save overview position
     videoTargets['overview'] = {
@@ -150,6 +151,27 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
       requestAnimationFrame(animate)
 
       TWEEN.update(currentTime)
+
+      // Update video depth ordering (hide when behind black hole)
+      cssVideoObjects.forEach((cssObject) => {
+        // Calculate distance from camera along z-axis
+        const cameraZ = camera.position.z
+        const videoZ = cssObject.position.z
+
+        // If video is significantly behind camera (and thus black hole), hide it
+        // Black hole is at origin, so negative Z means behind from camera's perspective
+        if (videoZ < cameraZ - 5) {
+          // Behind the black hole - reduce interactivity
+          cssObject.element.style.zIndex = '-1'
+          cssObject.element.style.pointerEvents = 'none'
+          cssObject.element.style.opacity = '0'
+        } else {
+          // In front - normal rendering
+          cssObject.element.style.zIndex = '10'
+          cssObject.element.style.pointerEvents = 'auto'
+          cssObject.element.style.opacity = '1'
+        }
+      })
 
       // Spin accretion disks
       accretionDisks.forEach(diskObj => {
@@ -214,6 +236,7 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
       controls,
       accretionDisks,
       videoTargets,
+      cssVideoObjects,
       animationId
     }
 
@@ -358,10 +381,10 @@ function buildStars(scene: THREE.Scene) {
 
   starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3))
   const starsMat = new THREE.PointsMaterial({
-    size: 0.3,
+    size: 0.8,
     color: 0xffddcc,
     transparent: true,
-    opacity: 0.8
+    opacity: 1.0
   })
   const starMesh = new THREE.Points(starsGeo, starsMat)
   scene.add(starMesh)
@@ -372,11 +395,12 @@ function buildVideoBillboards(
   cssScene: THREE.Scene,
   videos: Video[],
   videoTargets: Record<string, { camPos: THREE.Vector3; targetPos: THREE.Vector3 }>
-) {
+): CSS3DObject[] {
   const orbitRadius = 22
   const scale = 0.012
   const width = 800
   const height = 450
+  const cssObjects: CSS3DObject[] = []
 
   videos.forEach((video) => {
     const radians = video.angle * (Math.PI / 180)
@@ -412,6 +436,7 @@ function buildVideoBillboards(
     cssObject.lookAt(new THREE.Vector3(0, y, 0))
     cssObject.scale.set(scale, scale, scale)
     cssScene.add(cssObject)
+    cssObjects.push(cssObject)
 
     // WebGL hole puncher
     const holeMaterial = new THREE.MeshBasicMaterial({
@@ -451,4 +476,6 @@ function buildVideoBillboards(
       targetPos: position.clone()
     }
   })
+
+  return cssObjects
 }
