@@ -498,7 +498,7 @@ export function BlackjackModule() {
     const clientY = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientY : (e as React.MouseEvent).clientY
     const mousePos = toContent(clientX, clientY)
 
-    // Get the box the coin is in to estimate a visual drag position
+    // Get the box the coin is in, calculate its absolute position in content space
     let boxRect: DOMRect | null = null
     if (coin.container === 'player') boxRect = playerBoxRef.current?.getBoundingClientRect() ?? null
     else if (coin.container === 'wager') boxRect = wagerBoxRef.current?.getBoundingClientRect() ?? null
@@ -508,10 +508,13 @@ export function BlackjackModule() {
     const contentRect = contentRef.current?.getBoundingClientRect()
     if (!boxRect || !contentRect) return
 
-    // Store drag info (we'll use gridIndex for snapping, but keep visual feedback)
-    const coinAbsX = (boxRect.left - contentRect.left) + CD * coin.gridIndex  // Position based on gridIndex for visual feedback
-    const coinAbsY = (boxRect.top - contentRect.top) + CD / 2
+    // Coin's absolute position based on gridIndex
+    const gridX = 6 + coin.gridIndex * (CD + 6)
+    const gridY = 27
+    const coinAbsX = (boxRect.left - contentRect.left) + gridX
+    const coinAbsY = (boxRect.top - contentRect.top) + gridY
 
+    // Offset = how far coin is from mouse position
     dragRef.current = { coinId, ox: coinAbsX - mousePos.x, oy: coinAbsY - mousePos.y }
     setDrag({ coinId, x: coinAbsX, y: coinAbsY })
 
@@ -1016,11 +1019,20 @@ export function BlackjackModule() {
 // ─── Coin Component ────────────────────────────────────────────────────────────
 function CoinEl({ coin, onDown, returning }: { coin: Coin; onDown: (e: React.MouseEvent | React.TouchEvent, id: string) => void; returning?: boolean }) {
   const gold = coin.type === 'gold'
+  // Grid-based positioning: each cell is 32px wide (26px coin + 6px gap), centered vertically
+  const gridX = 6 + coin.gridIndex * (CD + 6)
+  const gridY = 27  // Center vertically in 80px container
   return (
     <div
       onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
       onTouchStart={coin.locked ? undefined : e => onDown(e, coin.id)}
       className={`${styles['bj-coin']} ${gold ? styles['gold'] : styles['bronze']} ${coin.locked ? styles['locked'] : ''} ${returning ? styles['returning'] : ''}`}
+      style={{
+        left: gridX - CR,
+        top: gridY - CR,
+        width: CD,
+        height: CD,
+      }}
     >
       <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
         <circle cx="13" cy="13" r="12" fill="none" stroke={gold ? '#9B8C2F' : '#5D5147'} strokeWidth="0.8"/>

@@ -351,11 +351,6 @@
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 6px;
-  padding: 6px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -363,7 +358,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 .bj-coin {
-  position: relative;
+  position: absolute;
   width: 26px;
   height: 26px;
   border-radius: 50%;
