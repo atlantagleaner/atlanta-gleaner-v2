@@ -1,42 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
+import Starfield from './components/Starfield'
 import { Banner }           from '@/src/components/Banner'
 import {
   T, PALETTE_CSS, PAGE_MAX_W, SPACING,
   PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
-interface Star {
-  id: string
-  x: number
-  y: number
-  size: number
-  duration: number
-  delay: number
-}
-
 export default function SaturnPage() {
-  const [stars, setStars] = useState<Star[]>([])
-
   // Apply Saturn theme to entire document (including navbar)
   useEffect(() => {
     document.documentElement.setAttribute('data-saturn', 'true')
     return () => document.documentElement.removeAttribute('data-saturn')
-  }, [])
-
-  // Generate stars only on client after hydration (Mount Pattern)
-  useEffect(() => {
-    const randomStars = Array.from({ length: 120 }).map((_, i) => ({
-      id: `star-${i}`,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      duration: Math.random() * 3 + 2,
-      delay: Math.random() * 2,
-    }))
-    setStars(randomStars)
   }, [])
   return (
     <div data-saturn="true" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
@@ -47,18 +24,8 @@ export default function SaturnPage() {
         pointerEvents: 'none',
         zIndex: 0,
       }}>
-        {/* Starfield */}
-        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
+        {/* Starfield with box-shadow pattern */}
+        <Starfield />
         {/* Animated nebula/space gradient */}
         <div style={{
           position: 'absolute',
@@ -70,7 +37,7 @@ export default function SaturnPage() {
           `,
           animation: 'saturn-nebula-drift 45s ease-in-out infinite, saturn-nebula-pulse 8s ease-in-out infinite',
         }} />
-        {/* Stars */}
+        {/* Nebula animations */}
         <style>{`
           @keyframes saturn-nebula-drift {
             0%, 100% { transform: translate(0, 0); }
@@ -80,27 +47,7 @@ export default function SaturnPage() {
             0%, 100% { opacity: 0.4; }
             50% { opacity: 0.7; }
           }
-          @keyframes saturn-star-twinkle {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-          }
         `}</style>
-        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-          {stars.map((star) => (
-            <circle
-              key={star.id}
-              cx={`${star.x}%`}
-              cy={`${star.y}%`}
-              r={star.size}
-              fill="#F5F1E8"
-              opacity="0.6"
-              style={{
-                animation: `saturn-star-twinkle ${star.duration}s ease-in-out infinite`,
-                animationDelay: `${star.delay}s`,
-              }}
-            />
-          ))}
-        </svg>
       </div>
 
       <style>{`
