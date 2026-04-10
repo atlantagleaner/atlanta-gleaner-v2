@@ -415,7 +415,7 @@ function buildVideoBillboards(
 
     const position = new THREE.Vector3(x, y, z)
 
-    // CSS3D Element (YouTube iframe)
+    // CSS3D Element (YouTube thumbnail with play button overlay)
     const div = document.createElement('div')
     div.className = 'ag-orbital-video'
     div.style.width = '800px'
@@ -423,18 +423,72 @@ function buildVideoBillboards(
     div.style.background = '#000000'
     div.style.boxShadow = '0 0 50px rgba(255, 150, 50, 0.15)'
     div.style.borderRadius = '4px'
+    div.style.position = 'relative'
+    div.style.cursor = 'pointer'
+    div.style.overflow = 'hidden'
 
-    const iframe = document.createElement('iframe')
-    iframe.src = `https://www.youtube.com/embed/${video.youtubeId}?rel=0`
-    iframe.title = video.title
-    iframe.setAttribute('allowfullscreen', '')
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture')
-    iframe.style.width = '100%'
-    iframe.style.height = '100%'
-    iframe.style.border = 'none'
-    iframe.style.borderRadius = '4px'
+    // Thumbnail image
+    const img = document.createElement('img')
+    img.src = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
+    img.alt = video.title
+    img.style.width = '100%'
+    img.style.height = '100%'
+    img.style.objectFit = 'cover'
+    img.style.borderRadius = '4px'
+    img.style.display = 'block'
 
-    div.appendChild(iframe)
+    // Play button overlay with responsive sizing
+    const playButton = document.createElement('div')
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    const playSize = isMobile ? 60 : 80
+    const playFontSize = isMobile ? 28 : 40
+
+    playButton.style.cssText = `
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: ${playSize}px;
+      height: ${playSize}px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    `
+
+    const playIcon = document.createElement('span')
+    playIcon.textContent = '▶'
+    playIcon.style.fontSize = `${playFontSize}px`
+    playIcon.style.color = '#FF0000'
+    playIcon.style.marginLeft = `${isMobile ? 2 : 6}px`
+
+    playButton.appendChild(playIcon)
+
+    // Play button interaction effects
+    const showPlayState = () => {
+      playButton.style.background = 'rgba(255, 255, 255, 1)'
+      playButton.style.transform = 'translate(-50%, -50%) scale(1.1)'
+      playButton.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)'
+    }
+
+    const hidePlayState = () => {
+      playButton.style.background = 'rgba(255, 255, 255, 0.9)'
+      playButton.style.transform = 'translate(-50%, -50%) scale(1)'
+      playButton.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)'
+    }
+
+    playButton.addEventListener('mouseenter', showPlayState)
+    playButton.addEventListener('mouseleave', hidePlayState)
+    playButton.addEventListener('touchstart', showPlayState)
+    playButton.addEventListener('touchend', hidePlayState)
+
+    div.appendChild(img)
+    div.appendChild(playButton)
 
     const cssObject = new CSS3DObject(div)
     cssObject.position.copy(position)
@@ -442,6 +496,22 @@ function buildVideoBillboards(
     cssObject.scale.set(scale, scale, scale)
     cssScene.add(cssObject)
     cssObjects.push(cssObject)
+
+    // Add click handlers to trigger fly-to animation
+    div.addEventListener('click', (e) => {
+      e.stopPropagation()
+      const event = new CustomEvent('flyTo', { detail: { targetId: video.id } })
+      document.dispatchEvent(event)
+    })
+
+    // Enhance hover effect for visual feedback
+    div.addEventListener('mouseenter', () => {
+      div.style.boxShadow = '0 0 80px rgba(255, 150, 50, 0.3)'
+    })
+
+    div.addEventListener('mouseleave', () => {
+      div.style.boxShadow = '0 0 50px rgba(255, 150, 50, 0.15)'
+    })
 
     // WebGL hole puncher
     const holeMaterial = new THREE.MeshBasicMaterial({
