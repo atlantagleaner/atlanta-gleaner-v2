@@ -5,6 +5,7 @@ import { TarotModule } from './TarotModule'
 import { AstrologyModule } from './AstrologyModule'
 import { CrystalBallModule } from './CrystalBallModule'
 import { BlackjackModule } from './BlackjackModule'
+import { BlackjackModule2 } from './BlackjackModule2'
 import { DraggableModule } from './DraggableModule'
 import { SPACING, PAGE_BOTTOM_PADDING_DESKTOP } from '@/src/styles/tokens'
 
@@ -13,6 +14,7 @@ const MODULES = [
   { id: 'astrology', label: 'The Wheel',  defaultX: 420, defaultY: 140, defaultWidth: 320, defaultHeight: 420, minWidth: 260, minHeight: 340, maxWidth: 800, maxHeight: 1050, Component: AstrologyModule },
   { id: 'crystal',   label: 'The Sphere', defaultX: 780, defaultY: 160, defaultWidth: 300, defaultHeight: 400, minWidth: 240, minHeight: 320, maxWidth: 750, maxHeight: 1000, Component: CrystalBallModule },
   { id: 'blackjack', label: 'Blackjack',  defaultX: 1120, defaultY: 130, defaultWidth: 680, defaultHeight: 680, minWidth: 520, minHeight: 580, maxWidth: 1125, maxHeight: 1125, Component: BlackjackModule },
+  { id: 'blackjack2', label: 'Blackjack II', defaultX: 1820, defaultY: 130, defaultWidth: 680, defaultHeight: 680, minWidth: 520, minHeight: 580, maxWidth: 1125, maxHeight: 1125, Component: BlackjackModule2 },
 ]
 
 function SaturnMobilePanel({ label, children }: { label: string; children: React.ReactNode }) {
