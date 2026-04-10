@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { motion, useAnimation } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 // --- TYPES & INTERFACES ---
 
@@ -60,7 +60,6 @@ const loadEngine = async () => {
 
 const generateInitialCoins = (): CoinData[] => {
   const coins: CoinData[] = []
-  // 4 Gold (10), 4 Silver (2), 2 Copper (1) = 50
   for (let i = 0; i < 4; i++) coins.push({ id: `g-${i}`, type: 'gold', value: 10, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
   for (let i = 0; i < 4; i++) coins.push({ id: `s-${i}`, type: 'silver', value: 2, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
   for (let i = 0; i < 2; i++) coins.push({ id: `c-${i}`, type: 'copper', value: 1, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
@@ -156,9 +155,9 @@ const Coin = ({ data, onDrop }: { data: CoinData, onDrop: (id: string, box: { x:
   )
 }
 
-// --- MAIN APP ---
+// --- MAIN COMPONENT ---
 
-export default function BlackjackTriptych() {
+export const BlackjackModule = () => {
   const [coins, setCoins] = useState<CoinData[]>(generateInitialCoins())
   const [gameState, setGameState] = useState<GameState>({
     game: null,
@@ -306,10 +305,10 @@ export default function BlackjackTriptych() {
     setGameState(prev => ({ ...prev, debt: prev.debt + 50, dialogue: "A small debt for another chance..." }))
   }
 
-  if (gameState.stage === 'loading') return <div className="h-screen bg-[#0B0820] flex items-center justify-center text-amber-500 font-mono">Invoking...</div>
+  if (gameState.stage === 'loading') return <div className="h-full flex items-center justify-center text-amber-500 font-mono">Invoking...</div>
 
   return (
-    <div className="flex flex-col h-screen bg-[#0B0820] text-[#F5F1E8] font-mono select-none overflow-hidden">
+    <div className="flex flex-col h-full bg-[#0B0820] text-[#F5F1E8] font-mono select-none overflow-hidden">
       
       {/* VOID */}
       <div className="h-1/3 border-b border-amber-900/30 flex flex-col items-center justify-center p-4 relative bg-[#050410]">
@@ -325,7 +324,7 @@ export default function BlackjackTriptych() {
         <div className="absolute top-2 left-4 text-[10px] uppercase text-amber-600/50">The Altar</div>
         <div className="w-1/4 border-r border-amber-900/20 flex flex-col p-2 space-y-2">
           {['sigil213', 'sigilPairs', 'sigilBuster'].map(s => (
-            <div key={s} ref={el => boxesRef.current[s] = el} className="flex-1 border border-amber-900/40 rounded bg-black/40 relative overflow-hidden flex items-center justify-center">
+            <div key={s} ref={el => { boxesRef.current[s] = el; }} className="flex-1 border border-amber-900/40 rounded bg-black/40 relative overflow-hidden flex items-center justify-center">
               <span className="text-[8px] text-amber-700 uppercase z-0">{s.replace('sigil','')}</span>
               {coins.filter(c => c.originBox === s).map(c => <Coin key={c.id} data={c} onDrop={handleDrop} />)}
             </div>
@@ -346,7 +345,7 @@ export default function BlackjackTriptych() {
         <div className="absolute top-2 left-4 text-[10px] uppercase text-amber-600/50">The Treasury</div>
         <div className="w-1/3 flex flex-col">
           <div className="text-[10px] text-amber-600 mb-1">WALLET ({totals.wallet})</div>
-          <div ref={el => boxesRef.current.wallet = el} className="flex-1 border border-amber-900/40 bg-black/20 rounded relative">
+          <div ref={el => { boxesRef.current.wallet = el; }} className="flex-1 border border-amber-900/40 bg-black/20 rounded relative">
             {coins.filter(c => c.originBox === 'wallet').map(c => <Coin key={c.id} data={c} onDrop={handleDrop} />)}
             {totals.wallet === 0 && totals.wager === 0 && <button onClick={handleReplenish} className="absolute inset-0 text-[10px] text-amber-500 hover:text-amber-400">More?</button>}
           </div>
@@ -363,7 +362,7 @@ export default function BlackjackTriptych() {
         </div>
         <div className="w-1/3 flex flex-col">
           <div className="text-[10px] text-amber-600 mb-1 text-right">BANK ({totals.wager})</div>
-          <div ref={el => boxesRef.current.wager = el} className="flex-1 border border-amber-900/40 bg-black/20 rounded relative">
+          <div ref={el => { boxesRef.current.wager = el; }} className="flex-1 border border-amber-900/40 bg-black/20 rounded relative">
             {coins.filter(c => c.originBox === 'wager').map(c => <Coin key={c.id} data={c} onDrop={handleDrop} />)}
           </div>
         </div>
