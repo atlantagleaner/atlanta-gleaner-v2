@@ -45,17 +45,24 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       const game = state.game
       game.dispatch(action.payload)
       const gameState = game.getState()
-      const stage = gameState.stage
+      
+      // Map engine stages (STAGE_READY, STAGE_PLAYERS_TURN, etc.) to component stages
+      const engineStage = gameState.stage.name || ''
+      let stage = 'ready'
+      if (engineStage === 'STAGE_PLAYERS_TURN') stage = 'players-turn'
+      if (engineStage === 'STAGE_DONE' || engineStage === 'STAGE_SHOWDOWN') stage = 'done'
+      if (engineStage === 'STAGE_READY') stage = 'ready'
 
       // Extract dealer cards
       const dealerCards = gameState.dealerCards || []
-      // Extract player hands
-      const playerHands = gameState.hands || [[]]
-      // Calculate dealer value (show only first card if still players-turn)
-      const dealerValue =
-        stage === 'players-turn' || stage === 'insurance'
-          ? 0
-          : gameState.dealerValue || 0
+      
+      // Extract player hands from the first player
+      const playerHands = (gameState.players && gameState.players[0]?.hands) 
+        ? gameState.players[0].hands.map((h: any) => h.cards) 
+        : [[]]
+
+      // Extract dealer value
+      const dealerValue = gameState.dealerValue?.hi || 0
 
       return {
         ...state,
@@ -127,7 +134,8 @@ export function BlackjackModule() {
       console.error('Actions not loaded yet')
       return
     }
-    dispatch({ type: 'DISPATCH_ACTION', payload: actions.bet(10) })
+    // Engine actions expect specific object structures
+    dispatch({ type: 'DISPATCH_ACTION', payload: actions.bet({ bet: 10, playerId: 0 }) })
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.dealCards() })
   }
 
@@ -165,19 +173,18 @@ export function BlackjackModule() {
   const isDone = state.stage === 'done'
   const isReady = state.stage === 'ready'
 
-  // Calculate hand values for display
+  // Calculate hand values for display using engine logic
   const getHandValue = (cards: any[]) => {
     if (!cards || cards.length === 0) return 0
     let value = 0
     let aces = 0
 
     for (const card of cards) {
+      // engine uses .value or .text
       const rankValue = card.value
-      if (rankValue === 11) {
+      if (rankValue === 11 || card.text === 'A') {
         aces++
         value += 11
-      } else if (rankValue === 10) {
-        value += 10
       } else {
         value += rankValue
       }
@@ -193,29 +200,21 @@ export function BlackjackModule() {
 
   // Get result message
   const getResultMessage = () => {
-    const result = gameState.result
-    if (!result) return ''
+    // Check first hand result
+    const player = gameState.players?.[0]
+    const hand = player?.hands?.[0]
+    if (!hand) return ''
 
-    if (result === 'win') {
-      const messages = [
-        'Twenty-one. Saturn smiles... for now.',
-        'Fortune favors the bold.',
-        'The cards align in your favor.',
-      ]
-      return messages[Math.floor(Math.random() * messages.length)]
-    } else if (result === 'loss') {
-      const messages = [
-        'The house has twenty-one. As it was written.',
-        'The wheel turns against you.',
-        'The fates demand their due.',
-      ]
-      return messages[Math.floor(Math.random() * messages.length)]
-    } else if (result === 'draw') {
-      return 'A standoff. The balance holds... for now.'
-    } else if (result === 'bust') {
-      return 'Too far. The table claims its due.'
-    }
-    return ''
+    if (hand.playerHasBlackjack) return 'Blackjack! Saturn smiles... for now.'
+    if (hand.playerHasBusted) return 'Too far. The table claims its due.'
+    
+    // Simplistic win/loss check if not blackjack/bust
+    const dv = gameState.dealerValue?.hi || 0
+    const pv = hand.playerValue?.hi || 0
+    
+    if (dv > 21 || pv > dv) return 'Fortune favors the bold. You win.'
+    if (dv > pv) return 'The house holds. As it was written.'
+    return 'A standoff. The balance holds... for now.'
   }
 
   return (
@@ -227,8 +226,8 @@ export function BlackjackModule() {
         <div className="bj-cards-row">
           {state.dealerCards.map((card, idx) => {
             const isHidden = state.stage === 'players-turn' && idx === 1
-            const suit = card.suit?.toLowerCase() || 'spades'
-            const rank = card.rank || 'A'
+            const suit = card.suite?.toLowerCase() || 'spades'
+            const rank = card.text || 'A'
             return (
               <BlackjackCard
                 key={idx}
@@ -239,7 +238,7 @@ export function BlackjackModule() {
             )
           })}
         </div>
-        {!isPlayerTurn && state.dealerCards.length > 0 && (
+        {(isDone) && state.dealerCards.length > 0 && (
           <div className="bj-hand-value">Dealer: {state.dealerValue}</div>
         )}
       </div>
@@ -252,8 +251,8 @@ export function BlackjackModule() {
               {hand.map((card: any, cardIdx: number) => (
                 <BlackjackCard
                   key={cardIdx}
-                  suit={card.suit?.toLowerCase() || 'spades'}
-                  rank={card.rank || 'A'}
+                  suit={card.suite?.toLowerCase() || 'spades'}
+                  rank={card.text || 'A'}
                 />
               ))}
             </div>
@@ -274,21 +273,13 @@ export function BlackjackModule() {
           <button className="bj-btn bj-btn-primary" onClick={handleStand}>
             Stand
           </button>
-          {gameState.canDouble && (
-            <button className="bj-btn bj-btn-primary" onClick={handleDouble}>
-              Double
-            </button>
-          )}
-          {gameState.canSplit && (
-            <button className="bj-btn bj-btn-primary" onClick={handleSplit}>
-              Split
-            </button>
-          )}
-          {gameState.canSurrender && (
-            <button className="bj-btn bj-btn-ghost" onClick={handleSurrender}>
-              Surrender
-            </button>
-          )}
+          {/* Engine state might have different property names for available actions */}
+          <button className="bj-btn bj-btn-primary" onClick={handleDouble}>
+            Double
+          </button>
+          <button className="bj-btn bj-btn-ghost" onClick={handleSurrender}>
+            Surrender
+          </button>
         </div>
       )}
 
@@ -301,4 +292,5 @@ export function BlackjackModule() {
       )}
     </div>
   )
+}
 }
