@@ -80,7 +80,7 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
     // Setup Camera
     // ─────────────────────────────────────────────────────────────────────────────
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000)
-    camera.position.set(0, 15, 45)
+    camera.position.set(0, 30, 90)
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Setup Scenes
@@ -136,9 +136,14 @@ export default function EventHorizonScene({ videos, showTitles = true, onVideoSe
     // Build video billboards
     const cssVideoObjects = buildVideoBillboards(webglScene, cssScene, videos, videoTargets)
 
+    // Build titles in 3D space
+    if (showTitles) {
+      buildTitles(cssScene)
+    }
+
     // Save overview position
     videoTargets['overview'] = {
-      camPos: new THREE.Vector3(0, 15, 45),
+      camPos: new THREE.Vector3(0, 30, 90),
       targetPos: new THREE.Vector3(0, 0, 0)
     }
 
@@ -310,10 +315,10 @@ function buildBlackHole(scene: THREE.Scene, accretionDisks: Array<{ mesh: THREE.
   const glowRing = new THREE.Mesh(glowGeo, glowMat)
   scene.add(glowRing)
 
-  // Accretion Disks (three concentric rings with different colors and speeds)
-  createParticleRing(scene, bhRadius * 1.2, bhRadius * 2.0, 15000, 0xffaa44, 0.04, accretionDisks)
-  createParticleRing(scene, bhRadius * 1.8, bhRadius * 3.5, 20000, 0xff5511, 0.02, accretionDisks)
-  createParticleRing(scene, bhRadius * 3.0, bhRadius * 6.0, 15000, 0x551111, 0.01, accretionDisks)
+  // Accretion Disks (three concentric rings with different colors and speeds) - 2x scaled
+  createParticleRing(scene, bhRadius * 2.4, bhRadius * 4.0, 15000, 0xffaa44, 0.04, accretionDisks)
+  createParticleRing(scene, bhRadius * 3.6, bhRadius * 7.0, 20000, 0xff5511, 0.02, accretionDisks)
+  createParticleRing(scene, bhRadius * 6.0, bhRadius * 12.0, 15000, 0x551111, 0.01, accretionDisks)
 }
 
 function createParticleRing(
@@ -396,7 +401,7 @@ function buildVideoBillboards(
   videos: Video[],
   videoTargets: Record<string, { camPos: THREE.Vector3; targetPos: THREE.Vector3 }>
 ): CSS3DObject[] {
-  const orbitRadius = 22
+  const orbitRadius = 44
   const scale = 0.012
   const width = 800
   const height = 450
@@ -478,4 +483,81 @@ function buildVideoBillboards(
   })
 
   return cssObjects
+}
+
+function buildTitles(cssScene: THREE.Scene) {
+  // Site Title ("The Atlanta Gleaner")
+  const siteTitleDiv = document.createElement('div')
+  siteTitleDiv.style.cssText = `
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #EEEDEB;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    padding: 12px 28px;
+    text-shadow: 0 0 20px rgba(238, 237, 235, 0.5);
+    border: 1px solid rgba(238, 237, 235, 0.1);
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0.8;
+  `
+  siteTitleDiv.textContent = 'The Atlanta Gleaner'
+
+  const siteTitle = new CSS3DObject(siteTitleDiv)
+  siteTitle.position.set(0, 25, 30)
+  siteTitle.scale.set(0.012, 0.012, 0.012)
+  cssScene.add(siteTitle)
+
+  // Credit Line ("EDITED BY GEORGE WASHINGTON")
+  const creditDiv = document.createElement('div')
+  creditDiv.style.cssText = `
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #EEEDEB;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
+    padding: 8px 20px;
+    text-shadow: 0 0 15px rgba(238, 237, 235, 0.3);
+    border: 1px solid rgba(238, 237, 235, 0.08);
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0.6;
+    font-style: italic;
+  `
+  creditDiv.textContent = 'Edited by George Washington'
+
+  const credit = new CSS3DObject(creditDiv)
+  credit.position.set(0, 20, 30)
+  credit.scale.set(0.012, 0.012, 0.012)
+  cssScene.add(credit)
+
+  // Page Title ("Orbital")
+  const pageTitleDiv = document.createElement('div')
+  pageTitleDiv.style.cssText = `
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: #EEEDEB;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+    padding: 16px 40px;
+    text-shadow: 0 0 30px rgba(238, 237, 235, 0.6);
+    border: 1px solid rgba(238, 237, 235, 0.15);
+    border-radius: 10px;
+    white-space: nowrap;
+  `
+  pageTitleDiv.textContent = 'Orbital'
+
+  const pageTitle = new CSS3DObject(pageTitleDiv)
+  pageTitle.position.set(0, 12, 35)
+  pageTitle.scale.set(0.012, 0.012, 0.012)
+  cssScene.add(pageTitle)
 }
