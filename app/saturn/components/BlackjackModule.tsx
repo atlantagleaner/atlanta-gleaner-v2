@@ -16,13 +16,6 @@ const KARMA_LIMIT = 8
 const CR          = 13   // coin radius
 const CD          = CR * 2
 
-// Layout boxes — for Preset C (1:1 square) with flex-based betting station
-// Coins positioned INSIDE box divs with these relative coordinates
-const PB = { x: 8,  y: 8, w: 84, h: 84 }  // player coin box (relative to box container, with padding)
-const WB = { x: 8,  y: 8, w: 84, h: 84 }  // wager box (relative to box container, with padding)
-const SB = { x: 304, y: 328, w: 64,  h: 90  }  // split-wager (dynamic)
-const IB = { x: 304, y: 328, w: 64,  h: 90  }  // insurance (same pos, mutually exclusive)
-
 // Dealer bust % by up-card value (standard infinite-deck table)
 const DEALER_BUST: Record<number, number> = {
   1: 11.7, 2: 35.4, 3: 37.6, 4: 40.3, 5: 42.9,
@@ -45,7 +38,7 @@ interface Coin {
   y:         number
   container: 'player' | 'wager' | 'split' | 'insurance'
   locked:    boolean
-  returning?: boolean  // For return animation + glow
+  returning?: boolean
 }
 
 type Prompt = 'more-coins' | 'odds' | null
@@ -74,40 +67,21 @@ interface S {
 }
 
 type A =
-  | { type: 'SYNC';           eng: any; overrides?: Partial<S> }
-  | { type: 'DROP';           id: string; container: Coin['container']; x: number; y: number }
-  | { type: 'BOUNCE';         id: string }
+  | { type: 'SYNC';              eng: any; overrides?: Partial<S> }
+  | { type: 'DROP';              id: string; container: Coin['container']; x: number; y: number }
+  | { type: 'BOUNCE';            id: string }
   | { type: 'MORE_COINS_YES' }
   | { type: 'MORE_COINS_NO'  }
   | { type: 'ODDS_YES'        }
   | { type: 'ODDS_NO'         }
   | { type: 'RESET'           }
+  | { type: 'FORGIVE_KARMA'   }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 let _cid = 0
 function uid() { return `c${++_cid}_${Date.now()}` }
 
 function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)) }
-
-function inBox(x: number, y: number, b: typeof PB) {
-  return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h
-}
-
-function scatter(
-  specs: Array<{ type: 'gold' | 'bronze'; value: number }>,
-  box: typeof PB,
-  container: Coin['container'],
-): Coin[] {
-  return specs.map(s => ({
-    id:        uid(),
-    type:      s.type,
-    value:     s.value,
-    x:         clamp(box.x + CR + Math.random() * (box.w - CD), box.x + CR, box.x + box.w - CR),
-    y:         clamp(box.y + CR + Math.random() * (box.h - CD), box.y + CR, box.y + box.h - CR),
-    container,
-    locked:    false,
-  }))
-}
 
 function valueToCoins(pts: number): Array<{ type: 'gold' | 'bronze'; value: number }> {
   const result: Array<{ type: 'gold' | 'bronze'; value: number }> = []
@@ -120,6 +94,7 @@ function valueToCoins(pts: number): Array<{ type: 'gold' | 'bronze'; value: numb
 function coinsIn(coins: Coin[], container: Coin['container']) {
   return coins.filter(c => c.container === container)
 }
+
 function sumCoins(coins: Coin[]) {
   return coins.reduce((s, c) => s + c.value, 0)
 }
@@ -132,6 +107,27 @@ function bustProb(handCards: EngCard[], deck: EngCard[]): number {
     return val && bjEngine.checkForBusted(val)
   })
   return Math.round((bust.length / deck.length) * 100)
+}
+
+// Scatter coins randomly within a box's measured dimensions
+function scatter(
+  specs: Array<{ type: 'gold' | 'bronze'; value: number }>,
+  box: { width: number; height: number },
+  container: 'player' | 'wager',
+): Coin[] {
+  const padding = CR  // margin from edge to coin center
+  const maxX = box.width - padding
+  const maxY = box.height - padding
+
+  return specs.map(s => ({
+    id:        uid(),
+    type:      s.type,
+    value:     s.value,
+    x:         clamp(padding + Math.random() * (maxX - padding), padding, maxX),
+    y:         clamp(padding + Math.random() * (maxY - padding), padding, maxY),
+    container,
+    locked:    false,
+  }))
 }
 
 // ─── Initial state ─────────────────────────────────────────────────────────────
@@ -153,7 +149,7 @@ function initState(): S {
     wonOnLeft:          0,
     initialBet:         0,
     sideBetsInfo:       {},
-    coins:              scatter(specs, PB, 'player'),
+    coins:              scatter(specs, { width: 100, height: 100 }, 'player'),  // Default size, measured on mount
     karmaDebt:          0,
     showOdds:           false,
     dialogue:           'Looks like someone left their coins behind...',
@@ -207,7 +203,7 @@ function reducer(state: S, action: A): S {
         // Strip wagered coins; return won coins
         coins = coinsIn(state.coins, 'player')
         if (totalWon > 0) {
-          coins = [...coins, ...scatter(valueToCoins(totalWon), PB, 'player')]
+          coins = [...coins, ...scatter(valueToCoins(totalWon), { width: 100, height: 100 }, 'player')]
         }
 
         const wNet = (e.wonOnRight ?? 0) - (e.initialBet ?? 0)
@@ -278,12 +274,11 @@ function reducer(state: S, action: A): S {
     }
 
     case 'BOUNCE': {
-      const nx = clamp(PB.x + CR + Math.random() * (PB.w - CD), PB.x + CR, PB.x + PB.w - CR)
-      const ny = clamp(PB.y + CR + Math.random() * (PB.h - CD), PB.y + CR, PB.y + PB.h - CR)
+      // Return coin to player box with animation (coordinates will be set by caller)
       return {
         ...state,
         coins: state.coins.map(c =>
-          c.id === action.id ? { ...c, container: 'player', x: nx, y: ny, locked: false, returning: true } : c
+          c.id === action.id ? { ...c, container: 'player', locked: false, returning: true } : c
         ),
       }
     }
@@ -296,7 +291,7 @@ function reducer(state: S, action: A): S {
       const added    = 4 * GOLD + 2 * BRONZE   // 10 pts
       const newDebt  = state.karmaDebt + added
       const trigOdds = !state.showOdds && newDebt >= KARMA_LIMIT
-      const newCoins = scatter(specs, PB, 'player').map(c => ({ ...c, returning: true }))
+      const newCoins = scatter(specs, { width: 100, height: 100 }, 'player').map(c => ({ ...c, returning: true }))
       return {
         ...state,
         coins:     [...coinsIn(state.coins, 'player'), ...newCoins],
@@ -316,6 +311,9 @@ function reducer(state: S, action: A): S {
     case 'ODDS_NO':
       return { ...state, prompt: null, dialogue: 'As you wish.' }
 
+    case 'FORGIVE_KARMA':
+      return { ...state, karmaDebt: 0 }
+
     case 'RESET':
       return initState()
 
@@ -324,7 +322,7 @@ function reducer(state: S, action: A): S {
   }
 }
 
-// ─── Card component ────────────────────────────────────────────────────────────
+// ─── Card Component ────────────────────────────────────────────────────────────
 function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolean }) {
   const CARD: React.CSSProperties = {
     width:           44,
@@ -348,125 +346,33 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
         <svg viewBox="0 0 44 62" style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.3 }}>
           <rect x="3" y="3" width="38" height="56" fill="none" stroke="#B8860B" strokeWidth="1"/>
           <circle cx="22" cy="31" r="8" fill="none" stroke="#B8860B" strokeWidth="0.7"/>
-          <line x1="22" y1="3" x2="22" y2="59" stroke="#B8860B" strokeWidth="0.4"/>
-          <line x1="3" y1="31" x2="41" y2="31" stroke="#B8860B" strokeWidth="0.4"/>
         </svg>
       </div>
     )
   }
-  const isRed  = card.color === 'R'
-  const suit   = card.suite === 'hearts' ? '♥' : card.suite === 'diamonds' ? '♦' : card.suite === 'clubs' ? '♣' : '♠'
-  const clr    = isRed ? '#C0392B' : '#1A1A2E'
-  const label  = card.text === '1' ? 'A' : card.text
-
   return (
     <div style={CARD}>
-      <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:11, fontWeight:700, color:clr, lineHeight:1 }}>{label}</span>
-      <span style={{ fontFamily:"Georgia,serif", fontSize:13, color:clr, lineHeight:1 }}>{suit}</span>
-      <span style={{ position:'absolute', bottom:3, right:4, fontFamily:"Georgia,serif", fontSize:13, color:clr, transform:'rotate(180deg)', lineHeight:1 }}>{suit}</span>
+      <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, color: card.color, lineHeight: 1 }}>
+        {card.text}
+      </div>
+      <div style={{ fontSize: 28, color: card.color, fontWeight: 700, marginTop: 8, lineHeight: 1 }}>
+        {card.suite}
+      </div>
     </div>
   )
 }
 
-function HandValue({ val, blackjack, busted }: { val?: { hi:number; lo:number }; blackjack?: boolean; busted?: boolean }) {
-  if (!val) return null
-  const display = blackjack ? 'BJ' : busted ? 'BUST' : val.hi <= 21 ? String(val.hi) : val.hi !== val.lo ? String(val.lo) : String(val.hi)
-  const color   = busted ? 'rgba(200,50,50,0.9)' : blackjack ? '#FFD700' : 'rgba(245,241,232,0.7)'
+// ─── Hand Value Display ────────────────────────────────────────────────────────
+function HandValue({ val, blackjack, busted }: { val?: { hi: number; lo: number }; blackjack?: boolean; busted?: boolean }) {
+  const v = blackjack ? 'BJ' : busted ? 'BUST' : val?.hi ?? val?.lo ?? '?'
   return (
-    <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:10, color, letterSpacing:'0.08em' }}>
-      {display}
-    </span>
-  )
-}
-
-// ─── Coin component ─────────────────────────────────────────────────────────────
-function CoinEl({ coin, onDown }: {
-  coin:    Coin
-  onDown:  (e: React.MouseEvent | React.TouchEvent, id: string) => void
-}) {
-  const gold = coin.type === 'gold'
-  const isReturning = coin.returning
-
-  return (
-    <div
-      onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
-      onTouchStart={coin.locked ? undefined : e => onDown(e, coin.id)}
-      style={{
-        position:     'absolute',
-        left:         coin.x - CR,
-        top:          coin.y - CR,
-        width:        CD,
-        height:       CD,
-        borderRadius: '50%',
-        background:   gold ? '#D4AF37' : '#8B7765',
-        border:       `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
-        boxShadow:    `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3)`,
-        cursor:       coin.locked ? 'default' : 'grab',
-        touchAction:  'none',
-        userSelect:   'none',
-        zIndex:       4,
-        display:      'flex',
-        alignItems:   'center',
-        justifyContent: 'center',
-        overflow:     'hidden',
-        animation:    isReturning
-          ? 'bj-coin-glow 0.6s ease-in-out forwards'
-          : 'bj-coin-glow 1.5s ease-in-out infinite',
-        transition:   isReturning ? 'none' : 'box-shadow 0.2s ease',
-      }}
-    >
-      {/* Greek coin profile relief */}
-      <svg style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5 }} viewBox="0 0 26 26">
-        {/* Profile head facing left */}
-        <circle cx="7" cy="13" r="4" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6" />
-        <path d="M 11 10 Q 12 11 12 13 Q 12 15 11 16" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
-        {/* Circular border engraving */}
-        <circle cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      </svg>
-
-      {/* Greek letter */}
-      <span style={{
-        fontFamily:  "'Georgia',serif",
-        fontSize:     9,
-        fontWeight:   700,
-        color:        gold ? 'rgba(50,40,15,0.8)' : 'rgba(240,235,220,0.7)',
-        letterSpacing: 0,
-        lineHeight:    1,
-        pointerEvents: 'none',
-        textShadow:   '0 0.5px 1px rgba(0,0,0,0.4)',
-        zIndex:       1,
-      }}>
-        {gold ? 'Φ' : 'Ψ'}
-      </span>
+    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: busted ? '#C85050' : blackjack ? '#B8860B' : '#F5F1E8', letterSpacing: '0.08em' }}>
+      {v}
     </div>
   )
 }
 
-// ─── Drag ghost ─────────────────────────────────────────────────────────────────
-function DragGhost({ coin, x, y }: { coin: Coin; x: number; y: number }) {
-  const gold = coin.type === 'gold'
-  return (
-    <div style={{
-      position:     'absolute',
-      left:         x - CR,
-      top:          y - CR,
-      width:        CD,
-      height:       CD,
-      borderRadius: '50%',
-      background:   gold
-        ? 'radial-gradient(circle at 38% 35%, #FFD700, #B8860B 65%, #7A5C00)'
-        : 'radial-gradient(circle at 38% 35%, #D4956A, #8B4513 65%, #4A2400)',
-      border:       `1.5px solid ${gold ? 'rgba(255,215,0,0.55)' : 'rgba(205,133,63,0.55)'}`,
-      boxShadow:    '0 4px 12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.18)',
-      opacity:      0.9,
-      zIndex:       100,
-      cursor:       'grabbing',
-      pointerEvents: 'none',
-    }} />
-  )
-}
-
-// ─── Action button ─────────────────────────────────────────────────────────────
+// ─── Button Component ──────────────────────────────────────────────────────────
 function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: () => void; disabled?: boolean }) {
   return (
     <button
@@ -492,113 +398,179 @@ function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: 
   )
 }
 
-// ─── Section label ─────────────────────────────────────────────────────────────
+// ─── Styles ────────────────────────────────────────────────────────────────────
 const SECT_LABEL: React.CSSProperties = {
   fontFamily:    "'IBM Plex Mono',monospace",
   fontSize:      8,
   fontWeight:    700,
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.18em',
-  color:         'rgba(184,134,11,0.55)',
+  letterSpacing: '0.14em',
+  color:         'rgba(184,134,11,0.70)',
 }
 
 const DIVIDER: React.CSSProperties = {
-  borderBottom: '1px solid rgba(184,134,11,0.10)',
-  margin:       '0',
+  height: '1px',
+  background: 'rgba(184,134,11,0.08)',
+  margin: '0 -16px',
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────────
+// ─── Main Component ────────────────────────────────────────────────────────────
 export function BlackjackModule() {
-  const gameRef   = useRef<any>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const dragRef   = useRef<{ coinId: string; ox: number; oy: number } | null>(null)
-
-  const [state, dispatch] = useReducer(reducer, undefined, initState)
-  const stateRef = useRef(state)
-  useEffect(() => { stateRef.current = state }, [state])
-
+  const [state, dispatch] = useReducer(reducer, initState())
   const [drag, setDrag] = useState<{ coinId: string; x: number; y: number } | null>(null)
-  const dragStateRef = useRef(drag)
-  useEffect(() => { dragStateRef.current = drag }, [drag])
+  const contentRef = useRef<HTMLDivElement>(null)
+  const playerBoxRef = useRef<HTMLDivElement>(null)
+  const wagerBoxRef = useRef<HTMLDivElement>(null)
+  const splitBoxRef = useRef<HTMLDivElement>(null)
+  const insuranceBoxRef = useRef<HTMLDivElement>(null)
+  const gameRef = useRef<any>(new bjLib.Game())
+  const dragRef = useRef<{ coinId: string; ox: number; oy: number } | null>(null)
 
-  // ── Clear returning flag after glow animation completes ──────────────────────
+  // Track box dimensions for measured coin positioning
+  const [boxDims, setBoxDims] = useState<{ player: { width: number; height: number }; wager: { width: number; height: number } }>({
+    player: { width: 100, height: 100 },
+    wager: { width: 100, height: 100 },
+  })
+
+  // Measure box dimensions on mount and window resize
   useEffect(() => {
-    const returningCoins = state.coins.filter(c => c.returning)
-    if (returningCoins.length === 0) return
+    function measureBoxes() {
+      if (playerBoxRef.current && wagerBoxRef.current) {
+        setBoxDims({
+          player: { width: playerBoxRef.current.offsetWidth, height: playerBoxRef.current.offsetHeight },
+          wager: { width: wagerBoxRef.current.offsetWidth, height: wagerBoxRef.current.offsetHeight },
+        })
+      }
+    }
+    measureBoxes()
+    const timer = setTimeout(measureBoxes, 200)  // Measure after layout settles
+    window.addEventListener('resize', measureBoxes)
+    return () => { clearTimeout(timer); window.removeEventListener('resize', measureBoxes) }
+  }, [])
 
+  // Clear "returning" flag after animation completes
+  useEffect(() => {
+    const coins = state.coins.filter(c => c.returning)
+    if (coins.length === 0) return
     const timer = setTimeout(() => {
       dispatch({
         type: 'SYNC',
-        eng: gameRef.current?.getState(),
-        overrides: {
-          coins: state.coins.map(c => c.returning ? { ...c, returning: false } : c),
-        },
+        eng: gameRef.current.getState(),
+        overrides: { coins: state.coins.map(c => ({ ...c, returning: false })) }
       })
     }, 600)
-
     return () => clearTimeout(timer)
   }, [state.coins])
 
-  // ── Content-area coordinate conversion ──────────────────────────────────────
-  function toContent(px: number, py: number): { x: number; y: number } {
-    const r = contentRef.current?.getBoundingClientRect()
-    if (!r) return { x: px, y: py }
-    return { x: px - r.left, y: py - r.top }
+  // Validate drop target — checks all available containers
+  function dropTarget(x: number, y: number): Coin['container'] | null {
+    const contentRect = contentRef.current?.getBoundingClientRect()
+    if (!contentRect) return null
+
+    // Check player box
+    if (playerBoxRef.current) {
+      const rect = playerBoxRef.current.getBoundingClientRect()
+      const relX = x - (contentRect.left - rect.left)
+      const relY = y - (contentRect.top - rect.top)
+      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'player'
+    }
+
+    // Check wager box
+    if (wagerBoxRef.current) {
+      const rect = wagerBoxRef.current.getBoundingClientRect()
+      const relX = x - (contentRect.left - rect.left)
+      const relY = y - (contentRect.top - rect.top)
+      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'wager'
+    }
+
+    // Check split box (if available)
+    if (state.showSplit && splitBoxRef.current) {
+      const rect = splitBoxRef.current.getBoundingClientRect()
+      const relX = x - (contentRect.left - rect.left)
+      const relY = y - (contentRect.top - rect.top)
+      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'split'
+    }
+
+    // Check insurance box (if available)
+    if (state.showIns && insuranceBoxRef.current) {
+      const rect = insuranceBoxRef.current.getBoundingClientRect()
+      const relX = x - (contentRect.left - rect.left)
+      const relY = y - (contentRect.top - rect.top)
+      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) return 'insurance'
+    }
+
+    return null
   }
 
-  function dropTarget(x: number, y: number): Coin['container'] {
-    if (inBox(x, y, WB)) return 'wager'
-    if (stateRef.current.showSplit && inBox(x, y, SB)) return 'split'
-    if (stateRef.current.showIns   && inBox(x, y, IB)) return 'insurance'
-    return 'player'
+  function toContent(clientX: number, clientY: number) {
+    if (!contentRef.current) return { x: 0, y: 0 }
+    const rect = contentRef.current.getBoundingClientRect()
+    return { x: clientX - rect.left, y: clientY - rect.top }
   }
 
-  // ── Mouse drag ───────────────────────────────────────────────────────────────
-  const handleCoinDown = useCallback((e: React.MouseEvent | React.TouchEvent, id: string) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const coin = stateRef.current.coins.find(c => c.id === id)
+  function handleCoinDown(e: React.MouseEvent | React.TouchEvent, coinId: string) {
+    if (e.type === 'mousedown' && (e as React.MouseEvent).button !== 0) return
+
+    const coin = state.coins.find(c => c.id === coinId)
     if (!coin || coin.locked) return
 
-    const { clientX, clientY } = 'touches' in e ? e.touches[0] : e
+    const clientX = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientX : (e as React.MouseEvent).clientX
+    const clientY = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientY : (e as React.MouseEvent).clientY
     const pos = toContent(clientX, clientY)
-    dragRef.current = { coinId: id, ox: coin.x - pos.x, oy: coin.y - pos.y }
-    setDrag({ coinId: id, x: coin.x, y: coin.y })
-  }, [])
 
-  useEffect(() => {
-    function onMove(e: MouseEvent) {
-      if (!dragRef.current) return
-      const pos = toContent(e.clientX, e.clientY)
-      setDrag({ coinId: dragRef.current.coinId, x: pos.x + dragRef.current.ox, y: pos.y + dragRef.current.oy })
+    dragRef.current = { coinId, ox: coin.x - pos.x, oy: coin.y - pos.y }
+    setDrag({ coinId, x: coin.x, y: coin.y })
+
+    if (e.type === 'mousedown') {
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
     }
-    function onUp(e: MouseEvent) {
-      if (!dragRef.current) return
-      const pos   = toContent(e.clientX, e.clientY)
-      const cx    = pos.x + dragRef.current.ox
-      const cy    = pos.y + dragRef.current.oy
-      const target = dropTarget(cx, cy)
-      const box    = target === 'wager' ? WB : target === 'split' ? SB : target === 'insurance' ? IB : PB
-      const fx     = clamp(cx, box.x + CR, box.x + box.w - CR)
-      const fy     = clamp(cy, box.y + CR, box.y + box.h - CR)
+  }
 
-      if (target === 'player') {
-        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
-      } else {
-        dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: fx, y: fy })
+  function onMouseMove(e: MouseEvent) {
+    if (!dragRef.current) return
+    const pos = toContent(e.clientX, e.clientY)
+    setDrag({ coinId: dragRef.current.coinId, x: pos.x + dragRef.current.ox, y: pos.y + dragRef.current.oy })
+  }
+
+  function onMouseUp(e: MouseEvent) {
+    if (!dragRef.current) return
+    const pos = toContent(e.clientX, e.clientY)
+    const cx = pos.x + dragRef.current.ox
+    const cy = pos.y + dragRef.current.oy
+
+    const target = dropTarget(cx, cy)
+
+    if (target) {
+      // Get the appropriate box ref and clamp coordinates
+      let box: HTMLDivElement | null = null
+      if (target === 'player') box = playerBoxRef.current
+      else if (target === 'wager') box = wagerBoxRef.current
+      else if (target === 'split') box = splitBoxRef.current
+      else if (target === 'insurance') box = insuranceBoxRef.current
+
+      if (box) {
+        const rect = box.getBoundingClientRect()
+        const contentRect = contentRef.current?.getBoundingClientRect()
+        if (contentRect) {
+          const relX = clamp(cx - (contentRect.left - rect.left), CR, rect.width - CR)
+          const relY = clamp(cy - (contentRect.top - rect.top), CR, rect.height - CR)
+          dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
+        }
       }
-      dragRef.current = null
-      setDrag(null)
+    } else {
+      // Bounce back to player box
+      dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
     }
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup',   onUp)
-    return () => {
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup',   onUp)
-    }
-  }, [])
 
-  // ── Touch drag (non-passive to block scroll) ────────────────────────────────
+    dragRef.current = null
+    setDrag(null)
+
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onMouseUp)
+  }
+
+  // Touch drag (non-passive to block scroll)
   useEffect(() => {
     const el = contentRef.current
     if (!el) return
@@ -606,39 +578,53 @@ export function BlackjackModule() {
     function onTouchMove(e: TouchEvent) {
       if (!dragRef.current) return
       e.preventDefault()
-      const t   = e.touches[0]
+      const t = e.touches[0]
       const pos = toContent(t.clientX, t.clientY)
       setDrag({ coinId: dragRef.current.coinId, x: pos.x + dragRef.current.ox, y: pos.y + dragRef.current.oy })
     }
+
     function onTouchEnd(e: TouchEvent) {
       if (!dragRef.current) return
-      const t    = e.changedTouches[0]
-      const pos  = toContent(t.clientX, t.clientY)
-      const cx   = pos.x + dragRef.current.ox
-      const cy   = pos.y + dragRef.current.oy
-      const target = dropTarget(cx, cy)
-      const box    = target === 'wager' ? WB : target === 'split' ? SB : target === 'insurance' ? IB : PB
-      const fx     = clamp(cx, box.x + CR, box.x + box.w - CR)
-      const fy     = clamp(cy, box.y + CR, box.y + box.h - CR)
+      const t = e.changedTouches[0]
+      const pos = toContent(t.clientX, t.clientY)
+      const cx = pos.x + dragRef.current.ox
+      const cy = pos.y + dragRef.current.oy
 
-      if (target === 'player') {
-        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
+      const target = dropTarget(cx, cy)
+
+      if (target) {
+        let box: HTMLDivElement | null = null
+        if (target === 'player') box = playerBoxRef.current
+        else if (target === 'wager') box = wagerBoxRef.current
+        else if (target === 'split') box = splitBoxRef.current
+        else if (target === 'insurance') box = insuranceBoxRef.current
+
+        if (box) {
+          const rect = box.getBoundingClientRect()
+          const contentRect = contentRef.current?.getBoundingClientRect()
+          if (contentRect) {
+            const relX = clamp(cx - (contentRect.left - rect.left), CR, rect.width - CR)
+            const relY = clamp(cy - (contentRect.top - rect.top), CR, rect.height - CR)
+            dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
+          }
+        }
       } else {
-        dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: fx, y: fy })
+        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
       }
+
       dragRef.current = null
       setDrag(null)
     }
 
     el.addEventListener('touchmove', onTouchMove, { passive: false })
-    el.addEventListener('touchend',  onTouchEnd,  { passive: false })
+    el.addEventListener('touchend', onTouchEnd, { passive: false })
     return () => {
       el.removeEventListener('touchmove', onTouchMove)
-      el.removeEventListener('touchend',  onTouchEnd)
+      el.removeEventListener('touchend', onTouchEnd)
     }
   }, [])
 
-  // ── Engine action helpers ────────────────────────────────────────────────────
+  // Game action handlers
   function syncEng(overrides?: Partial<S>) {
     dispatch({ type: 'SYNC', eng: gameRef.current.getState(), overrides })
   }
@@ -679,12 +665,8 @@ export function BlackjackModule() {
   function handleInsuranceYes() {
     const half = Math.floor(state.initialBet / 2)
     if (half === 0) { handleInsuranceNo(); return }
-    // Auto-place insurance coins (invisible dealer)
-    const specs = valueToCoins(half)
-    const insCoins = scatter(specs, IB, 'insurance').map(c => ({ ...c, locked: true }))
-    const nextCoins = [...coinsIn(state.coins, 'player'), ...coinsIn(state.coins, 'wager'), ...insCoins]
     gameRef.current.dispatch(bjActions.insurance({ bet: half }))
-    dispatch({ type: 'SYNC', eng: gameRef.current.getState(), overrides: { coins: nextCoins, showIns: false, prompt: null } })
+    syncEng()
   }
 
   function handleInsuranceNo() {
@@ -692,7 +674,7 @@ export function BlackjackModule() {
     syncEng()
   }
 
-  // ── Derived state ────────────────────────────────────────────────────────────
+  // Derived state
   const isReady        = state.stage === 'ready'
   const isDone         = state.stage === 'done'
   const isPlayerRight  = state.stage === 'player-turn-right'
@@ -700,61 +682,38 @@ export function BlackjackModule() {
   const isPlaying      = isPlayerRight || isPlayerLeft
 
   const wagerCoins     = coinsIn(state.coins, 'wager')
-  const splitCoins     = coinsIn(state.coins, 'split')
+  const playerCoins    = coinsIn(state.coins, 'player')
   const wagerVal       = sumCoins(wagerCoins)
-  const splitVal       = sumCoins(splitCoins)
-  const playerCoinsArr = coinsIn(state.coins, 'player')
+  const playerVal      = sumCoins(playerCoins)
 
   const avR = state.handRight?.availableActions ?? {}
   const avL = state.handLeft?.availableActions  ?? {}
 
-  // Current hand for odds (right unless on left turn)
   const activeHand  = isPlayerLeft ? state.handLeft  : state.handRight
   const activeCards = activeHand?.cards ?? []
 
-  // Split button enabled when splitVal === initialBet
-  const splitReady   = avR.split && splitVal === state.initialBet
-  const doubleReady  = isPlayerRight
-    ? avR.double && wagerVal >= state.initialBet * 2
-    : avL.double && wagerVal >= state.initialBet * 2
-
-  // Dealer visible card for odds
   const dealerUp     = state.dealerCards?.[0]
   const dealerBustPct = dealerUp ? (DEALER_BUST[dealerUp.value] ?? 0) : 0
 
-  // Bust probability
   const deck          = gameRef.current?.getState()?.deck ?? []
   const bustPct       = (isPlaying && state.showOdds && activeCards.length > 0)
     ? bustProb(activeCards, deck)
     : null
 
-  // Double-down wager hint
   const needForDouble = isPlaying && avR.double && wagerVal < state.initialBet * 2
     ? state.initialBet * 2 - wagerVal : 0
 
-  // ── Button visibility logic (state-based, no ghost slots) ──
+  // Button visibility logic
   const isFirstMove = activeHand?.cards?.length === 2
   const playerTotal = activeHand?.playerValue?.hi ?? 0
   const dealerUpCard = state.dealerCards?.[0]
-  const dealerIsAce = dealerUpCard?.value === 1 // Ace = 1 in engine
-  const av = isPlayerLeft ? avL : avR // Current available actions for active hand
+  const dealerIsAce = dealerUpCard?.value === 1
+  const av = isPlayerLeft ? avL : avR
 
-  // HIT / STAND: Active hand + total < 21
   const showHitStand = isPlaying && playerTotal < 21 && av.hit && av.stand
-
-  // DOUBLE: First move + 2 cards + valid total (9, 10, 11) + available
-  const showDouble = isFirstMove && av.double &&
-    [9, 10, 11].includes(playerTotal)
-
-  // SPLIT: First move + pair + available
-  const showSplit = isFirstMove && av.split &&
-    activeHand?.cards?.length === 2 &&
-    activeHand.cards[0]?.value === activeHand.cards[1]?.value
-
-  // INSURANCE: First move + dealer Ace + available
+  const showDouble = isFirstMove && av.double && [9, 10, 11].includes(playerTotal)
+  const showSplit = isFirstMove && av.split && activeHand?.cards?.length === 2 && activeHand.cards[0]?.value === activeHand.cards[1]?.value
   const showInsurance = isFirstMove && av.insurance && !!dealerUpCard && dealerIsAce
-
-  // SURRENDER: First move + hand active + available
   const showSurrender = isFirstMove && av.surrender && isPlaying
 
   return (
@@ -782,38 +741,15 @@ export function BlackjackModule() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span style={SECT_LABEL}>Dealer</span>
           {state.dealerCards.length > 0 && (
-            <HandValue
-              val={state.dealerValue ?? undefined}
-              blackjack={state.dealerHasBlackjack}
-              busted={state.dealerHasBusted}
-            />
+            <HandValue val={state.dealerValue ?? undefined} blackjack={state.dealerHasBlackjack} busted={state.dealerHasBusted} />
           )}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', minHeight: 62 }}>
-          {state.dealerCards.length === 0 && (
-            <>
-              <PlayingCard hidden />
-              <PlayingCard hidden />
-            </>
-          )}
-          {state.dealerCards.map((c, i) => (
-            <PlayingCard key={i} card={c} />
-          ))}
-          {/* Hole card — only hidden during player turn */}
-          {(isPlayerRight || isPlayerLeft) && state.dealerHoleCard && (
-            <PlayingCard hidden />
-          )}
-          {/* Odds overlay on dealer up-card */}
+          {state.dealerCards.length === 0 && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
+          {state.dealerCards.map((c, i) => (<PlayingCard key={i} card={c} />))}
+          {(isPlayerRight || isPlayerLeft) && state.dealerHoleCard && (<PlayingCard hidden />)}
           {state.showOdds && dealerUp && isPlaying && (
-            <div style={{
-              marginLeft: 8,
-              alignSelf: 'center',
-              fontFamily: "'IBM Plex Mono',monospace",
-              fontSize: 9,
-              color: 'rgba(184,134,11,0.80)',
-              letterSpacing: '0.08em',
-              lineHeight: 1.6,
-            }}>
+            <div style={{ marginLeft: 8, alignSelf: 'center', fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: 'rgba(184,134,11,0.80)', letterSpacing: '0.08em', lineHeight: 1.6 }}>
               <div>DEALER BUST</div>
               <div style={{ fontSize: 13, color: '#B8860B' }}>{dealerBustPct.toFixed(1)}%</div>
             </div>
@@ -827,28 +763,14 @@ export function BlackjackModule() {
       <div style={{ flex: '0 0 26%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 'clamp(6px, 1%, 10px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span style={SECT_LABEL}>Player</span>
-          {state.handRight?.playerValue && (
-            <HandValue
-              val={state.handRight.playerValue}
-              blackjack={state.handRight.playerHasBlackjack}
-              busted={state.handRight.playerHasBusted}
-            />
-          )}
+          {state.handRight?.playerValue && (<HandValue val={state.handRight.playerValue} blackjack={state.handRight.playerHasBlackjack} busted={state.handRight.playerHasBusted} />)}
         </div>
 
         <div style={{ display: 'flex', gap: 16, minHeight: 62 }}>
-          {/* Right (main) hand */}
           <div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
-              {(isReady && !isDone) && (
-                <>
-                  <PlayingCard hidden />
-                  <PlayingCard hidden />
-                </>
-              )}
-              {(state.handRight?.cards ?? []).map((c: EngCard, i: number) => (
-                <PlayingCard key={i} card={c} />
-              ))}
+              {(isReady && !isDone) && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
+              {(state.handRight?.cards ?? []).map((c: EngCard, i: number) => (<PlayingCard key={i} card={c} />))}
             </div>
             {bustPct !== null && !isPlayerLeft && (
               <div style={{ marginTop: 4, fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: 'rgba(184,134,11,0.75)', letterSpacing: '0.08em' }}>
@@ -857,23 +779,12 @@ export function BlackjackModule() {
             )}
           </div>
 
-          {/* Left (split) hand */}
           {state.showSplit && (state.handLeft?.cards?.length > 0) && (
             <div style={{ borderLeft: '1px solid rgba(184,134,11,0.15)', paddingLeft: 16 }}>
               <div style={{ display: 'flex', gap: 6 }}>
-                {(state.handLeft.cards ?? []).map((c: EngCard, i: number) => (
-                  <PlayingCard key={i} card={c} />
-                ))}
+                {(state.handLeft.cards ?? []).map((c: EngCard, i: number) => (<PlayingCard key={i} card={c} />))}
               </div>
-              {state.handLeft?.playerValue && (
-                <div style={{ marginTop: 4 }}>
-                  <HandValue
-                    val={state.handLeft.playerValue}
-                    blackjack={state.handLeft.playerHasBlackjack}
-                    busted={state.handLeft.playerHasBusted}
-                  />
-                </div>
-              )}
+              {state.handLeft?.playerValue && (<div style={{ marginTop: 4 }}><HandValue val={state.handLeft.playerValue} blackjack={state.handLeft.playerHasBlackjack} busted={state.handLeft.playerHasBusted} /></div>)}
               {bustPct !== null && isPlayerLeft && (
                 <div style={{ marginTop: 4, fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: 'rgba(184,134,11,0.75)', letterSpacing: '0.08em' }}>
                   BUST RISK {bustPct}%
@@ -885,55 +796,21 @@ export function BlackjackModule() {
 
         {/* Dialogue footer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 10 }}>
-          <p style={{
-            fontFamily:   "'Cormorant Garamond',serif",
-            fontStyle:    'italic',
-            fontSize:     13,
-            color:        'rgba(245,241,232,0.75)',
-            margin:       0,
-            lineHeight:   1.4,
-            letterSpacing: '0.02em',
-            flex: 1,
-          }}>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: 'italic', fontSize: 13, color: 'rgba(245,241,232,0.75)', margin: 0, lineHeight: 1.4, letterSpacing: '0.02em', flex: 1 }}>
             {state.dialogue}
           </p>
 
-          {/* Yes / No prompts */}
           {state.prompt && !state.gameOver && (
             <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
               <button
                 onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_YES' }) : () => dispatch({ type: 'ODDS_YES' })}
-                style={{
-                  fontFamily:    "'IBM Plex Mono',monospace",
-                  fontSize:      9,
-                  fontWeight:    700,
-                  textTransform: 'uppercase' as const,
-                  letterSpacing: '0.12em',
-                  color:         '#00D9FF',
-                  background:    'transparent',
-                  border:        '1px solid rgba(0,217,255,0.5)',
-                  padding:       '6px 12px',
-                  cursor:        'pointer',
-                  transition:    'border-color 0.15s, color 0.15s',
-                }}
+                style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: '#00D9FF', background: 'transparent', border: '1px solid rgba(0,217,255,0.5)', padding: '6px 12px', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
               >
                 Yes
               </button>
               <button
                 onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_NO' }) : () => dispatch({ type: 'ODDS_NO' })}
-                style={{
-                  fontFamily:    "'IBM Plex Mono',monospace",
-                  fontSize:      9,
-                  fontWeight:    700,
-                  textTransform: 'uppercase' as const,
-                  letterSpacing: '0.12em',
-                  color:         '#00D9FF',
-                  background:    'transparent',
-                  border:        '1px solid rgba(0,217,255,0.5)',
-                  padding:       '6px 12px',
-                  cursor:        'pointer',
-                  transition:    'border-color 0.15s, color 0.15s',
-                }}
+                style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: 'rgba(245,241,232,0.50)', background: 'transparent', border: '1px solid rgba(184,134,11,0.25)', padding: '6px 12px', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
               >
                 No
               </button>
@@ -944,95 +821,154 @@ export function BlackjackModule() {
 
       <div style={DIVIDER} />
 
-      {/* ── Betting Station (Unified) ── */}
-      <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(12px, 3%, 20px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)', position: 'relative' }}>
+      {/* ── Betting Station ── */}
+      <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr', gap: 'clamp(8px, 2%, 12px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)' }}>
 
-        {/* Left Column: Coins */}
+        {/* Player Coin Box */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Coins</span>
-          <div style={{
-            position:   'relative',
-            flex: 1,
-            minHeight: 'clamp(60px, 12vw, 100px)',
-            border:    '1px solid rgba(184,134,11,0.18)',
-            background: 'rgba(11,8,32,0.35)',
-          }}>
-            {/* Coins rendered inside box (position: relative container) */}
-            {state.coins
-              .filter(c => c.container === 'player' && (!drag || c.id !== drag.coinId))
-              .map(coin => (
-                <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
-              ))
-            }
+          <div
+            ref={playerBoxRef}
+            style={{
+              position: 'relative',
+              flex: 1,
+              minHeight: 'clamp(50px, 10vw, 80px)',
+              border: '1px solid rgba(184,134,11,0.18)',
+              background: 'rgba(11,8,32,0.35)',
+              overflow: 'hidden',
+            }}
+          >
+            {playerCoins.map(coin => {
+              if (drag?.coinId === coin.id) return null
+              return (
+                <CoinEl
+                  key={coin.id}
+                  coin={coin}
+                  onDown={handleCoinDown}
+                  returning={coin.returning}
+                />
+              )
+            })}
           </div>
         </div>
 
-        {/* Right Column: Wager */}
+        {/* Wager Box */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Wager</span>
-          <div style={{
-            position:   'relative',
-            flex: 1,
-            minHeight: 'clamp(60px, 12vw, 100px)',
-            border:    `1px solid rgba(184,134,11,${wagerCoins.length > 0 ? '0.45' : '0.22'})`,
-            background: 'rgba(11,8,32,0.45)',
-            boxShadow: wagerCoins.length > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
-            transition: 'border-color 0.2s, box-shadow 0.2s',
-          }}>
-            {/* Coins rendered inside box (position: relative container) */}
-            {state.coins
-              .filter(c => c.container !== 'player' && (!drag || c.id !== drag.coinId))
-              .map(coin => (
-                <CoinEl key={coin.id} coin={coin} onDown={handleCoinDown} />
-              ))
-            }
+          <div
+            ref={wagerBoxRef}
+            style={{
+              position: 'relative',
+              flex: 1,
+              minHeight: 'clamp(50px, 10vw, 80px)',
+              border: `1px solid rgba(184,134,11,${wagerVal > 0 ? '0.45' : '0.22'})`,
+              background: 'rgba(11,8,32,0.45)',
+              boxShadow: wagerVal > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
+              transition: 'border-color 0.2s, box-shadow 0.2s',
+              overflow: 'hidden',
+            }}
+          >
+            {wagerCoins.map(coin => {
+              if (drag?.coinId === coin.id) return null
+              return (
+                <CoinEl
+                  key={coin.id}
+                  coin={coin}
+                  onDown={handleCoinDown}
+                  returning={coin.returning}
+                />
+              )
+            })}
           </div>
           {needForDouble > 0 && (
-            <div style={{
-              fontSize: 'clamp(7px, 0.85vw, 9px)',
-              color: 'rgba(184,134,11,0.55)',
-              letterSpacing: '0.08em',
-            }}>
+            <div style={{ fontSize: 'clamp(7px, 0.85vw, 9px)', color: 'rgba(184,134,11,0.55)', letterSpacing: '0.08em' }}>
               +{needForDouble} to double
             </div>
           )}
         </div>
+
+        {/* Split Box (conditional) */}
+        {state.showSplit && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+            <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Split</span>
+            <div
+              ref={splitBoxRef}
+              style={{
+                position: 'relative',
+                flex: 1,
+                minHeight: 'clamp(50px, 10vw, 80px)',
+                border: '1px solid rgba(184,134,11,0.25)',
+                background: 'rgba(11,8,32,0.40)',
+                overflow: 'hidden',
+              }}
+            >
+              {coinsIn(state.coins, 'split').map(coin => {
+                if (drag?.coinId === coin.id) return null
+                return (
+                  <CoinEl
+                    key={coin.id}
+                    coin={coin}
+                    onDown={handleCoinDown}
+                    returning={coin.returning}
+                  />
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Insurance Box (conditional) */}
+        {state.showIns && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+            <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Insurance</span>
+            <div
+              ref={insuranceBoxRef}
+              style={{
+                position: 'relative',
+                flex: 1,
+                minHeight: 'clamp(50px, 10vw, 80px)',
+                border: '1px solid rgba(184,134,11,0.25)',
+                background: 'rgba(11,8,32,0.40)',
+                overflow: 'hidden',
+              }}
+            >
+              {coinsIn(state.coins, 'insurance').map(coin => {
+                if (drag?.coinId === coin.id) return null
+                return (
+                  <CoinEl
+                    key={coin.id}
+                    coin={coin}
+                    onDown={handleCoinDown}
+                    returning={coin.returning}
+                  />
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* ── Action buttons (state-based visibility) ── */}
+      {/* ── Action Buttons ── */}
       <div style={{ flex: '0 0 16%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', gap: 'clamp(4px, 1%, 8px)', flexWrap: 'wrap', alignContent: 'flex-start' }}>
-        {showHitStand && (
-          <ActBtn label="Hit" onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')} />
-        )}
-        {showHitStand && (
-          <ActBtn label="Stand" onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} />
-        )}
-        {showDouble && (
-          <ActBtn label="Double" onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} />
-        )}
-        {showSplit && (
-          <ActBtn label="Split" onClick={handleSplit} />
-        )}
-        {showInsurance && (
-          <ActBtn label="Insurance" onClick={handleInsuranceYes} />
-        )}
-        {showSurrender && (
-          <ActBtn label="Surrender" onClick={handleSurrender} />
-        )}
+        {showHitStand && (<ActBtn label="Hit" onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')} />)}
+        {showHitStand && (<ActBtn label="Stand" onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} />)}
+        {showDouble && (<ActBtn label="Double" onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} />)}
+        {showSplit && (<ActBtn label="Split" onClick={handleSplit} />)}
+        {showInsurance && (<ActBtn label="Insurance" onClick={handleInsuranceYes} />)}
+        {showSurrender && (<ActBtn label="Surrender" onClick={handleSurrender} />)}
       </div>
 
-      {/* ── Bottom bar ── */}
+      {/* ── Bottom Bar ── */}
       <div style={{ flex: '0 0 12%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(8px, 0.9vw, 11px)' }}>
-        {/* Deal / Reset */}
         {state.gameOver ? (
-          <button onClick={() => dispatch({ type: 'RESET' })} style={{...DEAL_BTN, fontSize: 'clamp(8px, 1vw, 10px)', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)'}}>
+          <button onClick={() => dispatch({ type: 'RESET' })} style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(8px, 1vw, 10px)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: '#0B0820', background: '#B8860B', border: 'none', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)', cursor: 'pointer' }}>
             Reset
           </button>
         ) : isDone || isReady ? (
           <button
             onClick={handleDeal}
             disabled={wagerVal === 0 || !!state.prompt}
-            style={{ ...DEAL_BTN, opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1, fontSize: 'clamp(8px, 1vw, 10px)', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)' }}
+            style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(8px, 1vw, 10px)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: '#0B0820', background: '#B8860B', border: 'none', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)', cursor: 'pointer', opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1 }}
           >
             Deal
           </button>
@@ -1040,32 +976,54 @@ export function BlackjackModule() {
           <div style={{ width: 'clamp(40px, 5vw, 60px)' }} />
         )}
 
-        {/* Karma debt */}
-        <div style={{ textAlign: 'right' }}>
-          <span style={{ ...SECT_LABEL, display: 'block', marginBottom: 'clamp(2px, 0.5%, 4px)', fontSize: 'clamp(7px, 0.9vw, 9px)' }}>Karma Debt</span>
-          <span style={{
-            fontFamily:    "'IBM Plex Mono',monospace",
-            fontSize:       'clamp(9px, 1vw, 12px)',
-            color:          state.karmaDebt > 0 ? 'rgba(200,80,80,0.85)' : 'rgba(245,241,232,0.30)',
-            letterSpacing: '0.08em',
-          }}>
-            {state.karmaDebt > 0 ? `${state.karmaDebt} pts` : '—'}
-          </span>
+        <div style={{ display: 'flex', gap: 'clamp(6px, 1%, 10px)', alignItems: 'center' }}>
+          {/* Karma Forgiveness Button */}
+          {state.karmaDebt > 0 && (
+            <button
+              onClick={() => dispatch({ type: 'FORGIVE_KARMA' })}
+              style={{
+                fontFamily: "'IBM Plex Mono',monospace",
+                fontSize: 'clamp(7px, 0.8vw, 9px)',
+                fontWeight: 700,
+                textTransform: 'uppercase' as const,
+                letterSpacing: '0.10em',
+                color: 'rgba(200,80,80,0.70)',
+                background: 'transparent',
+                border: '1px solid rgba(200,80,80,0.35)',
+                padding: '5px 10px',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(200,80,80,0.95)'
+                ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(200,80,80,0.55)'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(200,80,80,0.70)'
+                ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(200,80,80,0.35)'
+              }}
+            >
+              Forgive Debt
+            </button>
+          )}
+
+          {/* Karma Debt Display */}
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ ...SECT_LABEL, display: 'block', marginBottom: 'clamp(2px, 0.5%, 4px)', fontSize: 'clamp(7px, 0.9vw, 9px)' }}>Karma Debt</span>
+            <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(9px, 1vw, 12px)', color: state.karmaDebt > 0 ? 'rgba(200,80,80,0.85)' : 'rgba(245,241,232,0.30)', letterSpacing: '0.08em' }}>
+              {state.karmaDebt > 0 ? `${state.karmaDebt} pts` : '—'}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Drag ghost renders on top of everything */}
+      {/* Drag Ghost */}
       {drag && (() => {
         const coin = state.coins.find(c => c.id === drag.coinId)
         return coin ? <DragGhost coin={coin} x={drag.x} y={drag.y} /> : null
       })()}
 
       <style>{`
-        @keyframes bj-fade-in {
-          from { opacity: 0 }
-          to { opacity: 1 }
-        }
-
         @keyframes bj-coin-glow {
           0%, 100% {
             box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3);
@@ -1074,59 +1032,79 @@ export function BlackjackModule() {
             box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 14px rgba(184,134,11,0.5), 0 0 28px rgba(184,134,11,0.2);
           }
         }
-
-        @keyframes bj-coin-arc {
-          0% {
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
       `}</style>
     </div>
   )
 }
 
-// ─── Button styles ─────────────────────────────────────────────────────────────
-const DEAL_BTN: React.CSSProperties = {
-  fontFamily:    "'IBM Plex Mono',monospace",
-  fontSize:       10,
-  fontWeight:     700,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.14em',
-  color:          '#0B0820',
-  background:     '#B8860B',
-  border:         'none',
-  padding:        '9px 18px',
-  cursor:         'pointer',
+// ─── Coin Component ────────────────────────────────────────────────────────────
+function CoinEl({ coin, onDown, returning }: { coin: Coin; onDown: (e: React.MouseEvent | React.TouchEvent, id: string) => void; returning?: boolean }) {
+  const gold = coin.type === 'gold'
+  return (
+    <div
+      onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
+      onTouchStart={coin.locked ? undefined : e => onDown(e, coin.id)}
+      style={{
+        position: 'absolute',
+        left: coin.x - CR,
+        top: coin.y - CR,
+        width: CD,
+        height: CD,
+        borderRadius: '50%',
+        background: gold ? '#D4AF37' : '#8B7765',
+        border: `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
+        boxShadow: `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3)`,
+        cursor: coin.locked ? 'default' : 'grab',
+        touchAction: 'none',
+        userSelect: 'none',
+        zIndex: 4,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        animation: returning ? 'bj-coin-glow 0.6s ease-in-out forwards' : 'bj-coin-glow 1.5s ease-in-out infinite',
+      }}
+    >
+      <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
+        <circle cx="13" cy="13" r="12" fill="none" stroke={gold ? '#9B8C2F' : '#5D5147'} strokeWidth="0.8"/>
+        <text x="13" y="15" fontSize="10" fontFamily="serif" fontWeight="bold" textAnchor="middle" fill={gold ? '#9B8C2F' : '#5D5147'}>
+          {gold ? 'Φ' : 'Ψ'}
+        </text>
+      </svg>
+    </div>
+  )
 }
 
-const YES_BTN: React.CSSProperties = {
-  fontFamily:    "'IBM Plex Mono',monospace",
-  fontSize:       9,
-  fontWeight:     700,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.12em',
-  color:          '#0B0820',
-  background:     '#B8860B',
-  border:         'none',
-  padding:        '5px 14px',
-  cursor:         'pointer',
-}
-
-const NO_BTN: React.CSSProperties = {
-  fontFamily:    "'IBM Plex Mono',monospace",
-  fontSize:       9,
-  fontWeight:     700,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.12em',
-  color:          'rgba(245,241,232,0.50)',
-  background:     'transparent',
-  border:         '1px solid rgba(184,134,11,0.25)',
-  padding:        '5px 14px',
-  cursor:         'pointer',
+// ─── Drag Ghost Component ──────────────────────────────────────────────────────
+function DragGhost({ coin, x, y }: { coin: Coin; x: number; y: number }) {
+  const gold = coin.type === 'gold'
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: x - CR,
+        top: y - CR,
+        width: CD,
+        height: CD,
+        borderRadius: '50%',
+        background: gold ? '#D4AF37' : '#8B7765',
+        border: `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
+        boxShadow: `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 8px rgba(184,134,11,0.3)`,
+        pointerEvents: 'none',
+        zIndex: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        opacity: 0.85,
+      }}
+    >
+      <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
+        <circle cx="13" cy="13" r="12" fill="none" stroke={gold ? '#9B8C2F' : '#5D5147'} strokeWidth="0.8"/>
+        <text x="13" y="15" fontSize="10" fontFamily="serif" fontWeight="bold" textAnchor="middle" fill={gold ? '#9B8C2F' : '#5D5147'}>
+          {gold ? 'Φ' : 'Ψ'}
+        </text>
+      </svg>
+    </div>
+  )
 }
