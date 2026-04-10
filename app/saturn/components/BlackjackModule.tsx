@@ -1,11 +1,24 @@
 'use client'
 
-import { useReducer, useEffect } from 'react'
+import { useReducer, useEffect, useState } from 'react'
 import { BlackjackCard } from './BlackjackCard'
 import './BlackjackModule.css'
 
-const Game = require('blackjack-engine').Game
-const actions = require('blackjack-engine').actions
+let Game: any = null
+let actions: any = null
+
+// Lazy load the blackjack-engine library
+const loadEngine = async () => {
+  if (typeof window !== 'undefined' && !Game) {
+    try {
+      const module = await import('blackjack-engine')
+      Game = module.Game
+      actions = module.actions
+    } catch (error) {
+      console.error('Failed to load blackjack-engine:', error)
+    }
+  }
+}
 
 interface GameState {
   game: any
@@ -74,6 +87,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
 }
 
 export function BlackjackModule() {
+  const [engineLoaded, setEngineLoaded] = useState(false)
   const [state, dispatch] = useReducer(gameReducer, {
     game: null,
     stage: 'ready',
@@ -85,8 +99,19 @@ export function BlackjackModule() {
   })
 
   useEffect(() => {
-    const game = new Game()
-    dispatch({ type: 'INIT_GAME', payload: game })
+    const initEngine = async () => {
+      await loadEngine()
+      if (Game) {
+        try {
+          const game = new Game()
+          dispatch({ type: 'INIT_GAME', payload: game })
+          setEngineLoaded(true)
+        } catch (error) {
+          console.error('Failed to initialize game:', error)
+        }
+      }
+    }
+    initEngine()
   }, [])
 
   if (!state.game) {
@@ -98,27 +123,36 @@ export function BlackjackModule() {
   }
 
   const handleDeal = () => {
+    if (!actions) {
+      console.error('Actions not loaded yet')
+      return
+    }
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.bet(10) })
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.dealCards() })
   }
 
   const handleHit = () => {
+    if (!actions) return
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.hit() })
   }
 
   const handleStand = () => {
+    if (!actions) return
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.stand() })
   }
 
   const handleDouble = () => {
+    if (!actions) return
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.double() })
   }
 
   const handleSplit = () => {
+    if (!actions) return
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.split() })
   }
 
   const handleSurrender = () => {
+    if (!actions) return
     dispatch({ type: 'DISPATCH_ACTION', payload: actions.surrender() })
   }
 
