@@ -84,7 +84,9 @@ type A =
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 let _cid = 0
+let _tempCid = 0  // Counter for deterministic server-side IDs only
 function uid() { return `c${++_cid}_${Date.now()}` }
+function tempUid() { return `temp-${++_tempCid}` }  // Deterministic for SSR, replaced on client
 
 function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)) }
 
@@ -126,7 +128,7 @@ function scatter(
   const maxY = box.height - padding
 
   return specs.map(s => ({
-    id:        uid(),
+    id:        tempUid(),  // Use deterministic ID for SSR; replaced with uid() on client
     type:      s.type,
     value:     s.value,
     x:         randomize ? clamp(padding + Math.random() * (maxX - padding), padding, maxX) : 0,
@@ -448,19 +450,19 @@ export function BlackjackModule() {
     return () => clearTimeout(timer)
   }, [state.coins])
 
-  // Client-side randomization — scatter coins with random positions only after mount
+  // Client-side randomization & ID assignment — scatter coins with random positions and assign real IDs after mount
   useEffect(() => {
     const playerCoins = state.coins.filter(c => c.container === 'player')
     if (playerCoins.length === 0) return
     const specs = playerCoins.map(c => ({ type: c.type, value: c.value }))
     const box = state.boxDims.player
     const scatteredCoins = scatter(specs, box, 'player', true)
-    // Map new positions to existing coins, preserving their IDs
+    // Map new positions and IDs to existing coins (replace temp IDs with real uid() IDs)
     const updatedCoins = state.coins.map(c => {
       if (c.container !== 'player') return c
       const idx = playerCoins.findIndex(pc => pc.id === c.id)
       const scattered = idx >= 0 ? scatteredCoins[idx] : null
-      return scattered ? { ...c, x: scattered.x, y: scattered.y } : c
+      return scattered ? { ...c, id: uid(), x: scattered.x, y: scattered.y } : c
     })
     dispatch({
       type: 'SET_COINS',
