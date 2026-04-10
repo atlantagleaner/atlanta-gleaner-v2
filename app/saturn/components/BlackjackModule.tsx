@@ -73,6 +73,7 @@ type A =
   | { type: 'DROP';              id: string; container: Coin['container']; x: number; y: number }
   | { type: 'BOUNCE';            id: string; playerDims: { width: number; height: number } }
   | { type: 'SET_BOX_DIMS';       dims: { player: { width: number; height: number }; wager: { width: number; height: number } } }
+  | { type: 'SET_COINS';          coins: Coin[] }
   | { type: 'MORE_COINS_YES' }
   | { type: 'MORE_COINS_NO'  }
   | { type: 'ODDS_YES'        }
@@ -118,6 +119,7 @@ function scatter(
   specs: Array<{ type: 'gold' | 'bronze'; value: number }>,
   box: { width: number; height: number },
   container: 'player' | 'wager',
+  randomize: boolean = false,
 ): Coin[] {
   const padding = CR  // margin from edge to coin center
   const maxX = box.width - padding
@@ -127,8 +129,8 @@ function scatter(
     id:        uid(),
     type:      s.type,
     value:     s.value,
-    x:         clamp(padding + Math.random() * (maxX - padding), padding, maxX),
-    y:         clamp(padding + Math.random() * (maxY - padding), padding, maxY),
+    x:         randomize ? clamp(padding + Math.random() * (maxX - padding), padding, maxX) : 0,
+    y:         randomize ? clamp(padding + Math.random() * (maxY - padding), padding, maxY) : 0,
     container,
     locked:    false,
   }))
@@ -294,6 +296,13 @@ function reducer(state: S, action: A): S {
       }
     }
 
+    case 'SET_COINS': {
+      return {
+        ...state,
+        coins: action.coins,
+      }
+    }
+
     case 'BOUNCE': {
       // Return coin to player box with repositioning
       const playerCoins = scatter([{ type: 'gold', value: GOLD }], action.playerDims, 'player')
@@ -438,6 +447,26 @@ export function BlackjackModule() {
     }, 600)
     return () => clearTimeout(timer)
   }, [state.coins])
+
+  // Client-side randomization — scatter coins with random positions only after mount
+  useEffect(() => {
+    const playerCoins = state.coins.filter(c => c.container === 'player')
+    if (playerCoins.length === 0) return
+    const specs = playerCoins.map(c => ({ type: c.type, value: c.value }))
+    const box = state.boxDims.player
+    const scatteredCoins = scatter(specs, box, 'player', true)
+    // Map new positions to existing coins, preserving their IDs
+    const updatedCoins = state.coins.map(c => {
+      if (c.container !== 'player') return c
+      const idx = playerCoins.findIndex(pc => pc.id === c.id)
+      const scattered = idx >= 0 ? scatteredCoins[idx] : null
+      return scattered ? { ...c, x: scattered.x, y: scattered.y } : c
+    })
+    dispatch({
+      type: 'SET_COINS',
+      coins: updatedCoins,
+    })
+  }, [])
 
   // Validate drop target — checks all available containers
   function dropTarget(x: number, y: number): Coin['container'] | null {
