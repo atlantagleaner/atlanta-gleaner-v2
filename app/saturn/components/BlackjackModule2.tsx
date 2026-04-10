@@ -5,9 +5,19 @@ import styles from './blackjack.module.css'
 
 // ─── Engine (CJS) ──────────────────────────────────────────────────────────────
 /* eslint-disable @typescript-eslint/no-var-requires */
-const bjLib = require('engine-blackjack')
-const bjActions = bjLib.actions
-const bjEngine = bjLib.engine
+let bjLib: any
+let bjActions: any
+let bjEngine: any
+try {
+  bjLib = require('engine-blackjack')
+  bjActions = bjLib?.actions
+  bjEngine = bjLib?.engine
+  if (!bjLib || !bjActions || !bjEngine) {
+    console.warn('BlackjackModule2: engine-blackjack library incomplete', { bjLib, bjActions, bjEngine })
+  }
+} catch (e) {
+  console.error('BlackjackModule2: Failed to load engine-blackjack', e)
+}
 /* eslint-enable */
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
@@ -70,7 +80,7 @@ interface S {
 type A =
   | { type: 'SYNC'; eng: any; overrides?: Partial<S> }
   | { type: 'DROP'; id: string; container: Coin['container']; gridIndex: number }
-  | { type: 'BOUNCE'; id: string }
+  | { type: 'BOUNCE'; id: string; playerDims: { width: number; height: number } }
   | { type: 'SET_BOX_DIMS'; dims: { player: { width: number; height: number }; wager: { width: number; height: number } } }
   | { type: 'SET_COINS'; coins: Coin[] }
   | { type: 'MORE_COINS_YES' }
@@ -281,11 +291,14 @@ function reducer(state: S, action: A): S {
     case 'BOUNCE': {
       const playerCoins = coinsIn(state.coins, 'player')
       const maxIndex = playerCoins.reduce((max, c) => Math.max(max, c.gridIndex), -1)
-      const newGridIndex = maxIndex + 1
+      const newGridIndex = Math.max(0, maxIndex + 1)
+      const playerBoxWidth = action.playerDims?.width ?? state.boxDims.player.width
+      const coinsPerRow = Math.max(1, Math.floor(playerBoxWidth / (CD + 6)))
+      const gridIndexClamped = Math.min(newGridIndex, coinsPerRow - 1)
       return {
         ...state,
         coins: state.coins.map(c =>
-          c.id === action.id ? { ...c, container: 'player', gridIndex: newGridIndex, locked: false, returning: true } : c
+          c.id === action.id ? { ...c, container: 'player', gridIndex: gridIndexClamped, locked: false, returning: true } : c
         ),
       }
     }
@@ -348,6 +361,12 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
       </div>
     )
   }
+
+  // Fallback for missing card data
+  const cardText = card.text || '?'
+  const cardSuite = card.suite || '?'
+  const cardColor = card.color || '#B8860B'
+
   return (
     <div className={styles['bj-card']}>
       <div style={{
@@ -356,18 +375,18 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
         left: '2px',
         fontSize: 'clamp(6px, 0.8vw, 10px)',
         fontWeight: 700,
-        color: card.color,
+        color: cardColor,
         lineHeight: 1,
         opacity: 0.9,
       }}>
-        {card.text}
+        {cardText}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-        <div className={styles['bj-card-text']} style={{ color: card.color }}>
-          {card.text}
+        <div className={styles['bj-card-text']} style={{ color: cardColor }}>
+          {cardText}
         </div>
-        <div className={styles['bj-card-suite']} style={{ color: card.color }}>
-          {card.suite}
+        <div className={styles['bj-card-suite']} style={{ color: cardColor }}>
+          {cardSuite}
         </div>
       </div>
       <div style={{
@@ -376,12 +395,12 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
         right: '2px',
         fontSize: 'clamp(6px, 0.8vw, 10px)',
         fontWeight: 700,
-        color: card.color,
+        color: cardColor,
         lineHeight: 1,
         opacity: 0.9,
         transform: 'rotate(180deg)',
       }}>
-        {card.text}
+        {cardText}
       </div>
     </div>
   )
@@ -560,14 +579,18 @@ export function BlackjackModule2() {
         }
       }
     } else {
-      dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
+      const playerDims = playerBoxRef.current ? {
+        width: playerBoxRef.current.offsetWidth,
+        height: playerBoxRef.current.offsetHeight,
+      } : state.boxDims.player
+      dispatch({ type: 'BOUNCE', id: dragRef.current.coinId, playerDims })
     }
 
     dragRef.current = null
     setDrag(null)
     document.removeEventListener('mousemove', onMouseMove)
     document.removeEventListener('mouseup', onMouseUp)
-  }, [dropTarget, toContent])
+  }, [dropTarget, toContent, state.boxDims.player])
 
   // Touch support (non-passive, stable)
   useEffect(() => {
@@ -608,7 +631,11 @@ export function BlackjackModule2() {
           }
         }
       } else {
-        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
+        const playerDims = playerBoxRef.current ? {
+          width: playerBoxRef.current.offsetWidth,
+          height: playerBoxRef.current.offsetHeight,
+        } : state.boxDims.player
+        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId, playerDims })
       }
 
       dragRef.current = null
@@ -622,7 +649,7 @@ export function BlackjackModule2() {
       el.removeEventListener('touchmove', onTouchMove)
       el.removeEventListener('touchend', onTouchEnd)
     }
-  }, [dropTarget, toContent])
+  }, [dropTarget, toContent, state.boxDims.player])
 
   // ─── Game engine wrappers (stable) ─────────────────────────────────────────
   const syncEng = useCallback((overrides?: Partial<S>) => {
@@ -634,9 +661,17 @@ export function BlackjackModule2() {
     const bet = sumCoins(wagerCoins)
     if (bet === 0) return
 
-    gameRef.current = new bjLib.Game()
-    gameRef.current.dispatch(bjActions.deal({ bet }))
-    syncEng()
+    try {
+      if (!bjLib || !bjActions) {
+        console.error('BlackjackModule2: engine-blackjack not loaded')
+        return
+      }
+      gameRef.current = new bjLib.Game()
+      gameRef.current.dispatch(bjActions.deal({ bet }))
+      syncEng()
+    } catch (e) {
+      console.error('BlackjackModule2: Error dealing hand', e)
+    }
   }, [state.coins, syncEng])
 
   const handleHit = useCallback((pos: 'right' | 'left' = 'right') => {
@@ -934,6 +969,10 @@ export function BlackjackModule2() {
         {state.gameOver ? (
           <button onClick={() => dispatch({ type: 'RESET' })} className={styles['bj-deal-button']}>
             Reset Game
+          </button>
+        ) : isDone ? (
+          <button onClick={() => dispatch({ type: 'RESET' })} className={styles['bj-deal-button']}>
+            Reset Hand
           </button>
         ) : !isPlaying ? (
           <button
