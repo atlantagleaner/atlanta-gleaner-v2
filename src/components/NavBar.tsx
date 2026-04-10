@@ -24,6 +24,10 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const navRef      = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Isolated routes that should not show the global navbar
+  const isIsolated = pathname === '/saturn' || pathname === '/runway/orbital'
+  if (isIsolated) return null
+
   // Show date/time on all pages (today's date unless publishedDate provided for case pages)
   const showDatetime = now
   const dateStr = defaultDateStr

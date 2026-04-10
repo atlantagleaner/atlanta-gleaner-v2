@@ -88,7 +88,7 @@ export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
     webglRenderer.domElement.style.position = 'absolute'
     webglRenderer.domElement.style.top = '0'
     webglRenderer.domElement.style.zIndex = '2'
-    webglRenderer.domElement.style.pointerEvents = 'none'
+    webglRenderer.domElement.style.pointerEvents = 'none' // CRITICAL: Allow clicks to pass to CSS renderer
     containerRef.current.appendChild(webglRenderer.domElement)
 
     const cssRenderer = new CSS3DRenderer()
@@ -96,6 +96,7 @@ export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
     cssRenderer.domElement.style.position = 'absolute'
     cssRenderer.domElement.style.top = '0'
     cssRenderer.domElement.style.zIndex = '1'
+    cssRenderer.domElement.style.pointerEvents = 'auto' // CRITICAL: Accept clicks
     containerRef.current.appendChild(cssRenderer.domElement)
 
     const controls = new OrbitControls(camera, cssRenderer.domElement)
@@ -191,11 +192,17 @@ export default function EventHorizonScene({ videos }: EventHorizonSceneProps) {
       mask.rotation.copy(obj.rotation)
       webglScene.add(mask)
 
-      div.onclick = () => document.dispatchEvent(new CustomEvent('flyTo', { detail: { targetId: video.id } }))
+      // CRITICAL: Better event listener for interactivity
+      div.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.dispatchEvent(new CustomEvent('flyTo', { detail: { targetId: video.id } }))
+      })
 
-      const camOffset = pos.clone().normalize().multiplyScalar(25)
+      // Fix Camera Placement: Offset should be subtracted from pos to be BETWEEN origin and video
+      // then facing the black hole (origin)
+      const camOffset = pos.clone().normalize().multiplyScalar(22)
       targets[video.id] = { 
-        camPos: { x: pos.x + camOffset.x, y: pos.y + camOffset.y, z: pos.z + camOffset.z }, 
+        camPos: { x: pos.x - camOffset.x, y: pos.y + 2, z: pos.z - camOffset.z }, 
         targetPos: { x: pos.x, y: pos.y, z: pos.z } 
       }
     })
