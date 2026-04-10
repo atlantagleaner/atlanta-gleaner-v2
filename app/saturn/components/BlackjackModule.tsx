@@ -450,19 +450,19 @@ export function BlackjackModule() {
     return () => clearTimeout(timer)
   }, [state.coins])
 
-  // Client-side randomization & ID assignment — scatter coins with random positions and assign real IDs after mount
+  // Client-side randomization — scatter coins with random positions only after mount
   useEffect(() => {
     const playerCoins = state.coins.filter(c => c.container === 'player')
     if (playerCoins.length === 0) return
     const specs = playerCoins.map(c => ({ type: c.type, value: c.value }))
     const box = state.boxDims.player
     const scatteredCoins = scatter(specs, box, 'player', true)
-    // Map new positions and IDs to existing coins (replace temp IDs with real uid() IDs)
+    // Map new positions to existing coins, keep their temp IDs (no key changes to avoid hydration error)
     const updatedCoins = state.coins.map(c => {
       if (c.container !== 'player') return c
       const idx = playerCoins.findIndex(pc => pc.id === c.id)
       const scattered = idx >= 0 ? scatteredCoins[idx] : null
-      return scattered ? { ...c, id: uid(), x: scattered.x, y: scattered.y } : c
+      return scattered ? { ...c, x: scattered.x, y: scattered.y } : c
     })
     dispatch({
       type: 'SET_COINS',
