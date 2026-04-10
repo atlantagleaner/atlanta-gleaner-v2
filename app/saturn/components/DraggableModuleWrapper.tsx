@@ -1,13 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { TarotModule } from './TarotModule'
 import { AstrologyModule } from './AstrologyModule'
 import { CrystalBallModule } from './CrystalBallModule'
 import { BlackjackModule } from './BlackjackModule'
 import { DraggableModule } from './DraggableModule'
-import { SPACING, PAGE_BOTTOM_PADDING_DESKTOP, ANIMATION } from '@/src/styles/tokens'
-import { useMobileDetect } from '@/src/hooks'
+import { SPACING, PAGE_BOTTOM_PADDING_DESKTOP } from '@/src/styles/tokens'
 
 const MODULES = [
   { id: 'tarot',     label: 'Tarot',      defaultX: 32,  defaultY: 120, defaultWidth: 340, defaultHeight: 460, minWidth: 280, minHeight: 360, maxWidth: 850, maxHeight: 1150, Component: TarotModule },
@@ -72,48 +71,65 @@ function SaturnMobilePanel({ label, children }: { label: string; children: React
 }
 
 export function DraggableModuleWrapper() {
-  const isMobile = useMobileDetect(768)
-
-  if (isMobile) {
-    return (
-      <div style={{ padding: `0 12px ${PAGE_BOTTOM_PADDING_DESKTOP}`, position: 'relative', zIndex: 10 }}>
+  return (
+    <>
+      {/* Mobile layout - hidden on desktop via CSS */}
+      <div
+        style={{
+          padding: `0 12px ${PAGE_BOTTOM_PADDING_DESKTOP}`,
+          position: 'relative',
+          zIndex: 10,
+          display: 'none',
+        }}
+        className="saturn-mobile-layout"
+      >
         {MODULES.map(({ id, label, Component }) => (
           <SaturnMobilePanel key={id} label={label}>
             <Component />
           </SaturnMobilePanel>
         ))}
       </div>
-    )
-  }
 
-  return (
-    <div
-      className="saturn-bottom"
-      style={{
-        position: 'relative',
-        zIndex: 10,
-        minHeight: '1600px',
-        maxWidth: '100vw',
-        padding: `0 ${SPACING.lg} ${PAGE_BOTTOM_PADDING_DESKTOP}`,
-      }}
-    >
-      {MODULES.map(({ id, label, defaultX, defaultY, defaultWidth, defaultHeight, minWidth, minHeight, maxWidth, maxHeight, Component }) => (
-        <DraggableModule
-          key={id}
-          id={id}
-          label={label}
-          defaultX={defaultX}
-          defaultY={defaultY}
-          defaultWidth={defaultWidth}
-          defaultHeight={defaultHeight}
-          minWidth={minWidth}
-          minHeight={minHeight}
-          maxWidth={maxWidth}
-          maxHeight={maxHeight}
-        >
-          <Component />
-        </DraggableModule>
-      ))}
-    </div>
+      {/* Desktop layout - shown on desktop via CSS */}
+      <div
+        className="saturn-bottom saturn-desktop-layout"
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          minHeight: '1600px',
+          maxWidth: '100vw',
+          padding: `0 ${SPACING.lg} ${PAGE_BOTTOM_PADDING_DESKTOP}`,
+        }}
+      >
+        {MODULES.map(({ id, label, defaultX, defaultY, defaultWidth, defaultHeight, minWidth, minHeight, maxWidth, maxHeight, Component }) => (
+          <DraggableModule
+            key={id}
+            id={id}
+            label={label}
+            defaultX={defaultX}
+            defaultY={defaultY}
+            defaultWidth={defaultWidth}
+            defaultHeight={defaultHeight}
+            minWidth={minWidth}
+            minHeight={minHeight}
+            maxWidth={maxWidth}
+            maxHeight={maxHeight}
+          >
+            <Component />
+          </DraggableModule>
+        ))}
+      </div>
+
+      <style>{`
+        @media (max-width: 767px) {
+          .saturn-mobile-layout { display: block !important; }
+          .saturn-desktop-layout { display: none !important; }
+        }
+        @media (min-width: 768px) {
+          .saturn-mobile-layout { display: none !important; }
+          .saturn-desktop-layout { display: block !important; }
+        }
+      `}</style>
+    </>
   )
 }

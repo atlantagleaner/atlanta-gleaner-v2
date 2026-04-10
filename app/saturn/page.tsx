@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
 import Starfield from './components/Starfield'
 import { Banner }           from '@/src/components/Banner'
@@ -10,13 +9,8 @@ import {
 } from '@/src/styles/tokens'
 
 export default function SaturnPage() {
-  // Apply Saturn theme to entire document (including navbar)
-  useEffect(() => {
-    document.documentElement.setAttribute('data-saturn', 'true')
-    return () => document.documentElement.removeAttribute('data-saturn')
-  }, [])
   return (
-    <div data-saturn="true" style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
+    <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Space background with pulsing nebula effect */}
       <div style={{
         position: 'fixed',

@@ -1,36 +1,37 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-const generateStars = (count: number) => {
+// Deterministic star generation using seeded random
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed++) * 10000
+  return x - Math.floor(x)
+}
+
+const generateDeterministicStars = (count: number, seedStart: number) => {
   let boxShadow = ''
+  let seed = seedStart
   for (let i = 0; i < count; i++) {
-    const x = Math.floor(Math.random() * 100)
-    const y = Math.floor(Math.random() * 100)
+    const x = Math.floor(seededRandom(seed++) * 100)
+    const y = Math.floor(seededRandom(seed++) * 100)
     boxShadow += `${x}vw ${y}vh #FFF`
     if (i < count - 1) boxShadow += ', '
   }
   return boxShadow
 }
 
+// Pre-generate deterministic star patterns (consistent across server and client)
+const SMALL_STARS = generateDeterministicStars(150, 1001)
+const MEDIUM_STARS = generateDeterministicStars(50, 2001)
+const LARGE_STARS = generateDeterministicStars(20, 3001)
+
 export default function Starfield() {
-  const [smallStars, setSmallStars] = useState('')
-  const [mediumStars, setMediumStars] = useState('')
-  const [largeStars, setLargeStars] = useState('')
-
-  // Generate fresh random stars on client after hydration
-  useEffect(() => {
-    setSmallStars(generateStars(150))
-    setMediumStars(generateStars(50))
-    setLargeStars(generateStars(20))
-  }, [])
-
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
       <style>{`
-        .star-layer-1 { width: 1px; height: 1px; background: transparent; box-shadow: ${smallStars}; }
-        .star-layer-2 { width: 2px; height: 2px; background: transparent; box-shadow: ${mediumStars}; }
-        .star-layer-3 { width: 3px; height: 3px; background: transparent; box-shadow: ${largeStars}; }
+        .star-layer-1 { width: 1px; height: 1px; background: transparent; box-shadow: ${SMALL_STARS}; }
+        .star-layer-2 { width: 2px; height: 2px; background: transparent; box-shadow: ${MEDIUM_STARS}; }
+        .star-layer-3 { width: 3px; height: 3px; background: transparent; box-shadow: ${LARGE_STARS}; }
       `}</style>
       <div className="star-layer-1" />
       <div className="star-layer-2" />
