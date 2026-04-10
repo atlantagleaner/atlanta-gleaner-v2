@@ -782,7 +782,7 @@ export function BlackjackModule() {
             <HandValue val={state.dealerValue ?? undefined} blackjack={state.dealerHasBlackjack} busted={state.dealerHasBusted} />
           )}
         </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', minHeight: 62 }}>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', minHeight: 62, justifyContent: 'center' }}>
           {state.dealerCards.length === 0 && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
           {state.dealerCards.map((c, i) => (<PlayingCard key={i} card={c} />))}
           {(isPlayerRight || isPlayerLeft) && state.dealerHoleCard && (<PlayingCard hidden />)}
@@ -804,7 +804,7 @@ export function BlackjackModule() {
           {state.handRight?.playerValue && (<HandValue val={state.handRight.playerValue} blackjack={state.handRight.playerHasBlackjack} busted={state.handRight.playerHasBusted} />)}
         </div>
 
-        <div style={{ display: 'flex', gap: 16, minHeight: 62 }}>
+        <div style={{ display: 'flex', gap: 16, minHeight: 62, justifyContent: 'center' }}>
           <div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
               {(isReady && !isDone) && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
@@ -859,12 +859,11 @@ export function BlackjackModule() {
 
       <div style={DIVIDER} />
 
-      {/* ── Betting Station ── */}
-      <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr', gap: 'clamp(8px, 2%, 12px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)' }}>
+      {/* ── Coins Grid (compact) ── */}
+      <div style={{ flex: '0 0 14%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr', gap: 'clamp(8px, 2%, 12px)', background: 'transparent' }}>
 
         {/* Player Coin Box */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
-          <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Coins</span>
           <div
             ref={playerBoxRef}
             style={{
@@ -1012,7 +1011,7 @@ export function BlackjackModule() {
           <button onClick={() => dispatch({ type: 'RESET' })} style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(8px, 1vw, 10px)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: '#0B0820', background: '#B8860B', border: 'none', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)', cursor: 'pointer' }}>
             Reset
           </button>
-        ) : isDone || isReady ? (
+        ) : !isPlaying ? (
           <button
             onClick={handleDeal}
             disabled={wagerVal === 0 || !!state.prompt}
