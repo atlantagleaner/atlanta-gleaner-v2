@@ -346,17 +346,43 @@ function reducer(state: S, action: A): S {
 }
 
 // ─── Card Component (stable rendering) ───────────────────────────────────────
+// ─── Suit Color Helper ─────────────────────────────────────────────────────
+function getSuitColor(card?: EngCard): string {
+  if (!card?.suite) return '#1A1A1A'
+  const suite = card.suite.toLowerCase()
+  // Red for hearts (♥) and diamonds (♦)
+  if (suite.includes('♥') || suite.includes('heart') || suite.includes('♦') || suite.includes('diamond')) {
+    return '#C23B3B'
+  }
+  // Black for clubs (♣) and spades (♠)
+  return '#1A1A1A'
+}
+
+// ─── Playing Card Component (Analog/Vintage Aesthetics) ────────────────────
 function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolean }) {
   if (hidden || !card) {
+    // Hidden card with mystical Saturn rings
     return (
       <div className={`${styles['bj-card']} ${styles['hidden']}`}>
         <svg viewBox="0 0 44 62" className={styles['bj-card-back-svg']}>
+          {/* Ornate outer frame */}
           <rect x="2" y="2" width="40" height="58" fill="none" stroke="#B8860B" strokeWidth="0.8" />
           <rect x="4" y="4" width="36" height="54" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.6" />
-          <circle cx="22" cy="31" r="10" fill="none" stroke="#B8860B" strokeWidth="0.7" opacity="0.7" />
-          <circle cx="22" cy="31" r="6" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.5" />
-          <line x1="22" y1="20" x2="22" y2="42" stroke="#B8860B" strokeWidth="0.4" opacity="0.5" />
-          <line x1="11" y1="31" x2="33" y2="31" stroke="#B8860B" strokeWidth="0.4" opacity="0.5" />
+
+          {/* Saturn rings - concentric ellipses */}
+          <ellipse cx="22" cy="31" rx="14" ry="8" fill="none" stroke="#B8860B" strokeWidth="0.6" opacity="0.8" />
+          <ellipse cx="22" cy="31" rx="11" ry="6" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+          <ellipse cx="22" cy="31" rx="8" ry="4.5" fill="none" stroke="#B8860B" strokeWidth="0.4" opacity="0.6" />
+
+          {/* Center circle (planet) */}
+          <circle cx="22" cy="31" r="3.5" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.8" />
+          <circle cx="22" cy="31" r="2" fill="#B8860B" opacity="0.4" />
+
+          {/* Radiating lines (cosmic rays) */}
+          <line x1="22" y1="15" x2="22" y2="8" stroke="#B8860B" strokeWidth="0.3" opacity="0.5" />
+          <line x1="22" y1="47" x2="22" y2="54" stroke="#B8860B" strokeWidth="0.3" opacity="0.5" />
+          <line x1="8" y1="31" x2="2" y2="31" stroke="#B8860B" strokeWidth="0.3" opacity="0.5" />
+          <line x1="36" y1="31" x2="42" y2="31" stroke="#B8860B" strokeWidth="0.3" opacity="0.5" />
         </svg>
       </div>
     )
@@ -364,41 +390,84 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
 
   // Fallback for missing card data
   const cardText = card.text || '?'
-  const cardSuite = card.suite || '?'
-  const cardColor = card.color || '#B8860B'
+  const cardSuite = card.suite || '♣'
+  const suitColor = getSuitColor(card)
 
   return (
-    <div className={styles['bj-card']}>
+    <div className={styles['bj-card']} style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Ornate geometric frame */}
+      <svg
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+        viewBox="0 0 100 150"
+        preserveAspectRatio="none"
+      >
+        {/* Outer frame */}
+        <rect x="3" y="3" width="94" height="144" fill="none" stroke="#B8860B" strokeWidth="1" opacity="0.8" />
+        {/* Inner frame */}
+        <rect x="6" y="6" width="88" height="138" fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.6" />
+
+        {/* Corner flourishes - top-left */}
+        <line x1="8" y1="8" x2="15" y2="8" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+        <line x1="8" y1="8" x2="8" y2="15" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+
+        {/* Corner flourishes - top-right */}
+        <line x1="92" y1="8" x2="85" y2="8" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+        <line x1="92" y1="8" x2="92" y2="15" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+
+        {/* Corner flourishes - bottom-left */}
+        <line x1="8" y1="142" x2="15" y2="142" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+        <line x1="8" y1="142" x2="8" y2="135" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+
+        {/* Corner flourishes - bottom-right */}
+        <line x1="92" y1="142" x2="85" y2="142" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+        <line x1="92" y1="142" x2="92" y2="135" stroke="#B8860B" strokeWidth="0.5" opacity="0.7" />
+      </svg>
+
+      {/* Top-left corner value */}
       <div style={{
         position: 'absolute',
-        top: '2px',
-        left: '2px',
-        fontSize: 'clamp(6px, 0.8vw, 10px)',
+        top: '4px',
+        left: '4px',
+        fontFamily: 'Cormorant Garamond, serif',
+        fontSize: 'clamp(8px, 1.2vw, 14px)',
         fontWeight: 700,
-        color: cardColor,
+        color: suitColor,
         lineHeight: 1,
-        opacity: 0.9,
+        textShadow: `0 0 8px ${suitColor}66`,
+        zIndex: 1,
       }}>
         {cardText}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-        <div className={styles['bj-card-text']} style={{ color: cardColor }}>
-          {cardText}
-        </div>
-        <div className={styles['bj-card-suite']} style={{ color: cardColor }}>
-          {cardSuite}
-        </div>
-      </div>
+
+      {/* Center - Large suit symbol (diagonal positioning) */}
       <div style={{
         position: 'absolute',
-        bottom: '2px',
-        right: '2px',
-        fontSize: 'clamp(6px, 0.8vw, 10px)',
-        fontWeight: 700,
-        color: cardColor,
+        top: '50%',
+        right: '15%',
+        transform: 'translateY(-50%)',
+        fontSize: 'clamp(32px, 8vw, 48px)',
+        color: suitColor,
+        textShadow: `0 0 12px ${suitColor}80`,
+        zIndex: 1,
         lineHeight: 1,
-        opacity: 0.9,
+        fontFamily: 'serif',
+      }}>
+        {cardSuite}
+      </div>
+
+      {/* Bottom-right corner value (rotated 180°) */}
+      <div style={{
+        position: 'absolute',
+        bottom: '4px',
+        right: '4px',
+        fontFamily: 'Cormorant Garamond, serif',
+        fontSize: 'clamp(8px, 1.2vw, 14px)',
+        fontWeight: 700,
+        color: suitColor,
+        lineHeight: 1,
+        textShadow: `0 0 8px ${suitColor}66`,
         transform: 'rotate(180deg)',
+        zIndex: 1,
       }}>
         {cardText}
       </div>

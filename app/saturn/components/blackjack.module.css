@@ -94,8 +94,15 @@
 }
 
 .bj-card.hidden {
-  background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1E 100%);
+  background: linear-gradient(135deg, #0B0820 0%, #050310 100%);
   border-color: rgba(184, 134, 11, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.60), inset 0 0 12px rgba(184, 134, 11, 0.08);
+}
+
+.bj-card-back-svg {
+  opacity: 0.75;
+  width: 100%;
+  height: 100%;
 }
 
 .bj-card-text {
@@ -108,10 +115,6 @@
   font-size: clamp(10px, 2vw, 16px);
   font-weight: 500;
   margin-top: 2px;
-}
-
-.bj-card-back-svg {
-  opacity: 0.6;
 }
 
 /* ─── HAND VALUE DISPLAY ───────────────────────────────────────────────────── */
