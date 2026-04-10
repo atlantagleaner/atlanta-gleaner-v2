@@ -25,7 +25,7 @@ export default function SaturnPage() {
         zIndex: 0,
       }}>
         {/* Starfield with box-shadow pattern */}
-        {/* <Starfield /> */}
+        <Starfield />
         {/* Animated nebula/space gradient */}
         <div style={{
           position: 'absolute',

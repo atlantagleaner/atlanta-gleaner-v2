@@ -35,8 +35,7 @@ interface Coin {
   id:        string
   type:      'gold' | 'bronze'
   value:     number
-  x:         number
-  y:         number
+  gridIndex: number
   container: 'player' | 'wager' | 'split' | 'insurance'
   locked:    boolean
   returning?: boolean
@@ -70,7 +69,7 @@ interface S {
 
 type A =
   | { type: 'SYNC';              eng: any; overrides?: Partial<S> }
-  | { type: 'DROP';              id: string; container: Coin['container']; x: number; y: number }
+  | { type: 'DROP';              id: string; container: Coin['container']; gridIndex: number }
   | { type: 'BOUNCE';            id: string; playerDims: { width: number; height: number } }
   | { type: 'SET_BOX_DIMS';       dims: { player: { width: number; height: number }; wager: { width: number; height: number } } }
   | { type: 'SET_COINS';          coins: Coin[] }
@@ -116,23 +115,18 @@ function bustProb(handCards: EngCard[], deck: EngCard[]): number {
   return Math.round((bust.length / deck.length) * 100)
 }
 
-// Scatter coins randomly within a box's measured dimensions
+// Place coins in a grid row (gridIndex 0, 1, 2, ...)
 function scatter(
   specs: Array<{ type: 'gold' | 'bronze'; value: number }>,
   box: { width: number; height: number },
   container: 'player' | 'wager',
   randomize: boolean = false,
 ): Coin[] {
-  const padding = CR  // margin from edge to coin center
-  const maxX = box.width - padding
-  const maxY = box.height - padding
-
-  return specs.map(s => ({
+  return specs.map((s, idx) => ({
     id:        tempUid(),  // Use deterministic ID for SSR; replaced with uid() on client
     type:      s.type,
     value:     s.value,
-    x:         randomize ? clamp(padding + Math.random() * (maxX - padding), padding, maxX) : 0,
-    y:         randomize ? clamp(padding + Math.random() * (maxY - padding), padding, maxY) : 0,
+    gridIndex: idx,
     container,
     locked:    false,
   }))
@@ -272,12 +266,12 @@ function reducer(state: S, action: A): S {
     }
 
     case 'DROP': {
-      const { id, container, x, y } = action
+      const { id, container, gridIndex } = action
       return {
         ...state,
         coins: state.coins.map(c =>
           c.id === id
-            ? { ...c, container, x, y, locked: container !== 'player' }
+            ? { ...c, container, gridIndex, locked: container !== 'player' }
             : c
         ),
       }
@@ -285,16 +279,10 @@ function reducer(state: S, action: A): S {
 
     case 'SET_BOX_DIMS': {
       const newDims = action.dims
-      // Rescatter player coins to fit new dimensions
-      const playerCoins = coinsIn(state.coins, 'player')
-      const wagerCoins = coinsIn(state.coins, 'wager')
-      const otherCoins = state.coins.filter(c => c.container !== 'player' && c.container !== 'wager')
-      const scatteredPlayer = scatter(playerCoins.map(c => ({ type: c.type, value: c.value })), newDims.player, 'player')
-      const scatteredWager = scatter(wagerCoins.map(c => ({ type: c.type, value: c.value })), newDims.wager, 'wager')
+      // No need to rescatter with grid-based positioning
       return {
         ...state,
         boxDims: newDims,
-        coins: [...scatteredPlayer, ...scatteredWager, ...otherCoins],
       }
     }
 
@@ -307,12 +295,13 @@ function reducer(state: S, action: A): S {
 
     case 'BOUNCE': {
       // Return coin to player box with repositioning
-      const playerCoins = scatter([{ type: 'gold', value: GOLD }], action.playerDims, 'player')
-      const newPos = playerCoins[0]
+      const playerCoins = coinsIn(state.coins, 'player')
+      const maxIndex = playerCoins.reduce((max, c) => Math.max(max, c.gridIndex), -1)
+      const newGridIndex = maxIndex + 1
       return {
         ...state,
         coins: state.coins.map(c =>
-          c.id === action.id ? { ...c, container: 'player', x: newPos.x, y: newPos.y, locked: false, returning: true } : c
+          c.id === action.id ? { ...c, container: 'player', gridIndex: newGridIndex, locked: false, returning: true } : c
         ),
       }
     }
@@ -450,25 +439,8 @@ export function BlackjackModule() {
     return () => clearTimeout(timer)
   }, [state.coins])
 
-  // Client-side randomization — scatter coins with random positions only after mount
-  useEffect(() => {
-    const playerCoins = state.coins.filter(c => c.container === 'player')
-    if (playerCoins.length === 0) return
-    const specs = playerCoins.map(c => ({ type: c.type, value: c.value }))
-    const box = state.boxDims.player
-    const scatteredCoins = scatter(specs, box, 'player', true)
-    // Map new positions to existing coins, keep their temp IDs (no key changes to avoid hydration error)
-    const updatedCoins = state.coins.map(c => {
-      if (c.container !== 'player') return c
-      const idx = playerCoins.findIndex(pc => pc.id === c.id)
-      const scattered = idx >= 0 ? scatteredCoins[idx] : null
-      return scattered ? { ...c, x: scattered.x, y: scattered.y } : c
-    })
-    dispatch({
-      type: 'SET_COINS',
-      coins: updatedCoins,
-    })
-  }, [])
+  // Grid-based positioning — no random scattering needed
+  // Coins are already positioned by gridIndex in the scatter function
 
   // Validate drop target — checks all available containers
   function dropTarget(x: number, y: number): Coin['container'] | null {
@@ -526,7 +498,7 @@ export function BlackjackModule() {
     const clientY = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientY : (e as React.MouseEvent).clientY
     const mousePos = toContent(clientX, clientY)
 
-    // Get the box the coin is in, calculate its absolute position in content space
+    // Get the box the coin is in to estimate a visual drag position
     let boxRect: DOMRect | null = null
     if (coin.container === 'player') boxRect = playerBoxRef.current?.getBoundingClientRect() ?? null
     else if (coin.container === 'wager') boxRect = wagerBoxRef.current?.getBoundingClientRect() ?? null
@@ -536,11 +508,10 @@ export function BlackjackModule() {
     const contentRect = contentRef.current?.getBoundingClientRect()
     if (!boxRect || !contentRect) return
 
-    // Coin's absolute position in content space = box's position + coin's relative position within box
-    const coinAbsX = (boxRect.left - contentRect.left) + coin.x
-    const coinAbsY = (boxRect.top - contentRect.top) + coin.y
+    // Store drag info (we'll use gridIndex for snapping, but keep visual feedback)
+    const coinAbsX = (boxRect.left - contentRect.left) + CD * coin.gridIndex  // Position based on gridIndex for visual feedback
+    const coinAbsY = (boxRect.top - contentRect.top) + CD / 2
 
-    // Offset = how far coin is from mouse position
     dragRef.current = { coinId, ox: coinAbsX - mousePos.x, oy: coinAbsY - mousePos.y }
     setDrag({ coinId, x: coinAbsX, y: coinAbsY })
 
@@ -565,7 +536,7 @@ export function BlackjackModule() {
     const target = dropTarget(cx, cy)
 
     if (target) {
-      // Get the appropriate box ref and clamp coordinates
+      // Get the appropriate box ref and calculate grid index
       let box: HTMLDivElement | null = null
       if (target === 'player') box = playerBoxRef.current
       else if (target === 'wager') box = wagerBoxRef.current
@@ -576,9 +547,10 @@ export function BlackjackModule() {
         const rect = box.getBoundingClientRect()
         const contentRect = contentRef.current?.getBoundingClientRect()
         if (contentRect) {
-          const relX = clamp(cx - (rect.left - contentRect.left), CR, rect.width - CR)
-          const relY = clamp(cy - (rect.top - contentRect.top), CR, rect.height - CR)
-          dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
+          const relX = cx - (rect.left - contentRect.left)
+          // Calculate grid index based on position within the box (grid cell width = CD + gap)
+          const gridIndex = Math.max(0, Math.floor(relX / (CD + 6)))
+          dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, gridIndex })
         }
       }
     } else {
@@ -629,9 +601,10 @@ export function BlackjackModule() {
           const rect = box.getBoundingClientRect()
           const contentRect = contentRef.current?.getBoundingClientRect()
           if (contentRect) {
-            const relX = clamp(cx - (rect.left - contentRect.left), CR, rect.width - CR)
-            const relY = clamp(cy - (rect.top - contentRect.top), CR, rect.height - CR)
-            dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, x: relX, y: relY })
+            const relX = cx - (rect.left - contentRect.left)
+            // Calculate grid index based on position within the box
+            const gridIndex = Math.max(0, Math.floor(relX / (CD + 6)))
+            dispatch({ type: 'DROP', id: dragRef.current.coinId, container: target, gridIndex })
           }
         }
       } else {
@@ -1048,12 +1021,6 @@ function CoinEl({ coin, onDown, returning }: { coin: Coin; onDown: (e: React.Mou
       onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
       onTouchStart={coin.locked ? undefined : e => onDown(e, coin.id)}
       className={`${styles['bj-coin']} ${gold ? styles['gold'] : styles['bronze']} ${coin.locked ? styles['locked'] : ''} ${returning ? styles['returning'] : ''}`}
-      style={{
-        left: coin.x - CR,
-        top: coin.y - CR,
-        width: CD,
-        height: CD,
-      }}
     >
       <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
         <circle cx="13" cy="13" r="12" fill="none" stroke={gold ? '#9B8C2F' : '#5D5147'} strokeWidth="0.8"/>
