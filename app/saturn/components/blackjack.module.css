@@ -29,6 +29,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
+  min-height: 400px;
   background: var(--bj-dark);
   overflow: hidden;
   user-select: none;
