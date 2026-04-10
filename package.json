@@ -19,6 +19,7 @@
     "@vercel/edge-config": "^1.4.3",
     "blackjack-engine": "^0.1.2",
     "cheerio": "^1.0.0-rc.12",
+    "framer-motion": "^12.38.0",
     "fuse.js": "^7.3.0",
     "linkedom": "^0.18.12",
     "mammoth": "^1.12.0",
