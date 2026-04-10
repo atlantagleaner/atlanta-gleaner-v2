@@ -1,6 +1,7 @@
 'use client'
 
 import { useReducer, useRef, useEffect, useCallback, useState } from 'react'
+import styles from '@/app/saturn/styles/blackjack.module.css'
 
 // ─── Engine (CJS) ──────────────────────────────────────────────────────────────
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -349,26 +350,10 @@ function reducer(state: S, action: A): S {
 
 // ─── Card Component ────────────────────────────────────────────────────────────
 function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolean }) {
-  const CARD: React.CSSProperties = {
-    width:           44,
-    height:          62,
-    border:          '1px solid rgba(184,134,11,0.35)',
-    borderRadius:    3,
-    background:      hidden ? 'linear-gradient(135deg,#1A1A2E,#0B0820)' : '#F5F1E8',
-    display:         'flex',
-    flexDirection:   'column',
-    alignItems:      'flex-start',
-    justifyContent:  'flex-start',
-    padding:         '3px 4px',
-    flexShrink:      0,
-    position:        'relative',
-    boxShadow:       '0 1px 4px rgba(0,0,0,0.5)',
-    overflow:        'hidden',
-  }
   if (hidden || !card) {
     return (
-      <div style={CARD}>
-        <svg viewBox="0 0 44 62" style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.3 }}>
+      <div className={`${styles['bj-card']} ${styles['hidden']}`}>
+        <svg viewBox="0 0 44 62" className={styles['bj-card-back-svg']}>
           <rect x="3" y="3" width="38" height="56" fill="none" stroke="#B8860B" strokeWidth="1"/>
           <circle cx="22" cy="31" r="8" fill="none" stroke="#B8860B" strokeWidth="0.7"/>
         </svg>
@@ -376,11 +361,11 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
     )
   }
   return (
-    <div style={CARD}>
-      <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, color: card.color, lineHeight: 1 }}>
+    <div className={styles['bj-card']}>
+      <div className={styles['bj-card-text']} style={{ color: card.color }}>
         {card.text}
       </div>
-      <div style={{ fontSize: 28, color: card.color, fontWeight: 700, marginTop: 8, lineHeight: 1 }}>
+      <div className={styles['bj-card-suite']} style={{ color: card.color }}>
         {card.suite}
       </div>
     </div>
@@ -391,7 +376,7 @@ function PlayingCard({ card, hidden = false }: { card?: EngCard; hidden?: boolea
 function HandValue({ val, blackjack, busted }: { val?: { hi: number; lo: number }; blackjack?: boolean; busted?: boolean }) {
   const v = blackjack ? 'BJ' : busted ? 'BUST' : val?.hi ?? val?.lo ?? '?'
   return (
-    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: busted ? '#C85050' : blackjack ? '#B8860B' : '#F5F1E8', letterSpacing: '0.08em' }}>
+    <div className={`${styles['bj-hand-value']} ${blackjack ? styles['blackjack'] : ''} ${busted ? styles['busted'] : ''}`}>
       {v}
     </div>
   )
@@ -403,20 +388,7 @@ function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: 
     <button
       onClick={onClick}
       disabled={disabled}
-      style={{
-        fontFamily:    "'IBM Plex Mono',monospace",
-        fontSize:      9,
-        fontWeight:    700,
-        textTransform: 'uppercase' as const,
-        letterSpacing: '0.12em',
-        color:         disabled ? 'rgba(245,241,232,0.20)' : 'rgba(245,241,232,0.70)',
-        background:    'transparent',
-        border:        `1px solid ${disabled ? 'rgba(184,134,11,0.08)' : 'rgba(184,134,11,0.25)'}`,
-        padding:       '7px 10px',
-        cursor:        disabled ? 'default' : 'pointer',
-        transition:    'border-color 0.15s, color 0.15s',
-        flexShrink:    0,
-      }}
+      className={`${styles['bj-btn']} ${disabled ? styles['disabled'] : ''}`}
     >
       {label}
     </button>
@@ -424,20 +396,7 @@ function ActBtn({ label, onClick, disabled = false }: { label: string; onClick: 
 }
 
 // ─── Styles ────────────────────────────────────────────────────────────────────
-const SECT_LABEL: React.CSSProperties = {
-  fontFamily:    "'IBM Plex Mono',monospace",
-  fontSize:      8,
-  fontWeight:    700,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.14em',
-  color:         'rgba(184,134,11,0.70)',
-}
-
-const DIVIDER: React.CSSProperties = {
-  height: '1px',
-  background: 'rgba(184,134,11,0.08)',
-  margin: '0 -16px',
-}
+// All styles moved to app/saturn/styles/blackjack.module.css
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 export function BlackjackModule() {
@@ -758,55 +717,43 @@ export function BlackjackModule() {
   return (
     <div
       ref={contentRef}
-      style={{
-        position: 'relative',
-        width: '100%',
-        aspectRatio: '1 / 1',
-        background: '#1A1A2E',
-        overflow: 'hidden',
-        userSelect: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 'clamp(8px, 2%, 16px)',
-        gap: 'clamp(8px, 1.2%, 14px)',
-        fontSize: 'clamp(10px, 1.8vw, 16px)',
-        touchAction: drag ? 'none' : 'auto',
-      }}
+      className={styles['bj-container']}
+      style={{ touchAction: drag ? 'none' : 'auto' }}
     >
 
       {/* ── Dealer zone ── */}
-      <div style={{ flex: '0 0 18%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(4px, 0.8%, 8px)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span style={SECT_LABEL}>Dealer</span>
+      <div className={styles['bj-dealer-zone']}>
+        <div className={styles['bj-zone-header']}>
+          <span className={styles['bj-label']}>Dealer</span>
           {state.dealerCards.length > 0 && (
             <HandValue val={state.dealerValue ?? undefined} blackjack={state.dealerHasBlackjack} busted={state.dealerHasBusted} />
           )}
         </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', minHeight: 62, justifyContent: 'center' }}>
+        <div className={styles['bj-cards-row']}>
           {state.dealerCards.length === 0 && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
           {state.dealerCards.map((c, i) => (<PlayingCard key={i} card={c} />))}
           {(isPlayerRight || isPlayerLeft) && state.dealerHoleCard && (<PlayingCard hidden />)}
           {state.showOdds && dealerUp && isPlaying && (
-            <div style={{ marginLeft: 8, alignSelf: 'center', fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, color: 'rgba(184,134,11,0.80)', letterSpacing: '0.08em', lineHeight: 1.6 }}>
+            <div className={styles['bj-odds-display']}>
               <div>DEALER BUST</div>
-              <div style={{ fontSize: 13, color: '#B8860B' }}>{dealerBustPct.toFixed(1)}%</div>
+              <div className={styles['bj-odds-value']}>{dealerBustPct.toFixed(1)}%</div>
             </div>
           )}
         </div>
       </div>
 
-      <div style={DIVIDER} />
+      <div className={styles['bj-divider']} />
 
       {/* ── Player zone ── */}
-      <div style={{ flex: '0 0 26%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 'clamp(6px, 1%, 10px)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span style={SECT_LABEL}>Player</span>
+      <div className={styles['bj-player-zone']}>
+        <div className={styles['bj-zone-header']}>
+          <span className={styles['bj-label']}>Player</span>
           {state.handRight?.playerValue && (<HandValue val={state.handRight.playerValue} blackjack={state.handRight.playerHasBlackjack} busted={state.handRight.playerHasBusted} />)}
         </div>
 
-        <div style={{ display: 'flex', gap: 16, minHeight: 62, justifyContent: 'center' }}>
-          <div>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
+        <div className={styles['bj-player-hands']}>
+          <div className={styles['bj-hand']}>
+            <div className={styles['bj-cards-row']}>
               {(isReady && !isDone) && (<><PlayingCard hidden /><PlayingCard hidden /></>)}
               {(state.handRight?.cards ?? []).map((c: EngCard, i: number) => (<PlayingCard key={i} card={c} />))}
             </div>
@@ -818,8 +765,8 @@ export function BlackjackModule() {
           </div>
 
           {state.showSplit && (state.handLeft?.cards?.length > 0) && (
-            <div style={{ borderLeft: '1px solid rgba(184,134,11,0.15)', paddingLeft: 16 }}>
-              <div style={{ display: 'flex', gap: 6 }}>
+            <div className={styles['bj-hand-left']}>
+              <div className={styles['bj-cards-row']}>
                 {(state.handLeft.cards ?? []).map((c: EngCard, i: number) => (<PlayingCard key={i} card={c} />))}
               </div>
               {state.handLeft?.playerValue && (<div style={{ marginTop: 4 }}><HandValue val={state.handLeft.playerValue} blackjack={state.handLeft.playerHasBlackjack} busted={state.handLeft.playerHasBusted} /></div>)}
@@ -834,21 +781,21 @@ export function BlackjackModule() {
 
         {/* Dialogue footer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 10 }}>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: 'italic', fontSize: 13, color: 'rgba(245,241,232,0.75)', margin: 0, lineHeight: 1.4, letterSpacing: '0.02em', flex: 1 }}>
+          <p className={styles['bj-dialogue']}>
             {state.dialogue}
           </p>
 
           {state.prompt && !state.gameOver && (
-            <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            <div className={styles['bj-prompt']}>
               <button
                 onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_YES' }) : () => dispatch({ type: 'ODDS_YES' })}
-                style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: '#00D9FF', background: 'transparent', border: '1px solid rgba(0,217,255,0.5)', padding: '6px 12px', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
+                className={styles['bj-btn-yes']}
               >
                 Yes
               </button>
               <button
                 onClick={state.prompt === 'more-coins' ? () => dispatch({ type: 'MORE_COINS_NO' }) : () => dispatch({ type: 'ODDS_NO' })}
-                style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: 'rgba(245,241,232,0.50)', background: 'transparent', border: '1px solid rgba(184,134,11,0.25)', padding: '6px 12px', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
+                className={styles['bj-btn-no']}
               >
                 No
               </button>
@@ -857,23 +804,17 @@ export function BlackjackModule() {
         </div>
       </div>
 
-      <div style={DIVIDER} />
+      <div className={styles['bj-divider']} />
 
       {/* ── Coins Grid (compact) ── */}
-      <div style={{ flex: '0 0 14%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr', gap: 'clamp(8px, 2%, 12px)', background: 'transparent' }}>
+      <div className={styles['bj-coins-grid']} style={{ gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr' }}>
 
         {/* Player Coin Box */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
+        <div className={styles['bj-coin-box']}>
+          <span className={`${styles['bj-label']} ${styles['bj-label--small']}`}>Player</span>
           <div
             ref={playerBoxRef}
-            style={{
-              position: 'relative',
-              flex: 1,
-              minHeight: 'clamp(50px, 10vw, 80px)',
-              border: '1px solid rgba(184,134,11,0.18)',
-              background: 'rgba(11,8,32,0.35)',
-              overflow: 'hidden',
-            }}
+            className={styles['bj-coin-container']}
           >
             {playerCoins.map(coin => {
               if (drag?.coinId === coin.id) return null
@@ -890,19 +831,15 @@ export function BlackjackModule() {
         </div>
 
         {/* Wager Box */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
-          <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Wager</span>
+        <div className={styles['bj-coin-box']}>
+          <span className={`${styles['bj-label']} ${styles['bj-label--small']}`}>Wager</span>
           <div
             ref={wagerBoxRef}
+            className={styles['bj-coin-container']}
             style={{
-              position: 'relative',
-              flex: 1,
-              minHeight: 'clamp(50px, 10vw, 80px)',
-              border: `1px solid rgba(184,134,11,${wagerVal > 0 ? '0.45' : '0.22'})`,
+              borderColor: `rgba(184,134,11,${wagerVal > 0 ? '0.45' : '0.22'})`,
               background: 'rgba(11,8,32,0.45)',
               boxShadow: wagerVal > 0 ? '0 0 8px rgba(184,134,11,0.12)' : 'none',
-              transition: 'border-color 0.2s, box-shadow 0.2s',
-              overflow: 'hidden',
             }}
           >
             {wagerCoins.map(coin => {
@@ -936,18 +873,11 @@ export function BlackjackModule() {
 
         {/* Split Box (conditional) */}
         {state.showSplit && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
-            <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Split</span>
+          <div className={styles['bj-coin-box']}>
+            <span className={`${styles['bj-label']} ${styles['bj-label--small']}`}>Split</span>
             <div
               ref={splitBoxRef}
-              style={{
-                position: 'relative',
-                flex: 1,
-                minHeight: 'clamp(50px, 10vw, 80px)',
-                border: '1px solid rgba(184,134,11,0.25)',
-                background: 'rgba(11,8,32,0.40)',
-                overflow: 'hidden',
-              }}
+              className={styles['bj-coin-container']}
             >
               {coinsIn(state.coins, 'split').map(coin => {
                 if (drag?.coinId === coin.id) return null
@@ -966,18 +896,11 @@ export function BlackjackModule() {
 
         {/* Insurance Box (conditional) */}
         {state.showIns && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
-            <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Insurance</span>
+          <div className={styles['bj-coin-box']}>
+            <span className={`${styles['bj-label']} ${styles['bj-label--small']}`}>Insurance</span>
             <div
               ref={insuranceBoxRef}
-              style={{
-                position: 'relative',
-                flex: 1,
-                minHeight: 'clamp(50px, 10vw, 80px)',
-                border: '1px solid rgba(184,134,11,0.25)',
-                background: 'rgba(11,8,32,0.40)',
-                overflow: 'hidden',
-              }}
+              className={styles['bj-coin-container']}
             >
               {coinsIn(state.coins, 'insurance').map(coin => {
                 if (drag?.coinId === coin.id) return null
@@ -996,7 +919,7 @@ export function BlackjackModule() {
       </div>
 
       {/* ── Action Buttons ── */}
-      <div style={{ flex: '0 0 16%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', gap: 'clamp(4px, 1%, 8px)', flexWrap: 'wrap', alignContent: 'flex-start' }}>
+      <div className={styles['bj-action-buttons']}>
         {showHitStand && (<ActBtn label="Hit" onClick={() => handleHit(isPlayerLeft ? 'left' : 'right')} />)}
         {showHitStand && (<ActBtn label="Stand" onClick={() => handleStand(isPlayerLeft ? 'left' : 'right')} />)}
         {showDouble && (<ActBtn label="Double" onClick={() => handleDouble(isPlayerLeft ? 'left' : 'right')} />)}
@@ -1006,24 +929,25 @@ export function BlackjackModule() {
       </div>
 
       {/* ── Bottom Bar ── */}
-      <div style={{ flex: '0 0 12%', padding: 'clamp(6px, 1%, 10px) 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(8px, 0.9vw, 11px)' }}>
+      <div className={styles['bj-bottom-bar']}>
         {state.gameOver ? (
-          <button onClick={() => dispatch({ type: 'RESET' })} style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(8px, 1vw, 10px)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: '#0B0820', background: '#B8860B', border: 'none', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)', cursor: 'pointer' }}>
+          <button onClick={() => dispatch({ type: 'RESET' })} className={styles['bj-deal-button']}>
             Reset
           </button>
         ) : !isPlaying ? (
           <button
             onClick={handleDeal}
             disabled={wagerVal === 0 || !!state.prompt}
-            style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(8px, 1vw, 10px)', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: '#0B0820', background: '#B8860B', border: 'none', padding: 'clamp(5px, 0.8%, 8px) clamp(10px, 1.5%, 16px)', cursor: 'pointer', opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1 }}
+            className={styles['bj-deal-button']}
+            style={{ opacity: (wagerVal === 0 || !!state.prompt) ? 0.35 : 1 }}
           >
             Deal
           </button>
         ) : (
-          <div style={{ width: 'clamp(40px, 5vw, 60px)' }} />
+          <div className={styles['bj-bottom-spacer']} />
         )}
 
-        <div style={{ display: 'flex', gap: 'clamp(6px, 1%, 10px)', alignItems: 'center' }}>
+        <div className={styles['bj-bottom-content']}>
           {/* Karma Forgiveness Button */}
           {state.karmaDebt > 0 && (
             <button
@@ -1040,6 +964,7 @@ export function BlackjackModule() {
                 padding: '5px 10px',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
+                borderRadius: '2px',
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.color = 'rgba(200,80,80,0.95)'
@@ -1055,9 +980,9 @@ export function BlackjackModule() {
           )}
 
           {/* Karma Debt Display */}
-          <div style={{ textAlign: 'right' }}>
-            <span style={{ ...SECT_LABEL, display: 'block', marginBottom: 'clamp(2px, 0.5%, 4px)', fontSize: 'clamp(7px, 0.9vw, 9px)' }}>Karma Debt</span>
-            <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 'clamp(9px, 1vw, 12px)', color: state.karmaDebt > 0 ? 'rgba(200,80,80,0.85)' : 'rgba(245,241,232,0.30)', letterSpacing: '0.08em' }}>
+          <div className={styles['bj-karma-tracker']}>
+            <span className={styles['bj-karma-label']}>Karma Debt</span>
+            <span className={`${styles['bj-karma-value']} ${state.karmaDebt > 0 ? styles['debt'] : styles['neutral']}`}>
               {state.karmaDebt > 0 ? `${state.karmaDebt} pts` : '—'}
             </span>
           </div>
@@ -1091,25 +1016,12 @@ function CoinEl({ coin, onDown, returning }: { coin: Coin; onDown: (e: React.Mou
     <div
       onMouseDown={coin.locked ? undefined : e => onDown(e, coin.id)}
       onTouchStart={coin.locked ? undefined : e => onDown(e, coin.id)}
+      className={`${styles['bj-coin']} ${gold ? styles['gold'] : styles['bronze']} ${coin.locked ? styles['locked'] : ''} ${returning ? styles['returning'] : ''}`}
       style={{
-        position: 'absolute',
         left: coin.x - CR,
         top: coin.y - CR,
         width: CD,
         height: CD,
-        borderRadius: '50%',
-        background: gold ? '#D4AF37' : '#8B7765',
-        border: `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
-        boxShadow: `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3)`,
-        cursor: coin.locked ? 'default' : 'grab',
-        touchAction: 'none',
-        userSelect: 'none',
-        zIndex: 4,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        animation: returning ? 'bj-coin-glow 0.6s ease-in-out forwards' : 'bj-coin-glow 1.5s ease-in-out infinite',
       }}
     >
       <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
@@ -1127,23 +1039,12 @@ function DragGhost({ coin, x, y }: { coin: Coin; x: number; y: number }) {
   const gold = coin.type === 'gold'
   return (
     <div
+      className={`${styles['bj-drag-ghost']} ${styles['visible']} ${gold ? styles['gold'] : styles['bronze']}`}
       style={{
-        position: 'absolute',
         left: x - CR,
         top: y - CR,
         width: CD,
         height: CD,
-        borderRadius: '50%',
-        background: gold ? '#D4AF37' : '#8B7765',
-        border: `1.5px solid ${gold ? '#9B8C2F' : '#5D5147'}`,
-        boxShadow: `0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 8px rgba(184,134,11,0.3)`,
-        pointerEvents: 'none',
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        opacity: 0.85,
       }}
     >
       <svg viewBox="0 0 26 26" style={{ width: '100%', height: '100%', opacity: 0.4 }}>
