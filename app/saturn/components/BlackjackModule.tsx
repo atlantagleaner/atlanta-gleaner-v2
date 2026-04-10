@@ -1,7 +1,7 @@
 'use client'
 
 import { useReducer, useRef, useEffect, useCallback, useState } from 'react'
-import styles from '@/app/saturn/styles/blackjack.module.css'
+import styles from './blackjack.module.css'
 
 // ─── Engine (CJS) ──────────────────────────────────────────────────────────────
 /* eslint-disable @typescript-eslint/no-var-requires */
