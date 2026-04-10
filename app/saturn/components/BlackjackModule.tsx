@@ -57,6 +57,7 @@ interface S {
   initialBet:         number
   sideBetsInfo:       any
   coins:              Coin[]
+  boxDims:            { player: { width: number; height: number }; wager: { width: number; height: number } }
   karmaDebt:          number
   showOdds:           boolean
   dialogue:           string
@@ -69,7 +70,8 @@ interface S {
 type A =
   | { type: 'SYNC';              eng: any; overrides?: Partial<S> }
   | { type: 'DROP';              id: string; container: Coin['container']; x: number; y: number }
-  | { type: 'BOUNCE';            id: string }
+  | { type: 'BOUNCE';            id: string; playerDims: { width: number; height: number } }
+  | { type: 'SET_BOX_DIMS';       dims: { player: { width: number; height: number }; wager: { width: number; height: number } } }
   | { type: 'MORE_COINS_YES' }
   | { type: 'MORE_COINS_NO'  }
   | { type: 'ODDS_YES'        }
@@ -137,6 +139,7 @@ function initState(): S {
     ...Array(4).fill({ type: 'gold'   as const, value: GOLD   }),
     ...Array(2).fill({ type: 'bronze' as const, value: BRONZE }),
   ]
+  const defaultDims = { player: { width: 160, height: 80 }, wager: { width: 160, height: 80 } }
   return {
     stage:              'ready',
     dealerCards:        [],
@@ -150,7 +153,8 @@ function initState(): S {
     wonOnLeft:          0,
     initialBet:         0,
     sideBetsInfo:       {},
-    coins:              scatter(specs, { width: 100, height: 100 }, 'player'),  // Default size, measured on mount
+    boxDims:            defaultDims,
+    coins:              scatter(specs, defaultDims.player, 'player'),  // Default size, measured on mount
     karmaDebt:          0,
     showOdds:           false,
     dialogue:           'Looks like someone left their coins behind...',
@@ -204,7 +208,7 @@ function reducer(state: S, action: A): S {
         // Strip wagered coins; return won coins
         coins = coinsIn(state.coins, 'player')
         if (totalWon > 0) {
-          coins = [...coins, ...scatter(valueToCoins(totalWon), { width: 100, height: 100 }, 'player')]
+          coins = [...coins, ...scatter(valueToCoins(totalWon), state.boxDims.player, 'player')]
         }
 
         const wNet = (e.wonOnRight ?? 0) - (e.initialBet ?? 0)
@@ -274,12 +278,29 @@ function reducer(state: S, action: A): S {
       }
     }
 
+    case 'SET_BOX_DIMS': {
+      const newDims = action.dims
+      // Rescatter player coins to fit new dimensions
+      const playerCoins = coinsIn(state.coins, 'player')
+      const wagerCoins = coinsIn(state.coins, 'wager')
+      const otherCoins = state.coins.filter(c => c.container !== 'player' && c.container !== 'wager')
+      const scatteredPlayer = scatter(playerCoins.map(c => ({ type: c.type, value: c.value })), newDims.player, 'player')
+      const scatteredWager = scatter(wagerCoins.map(c => ({ type: c.type, value: c.value })), newDims.wager, 'wager')
+      return {
+        ...state,
+        boxDims: newDims,
+        coins: [...scatteredPlayer, ...scatteredWager, ...otherCoins],
+      }
+    }
+
     case 'BOUNCE': {
-      // Return coin to player box with animation (coordinates will be set by caller)
+      // Return coin to player box with repositioning
+      const playerCoins = scatter([{ type: 'gold', value: GOLD }], action.playerDims, 'player')
+      const newPos = playerCoins[0]
       return {
         ...state,
         coins: state.coins.map(c =>
-          c.id === action.id ? { ...c, container: 'player', locked: false, returning: true } : c
+          c.id === action.id ? { ...c, container: 'player', x: newPos.x, y: newPos.y, locked: false, returning: true } : c
         ),
       }
     }
@@ -292,7 +313,7 @@ function reducer(state: S, action: A): S {
       const added    = 4 * GOLD + 2 * BRONZE   // 10 pts
       const newDebt  = state.karmaDebt + added
       const trigOdds = !state.showOdds && newDebt >= KARMA_LIMIT
-      const newCoins = scatter(specs, { width: 100, height: 100 }, 'player').map(c => ({ ...c, returning: true }))
+      const newCoins = scatter(specs, state.boxDims.player, 'player').map(c => ({ ...c, returning: true }))
       return {
         ...state,
         coins:     [...coinsIn(state.coins, 'player'), ...newCoins],
@@ -430,19 +451,16 @@ export function BlackjackModule() {
   const gameRef = useRef<any>(new bjLib.Game())
   const dragRef = useRef<{ coinId: string; ox: number; oy: number } | null>(null)
 
-  // Track box dimensions for measured coin positioning
-  const [boxDims, setBoxDims] = useState<{ player: { width: number; height: number }; wager: { width: number; height: number } }>({
-    player: { width: 100, height: 100 },
-    wager: { width: 100, height: 100 },
-  })
-
-  // Measure box dimensions on mount and window resize
+  // Measure box dimensions on mount and window resize, dispatch to reducer
   useEffect(() => {
     function measureBoxes() {
       if (playerBoxRef.current && wagerBoxRef.current) {
-        setBoxDims({
-          player: { width: playerBoxRef.current.offsetWidth, height: playerBoxRef.current.offsetHeight },
-          wager: { width: wagerBoxRef.current.offsetWidth, height: wagerBoxRef.current.offsetHeight },
+        dispatch({
+          type: 'SET_BOX_DIMS',
+          dims: {
+            player: { width: playerBoxRef.current.offsetWidth, height: playerBoxRef.current.offsetHeight },
+            wager: { width: wagerBoxRef.current.offsetWidth, height: wagerBoxRef.current.offsetHeight },
+          },
         })
       }
     }
@@ -575,7 +593,10 @@ export function BlackjackModule() {
       }
     } else {
       // Bounce back to player box
-      dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
+      if (playerBoxRef.current) {
+        const playerDims = { width: playerBoxRef.current.offsetWidth, height: playerBoxRef.current.offsetHeight }
+        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId, playerDims })
+      }
     }
 
     dragRef.current = null
@@ -624,7 +645,10 @@ export function BlackjackModule() {
           }
         }
       } else {
-        dispatch({ type: 'BOUNCE', id: dragRef.current.coinId })
+        if (playerBoxRef.current) {
+          const playerDims = { width: playerBoxRef.current.offsetWidth, height: playerBoxRef.current.offsetHeight }
+          dispatch({ type: 'BOUNCE', id: dragRef.current.coinId, playerDims })
+        }
       }
 
       dragRef.current = null
@@ -839,7 +863,7 @@ export function BlackjackModule() {
       <div style={{ flex: '0 0 24%', padding: 'clamp(8px, 1.5%, 12px)', display: 'grid', gridTemplateColumns: state.showSplit ? '1fr 1fr 1fr' : state.showIns ? '1fr 1fr 1fr' : '1fr 1fr', gap: 'clamp(8px, 2%, 12px)', background: 'rgba(11, 8, 32, 0.2)', border: '1px solid rgba(184, 134, 11, 0.08)' }}>
 
         {/* Player Coin Box */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Coins</span>
           <div
             ref={playerBoxRef}
@@ -867,7 +891,7 @@ export function BlackjackModule() {
         </div>
 
         {/* Wager Box */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
           <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Wager</span>
           <div
             ref={wagerBoxRef}
@@ -913,7 +937,7 @@ export function BlackjackModule() {
 
         {/* Split Box (conditional) */}
         {state.showSplit && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
             <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Split</span>
             <div
               ref={splitBoxRef}
@@ -943,7 +967,7 @@ export function BlackjackModule() {
 
         {/* Insurance Box (conditional) */}
         {state.showIns && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.8%, 8px)', minWidth: 0 }}>
             <span style={{ ...SECT_LABEL, fontSize: 'clamp(7px, 0.9vw, 10px)' }}>Insurance</span>
             <div
               ref={insuranceBoxRef}
