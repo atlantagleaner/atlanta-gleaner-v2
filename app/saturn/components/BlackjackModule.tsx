@@ -516,10 +516,25 @@ export function BlackjackModule() {
 
     const clientX = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientX : (e as React.MouseEvent).clientX
     const clientY = e.type === 'touchstart' ? (e as React.TouchEvent).touches[0].clientY : (e as React.MouseEvent).clientY
-    const pos = toContent(clientX, clientY)
+    const mousePos = toContent(clientX, clientY)
 
-    dragRef.current = { coinId, ox: coin.x - pos.x, oy: coin.y - pos.y }
-    setDrag({ coinId, x: coin.x, y: coin.y })
+    // Get the box the coin is in, calculate its absolute position in content space
+    let boxRect: DOMRect | null = null
+    if (coin.container === 'player') boxRect = playerBoxRef.current?.getBoundingClientRect() ?? null
+    else if (coin.container === 'wager') boxRect = wagerBoxRef.current?.getBoundingClientRect() ?? null
+    else if (coin.container === 'split') boxRect = splitBoxRef.current?.getBoundingClientRect() ?? null
+    else if (coin.container === 'insurance') boxRect = insuranceBoxRef.current?.getBoundingClientRect() ?? null
+
+    const contentRect = contentRef.current?.getBoundingClientRect()
+    if (!boxRect || !contentRect) return
+
+    // Coin's absolute position in content space = box's position + coin's relative position within box
+    const coinAbsX = (boxRect.left - contentRect.left) + coin.x
+    const coinAbsY = (boxRect.top - contentRect.top) + coin.y
+
+    // Offset = how far coin is from mouse position
+    dragRef.current = { coinId, ox: coinAbsX - mousePos.x, oy: coinAbsY - mousePos.y }
+    setDrag({ coinId, x: coinAbsX, y: coinAbsY })
 
     if (e.type === 'mousedown') {
       document.addEventListener('mousemove', onMouseMove)
