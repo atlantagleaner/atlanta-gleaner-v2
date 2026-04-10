@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { TarotModule } from './components/TarotModule'
 import { AstrologyModule } from './components/AstrologyModule'
 import { CrystalBallModule } from './components/CrystalBallModule'
-import { TheBankModule } from './components/TheBankModule'
+import { BlackjackModule } from './components/BlackjackModule'
 import Starfield from './components/Starfield'
 import { Banner }           from '@/src/components/Banner'
 import {
@@ -110,7 +110,7 @@ export default function SaturnPage() {
           <CrystalBallModule />
         </div>
         <div className="saturn-module">
-          <TheBankModule />
+          <BlackjackModule />
         </div>
       </div>
 
