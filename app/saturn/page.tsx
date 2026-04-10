@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import { DraggableModuleWrapper } from './components/DraggableModuleWrapper'
+import { TarotModule } from './components/TarotModule'
+import { AstrologyModule } from './components/AstrologyModule'
+import { CrystalBallModule } from './components/CrystalBallModule'
+import { TheBankModule } from './components/TheBankModule'
 import Starfield from './components/Starfield'
 import { Banner }           from '@/src/components/Banner'
 import {
@@ -95,8 +98,72 @@ export default function SaturnPage() {
         </div>
       </div>
 
-      {/* Draggable modules container */}
-      <DraggableModuleWrapper />
+      {/* Game modules - simple grid layout */}
+      <div className="saturn-modules-container" style={{ position: 'relative', zIndex: 5 }}>
+        <div className="saturn-module">
+          <TarotModule />
+        </div>
+        <div className="saturn-module">
+          <AstrologyModule />
+        </div>
+        <div className="saturn-module">
+          <CrystalBallModule />
+        </div>
+        <div className="saturn-module">
+          <TheBankModule />
+        </div>
+      </div>
+
+      {/* Layout styles */}
+      <style>{`
+        .saturn-modules-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          padding: 120px 32px ${PAGE_BOTTOM_PADDING_DESKTOP};
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        .saturn-module {
+          border: 1px solid rgba(184,134,11,0.20);
+          background: #1A1A2E;
+          box-shadow: inset 0 0 40px rgba(11,8,32,0.6);
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .saturn-module > * {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        /* Bank module spans 2 columns */
+        .saturn-module:nth-child(4) {
+          grid-column: span 2;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 767px) {
+          .saturn-modules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 120px 12px ${PAGE_BOTTOM_PADDING_MOBILE};
+          }
+
+          .saturn-module {
+            width: 100%;
+            max-height: 100vh;
+          }
+
+          .saturn-module:nth-child(4) {
+            grid-column: auto;
+          }
+        }
+      `}</style>
     </div>
   )
 }
