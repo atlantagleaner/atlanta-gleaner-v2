@@ -511,26 +511,28 @@ export function TheBankModule() {
   const gameRef = useRef<any>(null)
   const dragRef = useRef<{ coinId: string; ox: number; oy: number } | null>(null)
 
+  // Measure boxes (shared between window resize and ResizeObserver)
+  const measureBoxes = useCallback(() => {
+    if (playerBoxRef.current && wagerBoxRef.current) {
+      dispatch({
+        type: 'SET_BOX_DIMS',
+        dims: {
+          player: {
+            width: playerBoxRef.current!.offsetWidth,
+            height: playerBoxRef.current!.offsetHeight,
+          },
+          wager: {
+            width: wagerBoxRef.current!.offsetWidth,
+            height: wagerBoxRef.current!.offsetHeight,
+          },
+        },
+      })
+    }
+  }, [dispatch])
+
   // Measure boxes once on mount + resize (debounced for stability)
   useEffect(() => {
     let rafId: number
-    function measureBoxes() {
-      if (playerBoxRef.current && wagerBoxRef.current) {
-        dispatch({
-          type: 'SET_BOX_DIMS',
-          dims: {
-            player: {
-              width: playerBoxRef.current!.offsetWidth,
-              height: playerBoxRef.current!.offsetHeight,
-            },
-            wager: {
-              width: wagerBoxRef.current!.offsetWidth,
-              height: wagerBoxRef.current!.offsetHeight,
-            },
-          },
-        })
-      }
-    }
 
     const debouncedMeasure = () => {
       cancelAnimationFrame(rafId)
@@ -546,7 +548,19 @@ export function TheBankModule() {
       window.removeEventListener('resize', debouncedMeasure)
       cancelAnimationFrame(rafId)
     }
-  }, [])
+  }, [measureBoxes])
+
+  // ResizeObserver for continuous container monitoring
+  useEffect(() => {
+    if (!contentRef.current) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureBoxes()
+    })
+
+    resizeObserver.observe(contentRef.current)
+    return () => resizeObserver.disconnect()
+  }, [measureBoxes])
 
   // Auto-clear returning animation flag
   useEffect(() => {

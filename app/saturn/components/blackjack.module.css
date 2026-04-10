@@ -327,7 +327,7 @@
 
 /* ─── DRAG GHOST ───────────────────────────────────────────────────────────── */
 .bj-drag-ghost {
-  position: fixed;
+  position: absolute;
   pointer-events: none;
   z-index: 10000;
   opacity: 0;
