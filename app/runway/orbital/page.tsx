@@ -73,13 +73,6 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     // 4. Controls
     const controls = new OrbitControls(camera, cssRenderer.domElement)
     controls.enableDamping = true
-    controls.enableKeys = true
-    controls.keys = {
-      LEFT: 'ArrowLeft',
-      UP: 'ArrowUp',
-      RIGHT: 'ArrowRight',
-      BOTTOM: 'ArrowDown'
-    }
 
     // 5. Black Hole & Accretion (WebGL)
     const bhRadius = 8.5
