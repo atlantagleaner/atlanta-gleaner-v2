@@ -193,15 +193,6 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       obj.position.copy(pos); obj.lookAt(0, 0, 0); obj.scale.set(scale, scale, scale)
       cssScene.add(obj)
 
-      // Create unscaled anchor in scene (not as child of scaled video object)
-      const anchor = new THREE.Object3D()
-      anchor.position.copy(obj.position)
-      anchor.rotation.copy(obj.rotation)
-      anchor.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI)  // Face away from black hole
-      const anchorDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200)) * 1.1  // Scale 30-unit distance based on viewport width, increased by 10%
-      anchor.translateZ(anchorDistance)  // Move toward black hole along local Z-axis (responsive)
-      cssScene.add(anchor)
-
       // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
       const maskEnabled = false
       if (maskEnabled) {
@@ -223,30 +214,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       // Store video ref for iframe swapping (including CSS3DObject for z-index control)
       videoRefs.set(v.id, { div, obj, pos: pos.clone() })
 
-      // Store anchor and video object for dynamic fly-to calculations
-      targets[v.id] = { anchor, videoObj: obj }
+      // Store video object for fly-to calculations
+      targets[v.id] = { videoObj: obj }
     })
 
-    // Calculate swap distance based on anchor distance formula
+    // Calculate orbit distance from viewport width (used for camera landing and swap proximity)
     const swapDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200)) * 1.1
-
-    // Helper: Get anchor's world position for camera fly-to
-    const getAnchorWorldPosition = (videoId: string): { x: number; y: number; z: number } => {
-      const d = targets[videoId]
-      if (!d?.anchor) return { x: 0, y: 0, z: 0 }
-      const pos = new THREE.Vector3()
-      d.anchor.getWorldPosition(pos)
-      return { x: pos.x, y: pos.y, z: pos.z }
-    }
-
-    // Helper: Get video's world position for controls.target
-    const getVideoCenter = (videoId: string): { x: number; y: number; z: number } => {
-      const d = targets[videoId]
-      if (!d?.videoObj) return { x: 0, y: 0, z: 0 }
-      const pos = new THREE.Vector3()
-      d.videoObj.getWorldPosition(pos)
-      return { x: pos.x, y: pos.y, z: pos.z }
-    }
 
     const handleFly = (e: any) => {
       const targetId = e.detail?.targetId
@@ -271,9 +244,28 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         // Reset all z-indices
         videoRefs.forEach(ref => ref.obj.element.style.zIndex = '1')
       } else {
-        // Video mode: use anchor for camera position, video center for look-at target
-        camPos = getAnchorWorldPosition(targetId)
-        targetPos = getVideoCenter(targetId)
+        // Video mode: position camera at swapDistance from video, along origin->video direction
+        const videoObj = targets[targetId]?.videoObj
+        if (videoObj) {
+          const videoWorldPos = new THREE.Vector3()
+          videoObj.getWorldPosition(videoWorldPos)
+
+          // Direction from origin toward video
+          const dirFromOrigin = videoWorldPos.clone().normalize()
+
+          // Position camera at swapDistance from origin along that direction
+          camPos = {
+            x: dirFromOrigin.x * swapDistance,
+            y: dirFromOrigin.y * swapDistance,
+            z: dirFromOrigin.z * swapDistance
+          }
+
+          // Look at video object
+          targetPos = { x: videoWorldPos.x, y: videoWorldPos.y, z: videoWorldPos.z }
+        } else {
+          camPos = { x: 0, y: 0, z: 0 }
+          targetPos = { x: 0, y: 0, z: 0 }
+        }
         targetOpacity = 0.3 // Fade canvas when approaching video
       }
 
@@ -296,16 +288,29 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     }
     document.addEventListener('flyTo', handleFly)
 
-    // Process proximity-based swaps every frame with hysteresis buffer
+    // Process proximity-based swaps and controls.target switching every frame
     const processProximitySwaps = () => {
       let swapProcessed = false // Throttle to 1 swap per frame
+      let controlsTargetSet = false
 
       for (const [videoId, ref] of videoRefs) {
-        const dist = camera.position.distanceTo(ref.pos)
+        const videoObj = targets[videoId]?.videoObj
+        if (!videoObj) continue
+
+        // Get video world position for distance calculation
+        const videoWorldPos = new THREE.Vector3()
+        videoObj.getWorldPosition(videoWorldPos)
+        const dist = camera.position.distanceTo(videoWorldPos)
         const inFrustum = isInFrustum(ref.pos)
 
-        // Hysteresis: swap in at swapDistance (matches anchor distance), out at >25
+        // Within swapDistance: orbit around video, enable iframe
         if (activeVideoId === null && dist < swapDistance && inFrustum && !swapProcessed) {
+          // Switch controls to orbit around video
+          if (!controlsTargetSet) {
+            controls.target.copy(videoWorldPos)
+            controlsTargetSet = true
+          }
+
           // ACTIVATE: Swap to iframe, promote z-index
           const video = videos.find(v => v.id === videoId)
           if (video) {
@@ -315,6 +320,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
             swapProcessed = true
           }
         } else if (activeVideoId === videoId && dist > 25) {
+          // Outside proximity: return to orbiting origin
+          controls.target.set(0, 0, 0)
+          controlsTargetSet = true
+
           // DEACTIVATE: Swap to thumbnail, demote z-index
           const video = videos.find(v => v.id === videoId)
           if (video) {
@@ -324,12 +333,21 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
             swapProcessed = true
           }
         } else if (activeVideoId === videoId) {
-          // Maintain active video's z-index
+          // Maintain active video's z-index and controls.target
+          if (!controlsTargetSet) {
+            controls.target.copy(videoWorldPos)
+            controlsTargetSet = true
+          }
           ref.obj.element.style.zIndex = '10'
         } else {
           // Ensure inactive videos are at base z-index
           ref.obj.element.style.zIndex = '1'
         }
+      }
+
+      // Ensure controls.target returns to origin if no video is active
+      if (!controlsTargetSet && activeVideoId === null && (controls.target.x !== 0 || controls.target.y !== 0 || controls.target.z !== 0)) {
+        controls.target.set(0, 0, 0)
       }
     }
 
