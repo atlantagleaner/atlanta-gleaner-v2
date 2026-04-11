@@ -9,7 +9,6 @@ export interface VideoOverlayProps {
 }
 
 export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOverlayProps) {
-  const [theaterVideoId, setTheaterVideoId] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -25,17 +24,6 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
     }
   }, [])
 
-  const handleVideoClick = (videoId: string) => {
-    setTheaterVideoId(videoId)
-    onSelectVideo?.(videoId)
-  }
-
-  const closeTheater = () => {
-    setTheaterVideoId(null)
-  }
-
-  const selectedVideo = videos.find(v => v.id === theaterVideoId)
-
   return (
     <>
       {/* Video Grid Overlay */}
@@ -49,13 +37,13 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           pointerEvents: 'auto',
           zIndex: 10,
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: '16px',
           padding: '140px 40px 40px 40px',
           overflowY: 'auto',
           overflowX: 'hidden',
-          background: 'rgba(2, 1, 1, 0.95)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(2, 1, 1, 0.65)',
+          backdropFilter: 'blur(5px)',
           animation: 'fadeIn 0.3s ease-in'
         }}
       >
@@ -74,7 +62,6 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         {videos.map((video) => (
           <div
             key={video.id}
-            onClick={() => handleVideoClick(video.id)}
             style={{
               position: 'relative',
               aspectRatio: '16 / 9',
@@ -124,80 +111,6 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           </div>
         ))}
       </div>
-
-      {/* Theater Mode Modal */}
-      {theaterVideoId && selectedVideo && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.95)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 50,
-            padding: '40px',
-            animation: 'fadeIn 0.3s ease-in'
-          }}
-          onClick={closeTheater}
-        >
-          {/* Close button */}
-          <button
-            onClick={closeTheater}
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              background: 'rgba(255, 255, 255, 0.04)',
-              backdropFilter: 'blur(24px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#FFF',
-              padding: '8px 16px',
-              borderRadius: '100px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              zIndex: 51,
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 165, 0, 0.15)'
-              e.currentTarget.style.borderColor = 'rgba(255, 165, 0, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
-            }}
-          >
-            ESC / CLOSE
-          </button>
-
-          {/* Theater iframe container */}
-          <div
-            style={{
-              width: '90vw',
-              maxWidth: '1400px',
-              aspectRatio: '16 / 9',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              boxShadow: '0 0 60px rgba(255, 179, 71, 0.3)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              key={theaterVideoId}
-              src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&modestbranding=1`}
-              style={{
-                width: '100%',
-                height: '100%',
-                border: 'none'
-              }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
     </>
   )
 }
