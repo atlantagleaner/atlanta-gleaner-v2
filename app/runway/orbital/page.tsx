@@ -5,8 +5,6 @@ import * as THREE from 'three'
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { VideoOverlay } from './components/VideoOverlay'
-// @ts-ignore
-import * as TWEEN from 'tween.js'
 
 // --- Video Data (kept for navbar structure) ---
 const ORBITAL_VIDEOS = [
@@ -19,11 +17,7 @@ const ORBITAL_VIDEOS = [
 ]
 
 // --- 3D Scene Component ---
-interface EventHorizonSceneProps {
-  onSceneReady?: (camera: THREE.PerspectiveCamera, controls: OrbitControls) => void
-}
-
-function EventHorizonScene({ onSceneReady }: EventHorizonSceneProps) {
+function EventHorizonScene() {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<number>(0)
 
@@ -61,9 +55,6 @@ function EventHorizonScene({ onSceneReady }: EventHorizonSceneProps) {
     const controls = new OrbitControls(camera, cssRenderer.domElement)
     controls.enableDamping = true
 
-    // Expose camera and controls to parent
-    onSceneReady?.(camera, controls)
-
     // 5. Black Hole & Accretion (WebGL)
     const bhRadius = 8.5
     const bh = new THREE.Mesh(new THREE.SphereGeometry(bhRadius, 64, 64), new THREE.MeshBasicMaterial({ color: 0x000000 }))
@@ -100,7 +91,6 @@ function EventHorizonScene({ onSceneReady }: EventHorizonSceneProps) {
     const animate = (time: number) => {
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
-      TWEEN.update(time)
       webglRenderer.render(webglScene, camera)
       cssRenderer.render(cssScene, camera)
       frameRef.current = requestAnimationFrame(animate)
@@ -138,73 +128,17 @@ export default function OrbitalPage() {
   const [time, setTime] = useState(new Date())
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const [isOverlayVisible, setIsOverlayVisible] = useState(false)
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null)
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
-  const controlsRef = useRef<OrbitControls | null>(null)
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  const handleSceneReady = (camera: THREE.PerspectiveCamera, controls: OrbitControls) => {
-    cameraRef.current = camera
-    controlsRef.current = controls
-  }
-
-  const triggerFlightAnimation = (videoId: string) => {
-    if (!cameraRef.current) return
-
-    const camera = cameraRef.current
-    const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
-    // Theater seat perspective: positioned above and in front, looking down slightly
-    const endPos = { x: 0, y: 35, z: 50 }
-
-    new TWEEN.Tween(startPos)
-      .to(endPos, 2500) // 2.5 second flight
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        camera.position.set(startPos.x, startPos.y, startPos.z)
-      })
-      .start()
-
-    setSelectedVideoId(videoId)
-  }
-
-  const resetOrbitalView = () => {
-    if (!cameraRef.current) return
-
-    const camera = cameraRef.current
-    const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
-    const endPos = { x: 0, y: 50, z: 75 } // Default orbital position
-
-    new TWEEN.Tween(startPos)
-      .to(endPos, 2500) // 2.5 second reset animation
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        camera.position.set(startPos.x, startPos.y, startPos.z)
-      })
-      .start()
-  }
-
   const handleFlyTo = (id: string) => {
+    // Placeholder for future functionality
     setIsTracksOpen(false)
     setIsPlusOpen(false)
-    // Only trigger flight if overlay is visible
-    if (isOverlayVisible) {
-      triggerFlightAnimation(id)
-    }
   }
 
   const navItemStyle: React.CSSProperties = {
@@ -252,13 +186,12 @@ export default function OrbitalPage() {
   return (
     <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
       {/* Translucent Saturn-Style Navbar */}
-      {isMobile ? (
-        // Mobile navbar - centered, stacked in two rows
-        <nav style={{
-          position: 'fixed', top: '15px', left: '15px', right: '15px',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', zIndex: 1000,
-        }}>
-          {/* Row 1: Date/Time + Atlanta Gleaner */}
+      <nav style={{
+        position: 'fixed', top: '25px', left: '25px', right: '25px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000,
+      }}>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          {/* Date/Time Link + Title */}
           <a href="/archive" style={{...navItemStyle, textDecoration: 'none'}}>
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
               <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
@@ -268,165 +201,81 @@ export default function OrbitalPage() {
             <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
 
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>THE ATLANTA GLEANER</span>
-              <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
+              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>ORBITAL — EVENT HORIZON</span>
+              <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>THE ATLANTA GLEANER • EDITED BY GEORGE WASHINGTON</span>
             </div>
           </a>
 
-          {/* Row 2: Runway, Orbit, Tracks, Plus buttons */}
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
-              RUNWAY
+          <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+            RUNWAY
+          </button>
+        </div>
+
+        {/* Quick-Jump Track Selectors with Dropdowns */}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {/* TRACKS Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => {
+                setIsTracksOpen(!isTracksOpen)
+                setIsPlusOpen(false)
+              }}
+              style={{ ...navItemStyle, padding: '10px 18px', minWidth: '45px', justifyContent: 'center' }}
+            >
+              TRACKS {isTracksOpen ? '▴' : '▾'}
             </button>
-
-            <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
-              ORBIT
-            </button>
-
-            {/* TRACKS Dropdown */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => {
-                  setIsTracksOpen(!isTracksOpen)
-                  setIsPlusOpen(false)
-                }}
-                style={{ ...navItemStyle, padding: '10px 18px', minWidth: '45px', justifyContent: 'center' }}
-              >
-                TRACKS {isTracksOpen ? '▴' : '▾'}
-              </button>
-              {isTracksOpen && (
-                <div style={dropdownMenuStyle}>
-                  {ORBITAL_VIDEOS.map((v, i) => (
-                    <div
-                      key={v.id}
-                      onClick={() => handleFlyTo(v.id)}
-                      style={dropdownItemStyle}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    >
-                      {String(i + 1).padStart(2, '0')} // {v.title}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Plus Menu Dropdown */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => {
-                  setIsPlusOpen(!isPlusOpen)
-                  setIsTracksOpen(false)
-                }}
-                style={{ ...navItemStyle, padding: '10px 15px' }}
-              >
-                {isPlusOpen ? '−' : '+'}
-              </button>
-              {isPlusOpen && (
-                <div style={{...dropdownMenuStyle, right: '0'}}>
-                  <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                  <a href="/runway" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                  <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                  <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                  <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
-                </div>
-              )}
-            </div>
-          </div>
-        </nav>
-      ) : (
-        // Desktop navbar - original layout
-        <nav style={{
-          position: 'fixed', top: '25px', left: '25px', right: '25px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000,
-        }}>
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            {/* Date/Time Link + Title */}
-            <a href="/archive" style={{...navItemStyle, textDecoration: 'none'}}>
-              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
-                <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+            {isTracksOpen && (
+              <div style={dropdownMenuStyle}>
+                {ORBITAL_VIDEOS.map((v, i) => (
+                  <div
+                    key={v.id}
+                    onClick={() => handleFlyTo(v.id)}
+                    style={dropdownItemStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    {String(i + 1).padStart(2, '0')} // {v.title}
+                  </div>
+                ))}
               </div>
+            )}
+          </div>
 
-              <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>THE ATLANTA GLEANER</span>
-                <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
-              </div>
-            </a>
-
-            <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
-              RUNWAY
+          {/* Plus Menu Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => {
+                setIsPlusOpen(!isPlusOpen)
+                setIsTracksOpen(false)
+              }}
+              style={{ ...navItemStyle, padding: '10px 15px' }}
+            >
+              {isPlusOpen ? '−' : '+'}
             </button>
+            {isPlusOpen && (
+              <div style={{...dropdownMenuStyle, right: '0'}}>
+                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
+                <a href="/runway" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
+                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
+                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
+                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
+              </div>
+            )}
           </div>
-
-          {/* Quick-Jump Track Selectors with Dropdowns */}
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {/* TRACKS Dropdown */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => {
-                  setIsTracksOpen(!isTracksOpen)
-                  setIsPlusOpen(false)
-                }}
-                style={{ ...navItemStyle, padding: '10px 18px', minWidth: '45px', justifyContent: 'center' }}
-              >
-                TRACKS {isTracksOpen ? '▴' : '▾'}
-              </button>
-              {isTracksOpen && (
-                <div style={dropdownMenuStyle}>
-                  {ORBITAL_VIDEOS.map((v, i) => (
-                    <div
-                      key={v.id}
-                      onClick={() => handleFlyTo(v.id)}
-                      style={dropdownItemStyle}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    >
-                      {String(i + 1).padStart(2, '0')} // {v.title}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Plus Menu Dropdown */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => {
-                  setIsPlusOpen(!isPlusOpen)
-                  setIsTracksOpen(false)
-                }}
-                style={{ ...navItemStyle, padding: '10px 15px' }}
-              >
-                {isPlusOpen ? '−' : '+'}
-              </button>
-              {isPlusOpen && (
-                <div style={{...dropdownMenuStyle, right: '0'}}>
-                  <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                  <a href="/runway" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                  <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                  <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                  <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
-                </div>
-              )}
-            </div>
-          </div>
-        </nav>
-      )}
+        </div>
+      </nav>
 
       {/* 3D Scene Container */}
       <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-        <EventHorizonScene onSceneReady={handleSceneReady} />
+        <EventHorizonScene />
       </div>
 
       {/* Video Overlay */}
       {isOverlayVisible && (
         <VideoOverlay
           videos={ORBITAL_VIDEOS}
-          selectedVideoId={selectedVideoId}
-          onSelectVideo={(videoId) => triggerFlightAnimation(videoId)}
+          selectedVideoId={null}
+          onSelectVideo={() => {}}
         />
       )}
 
