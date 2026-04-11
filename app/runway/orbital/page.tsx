@@ -463,8 +463,8 @@ export default function OrbitalPage() {
             <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
 
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>ORBITAL — EVENT HORIZON</span>
-              <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>THE ATLANTA GLEANER • EDITED BY GEORGE WASHINGTON</span>
+              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>THE ATLANTA GLEANER</span>
+              <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
             </div>
           </a>
 
