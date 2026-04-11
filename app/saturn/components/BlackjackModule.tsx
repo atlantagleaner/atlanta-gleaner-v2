@@ -16,10 +16,7 @@ interface Card {
 interface CoinData {
   id: string
   type: 'copper' | 'silver' | 'gold'
-  value: number
-  x: number
-  y: number
-  originBox: 'wallet' | 'wager' | 'sigil213' | 'sigilPairs' | 'sigilBuster'
+  location: 'wallet' | 'wager' | '213' | 'pairs' | 'buster'
 }
 
 interface GameState {
@@ -58,11 +55,13 @@ const loadEngine = async () => {
 
 // --- UTILS ---
 
+const VALUES: Record<'copper' | 'silver' | 'gold', number> = { copper: 1, silver: 2, gold: 10 }
+
 const generateInitialCoins = (): CoinData[] => {
   const coins: CoinData[] = []
-  for (let i = 0; i < 4; i++) coins.push({ id: `g-${i}`, type: 'gold', value: 10, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
-  for (let i = 0; i < 4; i++) coins.push({ id: `s-${i}`, type: 'silver', value: 2, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
-  for (let i = 0; i < 2; i++) coins.push({ id: `c-${i}`, type: 'copper', value: 1, x: Math.random() * 60 + 20, y: Math.random() * 60 + 20, originBox: 'wallet' })
+  for (let i = 0; i < 4; i++) coins.push({ id: `g-${i}`, type: 'gold', location: 'wallet' })
+  for (let i = 0; i < 4; i++) coins.push({ id: `s-${i}`, type: 'silver', location: 'wallet' })
+  for (let i = 0; i < 2; i++) coins.push({ id: `c-${i}`, type: 'copper', location: 'wallet' })
   return coins
 }
 
@@ -142,7 +141,7 @@ const OccultSigil = ({ name, icon }: { name: string; icon: string }) => {
   )
 }
 
-const Coin = ({ data, onDrop, containerRef }: { data: CoinData, onDrop: (id: string, box: { x: number, y: number }) => void, containerRef: React.RefObject<HTMLDivElement> }) => {
+const Coin = ({ data, onDragEnd }: { data: CoinData, onDragEnd: (id: string, point: { x: number, y: number }) => void }) => {
   const colors = {
     copper: 'from-orange-700 to-orange-900 border-orange-400',
     silver: 'from-slate-400 to-slate-600 border-slate-200',
@@ -151,20 +150,21 @@ const Coin = ({ data, onDrop, containerRef }: { data: CoinData, onDrop: (id: str
 
   return (
     <motion.div
+      layout
       drag
       dragMomentum={false}
-      onDragEnd={(e, info) => onDrop(data.id, { x: info.point.x, y: info.point.y })}
-      initial={{ x: data.x, y: data.y }}
-      animate={{ x: data.x, y: data.y }}
-      className={`absolute w-8 h-8 rounded-full border shadow-lg cursor-grab active:cursor-grabbing flex items-center justify-center bg-gradient-to-br ${colors[data.type]} select-none touch-none coin-glow`}
-      style={{ zIndex: 50, touchAction: 'none' }}
+      onDragEnd={(e, info) => onDragEnd(data.id, { x: info.point.x, y: info.point.y })}
+      className={`w-8 h-8 rounded-full border shadow-lg cursor-grab active:cursor-grabbing flex items-center justify-center bg-gradient-to-br ${colors[data.type]} select-none touch-none coin-glow`}
+      style={{ touchAction: 'none' }}
+      whileHover={{ scale: 1.1 }}
+      whileDrag={{ scale: 1.2, zIndex: 100 }}
     >
       <motion.div
         animate={{ opacity: [0.4, 0.8, 0.4] }}
         transition={{ duration: 3, repeat: Infinity }}
         className="w-6 h-6 rounded-full border border-white/20"
       />
-      <span className="absolute text-[8px] font-bold text-white/80">{data.value}</span>
+      <span className="text-[8px] font-bold text-white/80">{VALUES[data.type]}</span>
     </motion.div>
   )
 }
@@ -186,7 +186,19 @@ export const BlackjackModule = () => {
     sideBets: { '213': 0, 'pairs': 0, 'buster': 0 }
   })
 
-  const boxesRef = useRef<Record<string, HTMLDivElement | null>>({})
+  const boxesRef = useRef<{
+    walletRef: HTMLDivElement | null
+    wagerRef: HTMLDivElement | null
+    sigil213Ref: HTMLDivElement | null
+    sigilPairsRef: HTMLDivElement | null
+    sigilBusterRef: HTMLDivElement | null
+  }>({
+    walletRef: null,
+    wagerRef: null,
+    sigil213Ref: null,
+    sigilPairsRef: null,
+    sigilBusterRef: null
+  })
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -203,54 +215,44 @@ export const BlackjackModule = () => {
   const totals = useMemo(() => {
     let wallet = 0, wager = 0, side = 0
     coins.forEach(c => {
-      if (c.originBox === 'wallet') wallet += c.value
-      else if (c.originBox === 'wager') wager += c.value
-      else if (c.originBox.startsWith('sigil')) side += c.value
+      const value = VALUES[c.type]
+      if (c.location === 'wallet') wallet += value
+      else if (c.location === 'wager') wager += value
+      else if (c.location === '213' || c.location === 'pairs' || c.location === 'buster') side += value
     })
     return { wallet, wager, side }
   }, [coins])
 
   const handleDrop = (id: string, point: { x: number, y: number }) => {
-    let boxKey: string | null = null
-    for (const [key, ref] of Object.entries(boxesRef.current)) {
-      if (!ref) continue
-      const b = ref.getBoundingClientRect()
-      if (point.x >= b.left && point.x <= b.right && point.y >= b.top && point.y <= b.bottom) {
-        boxKey = key
-        break
-      }
+    const checkIntersect = (ref: HTMLDivElement | null) => {
+      if (!ref) return false
+      const rect = ref.getBoundingClientRect()
+      return (
+        point.x > rect.left && point.x < rect.right &&
+        point.y > rect.top && point.y < rect.bottom
+      )
     }
 
-    if (boxKey) {
-      const b = boxesRef.current[boxKey]!.getBoundingClientRect()
-      const coin = coins.find(c => c.id === id)
-      if (!coin) return
+    let newLocation: 'wallet' | 'wager' | '213' | 'pairs' | 'buster' | null = null
+    if (checkIntersect(boxesRef.current.walletRef)) newLocation = 'wallet'
+    else if (checkIntersect(boxesRef.current.wagerRef)) newLocation = 'wager'
+    else if (checkIntersect(boxesRef.current.sigil213Ref)) newLocation = '213'
+    else if (checkIntersect(boxesRef.current.sigilPairsRef)) newLocation = 'pairs'
+    else if (checkIntersect(boxesRef.current.sigilBusterRef)) newLocation = 'buster'
 
-      setCoins(prev => prev.map(c =>
-        c.id === id
-          ? { ...c, originBox: boxKey as any, x: point.x - b.left - 16, y: point.y - b.top - 16 }
-          : c
-      ))
+    if (newLocation) {
+      setCoins(prev => prev.map(c => c.id === id ? { ...c, location: newLocation! } : c))
 
-      if (boxKey.startsWith('sigil')) {
-        const dialogueMap: Record<string, string> = {
-          'sigil213': "A poker hand in the cards? Risky... but the 21+3 pays well if the stars align.",
-          'sigilPairs': "Perfect pairs, perfect symmetry. A duplicate fate awaits.",
-          'sigilBuster': "You bet on my failure? How rude. But if I bust, you feast."
-        }
-        setGameState(prev => ({ ...prev, dialogue: dialogueMap[boxKey!] || prev.dialogue }))
+      const dialogueMap: Record<string, string> = {
+        '213': "A poker hand in the cards? Risky... but the 21+3 pays well if the stars align.",
+        'pairs': "Perfect pairs, perfect symmetry. A duplicate fate awaits.",
+        'buster': "You bet on my failure? How rude. But if I bust, you feast."
+      }
+      if (dialogueMap[newLocation]) {
+        setGameState(prev => ({ ...prev, dialogue: dialogueMap[newLocation!] }))
       }
     } else {
-      // Ghostly return animation
-      const coin = coins.find(c => c.id === id)
-      if (coin) {
-        setGameState(prev => ({ ...prev, dialogue: "The void rejects your offering. It returns to its source." }))
-        setCoins(prev => prev.map(c =>
-          c.id === id
-            ? { ...c, x: coin.x, y: coin.y }
-            : c
-        ))
-      }
+      setGameState(prev => ({ ...prev, dialogue: "The void rejects your offering. It returns to its source." }))
     }
   }
 
@@ -266,10 +268,7 @@ export const BlackjackModule = () => {
         newCoins.push({
           id: `w-${ts}-${type}-${i}`,
           type,
-          value: val,
-          x: Math.random() * 60 + 20,
-          y: Math.random() * 60 + 20,
-          originBox: 'wallet'
+          location: 'wallet'
         })
       }
     }
@@ -277,7 +276,7 @@ export const BlackjackModule = () => {
     add('gold', 10)
     add('silver', 2)
     add('copper', 1)
-    setCoins(prev => [...prev.filter(c => c.originBox === 'wallet'), ...newCoins])
+    setCoins(prev => [...prev.filter(c => c.location === 'wallet'), ...newCoins])
   }
 
   const handleDeal = () => {
@@ -335,11 +334,11 @@ export const BlackjackModule = () => {
             ns.dialogue = "A draw. Balance restored."
           } else {
             ns.dialogue = "The house claims its due."
-            setCoins(c => c.filter(x => x.originBox === 'wallet'))
+            setCoins(c => c.filter(x => x.location === 'wallet'))
           }
         } else {
           ns.dialogue = "Busted. The void is hungry."
-          setCoins(c => c.filter(x => x.originBox === 'wallet'))
+          setCoins(c => c.filter(x => x.location === 'wallet'))
         }
       }
       return ns
@@ -401,34 +400,34 @@ export const BlackjackModule = () => {
         <div className="w-1/5 border-r border-amber-900/20 flex flex-col p-3 space-y-2 justify-center">
           <div
             key="sigil213"
-            ref={el => { boxesRef.current['sigil213'] = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 relative overflow-hidden flex items-center justify-center hover:border-amber-700/60 transition-colors"
+            ref={el => { boxesRef.current.sigil213Ref = el }}
+            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
           >
             <OccultSigil name="21+3" icon="👁️" />
-            {coins.filter(c => c.originBox === 'sigil213').map(c => (
-              <Coin key={c.id} data={c} onDrop={handleDrop} containerRef={containerRef} />
+            {coins.filter(c => c.location === '213').map(c => (
+              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
             ))}
           </div>
 
           <div
             key="sigilPairs"
-            ref={el => { boxesRef.current['sigilPairs'] = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 relative overflow-hidden flex items-center justify-center hover:border-amber-700/60 transition-colors"
+            ref={el => { boxesRef.current.sigilPairsRef = el }}
+            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
           >
             <OccultSigil name="Pairs" icon="🌙" />
-            {coins.filter(c => c.originBox === 'sigilPairs').map(c => (
-              <Coin key={c.id} data={c} onDrop={handleDrop} containerRef={containerRef} />
+            {coins.filter(c => c.location === 'pairs').map(c => (
+              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
             ))}
           </div>
 
           <div
             key="sigilBuster"
-            ref={el => { boxesRef.current['sigilBuster'] = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 relative overflow-hidden flex items-center justify-center hover:border-amber-700/60 transition-colors"
+            ref={el => { boxesRef.current.sigilBusterRef = el }}
+            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
           >
             <OccultSigil name="Buster" icon="⏳" />
-            {coins.filter(c => c.originBox === 'sigilBuster').map(c => (
-              <Coin key={c.id} data={c} onDrop={handleDrop} containerRef={containerRef} />
+            {coins.filter(c => c.location === 'buster').map(c => (
+              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
             ))}
           </div>
         </div>
@@ -465,11 +464,11 @@ export const BlackjackModule = () => {
         <div className="w-2/5 flex flex-col pr-4">
           <div className="text-[11px] text-amber-600 mb-2 font-bold">WALLET ({totals.wallet})</div>
           <div
-            ref={el => { boxesRef.current.wallet = el }}
-            className="flex-1 border border-amber-900/40 bg-black/20 rounded relative overflow-hidden"
+            ref={el => { boxesRef.current.walletRef = el }}
+            className="flex-1 border border-amber-900/40 bg-black/20 rounded flex flex-wrap items-start content-start gap-2 p-2 overflow-auto"
           >
-            {coins.filter(c => c.originBox === 'wallet').map(c => (
-              <Coin key={c.id} data={c} onDrop={handleDrop} containerRef={containerRef} />
+            {coins.filter(c => c.location === 'wallet').map(c => (
+              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
             ))}
             {totals.wallet === 0 && totals.wager === 0 && (
               <button
@@ -533,11 +532,11 @@ export const BlackjackModule = () => {
         <div className="w-2/5 flex flex-col pl-4">
           <div className="text-[11px] text-amber-600 mb-2 font-bold text-right">WAGER ({totals.wager})</div>
           <div
-            ref={el => { boxesRef.current.wager = el }}
-            className="flex-1 border border-amber-900/40 bg-black/20 rounded relative overflow-hidden"
+            ref={el => { boxesRef.current.wagerRef = el }}
+            className="flex-1 border border-amber-900/40 bg-black/20 rounded flex flex-wrap items-start content-start gap-2 p-2 overflow-auto"
           >
-            {coins.filter(c => c.originBox === 'wager').map(c => (
-              <Coin key={c.id} data={c} onDrop={handleDrop} containerRef={containerRef} />
+            {coins.filter(c => c.location === 'wager').map(c => (
+              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
             ))}
           </div>
         </div>
