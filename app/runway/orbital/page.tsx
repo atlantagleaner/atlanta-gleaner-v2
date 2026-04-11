@@ -18,11 +18,11 @@ const ORBITAL_VIDEOS = [
 // --- Internal Tween Logic to avoid "tween.js" errors ---
 class SimpleTween {
   private start: any; private end: any; private duration: number; private startTime: number
-  private onUpdate: (v: any) => void; private easing: (t: number) => number; public active = true
+  private onUpdate: (v: any) => void; private onComplete?: () => void; private easing: (t: number) => number; public active = true
 
-  constructor(start: any, end: any, duration: number, onUpdate: (v: any) => void) {
+  constructor(start: any, end: any, duration: number, onUpdate: (v: any) => void, onComplete?: () => void) {
     this.start = { ...start }; this.end = { ...end }; this.duration = duration
-    this.startTime = performance.now(); this.onUpdate = onUpdate
+    this.startTime = performance.now(); this.onUpdate = onUpdate; this.onComplete = onComplete
     this.easing = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
   }
 
@@ -34,7 +34,10 @@ class SimpleTween {
     const current: any = {}
     for (const key in this.start) current[key] = this.start[key] + (this.end[key] - this.start[key]) * eased
     this.onUpdate(current)
-    if (progress === 1) this.active = false
+    if (progress === 1) {
+      this.active = false
+      if (this.onComplete) this.onComplete()
+    }
   }
 }
 
@@ -91,6 +94,7 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       const mat = new THREE.PointsMaterial({ size: 0.18, color, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending })
       const pts = new THREE.Points(geo, mat)
       pts.rotation.x = -Math.PI / 3.5
+      pts.renderOrder = 5 // Render after mask, before black hole
       accretionDisks.push({ mesh: pts, speed }); webglScene.add(pts)
     }
     addRing(bhRadius * 2, bhRadius * 5, 12000, 0xffa500, 0.035)
@@ -109,18 +113,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     const targets: any = { overview: { camPos: { x: 0, y: 50, z: 140 }, targetPos: { x: 0, y: 0, z: 0 } } }
     const orbitRadius = 75, scale = 0.018
 
-    // State for iframe swapping & snap/latch
-    const videoRefs = new Map<string, { div: HTMLDivElement; pos: THREE.Vector3 }>()
+    // State for iframe swapping (proximity-based)
+    const videoRefs = new Map<string, { div: HTMLDivElement; obj: CSS3DObject; pos: THREE.Vector3 }>()
     let currentActiveVideo: string | null = null
-    let lastSnapTime = 0
-    let pendingVideoSwap: string | null = null
-    let tweenCompleteTime = 0
-
-    // State for theater mode (z-index & opacity transitions)
-    let theaterModeActive = false
-    let focusedVideoId: string | null = null
-    let webglOpacity = 1.0
-    let theaterModeReadyTime = 0
+    let activeVideoId: string | null = null  // Track current video at proximity
 
     // Helper: Check if camera is perpendicular to video plane (focus rule)
     const isFocused = (videoPos: THREE.Vector3, threshold = Math.PI / 6) => {
@@ -128,6 +124,14 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       const planeNormal = videoPos.clone().normalize() // Normal points outward from origin
       const angle = Math.acos(Math.max(-1, Math.min(1, camToVideo.dot(planeNormal))))
       return angle < threshold
+    }
+
+    // Helper: Check if video is in front of camera (frustum gating)
+    const isInFrustum = (videoPos: THREE.Vector3): boolean => {
+      const camDir = camera.getWorldDirection(new THREE.Vector3())
+      const camToVideo = videoPos.clone().sub(camera.position).normalize()
+      const dotProduct = camDir.dot(camToVideo)
+      return dotProduct > 0 // Positive dot product = video is in front
     }
 
     // Helper: Swap thumbnail to iframe
@@ -183,7 +187,8 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
 
       // Mask Mesh (Occlusion)
       const mask = new THREE.Mesh(new THREE.PlaneGeometry(800 * scale, 450 * scale), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: true }))
-      mask.position.copy(pos); mask.rotation.copy(obj.rotation); webglScene.add(mask)
+      mask.position.copy(pos); mask.rotation.copy(obj.rotation); mask.renderOrder = 0 // Render first for depth
+      webglScene.add(mask)
 
       div.addEventListener('pointerdown', (e) => {
         e.preventDefault()
@@ -195,63 +200,14 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         document.dispatchEvent(new CustomEvent('flyTo', { detail: { targetId: v.id } }))
       }
 
-      // Store video ref for iframe swapping
-      videoRefs.set(v.id, { div, pos: pos.clone() })
+      // Store video ref for iframe swapping (including CSS3DObject for z-index control)
+      videoRefs.set(v.id, { div, obj, pos: pos.clone() })
 
-      const offset = pos.clone().normalize().multiplyScalar(28)
+      const offset = pos.clone().normalize().multiplyScalar(30)
       targets[v.id] = { camPos: { x: pos.x + offset.x, y: pos.y + offset.y, z: pos.z + offset.z }, targetPos: { x: pos.x, y: pos.y, z: pos.z } }
     })
 
-    // Helper: Update theater mode (opacity & z-index)
-    const updateTheaterMode = (focusedPos: THREE.Vector3 | null) => {
-      if (!focusedPos) {
-        // No focused video, reset theater mode
-        if (theaterModeActive) {
-          cssRenderer.domElement.style.zIndex = '1'
-          theaterModeActive = false
-          focusedVideoId = null
-          theaterModeReadyTime = 0
-        }
-        // Fade opacity back to normal
-        if (webglOpacity < 1.0) {
-          webglOpacity = Math.min(1.0, webglOpacity + 0.02)
-          webglRenderer.domElement.style.opacity = webglOpacity.toString()
-        }
-        return
-      }
-
-      const dist = camera.position.distanceTo(focusedPos)
-
-      // Progressive opacity based on distance
-      if (dist > 30) {
-        webglOpacity = Math.min(1.0, webglOpacity + 0.02)
-        theaterModeReadyTime = 0
-      } else if (dist > 20) {
-        const fadeProgress = (30 - dist) / 10
-        webglOpacity = 1.0 - fadeProgress * 0.7
-        theaterModeReadyTime = 0
-      } else {
-        webglOpacity = 0.3
-        // Check if conditions met for theater mode (focused + distance)
-        if (isFocused(focusedPos)) {
-          theaterModeReadyTime += 16
-          if (theaterModeReadyTime > 100 && !theaterModeActive) {
-            cssRenderer.domElement.style.zIndex = '10'
-            theaterModeActive = true
-          }
-        } else {
-          theaterModeReadyTime = 0
-          if (theaterModeActive) {
-            cssRenderer.domElement.style.zIndex = '1'
-            theaterModeActive = false
-          }
-        }
-      }
-
-      webglRenderer.domElement.style.opacity = webglOpacity.toString()
-    }
-
-    const handleFly = (e: any) => {
+const handleFly = (e: any) => {
       const targetId = e.detail?.targetId
       const d = targets[targetId]
       if (!d) return
@@ -262,64 +218,73 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         if (prevVideo) swapToThumbnail(currentActiveVideo, prevVideo.youtubeId)
       }
 
-      // Reset theater mode when going to overview
+      // Reset when going to overview
       if (targetId === 'overview') {
-        theaterModeActive = false
-        focusedVideoId = null
-        theaterModeReadyTime = 0
+        activeVideoId = null
+        // Reset all z-indices
+        videoRefs.forEach(ref => ref.obj.element.style.zIndex = '1')
       }
 
-      // Mark this video for swap after animation completes
-      pendingVideoSwap = targetId
+      // Animate to target with dynamic near plane adjustment
+      tweens.current.push(new SimpleTween(
+        { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+        d.camPos,
+        1200,
+        (v) => {
+          camera.position.set(v.x, v.y, v.z)
+          // Dynamic near plane adjustment: prevent clipping during close approach
+          const dist = camera.position.length()
+          camera.near = dist < 40 ? 5 : 0.1
+          camera.updateProjectionMatrix()
+        }
+      ))
 
-      tweens.current.push(new SimpleTween({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, d.camPos, 1200, (v) => camera.position.set(v.x, v.y, v.z)))
       tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, d.targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z)))
-      tweenCompleteTime = 0
     }
     document.addEventListener('flyTo', handleFly)
+
+    // Process proximity-based swaps every frame with hysteresis buffer
+    const processProximitySwaps = () => {
+      let swapProcessed = false // Throttle to 1 swap per frame
+
+      for (const [videoId, ref] of videoRefs) {
+        const dist = camera.position.distanceTo(ref.pos)
+        const inFrustum = isInFrustum(ref.pos)
+
+        // Hysteresis: swap in at <30, out at >40
+        if (activeVideoId === null && dist < 30 && inFrustum && !swapProcessed) {
+          // ACTIVATE: Swap to iframe, promote z-index
+          const video = videos.find(v => v.id === videoId)
+          if (video) {
+            swapToIframe(videoId, video.youtubeId)
+            ref.obj.element.style.zIndex = '10'  // Per-video z-index
+            activeVideoId = videoId
+            swapProcessed = true
+          }
+        } else if (activeVideoId === videoId && dist > 40) {
+          // DEACTIVATE: Swap to thumbnail, demote z-index
+          const video = videos.find(v => v.id === videoId)
+          if (video) {
+            swapToThumbnail(videoId, video.youtubeId)
+            ref.obj.element.style.zIndex = '1'  // Reset z-index
+            activeVideoId = null
+            swapProcessed = true
+          }
+        } else if (activeVideoId === videoId) {
+          // Maintain active video's z-index
+          ref.obj.element.style.zIndex = '10'
+        } else {
+          // Ensure inactive videos are at base z-index
+          ref.obj.element.style.zIndex = '1'
+        }
+      }
+    }
 
     const animate = (time: number) => {
       tweens.current = tweens.current.filter(t => t.active); tweens.current.forEach(t => t.update(time))
 
-      // Handle swap after animation completes
-      if (pendingVideoSwap && tweens.current.length === 0) {
-        tweenCompleteTime += 16 // Approximate frame time
-        if (tweenCompleteTime > 50) { // 50ms buffer after tweens finish
-          const targetVideo = videos.find(v => v.id === pendingVideoSwap)
-          const targetPos = videoRefs.get(pendingVideoSwap)?.pos
-          if (targetVideo && targetPos && isFocused(targetPos)) {
-            swapToIframe(pendingVideoSwap, targetVideo.youtubeId)
-            focusedVideoId = pendingVideoSwap
-          }
-          pendingVideoSwap = null
-        }
-      } else if (pendingVideoSwap && tweens.current.length > 0) {
-        tweenCompleteTime = 0 // Reset buffer if new animation started
-      }
-
-      // Snap/latch: auto-animate to perfect viewing position if close but not perpendicular
-      const now = performance.now()
-      if (now - lastSnapTime > 1000) { // 1 second cooldown
-        for (const [videoId, ref] of videoRefs) {
-          const dist = camera.position.distanceTo(ref.pos)
-          if (dist < 60 && !isFocused(ref.pos, Math.PI / 6 + 0.1)) { // Distance threshold + angle threshold (30°)
-            // Trigger snap/latch animation to this video
-            const d = targets[videoId]
-            if (d) {
-              tweens.current.push(new SimpleTween({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, d.camPos, 800, (v) => camera.position.set(v.x, v.y, v.z)))
-              tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, d.targetPos, 800, (v) => controls.target.set(v.x, v.y, v.z)))
-              pendingVideoSwap = videoId
-              tweenCompleteTime = 0
-              lastSnapTime = now
-            }
-            break // Only snap to one video per frame
-          }
-        }
-      }
-
-      // Theater mode: manage z-index & opacity based on focused video distance
-      const focusedVideoPos = focusedVideoId ? videoRefs.get(focusedVideoId)?.pos : null
-      updateTheaterMode(focusedVideoPos || null)
+      // Process proximity-based swaps every frame
+      processProximitySwaps()
 
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
