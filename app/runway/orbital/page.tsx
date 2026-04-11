@@ -79,6 +79,8 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     // 4. Controls
     const controls = new OrbitControls(camera, cssRenderer.domElement)
     controls.enableDamping = true
+    controls.target.set(0, 0, 0)  // Orbit point at origin (black hole)
+    controls.enabled = false  // Default: free camera (no orbit)
 
     // 5. Black Hole & Accretion (WebGL)
     const bhRadius = 8.5
@@ -266,7 +268,6 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
           camPos = { x: 0, y: 0, z: 0 }
           targetPos = { x: 0, y: 0, z: 0 }
         }
-        targetOpacity = 0.3 // Fade canvas when approaching video
       }
 
       // Animate camera position with dynamic near plane adjustment
@@ -288,10 +289,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     }
     document.addEventListener('flyTo', handleFly)
 
-    // Process proximity-based swaps and controls.target switching every frame
+    // Track orbit mode inside scene (syncs with React state via event listener)
+    let isOrbitModeInternal = false
+
+    // Process proximity-based theater mode every frame
     const processProximitySwaps = () => {
       let swapProcessed = false // Throttle to 1 swap per frame
-      let controlsTargetSet = false
 
       for (const [videoId, ref] of videoRefs) {
         const videoObj = targets[videoId]?.videoObj
@@ -303,15 +306,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         const dist = camera.position.distanceTo(videoWorldPos)
         const inFrustum = isInFrustum(ref.pos)
 
-        // Within swapDistance: orbit around video, enable iframe
+        // Within swapDistance: ENTER THEATER MODE
         if (activeVideoId === null && dist < swapDistance && inFrustum && !swapProcessed) {
-          // Switch controls to orbit around video
-          if (!controlsTargetSet) {
-            controls.target.copy(videoWorldPos)
-            controlsTargetSet = true
-          }
-
-          // ACTIVATE: Swap to iframe, promote z-index
+          // ACTIVATE: Disable controls, swap to iframe
+          controls.enabled = false  // Theater mode: free camera (no orbit)
           const video = videos.find(v => v.id === videoId)
           if (video) {
             swapToIframe(videoId, video.youtubeId)
@@ -320,11 +318,8 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
             swapProcessed = true
           }
         } else if (activeVideoId === videoId && dist > 25) {
-          // Outside proximity: return to orbiting origin
-          controls.target.set(0, 0, 0)
-          controlsTargetSet = true
-
-          // DEACTIVATE: Swap to thumbnail, demote z-index
+          // EXIT THEATER MODE: Restore orbit mode state
+          controls.enabled = isOrbitModeInternal  // Restore to saved orbit mode
           const video = videos.find(v => v.id === videoId)
           if (video) {
             swapToThumbnail(videoId, video.youtubeId)
@@ -333,23 +328,24 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
             swapProcessed = true
           }
         } else if (activeVideoId === videoId) {
-          // Maintain active video's z-index and controls.target
-          if (!controlsTargetSet) {
-            controls.target.copy(videoWorldPos)
-            controlsTargetSet = true
-          }
+          // Maintain active video's z-index and disabled controls
           ref.obj.element.style.zIndex = '10'
         } else {
           // Ensure inactive videos are at base z-index
           ref.obj.element.style.zIndex = '1'
         }
       }
+    }
 
-      // Ensure controls.target returns to origin if no video is active
-      if (!controlsTargetSet && activeVideoId === null && (controls.target.x !== 0 || controls.target.y !== 0 || controls.target.z !== 0)) {
-        controls.target.set(0, 0, 0)
+    // Listen for orbit mode toggle from navbar button
+    const handleOrbitModeToggle = () => {
+      isOrbitModeInternal = !isOrbitModeInternal
+      // Only update controls if not in theater mode
+      if (activeVideoId === null) {
+        controls.enabled = isOrbitModeInternal
       }
     }
+    document.addEventListener('toggleOrbitMode', handleOrbitModeToggle)
 
     const animate = (time: number) => {
       tweens.current = tweens.current.filter(t => t.active); tweens.current.forEach(t => t.update(time))
@@ -380,6 +376,7 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
 
     return () => {
       document.removeEventListener('flyTo', handleFly)
+      document.removeEventListener('toggleOrbitMode', handleOrbitModeToggle)
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(frameRef.current)
       webglRenderer.dispose(); webglRenderer.domElement.remove(); cssRenderer.domElement.remove()
@@ -394,6 +391,7 @@ export default function OrbitalPage() {
   const [time, setTime] = useState(new Date())
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
+  const [isOrbitMode, setIsOrbitMode] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
@@ -513,6 +511,17 @@ export default function OrbitalPage() {
         {/* RUNWAY Button (moved to own nav-level item for mobile reflow) */}
         <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
           RUNWAY
+        </button>
+
+        {/* ORBIT Mode Toggle Button (inline on second row) */}
+        <button
+          onClick={() => {
+            setIsOrbitMode(!isOrbitMode)
+            document.dispatchEvent(new CustomEvent('toggleOrbitMode'))
+          }}
+          style={{ ...navItemStyle, background: isOrbitMode ? 'rgba(100, 200, 255, 0.1)' : 'transparent', borderColor: isOrbitMode ? 'rgba(100, 200, 255, 0.3)' : 'rgba(255,255,255,0.1)' }}
+        >
+          {isOrbitMode ? 'ORBIT ●' : 'ORBIT'}
         </button>
 
         {/* Quick-Jump Track Selectors with Dropdowns */}
