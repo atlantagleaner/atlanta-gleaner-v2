@@ -430,63 +430,34 @@ export default function OrbitalPage() {
 
   return (
     <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
-      <style>{`
-        @media (max-width: 768px) {
-          nav {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 12px !important;
-          }
-          .navbar-left {
-            flex-direction: column !important;
-            gap: 8px !important;
-            width: 100% !important;
-          }
-          .navbar-right {
-            flex-direction: column !important;
-            gap: 8px !important;
-            width: 100% !important;
-          }
-          .byline-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-          }
-        }
-      `}</style>
-
-      {/* Orbital Page Navbar */}
+      {/* Translucent Saturn-Style Navbar */}
       <nav style={{
         position: 'fixed', top: '25px', left: '25px', right: '25px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        zIndex: 1000, boxSizing: 'border-box', width: 'calc(100vw - 50px)',
-        gap: '24px'
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000,
       }}>
-        {/* Left Zone: Date/Time Link + Title + Byline + RUNWAY Button */}
-        <div className="navbar-left" style={{ display: 'flex', gap: '15px', alignItems: 'center', flex: 1 }}>
-          {/* Date/Time Link */}
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          {/* Date/Time Link + Title + Byline + RUNWAY Button */}
           <a href="/archive" style={{...navItemStyle, textDecoration: 'none'}}>
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
               <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
               <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
             </div>
+
+            <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
+
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
+              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>ORBITAL — EVENT HORIZON</span>
+              <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>THE ATLANTA GLEANER • EDITED BY GEORGE WASHINGTON</span>
+            </div>
           </a>
 
-          {/* Title + Byline */}
-          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.3', paddingLeft: '12px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}>
-            <span style={{ fontWeight: 800, color: '#FFA500', fontSize: '13px', letterSpacing: '0.15em' }}>THE ATLANTA GLEANER</span>
-            <span className="byline-text" style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.1em' }}>EDITED BY GEORGE WASHINGTON</span>
-          </div>
-
-          {/* RUNWAY Button */}
-          <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)', marginLeft: 'auto' }}>
+          <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
             RUNWAY
           </button>
         </div>
 
-        {/* Right Zone: TRACKS & Plus Dropdowns */}
-        <div className="navbar-right" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        {/* Quick-Jump Track Selectors with Dropdowns */}
+        <div style={{ display: 'flex', gap: '8px' }}>
           {/* TRACKS Dropdown */}
           <div style={{ position: 'relative' }}>
             <button
@@ -494,7 +465,7 @@ export default function OrbitalPage() {
                 setIsTracksOpen(!isTracksOpen)
                 setIsPlusOpen(false)
               }}
-              style={{ ...navItemStyle }}
+              style={{ ...navItemStyle, padding: '10px 18px', minWidth: '45px', justifyContent: 'center' }}
             >
               TRACKS {isTracksOpen ? '▴' : '▾'}
             </button>
