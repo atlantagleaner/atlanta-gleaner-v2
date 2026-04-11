@@ -227,6 +227,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       targets[v.id] = { anchor, videoObj: obj }
     })
 
+    // Calculate swap distance based on anchor distance formula
+    const swapDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200)) * 1.1
+
+    // Track whether a camera flight is in progress
+    let isFlightInProgress = false
+
     // Helper: Get anchor's world position for camera fly-to
     const getAnchorWorldPosition = (videoId: string): { x: number; y: number; z: number } => {
       const d = targets[videoId]
@@ -274,6 +280,14 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         targetOpacity = 0.3 // Fade canvas when approaching video
       }
 
+      // Mark flight as in progress - swap won't happen during flight
+      isFlightInProgress = true
+      let completedTweens = 0
+      const markFlightComplete = () => {
+        completedTweens++
+        if (completedTweens === 2) isFlightInProgress = false  // Only mark complete when both tweens finish
+      }
+
       // Animate camera position with dynamic near plane adjustment
       tweens.current.push(new SimpleTween(
         { x: camera.position.x, y: camera.position.y, z: camera.position.z },
@@ -285,11 +299,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
           const dist = camera.position.length()
           camera.near = dist < 30 ? 8 : 0.1
           camera.updateProjectionMatrix()
-        }
+        },
+        markFlightComplete
       ))
 
       // Animate controls target to video center (camera looks outward from video)
-      tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z)))
+      tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z), markFlightComplete))
     }
     document.addEventListener('flyTo', handleFly)
 
@@ -301,8 +316,9 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         const dist = camera.position.distanceTo(ref.pos)
         const inFrustum = isInFrustum(ref.pos)
 
-        // Hysteresis: swap in at <15, out at >25 (tighter bounds for inside-ring positioning)
-        if (activeVideoId === null && dist < 15 && inFrustum && !swapProcessed) {
+        // Hysteresis: swap in at swapDistance (only after flight completes), out at >25
+        // Only allow swap AFTER flight animation completes (!isFlightInProgress)
+        if (activeVideoId === null && dist < swapDistance && inFrustum && !swapProcessed && !isFlightInProgress) {
           // ACTIVATE: Swap to iframe, promote z-index
           const video = videos.find(v => v.id === videoId)
           if (video) {
