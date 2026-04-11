@@ -80,7 +80,10 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
       // Portrait mobile: vertical carousel with 3 visible
       return {
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         pointerEvents: 'auto',
         zIndex: 10,
         display: 'flex',
@@ -97,7 +100,10 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
       // Landscape mobile: horizontal carousel with 1-2 visible
       return {
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         pointerEvents: 'auto',
         zIndex: 10,
         display: 'flex',
@@ -114,7 +120,10 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
       // Desktop: horizontal carousel with 3 visible
       return {
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         pointerEvents: 'auto',
         zIndex: 10,
         display: 'flex',
@@ -188,7 +197,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
   return (
     <>
       {/* Arrow Button Controls */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9 }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', zIndex: 9 }}>
         {/* Left Arrow */}
         <button
           onClick={() => scrollCarousel('left')}
