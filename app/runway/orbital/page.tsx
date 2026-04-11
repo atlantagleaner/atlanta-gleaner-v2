@@ -137,6 +137,11 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       const mask = new THREE.Mesh(new THREE.PlaneGeometry(800 * scale, 450 * scale), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: true }))
       mask.position.copy(pos); mask.rotation.copy(obj.rotation); webglScene.add(mask)
 
+      div.addEventListener('pointerdown', (e) => {
+        e.preventDefault()
+        e.stopImmediatePropagation()
+      }, true)  // Capture phase to intercept before OrbitControls
+
       div.onclick = (e) => {
         e.stopPropagation()
         document.dispatchEvent(new CustomEvent('flyTo', { detail: { targetId: v.id } }))
