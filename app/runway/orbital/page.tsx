@@ -182,6 +182,22 @@ export default function OrbitalPage() {
     setSelectedVideoId(videoId)
   }
 
+  const resetOrbitalView = () => {
+    if (!cameraRef.current) return
+
+    const camera = cameraRef.current
+    const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+    const endPos = { x: 0, y: 50, z: 75 } // Default orbital position
+
+    new TWEEN.Tween(startPos)
+      .to(endPos, 2500) // 2.5 second reset animation
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .onUpdate(() => {
+        camera.position.set(startPos.x, startPos.y, startPos.z)
+      })
+      .start()
+  }
+
   const handleFlyTo = (id: string) => {
     setIsTracksOpen(false)
     setIsPlusOpen(false)
@@ -257,10 +273,14 @@ export default function OrbitalPage() {
             </div>
           </a>
 
-          {/* Row 2: Runway, Tracks, Plus buttons */}
+          {/* Row 2: Runway, Orbit, Tracks, Plus buttons */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
+            </button>
+
+            <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
+              ORBIT
             </button>
 
             {/* TRACKS Dropdown */}
