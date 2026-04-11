@@ -116,6 +116,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     let pendingVideoSwap: string | null = null
     let tweenCompleteTime = 0
 
+    // State for theater mode (z-index & opacity transitions)
+    let theaterModeActive = false
+    let focusedVideoId: string | null = null
+    let webglOpacity = 1.0
+    let theaterModeReadyTime = 0
+
     // Helper: Check if camera is perpendicular to video plane (focus rule)
     const isFocused = (videoPos: THREE.Vector3, threshold = Math.PI / 6) => {
       const camToVideo = videoPos.clone().sub(camera.position).normalize()
@@ -196,6 +202,55 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       targets[v.id] = { camPos: { x: pos.x + offset.x, y: pos.y + offset.y, z: pos.z + offset.z }, targetPos: { x: pos.x, y: pos.y, z: pos.z } }
     })
 
+    // Helper: Update theater mode (opacity & z-index)
+    const updateTheaterMode = (focusedPos: THREE.Vector3 | null) => {
+      if (!focusedPos) {
+        // No focused video, reset theater mode
+        if (theaterModeActive) {
+          cssRenderer.domElement.style.zIndex = '1'
+          theaterModeActive = false
+          focusedVideoId = null
+          theaterModeReadyTime = 0
+        }
+        // Fade opacity back to normal
+        if (webglOpacity < 1.0) {
+          webglOpacity = Math.min(1.0, webglOpacity + 0.02)
+          webglRenderer.domElement.style.opacity = webglOpacity.toString()
+        }
+        return
+      }
+
+      const dist = camera.position.distanceTo(focusedPos)
+
+      // Progressive opacity based on distance
+      if (dist > 30) {
+        webglOpacity = Math.min(1.0, webglOpacity + 0.02)
+        theaterModeReadyTime = 0
+      } else if (dist > 20) {
+        const fadeProgress = (30 - dist) / 10
+        webglOpacity = 1.0 - fadeProgress * 0.7
+        theaterModeReadyTime = 0
+      } else {
+        webglOpacity = 0.3
+        // Check if conditions met for theater mode (focused + distance)
+        if (isFocused(focusedPos)) {
+          theaterModeReadyTime += 16
+          if (theaterModeReadyTime > 100 && !theaterModeActive) {
+            cssRenderer.domElement.style.zIndex = '10'
+            theaterModeActive = true
+          }
+        } else {
+          theaterModeReadyTime = 0
+          if (theaterModeActive) {
+            cssRenderer.domElement.style.zIndex = '1'
+            theaterModeActive = false
+          }
+        }
+      }
+
+      webglRenderer.domElement.style.opacity = webglOpacity.toString()
+    }
+
     const handleFly = (e: any) => {
       const targetId = e.detail?.targetId
       const d = targets[targetId]
@@ -205,6 +260,13 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       if (currentActiveVideo && currentActiveVideo !== targetId && currentActiveVideo !== 'overview') {
         const prevVideo = videos.find(v => v.id === currentActiveVideo)
         if (prevVideo) swapToThumbnail(currentActiveVideo, prevVideo.youtubeId)
+      }
+
+      // Reset theater mode when going to overview
+      if (targetId === 'overview') {
+        theaterModeActive = false
+        focusedVideoId = null
+        theaterModeReadyTime = 0
       }
 
       // Mark this video for swap after animation completes
@@ -224,8 +286,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         tweenCompleteTime += 16 // Approximate frame time
         if (tweenCompleteTime > 50) { // 50ms buffer after tweens finish
           const targetVideo = videos.find(v => v.id === pendingVideoSwap)
-          if (targetVideo && isFocused(videoRefs.get(pendingVideoSwap)?.pos || new THREE.Vector3())) {
+          const targetPos = videoRefs.get(pendingVideoSwap)?.pos
+          if (targetVideo && targetPos && isFocused(targetPos)) {
             swapToIframe(pendingVideoSwap, targetVideo.youtubeId)
+            focusedVideoId = pendingVideoSwap
           }
           pendingVideoSwap = null
         }
@@ -252,6 +316,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
           }
         }
       }
+
+      // Theater mode: manage z-index & opacity based on focused video distance
+      const focusedVideoPos = focusedVideoId ? videoRefs.get(focusedVideoId)?.pos : null
+      updateTheaterMode(focusedVideoPos || null)
 
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
