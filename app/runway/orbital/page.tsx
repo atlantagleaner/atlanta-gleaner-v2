@@ -180,7 +180,7 @@ function EventHorizonScene({ videos, onOrbitModeToggle }: { videos: typeof ORBIT
 
     // Stop all videos
     const stopAllVideos = () => {
-      sceneRef.current.videoRefs.forEach((ref) => {
+      sceneRef.current.videoRefs.forEach((ref: any) => {
         ref.container.style.display = 'none'
         ref.iframe.style.display = 'none'
       })
