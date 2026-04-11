@@ -167,11 +167,10 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         scrollSnapStop: 'always'
       }
     } else {
-      // Desktop: width-based sizing for 3 visible
+      // Desktop: width-based sizing for exactly 3 visible
       return {
         position: 'relative',
-        flex: '0 0 auto',
-        width: 'calc((100vw - 120px) / 3.2)',
+        flex: '0 0 calc(33.333% - 11px)',
         aspectRatio: '16 / 9',
         borderRadius: '8px',
         overflow: 'hidden',
