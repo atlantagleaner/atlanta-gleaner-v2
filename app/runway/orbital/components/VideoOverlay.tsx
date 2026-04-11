@@ -41,8 +41,6 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           gap: '16px',
           padding: '140px 40px 40px 40px',
           overflowY: 'auto',
-          background: 'rgba(0, 0, 0, 0.3)',
-          backdropFilter: 'blur(4px)',
           animation: 'fadeIn 0.3s ease-in'
         }}
       >
