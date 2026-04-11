@@ -144,7 +144,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         overflow: 'hidden',
         cursor: 'pointer',
         border:
-          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.1)',
         transition: 'all 0.3s ease',
         boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
         scrollSnapAlign: 'start',
@@ -160,7 +160,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         overflow: 'hidden',
         cursor: 'pointer',
         border:
-          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.1)',
         transition: 'all 0.3s ease',
         boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
         scrollSnapAlign: 'start',
@@ -176,7 +176,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         overflow: 'hidden',
         cursor: 'pointer',
         border:
-          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.1)',
         transition: 'all 0.3s ease',
         boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
         scrollSnapAlign: 'start',
@@ -255,7 +255,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
             onClick={() => handleVideoClick(video.id)}
             style={{
               ...baseStyle,
-              borderColor: isSelected ? '#FFB347' : 'rgba(255, 255, 255, 0.2)',
+              borderColor: isSelected ? '#FFB347' : 'rgba(255, 255, 255, 0.1)',
               borderWidth: isSelected ? '3px' : '1px',
               boxShadow: isSelected ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none'
             }}
@@ -267,7 +267,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               e.currentTarget.style.borderColor =
                 selectedVideoId === video.id
                   ? '#FFB347'
-                  : 'rgba(255, 255, 255, 0.2)'
+                  : 'rgba(255, 255, 255, 0.1)'
               e.currentTarget.style.transform = 'scale(1)'
             }}
           >
@@ -325,11 +325,12 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               position: 'absolute',
               top: '20px',
               right: '20px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              background: 'rgba(255, 255, 255, 0.04)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               color: '#FFF',
               padding: '8px 16px',
-              borderRadius: '4px',
+              borderRadius: '100px',
               cursor: 'pointer',
               fontSize: '12px',
               fontFamily: 'monospace',
@@ -337,12 +338,12 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)'
+              e.currentTarget.style.background = 'rgba(255, 165, 0, 0.15)'
+              e.currentTarget.style.borderColor = 'rgba(255, 165, 0, 0.4)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
             }}
           >
             ESC / CLOSE
