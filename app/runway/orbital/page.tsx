@@ -197,7 +197,8 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       const anchor = new THREE.Object3D()
       anchor.position.copy(obj.position)
       anchor.rotation.copy(obj.rotation)
-      anchor.translateZ(-30)  // Move 30 units toward black hole along local negative Z-axis
+      const anchorDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200))  // Scale 30-unit distance based on viewport width
+      anchor.translateZ(-anchorDistance)  // Move toward black hole along local negative Z-axis (responsive)
       cssScene.add(anchor)
 
       // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
@@ -435,16 +436,20 @@ export default function OrbitalPage() {
       <style>{`
         @media (max-width: 768px) {
           nav {
-            flex-direction: column !important;
-            align-items: flex-start !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            align-items: center !important;
             gap: 12px !important;
             width: calc(100vw - 50px) !important;
             box-sizing: border-box !important;
           }
-          nav > div {
-            flex-direction: column !important;
+          nav > div:first-child {
+            flex-basis: 100% !important;
+            justify-content: center !important;
+          }
+          nav > div:last-child {
+            flex-direction: row !important;
             gap: 8px !important;
-            width: 100% !important;
           }
         }
       `}</style>
