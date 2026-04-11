@@ -430,6 +430,23 @@ export default function OrbitalPage() {
 
   return (
     <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          nav {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+            width: calc(100vw - 50px) !important;
+            box-sizing: border-box !important;
+          }
+          nav > div {
+            flex-direction: column !important;
+            gap: 8px !important;
+            width: 100% !important;
+          }
+        }
+      `}</style>
+
       {/* Translucent Saturn-Style Navbar */}
       <nav style={{
         position: 'fixed', top: '25px', left: '25px', right: '25px',
