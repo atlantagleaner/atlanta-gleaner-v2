@@ -193,10 +193,12 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       obj.position.copy(pos); obj.lookAt(0, 0, 0); obj.scale.set(scale, scale, scale)
       cssScene.add(obj)
 
-      // Create invisible anchor 25 units "behind" the video (along negative Z in local space)
+      // Create unscaled anchor in scene (not as child of scaled video object)
       const anchor = new THREE.Object3D()
-      anchor.position.set(0, 0, 25)
-      obj.add(anchor)
+      anchor.position.copy(obj.position)
+      anchor.rotation.copy(obj.rotation)
+      anchor.translateZ(-30)  // Move 30 units toward black hole along local negative Z-axis
+      cssScene.add(anchor)
 
       // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
       const maskEnabled = false
