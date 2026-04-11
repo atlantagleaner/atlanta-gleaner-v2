@@ -64,7 +64,10 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     webglRenderer.domElement.style.position = 'absolute'
     webglRenderer.domElement.style.top = '0'; webglRenderer.domElement.style.zIndex = '5'
     webglRenderer.domElement.style.pointerEvents = 'none' // Allow clicks to pass to CSS
+    webglRenderer.domElement.style.opacity = '1'
+    webglRenderer.domElement.style.transition = 'opacity 0.3s ease'
     containerRef.current.appendChild(webglRenderer.domElement)
+    const webglCanvas = webglRenderer.domElement
 
     // 3. CSS Renderer (Bottom Layer, Interactive)
     const cssRenderer = new CSS3DRenderer()
@@ -110,13 +113,18 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     webglScene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1.0, color: 0xffffff, transparent: true, opacity: 0.4 })))
 
     // 7. Video Billboards
-    const targets: any = { overview: { camPos: { x: 0, y: 50, z: 75 }, targetPos: { x: 0, y: 0, z: 0 } } }
+    const targets: any = { overview: { anchor: null, videoObj: null } }
     const orbitRadius = 75, scale = 0.018
 
     // State for iframe swapping (proximity-based)
     const videoRefs = new Map<string, { div: HTMLDivElement; obj: CSS3DObject; pos: THREE.Vector3 }>()
     let currentActiveVideo: string | null = null
     let activeVideoId: string | null = null  // Track current video at proximity
+
+    // Canvas opacity management
+    let targetOpacity = 1.0
+    let currentOpacity = 1.0
+    const opacityTransitionSpeed = 0.02
 
     // Helper: Check if camera is perpendicular to video plane (focus rule)
     const isFocused = (videoPos: THREE.Vector3, threshold = Math.PI / 6) => {
@@ -185,6 +193,11 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       obj.position.copy(pos); obj.lookAt(0, 0, 0); obj.scale.set(scale, scale, scale)
       cssScene.add(obj)
 
+      // Create invisible anchor 25 units "behind" the video (along negative Z in local space)
+      const anchor = new THREE.Object3D()
+      anchor.position.set(0, 0, 25)
+      obj.add(anchor)
+
       // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
       const maskEnabled = false
       if (maskEnabled) {
@@ -206,15 +219,31 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       // Store video ref for iframe swapping (including CSS3DObject for z-index control)
       videoRefs.set(v.id, { div, obj, pos: pos.clone() })
 
-      // Camera positioned inside ring looking outward (black hole behind camera)
-      const offset = pos.clone().normalize().multiplyScalar(25)
-      targets[v.id] = { camPos: { x: pos.x - offset.x, y: pos.y - offset.y, z: pos.z - offset.z }, targetPos: { x: 0, y: 0, z: 0 } }
+      // Store anchor and video object for dynamic fly-to calculations
+      targets[v.id] = { anchor, videoObj: obj }
     })
 
-const handleFly = (e: any) => {
+    // Helper: Get anchor's world position for camera fly-to
+    const getAnchorWorldPosition = (videoId: string): { x: number; y: number; z: number } => {
+      const d = targets[videoId]
+      if (!d?.anchor) return { x: 0, y: 0, z: 0 }
+      const pos = new THREE.Vector3()
+      d.anchor.getWorldPosition(pos)
+      return { x: pos.x, y: pos.y, z: pos.z }
+    }
+
+    // Helper: Get video's world position for controls.target
+    const getVideoCenter = (videoId: string): { x: number; y: number; z: number } => {
+      const d = targets[videoId]
+      if (!d?.videoObj) return { x: 0, y: 0, z: 0 }
+      const pos = new THREE.Vector3()
+      d.videoObj.getWorldPosition(pos)
+      return { x: pos.x, y: pos.y, z: pos.z }
+    }
+
+    const handleFly = (e: any) => {
       const targetId = e.detail?.targetId
-      const d = targets[targetId]
-      if (!d) return
+      if (!targetId) return
 
       // Garbage collect previous iframe if switching videos
       if (currentActiveVideo && currentActiveVideo !== targetId && currentActiveVideo !== 'overview') {
@@ -222,17 +251,29 @@ const handleFly = (e: any) => {
         if (prevVideo) swapToThumbnail(currentActiveVideo, prevVideo.youtubeId)
       }
 
-      // Reset when going to overview
+      // Determine camera position and target based on targetId
+      let camPos: { x: number; y: number; z: number }
+      let targetPos: { x: number; y: number; z: number }
+
       if (targetId === 'overview') {
+        // Overview mode: standard position looking at origin
+        camPos = { x: 0, y: 50, z: 75 }
+        targetPos = { x: 0, y: 0, z: 0 }
         activeVideoId = null
+        targetOpacity = 1.0
         // Reset all z-indices
         videoRefs.forEach(ref => ref.obj.element.style.zIndex = '1')
+      } else {
+        // Video mode: use anchor for camera position, video center for look-at target
+        camPos = getAnchorWorldPosition(targetId)
+        targetPos = getVideoCenter(targetId)
+        targetOpacity = 0.3 // Fade canvas when approaching video
       }
 
-      // Animate to target with dynamic near plane adjustment
+      // Animate camera position with dynamic near plane adjustment
       tweens.current.push(new SimpleTween(
         { x: camera.position.x, y: camera.position.y, z: camera.position.z },
-        d.camPos,
+        camPos,
         1200,
         (v) => {
           camera.position.set(v.x, v.y, v.z)
@@ -243,7 +284,8 @@ const handleFly = (e: any) => {
         }
       ))
 
-      tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, d.targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z)))
+      // Animate controls target to video center (camera looks outward from video)
+      tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z)))
     }
     document.addEventListener('flyTo', handleFly)
 
@@ -289,6 +331,12 @@ const handleFly = (e: any) => {
 
       // Process proximity-based swaps every frame
       processProximitySwaps()
+
+      // Update canvas opacity for theater mode safety
+      if (Math.abs(currentOpacity - targetOpacity) > 0.01) {
+        currentOpacity += (targetOpacity - currentOpacity) * opacityTransitionSpeed
+        webglCanvas.style.opacity = currentOpacity.toFixed(3)
+      }
 
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
