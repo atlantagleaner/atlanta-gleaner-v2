@@ -4,6 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { VideoOverlay } from './components/VideoOverlay'
+// @ts-ignore
+import * as TWEEN from 'tween.js'
 
 // --- Video Data (kept for navbar structure) ---
 const ORBITAL_VIDEOS = [
@@ -16,7 +19,11 @@ const ORBITAL_VIDEOS = [
 ]
 
 // --- 3D Scene Component ---
-function EventHorizonScene() {
+interface EventHorizonSceneProps {
+  onSceneReady?: (camera: THREE.PerspectiveCamera, controls: OrbitControls) => void
+}
+
+function EventHorizonScene({ onSceneReady }: EventHorizonSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<number>(0)
 
@@ -54,6 +61,9 @@ function EventHorizonScene() {
     const controls = new OrbitControls(camera, cssRenderer.domElement)
     controls.enableDamping = true
 
+    // Expose camera and controls to parent
+    onSceneReady?.(camera, controls)
+
     // 5. Black Hole & Accretion (WebGL)
     const bhRadius = 8.5
     const bh = new THREE.Mesh(new THREE.SphereGeometry(bhRadius, 64, 64), new THREE.MeshBasicMaterial({ color: 0x000000 }))
@@ -90,6 +100,7 @@ function EventHorizonScene() {
     const animate = (time: number) => {
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
+      TWEEN.update(time)
       webglRenderer.render(webglScene, camera)
       cssRenderer.render(cssScene, camera)
       frameRef.current = requestAnimationFrame(animate)
@@ -128,6 +139,10 @@ export default function OrbitalPage() {
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false)
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
+  const controlsRef = useRef<OrbitControls | null>(null)
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
@@ -143,10 +158,37 @@ export default function OrbitalPage() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const handleSceneReady = (camera: THREE.PerspectiveCamera, controls: OrbitControls) => {
+    cameraRef.current = camera
+    controlsRef.current = controls
+  }
+
+  const triggerFlightAnimation = (videoId: string) => {
+    if (!cameraRef.current) return
+
+    const camera = cameraRef.current
+    const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+    // Theater seat perspective: positioned above and in front, looking down slightly
+    const endPos = { x: 0, y: 35, z: 50 }
+
+    new TWEEN.Tween(startPos)
+      .to(endPos, 2500) // 2.5 second flight
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .onUpdate(() => {
+        camera.position.set(startPos.x, startPos.y, startPos.z)
+      })
+      .start()
+
+    setSelectedVideoId(videoId)
+  }
+
   const handleFlyTo = (id: string) => {
-    // Placeholder for future functionality
     setIsTracksOpen(false)
     setIsPlusOpen(false)
+    // Only trigger flight if overlay is visible
+    if (isOverlayVisible) {
+      triggerFlightAnimation(id)
+    }
   }
 
   const navItemStyle: React.CSSProperties = {
@@ -217,7 +259,7 @@ export default function OrbitalPage() {
 
           {/* Row 2: Runway, Tracks, Plus buttons */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+            <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
             </button>
 
@@ -294,7 +336,7 @@ export default function OrbitalPage() {
               </div>
             </a>
 
-            <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+            <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
             </button>
           </div>
@@ -356,8 +398,17 @@ export default function OrbitalPage() {
 
       {/* 3D Scene Container */}
       <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-        <EventHorizonScene />
+        <EventHorizonScene onSceneReady={handleSceneReady} />
       </div>
+
+      {/* Video Overlay */}
+      {isOverlayVisible && (
+        <VideoOverlay
+          videos={ORBITAL_VIDEOS}
+          selectedVideoId={selectedVideoId}
+          onSelectVideo={(videoId) => triggerFlightAnimation(videoId)}
+        />
+      )}
 
       {/* Aesthetic Vignette */}
       <div style={{
