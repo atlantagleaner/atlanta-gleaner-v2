@@ -109,6 +109,55 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     const targets: any = { overview: { camPos: { x: 0, y: 50, z: 140 }, targetPos: { x: 0, y: 0, z: 0 } } }
     const orbitRadius = 75, scale = 0.018
 
+    // State for iframe swapping & snap/latch
+    const videoRefs = new Map<string, { div: HTMLDivElement; pos: THREE.Vector3 }>()
+    let currentActiveVideo: string | null = null
+    let lastSnapTime = 0
+    let pendingVideoSwap: string | null = null
+    let tweenCompleteTime = 0
+
+    // Helper: Check if camera is perpendicular to video plane (focus rule)
+    const isFocused = (videoPos: THREE.Vector3, threshold = Math.PI / 6) => {
+      const camToVideo = videoPos.clone().sub(camera.position).normalize()
+      const planeNormal = videoPos.clone().normalize() // Normal points outward from origin
+      const angle = Math.acos(Math.max(-1, Math.min(1, camToVideo.dot(planeNormal))))
+      return angle < threshold
+    }
+
+    // Helper: Swap thumbnail to iframe
+    const swapToIframe = (videoId: string, youtubeId: string) => {
+      const ref = videoRefs.get(videoId)
+      if (!ref) return
+      const { div } = ref
+      const img = div.querySelector('img')
+      if (img) img.remove()
+      const iframe = document.createElement('iframe')
+      iframe.src = `https://www.youtube.com/embed/${youtubeId}`
+      iframe.style.width = '100%'
+      iframe.style.height = '100%'
+      iframe.style.border = 'none'
+      iframe.style.background = '#000'
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+      iframe.allowFullscreen = true
+      div.appendChild(iframe)
+      currentActiveVideo = videoId
+    }
+
+    // Helper: Swap iframe back to thumbnail
+    const swapToThumbnail = (videoId: string, youtubeId: string) => {
+      const ref = videoRefs.get(videoId)
+      if (!ref) return
+      const { div } = ref
+      const iframe = div.querySelector('iframe')
+      if (iframe) iframe.remove()
+      const img = document.createElement('img')
+      img.src = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+      img.style.width = '100%'
+      img.style.height = '100%'
+      img.style.objectFit = 'cover'
+      div.appendChild(img)
+    }
+
     videos.forEach((v) => {
       const rad = (v.angle * Math.PI) / 180
       const pos = new THREE.Vector3(Math.cos(rad) * orbitRadius, Math.sin(rad * 3) * 6, Math.sin(rad) * orbitRadius)
@@ -140,20 +189,70 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
         document.dispatchEvent(new CustomEvent('flyTo', { detail: { targetId: v.id } }))
       }
 
+      // Store video ref for iframe swapping
+      videoRefs.set(v.id, { div, pos: pos.clone() })
+
       const offset = pos.clone().normalize().multiplyScalar(28)
       targets[v.id] = { camPos: { x: pos.x + offset.x, y: pos.y + offset.y, z: pos.z + offset.z }, targetPos: { x: pos.x, y: pos.y, z: pos.z } }
     })
 
     const handleFly = (e: any) => {
-      const d = targets[e.detail?.targetId]
+      const targetId = e.detail?.targetId
+      const d = targets[targetId]
       if (!d) return
+
+      // Garbage collect previous iframe if switching videos
+      if (currentActiveVideo && currentActiveVideo !== targetId && currentActiveVideo !== 'overview') {
+        const prevVideo = videos.find(v => v.id === currentActiveVideo)
+        if (prevVideo) swapToThumbnail(currentActiveVideo, prevVideo.youtubeId)
+      }
+
+      // Mark this video for swap after animation completes
+      pendingVideoSwap = targetId
+
       tweens.current.push(new SimpleTween({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, d.camPos, 1200, (v) => camera.position.set(v.x, v.y, v.z)))
       tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, d.targetPos, 1200, (v) => controls.target.set(v.x, v.y, v.z)))
+      tweenCompleteTime = 0
     }
     document.addEventListener('flyTo', handleFly)
 
     const animate = (time: number) => {
       tweens.current = tweens.current.filter(t => t.active); tweens.current.forEach(t => t.update(time))
+
+      // Handle swap after animation completes
+      if (pendingVideoSwap && tweens.current.length === 0) {
+        tweenCompleteTime += 16 // Approximate frame time
+        if (tweenCompleteTime > 50) { // 50ms buffer after tweens finish
+          const targetVideo = videos.find(v => v.id === pendingVideoSwap)
+          if (targetVideo && isFocused(videoRefs.get(pendingVideoSwap)?.pos || new THREE.Vector3())) {
+            swapToIframe(pendingVideoSwap, targetVideo.youtubeId)
+          }
+          pendingVideoSwap = null
+        }
+      } else if (pendingVideoSwap && tweens.current.length === 0) {
+        tweenCompleteTime = 0
+      }
+
+      // Snap/latch: auto-animate to perfect viewing position if close but not perpendicular
+      const now = performance.now()
+      if (now - lastSnapTime > 1000) { // 1 second cooldown
+        for (const [videoId, ref] of videoRefs) {
+          const dist = camera.position.distanceTo(ref.pos)
+          if (dist < 60 && !isFocused(ref.pos, Math.PI / 6 + 0.1)) { // Distance threshold + angle threshold (30°)
+            // Trigger snap/latch animation to this video
+            const d = targets[videoId]
+            if (d) {
+              tweens.current.push(new SimpleTween({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, d.camPos, 800, (v) => camera.position.set(v.x, v.y, v.z)))
+              tweens.current.push(new SimpleTween({ x: controls.target.x, y: controls.target.y, z: controls.target.z }, d.targetPos, 800, (v) => controls.target.set(v.x, v.y, v.z)))
+              pendingVideoSwap = videoId
+              tweenCompleteTime = 0
+              lastSnapTime = now
+            }
+            break // Only snap to one video per frame
+          }
+        }
+      }
+
       accretionDisks.forEach(d => { d.mesh.rotation.z -= d.speed * 0.05 })
       controls.update()
       webglRenderer.render(webglScene, camera); cssRenderer.render(cssScene, camera)
