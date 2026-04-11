@@ -434,6 +434,10 @@ export default function OrbitalPage() {
   return (
     <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
       <style>{`
+        nav > div:last-child {
+          margin-left: auto;
+        }
+
         @media (max-width: 768px) {
           nav {
             flex-wrap: wrap !important;
@@ -446,8 +450,16 @@ export default function OrbitalPage() {
           nav > div:first-child {
             flex-basis: 100% !important;
             justify-content: center !important;
+            gap: 15px !important;
+            margin-left: 0 !important;
+          }
+          nav > button {
+            order: 3 !important;
+            margin-left: 0 !important;
           }
           nav > div:last-child {
+            order: 4 !important;
+            margin-left: 0 !important;
             flex-direction: row !important;
             gap: 8px !important;
           }
@@ -457,10 +469,10 @@ export default function OrbitalPage() {
       {/* Translucent Saturn-Style Navbar */}
       <nav style={{
         position: 'fixed', top: '25px', left: '25px', right: '25px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000,
+        display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '8px', zIndex: 1000,
       }}>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          {/* Date/Time Link + Title + Byline + RUNWAY Button */}
+          {/* Date/Time Link + Title + Byline */}
           <a href="/archive" style={{...navItemStyle, textDecoration: 'none'}}>
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
               <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
@@ -474,11 +486,12 @@ export default function OrbitalPage() {
               <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
             </div>
           </a>
-
-          <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
-            RUNWAY
-          </button>
         </div>
+
+        {/* RUNWAY Button (moved to own nav-level item for mobile reflow) */}
+        <button onClick={() => handleFlyTo('overview')} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+          RUNWAY
+        </button>
 
         {/* Quick-Jump Track Selectors with Dropdowns */}
         <div style={{ display: 'flex', gap: '8px' }}>
