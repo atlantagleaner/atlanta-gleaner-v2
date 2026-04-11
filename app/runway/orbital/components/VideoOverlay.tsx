@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 export interface VideoOverlayProps {
   videos: Array<{ id: string; youtubeId: string; title: string }>
@@ -10,10 +10,14 @@ export interface VideoOverlayProps {
 
 export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOverlayProps) {
   const [isMobile, setIsMobile] = useState(false)
+  const [scrollPosition, setScrollPosition] = useState(0)
+  const [isScrollable, setIsScrollable] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
+      checkScrollability()
     }
 
     handleResize()
@@ -24,10 +28,42 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
     }
   }, [])
 
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const handleScroll = () => {
+      setScrollPosition(container.scrollTop)
+      checkScrollability()
+    }
+
+    container.addEventListener('scroll', handleScroll)
+    checkScrollability()
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+    }
+  }, [videos])
+
+  const checkScrollability = () => {
+    if (!containerRef.current) return
+    const container = containerRef.current
+    const isScrollableContent = container.scrollHeight > container.clientHeight
+    setIsScrollable(isScrollableContent)
+  }
+
+  // Calculate which videos are visible
+  const videosPerRow = isMobile ? 1 : 3
+  const visibleVideos = isMobile ? 2 : 6 // roughly how many fit on screen
+  const currentVideoIndex = Math.floor(scrollPosition / 100) // rough estimate
+  const startIndex = Math.max(0, Math.min(currentVideoIndex, videos.length - visibleVideos))
+  const endIndex = Math.min(startIndex + visibleVideos, videos.length)
+
   return (
     <>
       {/* Video Grid Overlay */}
       <div
+        ref={containerRef}
         style={{
           position: 'fixed',
           top: 0,
@@ -38,8 +74,8 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           zIndex: 10,
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-          gap: '16px',
-          padding: '140px 40px 40px 40px',
+          gap: '12px',
+          padding: '110px 30px 30px 30px',
           overflowY: 'auto',
           overflowX: 'hidden',
           background: 'rgba(2, 1, 1, 0.65)',
@@ -69,16 +105,18 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               overflow: 'hidden',
               cursor: 'pointer',
               border: '1px solid rgba(255, 255, 255, 0.1)',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              transform: 'scale(0.65)',
+              transformOrigin: 'top left',
+              width: '154%',
+              height: 'auto'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = '#FFB347'
-              e.currentTarget.style.transform = 'scale(1.02)'
               e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 179, 71, 0.4)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
-              e.currentTarget.style.transform = 'scale(1)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           >
@@ -103,7 +141,11 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
                 fontSize: '12px',
                 color: '#FFF',
                 fontFamily: 'monospace',
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                maxWidth: '90%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
               }}
             >
               {video.title}
@@ -111,6 +153,31 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           </div>
         ))}
       </div>
+
+      {/* Scroll Indicator */}
+      {isScrollable && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(10px)',
+            padding: '8px 16px',
+            borderRadius: '100px',
+            color: '#FFF',
+            fontSize: '11px',
+            fontFamily: 'monospace',
+            letterSpacing: '0.1em',
+            zIndex: 11,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            pointerEvents: 'none'
+          }}
+        >
+          Videos {startIndex + 1}–{endIndex} of {videos.length}
+        </div>
+      )}
     </>
   )
 }

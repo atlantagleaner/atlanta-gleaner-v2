@@ -6,14 +6,24 @@ import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { VideoOverlay } from './components/VideoOverlay'
 
-// --- Video Data (kept for navbar structure) ---
+// --- Video Data ---
 const ORBITAL_VIDEOS = [
-  { id: 'v0', youtubeId: '-l6wrTvMcbY', angle: 0, title: 'Video 01' },
-  { id: 'v1', youtubeId: 'jtTjzDTpx8o', angle: 60, title: 'Video 02' },
-  { id: 'v2', youtubeId: 'Tg9cN2A7-cA', angle: 120, title: 'Video 03' },
-  { id: 'v3', youtubeId: '_GT9SmA1vlI', angle: 180, title: 'Video 04' },
-  { id: 'v4', youtubeId: '-W20dfeNCmI', angle: 240, title: 'Video 05' },
-  { id: 'v5', youtubeId: '9Y4wk-J3x7w', angle: 300, title: 'Video 06' }
+  { id: 'v0', youtubeId: 'KzZzAsS4I_0', title: 'Azealia Banks - Anna Wintour' },
+  { id: 'v1', youtubeId: 'F0p591f86hQ', title: 'Azealia Banks - Chasing Time' },
+  { id: 'v2', youtubeId: 'rW_Vf8V7S3k', title: 'Santigold - Shove It (feat. Spank Rock)' },
+  { id: 'v3', youtubeId: 'Y09p8Z4Lp3c', title: 'Kelela - Contact' },
+  { id: 'v4', youtubeId: '9_XWk8GzIos', title: 'Gorillaz - She\'s My Collar (feat. Kali Uchis)' },
+  { id: 'v5', youtubeId: 'pyGZ_Mvshm4', title: 'Kelela - Rewind' },
+  { id: 'v6', youtubeId: 'Oc51B88tg-I', title: 'VTSS / LSDXOXO - Q&A Mashup' },
+  { id: 'v7', youtubeId: '8IpwNXqZKOc', title: 'Effy - Bodied' },
+  { id: 'v8', youtubeId: '4qfn2-_Puh0', title: 'VTSS - Make You Scream' },
+  { id: 'v9', youtubeId: 'bqsWEiruFQE', title: 'horsegiirL - My Barn My Rules' },
+  { id: 'v10', youtubeId: 'Rks6Xn1zSkE', title: 'Sega Bodega - Kepko' },
+  { id: 'v11', youtubeId: 'MmqbsNvTzFs', title: 'UNIIQU3 - Unavailable (feat. R3LL)' },
+  { id: 'v12', youtubeId: 'ogItpAkBIYQ', title: 'Coucou Chloe - ZERO FIVE STARS' },
+  { id: 'v13', youtubeId: 'rhJFEMy-u-k', title: 'Skin On Skin - Burn Dem Bridges' },
+  { id: 'v14', youtubeId: 'vZtO2xRHgFQ', title: 'Tirzah - Gladly' },
+  { id: 'v15', youtubeId: 'Wobxiik9z2s', title: 'The Field - Over the Ice' }
 ]
 
 // --- 3D Scene Component ---
