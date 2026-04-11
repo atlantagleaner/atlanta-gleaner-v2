@@ -197,8 +197,9 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       const anchor = new THREE.Object3D()
       anchor.position.copy(obj.position)
       anchor.rotation.copy(obj.rotation)
-      const anchorDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200))  // Scale 30-unit distance based on viewport width
-      anchor.translateZ(-anchorDistance)  // Move toward black hole along local negative Z-axis (responsive)
+      anchor.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI)  // Face away from black hole
+      const anchorDistance = 30 * Math.max(0.6, Math.min(1.0, width / 1200)) * 1.1  // Scale 30-unit distance based on viewport width, increased by 10%
+      anchor.translateZ(anchorDistance)  // Move toward black hole along local Z-axis (responsive)
       cssScene.add(anchor)
 
       // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
