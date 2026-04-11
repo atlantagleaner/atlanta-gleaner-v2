@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 export interface VideoOverlayProps {
   videos: Array<{ id: string; youtubeId: string; title: string }>
@@ -12,6 +12,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
   const [theaterVideoId, setTheaterVideoId] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [isPortrait, setIsPortrait] = useState(false)
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   // Close theater when overlay is hidden (handled by parent)
   useEffect(() => {
@@ -45,6 +46,33 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
   }
 
   const selectedVideo = videos.find(v => v.id === selectedVideoId)
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return
+    const scrollAmount = isMobile ? 150 : 400
+    const scrollDirection = direction === 'left' ? -scrollAmount : scrollAmount
+    carouselRef.current.scrollBy({ left: scrollDirection, behavior: 'smooth' })
+  }
+
+  // Navbar button style (matching orbital navbar)
+  const navBarButtonStyle: React.CSSProperties = {
+    background: 'rgba(255, 255, 255, 0.04)',
+    backdropFilter: 'blur(24px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '50%',
+    color: '#FFF',
+    fontSize: '18px',
+    fontFamily: 'monospace',
+    transition: 'all 0.2s ease',
+    cursor: 'pointer',
+    userSelect: 'none',
+    width: '48px',
+    height: '48px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0
+  }
 
   // Determine carousel layout based on viewport
   const getContainerStyle = (): React.CSSProperties => {
@@ -160,8 +188,57 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
 
   return (
     <>
+      {/* Arrow Button Controls */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9 }}>
+        {/* Left Arrow */}
+        <button
+          onClick={() => scrollCarousel('left')}
+          style={{
+            position: 'fixed',
+            left: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'auto',
+            ...navBarButtonStyle
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 165, 0, 0.15)'
+            e.currentTarget.style.borderColor = 'rgba(255, 165, 0, 0.4)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+          }}
+        >
+          ←
+        </button>
+
+        {/* Right Arrow */}
+        <button
+          onClick={() => scrollCarousel('right')}
+          style={{
+            position: 'fixed',
+            right: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'auto',
+            ...navBarButtonStyle
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 165, 0, 0.15)'
+            e.currentTarget.style.borderColor = 'rgba(255, 165, 0, 0.4)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+          }}
+        >
+          →
+        </button>
+      </div>
+
       {/* Video Carousel Overlay */}
-      <div style={getContainerStyle()}>
+      <div ref={carouselRef} style={getContainerStyle()}>
         <style>{`
           @keyframes fadeIn {
             from { opacity: 0; }
