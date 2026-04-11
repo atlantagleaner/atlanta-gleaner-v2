@@ -53,7 +53,7 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     
     // 1. Scene & Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000)
-    camera.position.set(0, 50, 140)
+    camera.position.set(0, 50, 75)
     const webglScene = new THREE.Scene()
     const cssScene = new THREE.Scene()
 
@@ -110,7 +110,7 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
     webglScene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1.0, color: 0xffffff, transparent: true, opacity: 0.4 })))
 
     // 7. Video Billboards
-    const targets: any = { overview: { camPos: { x: 0, y: 50, z: 140 }, targetPos: { x: 0, y: 0, z: 0 } } }
+    const targets: any = { overview: { camPos: { x: 0, y: 50, z: 75 }, targetPos: { x: 0, y: 0, z: 0 } } }
     const orbitRadius = 75, scale = 0.018
 
     // State for iframe swapping (proximity-based)
@@ -185,10 +185,13 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       obj.position.copy(pos); obj.lookAt(0, 0, 0); obj.scale.set(scale, scale, scale)
       cssScene.add(obj)
 
-      // Mask Mesh (Occlusion)
-      const mask = new THREE.Mesh(new THREE.PlaneGeometry(800 * scale, 450 * scale), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: true }))
-      mask.position.copy(pos); mask.rotation.copy(obj.rotation); mask.renderOrder = 0 // Render first for depth
-      webglScene.add(mask)
+      // Mask Mesh (Occlusion) - Disabled for inside-ring theater mode
+      const maskEnabled = false
+      if (maskEnabled) {
+        const mask = new THREE.Mesh(new THREE.PlaneGeometry(800 * scale, 450 * scale), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: true }))
+        mask.position.copy(pos); mask.rotation.copy(obj.rotation); mask.renderOrder = 0 // Render first for depth
+        webglScene.add(mask)
+      }
 
       div.addEventListener('pointerdown', (e) => {
         e.preventDefault()
@@ -203,8 +206,9 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
       // Store video ref for iframe swapping (including CSS3DObject for z-index control)
       videoRefs.set(v.id, { div, obj, pos: pos.clone() })
 
-      const offset = pos.clone().normalize().multiplyScalar(30)
-      targets[v.id] = { camPos: { x: pos.x + offset.x, y: pos.y + offset.y, z: pos.z + offset.z }, targetPos: { x: pos.x, y: pos.y, z: pos.z } }
+      // Camera positioned inside ring looking outward (black hole behind camera)
+      const offset = pos.clone().normalize().multiplyScalar(25)
+      targets[v.id] = { camPos: { x: pos.x - offset.x, y: pos.y - offset.y, z: pos.z - offset.z }, targetPos: { x: 0, y: 0, z: 0 } }
     })
 
 const handleFly = (e: any) => {
@@ -232,9 +236,9 @@ const handleFly = (e: any) => {
         1200,
         (v) => {
           camera.position.set(v.x, v.y, v.z)
-          // Dynamic near plane adjustment: prevent clipping during close approach
+          // Dynamic near plane adjustment: prevent clipping during close approach to black hole
           const dist = camera.position.length()
-          camera.near = dist < 40 ? 5 : 0.1
+          camera.near = dist < 30 ? 8 : 0.1
           camera.updateProjectionMatrix()
         }
       ))
@@ -251,8 +255,8 @@ const handleFly = (e: any) => {
         const dist = camera.position.distanceTo(ref.pos)
         const inFrustum = isInFrustum(ref.pos)
 
-        // Hysteresis: swap in at <30, out at >40
-        if (activeVideoId === null && dist < 30 && inFrustum && !swapProcessed) {
+        // Hysteresis: swap in at <15, out at >25 (tighter bounds for inside-ring positioning)
+        if (activeVideoId === null && dist < 15 && inFrustum && !swapProcessed) {
           // ACTIVATE: Swap to iframe, promote z-index
           const video = videos.find(v => v.id === videoId)
           if (video) {
@@ -261,7 +265,7 @@ const handleFly = (e: any) => {
             activeVideoId = videoId
             swapProcessed = true
           }
-        } else if (activeVideoId === videoId && dist > 40) {
+        } else if (activeVideoId === videoId && dist > 25) {
           // DEACTIVATE: Swap to thumbnail, demote z-index
           const video = videos.find(v => v.id === videoId)
           if (video) {
