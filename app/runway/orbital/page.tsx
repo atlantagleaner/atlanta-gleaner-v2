@@ -229,8 +229,8 @@ function EventHorizonScene({ videos }: { videos: typeof ORBITAL_VIDEOS }) {
           }
           pendingVideoSwap = null
         }
-      } else if (pendingVideoSwap && tweens.current.length === 0) {
-        tweenCompleteTime = 0
+      } else if (pendingVideoSwap && tweens.current.length > 0) {
+        tweenCompleteTime = 0 // Reset buffer if new animation started
       }
 
       // Snap/latch: auto-animate to perfect viewing position if close but not perpendicular
