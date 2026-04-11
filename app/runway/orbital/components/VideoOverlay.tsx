@@ -10,10 +10,29 @@ export interface VideoOverlayProps {
 
 export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOverlayProps) {
   const [theaterVideoId, setTheaterVideoId] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [isPortrait, setIsPortrait] = useState(false)
 
   // Close theater when overlay is hidden (handled by parent)
   useEffect(() => {
     setTheaterVideoId(null)
+  }, [])
+
+  // Detect layout mode (mobile/desktop, portrait/landscape)
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      setIsPortrait(window.innerWidth < window.innerHeight)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleResize)
+    }
   }, [])
 
   const handleVideoClick = (videoId: string) => {
@@ -27,23 +46,122 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
 
   const selectedVideo = videos.find(v => v.id === selectedVideoId)
 
+  // Determine carousel layout based on viewport
+  const getContainerStyle = (): React.CSSProperties => {
+    if (isMobile && isPortrait) {
+      // Portrait mobile: vertical carousel with 3 visible
+      return {
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'auto',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        scrollSnapType: 'y mandatory',
+        scrollBehavior: 'smooth',
+        padding: '140px 40px 40px 40px',
+        gap: '16px',
+        animation: 'fadeIn 0.3s ease-in'
+      }
+    } else if (isMobile && !isPortrait) {
+      // Landscape mobile: horizontal carousel with 1-2 visible
+      return {
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'auto',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        scrollSnapType: 'x mandatory',
+        scrollBehavior: 'smooth',
+        padding: '40px 20px',
+        gap: '16px',
+        animation: 'fadeIn 0.3s ease-in'
+      }
+    } else {
+      // Desktop: horizontal carousel with 3 visible
+      return {
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'auto',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        scrollSnapType: 'x mandatory',
+        scrollBehavior: 'smooth',
+        padding: '140px 40px 40px 40px',
+        gap: '16px',
+        alignItems: 'center',
+        animation: 'fadeIn 0.3s ease-in'
+      }
+    }
+  }
+
+  // Determine video card size based on layout
+  const getVideoCardStyle = (): React.CSSProperties => {
+    if (isMobile && isPortrait) {
+      // Portrait: height-based sizing for 3 visible
+      return {
+        position: 'relative',
+        flex: '0 0 auto',
+        height: 'calc((100vh - 220px) / 3.2)',
+        width: '100%',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        border:
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+        transition: 'all 0.3s ease',
+        boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
+        scrollSnapAlign: 'start',
+        scrollSnapStop: 'always'
+      }
+    } else if (isMobile && !isPortrait) {
+      // Landscape: full-viewport width for 1-2 visible
+      return {
+        position: 'relative',
+        flex: '0 0 90vw',
+        aspectRatio: '16 / 9',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        border:
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+        transition: 'all 0.3s ease',
+        boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
+        scrollSnapAlign: 'start',
+        scrollSnapStop: 'always'
+      }
+    } else {
+      // Desktop: width-based sizing for 3 visible
+      return {
+        position: 'relative',
+        flex: '0 0 auto',
+        width: 'calc((100vw - 120px) / 3.2)',
+        aspectRatio: '16 / 9',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        border:
+          selectedVideoId ? '3px solid #FFB347' : '1px solid rgba(255, 255, 255, 0.2)',
+        transition: 'all 0.3s ease',
+        boxShadow: selectedVideoId ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none',
+        scrollSnapAlign: 'start',
+        scrollSnapStop: 'always'
+      }
+    }
+  }
+
   return (
     <>
-      {/* Video Grid Overlay */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          pointerEvents: 'auto',
-          zIndex: 10,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '16px',
-          padding: '140px 40px 40px 40px',
-          overflowY: 'auto',
-          animation: 'fadeIn 0.3s ease-in'
-        }}
-      >
+      {/* Video Carousel Overlay */}
+      <div style={getContainerStyle()}>
         <style>{`
           @keyframes fadeIn {
             from { opacity: 0; }
@@ -51,25 +169,19 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           }
         `}</style>
 
-        {videos.map((video) => (
+        {videos.map((video) => {
+          const baseStyle = getVideoCardStyle()
+          const isSelected = selectedVideoId === video.id
+
+          return (
           <div
             key={video.id}
             onClick={() => handleVideoClick(video.id)}
             style={{
-              position: 'relative',
-              aspectRatio: '16 / 9',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              border:
-                selectedVideoId === video.id
-                  ? '3px solid #FFB347'
-                  : '1px solid rgba(255, 255, 255, 0.2)',
-              transition: 'all 0.3s ease',
-              boxShadow:
-                selectedVideoId === video.id
-                  ? '0 0 20px rgba(255, 179, 71, 0.4)'
-                  : 'none'
+              ...baseStyle,
+              borderColor: isSelected ? '#FFB347' : 'rgba(255, 255, 255, 0.2)',
+              borderWidth: isSelected ? '3px' : '1px',
+              boxShadow: isSelected ? '0 0 20px rgba(255, 179, 71, 0.4)' : 'none'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = '#FFB347'
@@ -110,7 +222,8 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               {video.title}
             </div>
           </div>
-        ))}
+        )
+        })}
       </div>
 
       {/* Theater Mode Modal */}
