@@ -12,6 +12,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
   const [isMobile, setIsMobile] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const [isScrollable, setIsScrollable] = useState(false)
+  const [expandedVideoId, setExpandedVideoId] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -45,6 +46,20 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
     }
   }, [videos])
 
+  // Handle ESC key to close expanded video
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setExpandedVideoId(null)
+      }
+    }
+
+    if (expandedVideoId) {
+      window.addEventListener('keydown', handleKeyDown)
+      return () => window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [expandedVideoId])
+
   const checkScrollability = () => {
     if (!containerRef.current) return
     const container = containerRef.current
@@ -59,6 +74,16 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
   const startIndex = Math.max(0, Math.min(currentVideoIndex, videos.length - visibleVideos))
   const endIndex = Math.min(startIndex + visibleVideos, videos.length)
 
+  const expandedVideo = videos.find(v => v.id === expandedVideoId)
+
+  const handleVideoClick = (videoId: string) => {
+    setExpandedVideoId(expandedVideoId === videoId ? null : videoId)
+  }
+
+  const closeExpanded = () => {
+    setExpandedVideoId(null)
+  }
+
   return (
     <>
       {/* Video Grid Overlay */}
@@ -71,16 +96,17 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
           bottom: 0,
           left: 0,
           pointerEvents: 'auto',
-          zIndex: 10,
+          zIndex: expandedVideoId ? 10 : 10,
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: '12px',
           padding: '110px 30px 30px 30px',
           overflowY: 'auto',
           overflowX: 'hidden',
-          background: 'rgba(2, 1, 1, 0.65)',
+          background: expandedVideoId ? 'rgba(2, 1, 1, 0.85)' : 'rgba(2, 1, 1, 0.65)',
           backdropFilter: 'blur(5px)',
-          animation: 'fadeIn 0.3s ease-in'
+          animation: 'fadeIn 0.3s ease-in',
+          transition: 'background 0.3s ease'
         }}
       >
         <style>{`
@@ -98,6 +124,7 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         {videos.map((video) => (
           <div
             key={video.id}
+            onClick={() => handleVideoClick(video.id)}
             style={{
               position: 'relative',
               aspectRatio: '16 / 9',
@@ -109,15 +136,20 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               transform: 'scale(0.65)',
               transformOrigin: 'top left',
               width: '154%',
-              height: 'auto'
+              height: 'auto',
+              opacity: expandedVideoId && expandedVideoId !== video.id ? 0.5 : 1
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#FFB347'
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 179, 71, 0.4)'
+              if (!expandedVideoId) {
+                e.currentTarget.style.borderColor = '#FFB347'
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 179, 71, 0.4)'
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
-              e.currentTarget.style.boxShadow = 'none'
+              if (!expandedVideoId) {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.boxShadow = 'none'
+              }
             }}
           >
             <iframe
@@ -125,7 +157,8 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
               style={{
                 width: '100%',
                 height: '100%',
-                border: 'none'
+                border: 'none',
+                pointerEvents: expandedVideoId ? 'none' : 'auto'
               }}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -154,8 +187,106 @@ export function VideoOverlay({ videos, selectedVideoId, onSelectVideo }: VideoOv
         ))}
       </div>
 
+      {/* Expanded Video Overlay */}
+      {expandedVideo && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 20,
+            pointerEvents: 'auto',
+            animation: 'fadeIn 0.3s ease-in'
+          }}
+          onClick={closeExpanded}
+        >
+          {/* Expanded Video Container */}
+          <div
+            style={{
+              position: 'relative',
+              width: 'min(90vw, 1000px)',
+              aspectRatio: '16 / 9',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: '3px solid #FFB347',
+              boxShadow: '0 0 60px rgba(255, 179, 71, 0.5)',
+              backgroundColor: '#000',
+              pointerEvents: 'auto'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              src={`https://www.youtube.com/embed/${expandedVideo.youtubeId}?modestbranding=1&autoplay=1`}
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none'
+              }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+
+            {/* Close Button */}
+            <button
+              onClick={closeExpanded}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#FFF',
+                padding: '8px 16px',
+                borderRadius: '100px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontFamily: 'monospace',
+                zIndex: 21,
+                transition: 'all 0.2s ease',
+                pointerEvents: 'auto'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 165, 0, 0.15)'
+                e.currentTarget.style.borderColor = 'rgba(255, 165, 0, 0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              ESC / CLOSE
+            </button>
+
+            {/* Title */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '12px',
+                left: '12px',
+                right: '12px',
+                background: 'rgba(0, 0, 0, 0.8)',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                fontSize: '13px',
+                color: '#FFF',
+                fontFamily: 'monospace',
+                pointerEvents: 'none'
+              }}
+            >
+              {expandedVideo.title}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Scroll Indicator */}
-      {isScrollable && (
+      {isScrollable && !expandedVideoId && (
         <div
           style={{
             position: 'fixed',
