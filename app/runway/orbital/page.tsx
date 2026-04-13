@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { VideoOverlay } from './components/VideoOverlay'
 
 // --- Video Data ---
 const ORBITAL_VIDEOS = [
@@ -145,7 +144,6 @@ export default function OrbitalPage() {
   const [time, setTime] = useState(new Date())
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
-  const [isOverlayVisible, setIsOverlayVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
 
@@ -247,7 +245,7 @@ export default function OrbitalPage() {
 
           {/* Row 2: Runway, Orbit, Tracks, Plus */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+            <button onClick={() => window.location.reload()} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
             </button>
 
@@ -328,7 +326,7 @@ export default function OrbitalPage() {
             </div>
           </a>
 
-          <button onClick={() => setIsOverlayVisible(!isOverlayVisible)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
+          <button onClick={() => window.location.reload()} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
             RUNWAY
           </button>
 
@@ -396,15 +394,6 @@ export default function OrbitalPage() {
       <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
         <EventHorizonScene onSceneReady={handleSceneReady} />
       </div>
-
-      {/* Video Overlay */}
-      {isOverlayVisible && (
-        <VideoOverlay
-          videos={ORBITAL_VIDEOS}
-          selectedVideoId={null}
-          onSelectVideo={() => {}}
-        />
-      )}
 
       {/* Aesthetic Vignette */}
       <div style={{
