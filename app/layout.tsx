@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { NavBar } from '@/src/components/NavBar'
-import { AnalogShell } from '@/src/components/AnalogShell'
+import { LayoutWrapper } from '@/src/components/LayoutWrapper'
 import { Providers } from '@/src/components/Providers'
 import { serif, sans, mono } from '@/src/styles/fonts'
 
@@ -20,10 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${serif.variable} ${sans.variable} ${mono.variable}`} style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Providers>
-          <NavBar />
-          <AnalogShell>
+          <LayoutWrapper>
             {children}
-          </AnalogShell>
+          </LayoutWrapper>
         </Providers>
       </body>
     </html>

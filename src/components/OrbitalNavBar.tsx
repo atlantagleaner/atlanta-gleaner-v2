@@ -94,61 +94,221 @@ export function OrbitalNavBar({
             zIndex: 1000,
           }}
         >
-          {/* Row 1: Date/Time + The Atlanta Gleaner */}
-          <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left',
-                lineHeight: '1.2',
-              }}
-            >
-              <span style={{ fontWeight: 600 }}>
-                {time
-                  .toLocaleString('en-US', { month: 'short' })
-                  .toUpperCase()}{' '}
-                {time.getDate()}
-              </span>
-              <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                {time.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </span>
+          {/* Row 1: Date/Time + The Atlanta Gleaner + Plus Button (merged for archive) */}
+          {layout === 'archive' && showPlus ? (
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setIsPlusOpen(!isPlusOpen)}
+                style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'left',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>
+                    {time
+                      .toLocaleString('en-US', { month: 'short' })
+                      .toUpperCase()}{' '}
+                    {time.getDate()}
+                  </span>
+                  <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                    {time.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    width: '1px',
+                    height: '24px',
+                    background: 'rgba(255,255,255,0.2)',
+                  }}
+                />
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'left',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
+                    THE ATLANTA GLEANER
+                  </span>
+                  <span
+                    style={{
+                      opacity: 0.5,
+                      fontSize: '8px',
+                      letterSpacing: '0.2em',
+                    }}
+                  >
+                    EDITED BY GEORGE WASHINGTON
+                  </span>
+                </div>
+
+                <div style={{ marginLeft: 'auto' }}>
+                  {isPlusOpen ? '−' : '+'}
+                </div>
+              </button>
+              {isPlusOpen && (
+                <div style={{ ...dropdownMenuStyle, right: '0', marginTop: '8px' }}>
+                  <a
+                    href="/archive"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    ARCHIVE
+                  </a>
+                  <a
+                    href="/"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    RUNWAY
+                  </a>
+                  <a
+                    href="/saturn"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    SATURN
+                  </a>
+                  <a
+                    href="/vault"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    VAULT
+                  </a>
+                  <a
+                    href="/about"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    ABOUT
+                  </a>
+                </div>
+              )}
             </div>
-
-            <div
-              style={{
-                width: '1px',
-                height: '24px',
-                background: 'rgba(255,255,255,0.2)',
-              }}
-            />
-
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left',
-                lineHeight: '1.2',
-              }}
-            >
-              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
-                THE ATLANTA GLEANER
-              </span>
-              <span
+          ) : (
+            <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
+              <div
                 style={{
-                  opacity: 0.5,
-                  fontSize: '8px',
-                  letterSpacing: '0.2em',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'left',
+                  lineHeight: '1.2',
                 }}
               >
-                EDITED BY GEORGE WASHINGTON
-              </span>
-            </div>
-          </a>
+                <span style={{ fontWeight: 600 }}>
+                  {time
+                    .toLocaleString('en-US', { month: 'short' })
+                    .toUpperCase()}{' '}
+                  {time.getDate()}
+                </span>
+                <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                  {time.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })}
+                </span>
+              </div>
+
+              <div
+                style={{
+                  width: '1px',
+                  height: '24px',
+                  background: 'rgba(255,255,255,0.2)',
+                }}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'left',
+                  lineHeight: '1.2',
+                }}
+              >
+                <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
+                  THE ATLANTA GLEANER
+                </span>
+                <span
+                  style={{
+                    opacity: 0.5,
+                    fontSize: '8px',
+                    letterSpacing: '0.2em',
+                  }}
+                >
+                  EDITED BY GEORGE WASHINGTON
+                </span>
+              </div>
+            </a>
+          )}
 
           {/* Row 2: Buttons */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
@@ -304,61 +464,221 @@ export function OrbitalNavBar({
             zIndex: 1000,
           }}
         >
-          {/* Date/Time Link + Title */}
-          <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left',
-                lineHeight: '1.2',
-              }}
-            >
-              <span style={{ fontWeight: 600 }}>
-                {time
-                  .toLocaleString('en-US', { month: 'short' })
-                  .toUpperCase()}{' '}
-                {time.getDate()}
-              </span>
-              <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                {time.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </span>
+          {/* Date/Time Link + Title + Plus Button (merged for archive) */}
+          {layout === 'archive' && showPlus ? (
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setIsPlusOpen(!isPlusOpen)}
+                style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'left',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>
+                    {time
+                      .toLocaleString('en-US', { month: 'short' })
+                      .toUpperCase()}{' '}
+                    {time.getDate()}
+                  </span>
+                  <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                    {time.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    width: '1px',
+                    height: '24px',
+                    background: 'rgba(255,255,255,0.2)',
+                  }}
+                />
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'left',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
+                    THE ATLANTA GLEANER
+                  </span>
+                  <span
+                    style={{
+                      opacity: 0.5,
+                      fontSize: '8px',
+                      letterSpacing: '0.2em',
+                    }}
+                  >
+                    EDITED BY GEORGE WASHINGTON
+                  </span>
+                </div>
+
+                <div style={{ marginLeft: 'auto' }}>
+                  {isPlusOpen ? '−' : '+'}
+                </div>
+              </button>
+              {isPlusOpen && (
+                <div style={{ ...dropdownMenuStyle, right: '0', top: '100%', marginTop: '8px' }}>
+                  <a
+                    href="/archive"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    ARCHIVE
+                  </a>
+                  <a
+                    href="/"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    RUNWAY
+                  </a>
+                  <a
+                    href="/saturn"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    SATURN
+                  </a>
+                  <a
+                    href="/vault"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    VAULT
+                  </a>
+                  <a
+                    href="/about"
+                    style={{
+                      ...dropdownItemStyle,
+                      display: 'block',
+                      color: '#FFF',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        'rgba(255, 165, 0, 0.1)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    ABOUT
+                  </a>
+                </div>
+              )}
             </div>
-
-            <div
-              style={{
-                width: '1px',
-                height: '24px',
-                background: 'rgba(255,255,255,0.2)',
-              }}
-            />
-
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left',
-                lineHeight: '1.2',
-              }}
-            >
-              <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
-                THE ATLANTA GLEANER
-              </span>
-              <span
+          ) : (
+            <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
+              <div
                 style={{
-                  opacity: 0.5,
-                  fontSize: '8px',
-                  letterSpacing: '0.2em',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'left',
+                  lineHeight: '1.2',
                 }}
               >
-                EDITED BY GEORGE WASHINGTON
-              </span>
-            </div>
-          </a>
+                <span style={{ fontWeight: 600 }}>
+                  {time
+                    .toLocaleString('en-US', { month: 'short' })
+                    .toUpperCase()}{' '}
+                  {time.getDate()}
+                </span>
+                <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                  {time.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })}
+                </span>
+              </div>
+
+              <div
+                style={{
+                  width: '1px',
+                  height: '24px',
+                  background: 'rgba(255,255,255,0.2)',
+                }}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'left',
+                  lineHeight: '1.2',
+                }}
+              >
+                <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>
+                  THE ATLANTA GLEANER
+                </span>
+                <span
+                  style={{
+                    opacity: 0.5,
+                    fontSize: '8px',
+                    letterSpacing: '0.2em',
+                  }}
+                >
+                  EDITED BY GEORGE WASHINGTON
+                </span>
+              </div>
+            </a>
+          )}
 
           {layout === 'orbital' && (
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
@@ -503,110 +823,6 @@ export function OrbitalNavBar({
             </div>
           )}
 
-          {layout === 'archive' && showPlus && (
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => setIsPlusOpen(!isPlusOpen)}
-                style={{ ...navItemStyle, padding: '10px 15px' }}
-              >
-                {isPlusOpen ? '−' : '+'}
-              </button>
-              {isPlusOpen && (
-                <div style={{ ...dropdownMenuStyle }}>
-                  <a
-                    href="/archive"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ARCHIVE
-                  </a>
-                  <a
-                    href="/runway"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    RUNWAY
-                  </a>
-                  <a
-                    href="/saturn"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    SATURN
-                  </a>
-                  <a
-                    href="/vault"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                      VAULT
-                  </a>
-                  <a
-                    href="/about"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ABOUT
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
         </nav>
       )}
     </>
