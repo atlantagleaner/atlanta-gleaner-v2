@@ -157,7 +157,7 @@ export default function OrbitalPage() {
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [isRadioHubOpen, setIsRadioHubOpen] = useState(false)
+  const [isRadioHubOpen, setIsRadioHubOpen] = useState(true)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
 
   useEffect(() => {
@@ -327,10 +327,6 @@ export default function OrbitalPage() {
 
           <button onClick={() => setIsRadioHubOpen(!isRadioHubOpen)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
             RUNWAY
-          </button>
-
-          <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
-            ORBIT
           </button>
         </div>
       </nav>

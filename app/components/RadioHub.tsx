@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState } from 'react';
-import { Play, Music, ChevronRight, Volume2 } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Play, Music, ChevronRight, Volume2, ChevronDown } from 'lucide-react';
 
 const artists = [
   {
@@ -50,9 +50,24 @@ export const RadioHub: React.FC<RadioHubProps> = ({
   // Use provided props if available, otherwise use internal state
   const [internalActiveArtist, setInternalActiveArtist] = useState(artists[0]);
   const [internalIsPlaying, setInternalIsPlaying] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const activeArtist = propActiveArtist ?? internalActiveArtist;
   const isPlayingState = propIsPlaying !== undefined ? propIsPlaying : internalIsPlaying;
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMenuOpen]);
 
   const setActiveArtist = (artist: typeof artists[0]) => {
     if (onArtistChange) {
@@ -126,30 +141,79 @@ export const RadioHub: React.FC<RadioHubProps> = ({
       <>
         <BackgroundPlayer />
       <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', overflowY: 'auto' }}>
-        {/* Compact Artist Selector */}
-        <div style={{ width: '100%', maxWidth: '280px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            {artists.map((artist) => (
-              <button
-                key={artist.id}
-                onClick={() => handleArtistChange(artist)}
-                style={{
-                  ...glassStyle,
-                  padding: '8px 16px',
-                  color: activeArtist.id === artist.id ? '#FFF' : 'rgba(255, 255, 255, 0.5)',
-                  borderColor: activeArtist.id === artist.id ? 'rgba(255, 179, 71, 0.4)' : 'rgba(255, 255, 255, 0.1)',
-                  boxShadow: activeArtist.id === artist.id ? '0 0 20px rgba(255, 179, 71, 0.05)' : 'none',
-                  cursor: 'pointer',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  transition: 'all 0.3s ease',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <span style={monoStyle}>{artist.name}</span>
-              </button>
-            ))}
-          </div>
+        {/* Station Selector Dropdown */}
+        <div style={{ width: '100%', maxWidth: '280px', margin: '0 auto', position: 'relative' }} ref={menuRef}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              ...glassStyle,
+              width: '100%',
+              padding: '8px 16px',
+              color: '#FFF',
+              cursor: 'pointer',
+              fontSize: '10px',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+            }}
+          >
+            <span style={monoStyle}>Station • {activeArtist.name}</span>
+            <ChevronDown size={14} style={{ transition: 'transform 0.2s ease', transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+          </button>
+          {isMenuOpen && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              marginTop: '8px',
+              background: 'rgba(2, 1, 1, 0.8)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '8px',
+              zIndex: 1100,
+            }}>
+              {artists.map((artist) => (
+                <button
+                  key={artist.id}
+                  onClick={() => {
+                    handleArtistChange(artist);
+                    setIsMenuOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '8px 16px',
+                    border: 'none',
+                    background: activeArtist.id === artist.id ? 'rgba(255, 179, 71, 0.1)' : 'transparent',
+                    color: activeArtist.id === artist.id ? '#FFB347' : '#FFF',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    transition: 'background 0.2s ease',
+                    fontFamily: 'monospace',
+                    letterSpacing: '0.15em',
+                    textAlign: 'left',
+                    textTransform: 'uppercase',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activeArtist.id !== artist.id) {
+                      e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeArtist.id !== artist.id) {
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  {artist.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Large Player - Dominant Element */}
@@ -284,35 +348,77 @@ export const RadioHub: React.FC<RadioHubProps> = ({
     <>
       <BackgroundPlayer />
       <div style={{ background: '#050505', color: '#FFF', padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Artist Selector - Top Bar */}
-      <div>
-        <h3 style={{ ...monoStyle, fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '12px' }}>
-          Select Frequency
-        </h3>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {artists.map((artist) => (
-            <button
-              key={artist.id}
-              onClick={() => handleArtistChange(artist)}
-              style={{
-                ...glassStyle,
-                padding: '10px 24px',
-                color: activeArtist.id === artist.id ? '#FFF' : 'rgba(255, 255, 255, 0.5)',
-                borderColor: activeArtist.id === artist.id ? 'rgba(255, 179, 71, 0.4)' : 'rgba(255, 255, 255, 0.1)',
-                boxShadow: activeArtist.id === artist.id ? '0 0 20px rgba(255, 179, 71, 0.05)' : 'none',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <span style={monoStyle}>{artist.name}</span>
-            </button>
-          ))}
-        </div>
+      {/* Station Selector Dropdown */}
+      <div style={{ position: 'relative' }} ref={menuRef}>
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{
+            ...glassStyle,
+            padding: '10px 24px',
+            color: '#FFF',
+            cursor: 'pointer',
+            fontSize: '11px',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <span style={monoStyle}>Station • {activeArtist.name}</span>
+          <ChevronDown size={16} style={{ transition: 'transform 0.2s ease', transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        </button>
+        {isMenuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            marginTop: '8px',
+            background: 'rgba(2, 1, 1, 0.8)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '8px',
+            zIndex: 1100,
+            minWidth: '300px',
+          }}>
+            {artists.map((artist) => (
+              <button
+                key={artist.id}
+                onClick={() => {
+                  handleArtistChange(artist);
+                  setIsMenuOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: 'none',
+                  background: activeArtist.id === artist.id ? 'rgba(255, 179, 71, 0.1)' : 'transparent',
+                  color: activeArtist.id === artist.id ? '#FFB347' : '#FFF',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  transition: 'background 0.2s ease',
+                  fontFamily: 'monospace',
+                  letterSpacing: '0.15em',
+                  textAlign: 'left',
+                  textTransform: 'uppercase',
+                }}
+                onMouseEnter={(e) => {
+                  if (activeArtist.id !== artist.id) {
+                    e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeArtist.id !== artist.id) {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                {artist.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Large Player - Dominant Element */}

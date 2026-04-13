@@ -184,7 +184,7 @@ export default function OrbitalPage() {
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [isRadioHubOpen, setIsRadioHubOpen] = useState(false)
+  const [isRadioHubOpen, setIsRadioHubOpen] = useState(true)
   const [isRadioHubPlaying, setIsRadioHubPlaying] = useState(false)
   const [activeArtist, setActiveArtist] = useState(artists[0])
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)

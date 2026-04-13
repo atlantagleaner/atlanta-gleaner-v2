@@ -339,7 +339,7 @@ export function OrbitalNavBar({
               </div>
             )}
 
-            {showPlus && (
+            {showPlus && layout !== 'archive' && (
               <div style={{ position: 'relative' }}>
                 <button
                   onClick={() => setIsPlusOpen(!isPlusOpen)}
