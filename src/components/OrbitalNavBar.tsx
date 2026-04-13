@@ -298,8 +298,8 @@ export function OrbitalNavBar({
               layout === 'orbital'
                 ? 'space-between'
                 : 'flex-start',
-            alignItems: layout === 'orbital' ? 'center' : 'flex-start',
-            flexDirection: layout === 'archive' ? 'column' : 'row',
+            alignItems: 'center',
+            flexDirection: layout === 'orbital' ? 'row' : 'row',
             gap: '15px',
             zIndex: 1000,
           }}
