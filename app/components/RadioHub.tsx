@@ -125,9 +125,9 @@ export const RadioHub: React.FC<RadioHubProps> = ({
     return (
       <>
         <BackgroundPlayer />
-      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', overflowY: 'auto' }}>
         {/* Compact Artist Selector */}
-        <div style={{ width: '100%', maxWidth: '280px' }}>
+        <div style={{ width: '100%', maxWidth: '280px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             {artists.map((artist) => (
               <button
