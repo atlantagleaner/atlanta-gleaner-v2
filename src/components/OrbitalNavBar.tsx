@@ -36,7 +36,7 @@ export function OrbitalNavBar({
   }, [])
 
   const navItemStyle: React.CSSProperties = {
-    background: layout === 'archive' ? 'rgba(0, 0, 0, 0.35)' : 'rgba(255, 255, 255, 0.04)',
+    background: layout === 'archive' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.04)',
     backdropFilter: 'blur(24px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '100px',
@@ -57,7 +57,7 @@ export function OrbitalNavBar({
     position: 'absolute',
     top: '100%',
     marginTop: '8px',
-    background: 'rgba(2, 1, 1, 0.95)',
+    background: 'rgba(2, 1, 1, 0.8)',
     backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '8px',
