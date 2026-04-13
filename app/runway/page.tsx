@@ -152,12 +152,41 @@ function EventHorizonScene({ onSceneReady, isRadioHubOpen = false }: EventHorizo
 }
 
 // --- Main Application UI ---
+const artists = [
+  {
+    id: 'azealia-banks',
+    name: 'AZEALIA BANKS RADIO',
+    genre: 'HOUSE / BALLROOM',
+    playlistId: 'PL4-ERQAn4mRL1aXgmMCI7HTABHPmVkTqP',
+  },
+  {
+    id: 'the-field',
+    name: 'THE FIELD RADIO',
+    genre: 'MINIMAL TECHNO',
+    playlistId: 'PL4-ERQAn4mRJcxMG33aQScuQmYIwEuFvS',
+  },
+  {
+    id: 'minimal-techno',
+    name: 'MINIMAL TECHNO',
+    genre: 'BLUES',
+    playlistId: 'PL7uGNWx-iG9YZuPa0pfuF1uSrVLCpdoKN',
+  },
+  {
+    id: 'blues-remedy',
+    name: 'BLUES REMEDY',
+    genre: 'BLUES',
+    playlistId: 'PL4-ERQAn4mRJEE6DTaigv_JWQ7Anbx9Cu',
+  }
+];
+
 export default function OrbitalPage() {
   const [time, setTime] = useState(new Date())
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isRadioHubOpen, setIsRadioHubOpen] = useState(false)
+  const [isRadioHubPlaying, setIsRadioHubPlaying] = useState(false)
+  const [activeArtist, setActiveArtist] = useState(artists[0])
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
 
   useEffect(() => {
@@ -233,7 +262,7 @@ export default function OrbitalPage() {
   }
 
   return (
-    <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
+    <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'auto', position: 'relative' }}>
       {/* Translucent Saturn-Style Navbar */}
       {isMobile ? (
         // Mobile navbar - two rows
@@ -278,10 +307,6 @@ export default function OrbitalPage() {
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             <button onClick={() => setIsRadioHubOpen(!isRadioHubOpen)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
-            </button>
-
-            <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
-              ORBIT
             </button>
           </div>
         </nav>
@@ -328,10 +353,6 @@ export default function OrbitalPage() {
           <button onClick={() => setIsRadioHubOpen(!isRadioHubOpen)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
             RUNWAY
           </button>
-
-          <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
-            ORBIT
-          </button>
         </div>
       </nav>
       )}
@@ -341,7 +362,7 @@ export default function OrbitalPage() {
         <EventHorizonScene onSceneReady={handleSceneReady} isRadioHubOpen={isRadioHubOpen} />
       </div>
 
-      {/* Radio Hub Overlay */}
+      {/* Radio Hub - Always mounted for persistent playback */}
       {isRadioHubOpen && (
         <div
           style={{
@@ -352,7 +373,8 @@ export default function OrbitalPage() {
             alignItems: 'center',
             justifyContent: 'center',
             paddingTop: isMobile ? '80px' : '0',
-            animation: 'fadeIn 0.3s ease-out'
+            animation: 'fadeIn 0.3s ease-out',
+            pointerEvents: 'none'
           }}
         >
           <style>{`
@@ -371,14 +393,36 @@ export default function OrbitalPage() {
             style={{
               maxWidth: isMobile ? '90vw' : '900px',
               width: '100%',
-              maxHeight: isMobile ? 'auto' : '80vh',
+              maxHeight: isMobile ? '50vh' : '80vh',
               borderRadius: '32px',
               overflow: 'hidden',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.8)'
+              boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
+              pointerEvents: 'auto'
             }}
           >
-            <RadioHub isMobile={isMobile} />
+            <RadioHub
+              isMobile={isMobile}
+              isUIVisible={true}
+              isPlaying={isRadioHubPlaying}
+              activeArtist={activeArtist}
+              onPlayToggle={() => setIsRadioHubPlaying(!isRadioHubPlaying)}
+              onArtistChange={setActiveArtist}
+            />
           </div>
+        </div>
+      )}
+
+      {/* Hidden RadioHub instance for background playback when UI is closed */}
+      {!isRadioHubOpen && (
+        <div style={{ display: 'none' }}>
+          <RadioHub
+            isMobile={isMobile}
+            isUIVisible={false}
+            isPlaying={isRadioHubPlaying}
+            activeArtist={activeArtist}
+            onPlayToggle={() => setIsRadioHubPlaying(!isRadioHubPlaying)}
+            onArtistChange={setActiveArtist}
+          />
         </div>
       )}
 

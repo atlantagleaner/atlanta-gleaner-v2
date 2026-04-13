@@ -32,11 +32,47 @@ const artists = [
 
 interface RadioHubProps {
   isMobile?: boolean;
+  isUIVisible?: boolean;
+  isPlaying?: boolean;
+  activeArtist?: typeof artists[0];
+  onPlayToggle?: () => void;
+  onArtistChange?: (artist: typeof artists[0]) => void;
 }
 
-export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
-  const [activeArtist, setActiveArtist] = useState(artists[0]);
-  const [isPlaying, setIsPlaying] = useState(false);
+export const RadioHub: React.FC<RadioHubProps> = ({
+  isMobile = false,
+  isUIVisible = true,
+  isPlaying: propIsPlaying,
+  activeArtist: propActiveArtist,
+  onPlayToggle,
+  onArtistChange
+}) => {
+  // Use provided props if available, otherwise use internal state
+  const [internalActiveArtist, setInternalActiveArtist] = useState(artists[0]);
+  const [internalIsPlaying, setInternalIsPlaying] = useState(false);
+
+  const activeArtist = propActiveArtist ?? internalActiveArtist;
+  const isPlayingState = propIsPlaying !== undefined ? propIsPlaying : internalIsPlaying;
+
+  const setActiveArtist = (artist: typeof artists[0]) => {
+    if (onArtistChange) {
+      onArtistChange(artist);
+    } else {
+      setInternalActiveArtist(artist);
+    }
+  };
+
+  const setIsPlaying = (value: boolean | ((prev: boolean) => boolean)) => {
+    const newValue = typeof value === 'function' ? value(isPlayingState) : value;
+    if (onPlayToggle) {
+      // Only call onPlayToggle if the state would actually change
+      if (newValue !== isPlayingState) {
+        onPlayToggle();
+      }
+    } else {
+      setInternalIsPlaying(newValue);
+    }
+  };
 
   const handleArtistChange = (artist: typeof artists[0]) => {
     setActiveArtist(artist);
@@ -63,13 +99,36 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
     textTransform: 'uppercase',
   };
 
+  // Background playback iframe (hidden, kept in DOM for continuous audio)
+  const BackgroundPlayer = () => {
+    if (!isPlayingState || isUIVisible) return null;
+    return (
+      <iframe
+        width="0"
+        height="0"
+        src={`https://www.youtube.com/embed/videoseries?list=${activeArtist.playlistId}&autoplay=1&modestbranding=1&rel=0&theme=dark&controls=0`}
+        title="Background Player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        style={{ display: 'none', position: 'fixed', visibility: 'hidden' }}
+      ></iframe>
+    );
+  };
+
+  // When UI is not visible, only render the hidden background player
+  if (!isUIVisible) {
+    return <BackgroundPlayer />;
+  }
+
   // Mobile layout: player-dominant
   if (isMobile) {
     return (
-      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%' }}>
+      <>
+        <BackgroundPlayer />
+      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
         {/* Compact Artist Selector */}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>
+        <div style={{ width: '100%', maxWidth: '280px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             {artists.map((artist) => (
               <button
                 key={artist.id}
@@ -85,7 +144,6 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
                   fontWeight: 'bold',
                   transition: 'all 0.3s ease',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0,
                 }}
               >
                 <span style={monoStyle}>{artist.name}</span>
@@ -102,10 +160,11 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
             overflow: 'hidden',
             position: 'relative',
             width: '100%',
+            maxWidth: '280px',
             boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8)',
           }}
         >
-          {!isPlaying ? (
+          {!isPlayingState ? (
             <div
               style={{
                 position: 'absolute',
@@ -172,7 +231,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
         </div>
 
         {/* Compact Controls */}
-        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+        <div style={{ width: '100%', maxWidth: '280px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', paddingLeft: '16px', paddingRight: '16px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div
               style={{
@@ -186,7 +245,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
             <span style={{ ...monoStyle, fontSize: '10px', color: '#FFB347', fontWeight: 'bold' }}>Live Frequency</span>
           </div>
           <button
-            onClick={() => setIsPlaying(!isPlaying)}
+            onClick={() => setIsPlaying(!isPlayingState)}
             style={{
               ...monoStyle,
               fontSize: '9px',
@@ -205,7 +264,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
               e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
             }}
           >
-            {isPlaying ? 'Disconnect' : 'Play'}
+            {isPlayingState ? 'Disconnect' : 'Play'}
           </button>
         </div>
 
@@ -216,12 +275,15 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
           }
         `}</style>
       </div>
+      </>
     );
   }
 
   // Desktop layout: player-dominant with compact artist selector
   return (
-    <div style={{ background: '#050505', color: '#FFF', padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <>
+      <BackgroundPlayer />
+      <div style={{ background: '#050505', color: '#FFF', padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Artist Selector - Top Bar */}
       <div>
         <h3 style={{ ...monoStyle, fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '12px' }}>
@@ -265,7 +327,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
           minHeight: '400px',
         }}
       >
-        {!isPlaying ? (
+        {!isPlayingState ? (
           <div
             style={{
               position: 'absolute',
@@ -349,7 +411,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
           <span style={{ ...monoStyle, fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)' }}>Stereo Out</span>
         </div>
         <button
-          onClick={() => setIsPlaying(!isPlaying)}
+          onClick={() => setIsPlaying(!isPlayingState)}
           style={{
             ...monoStyle,
             fontSize: '10px',
@@ -368,7 +430,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
             e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
           }}
         >
-          {isPlaying ? 'Disconnect Stream' : 'Initialize Player'}
+          {isPlayingState ? 'Disconnect Stream' : 'Initialize Player'}
         </button>
       </div>
 
@@ -378,7 +440,8 @@ export const RadioHub: React.FC<RadioHubProps> = ({ isMobile = false }) => {
           50% { opacity: 0.5; }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 };
 
