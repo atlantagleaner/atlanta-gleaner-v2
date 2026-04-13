@@ -9,6 +9,7 @@ import type { CSSProperties } from 'react'
 import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
 import { SearchInput } from '@/src/components/common/SearchInput'
+import { OrbitalNavBar } from '@/src/components/OrbitalNavBar'
 import { useMobileDetect } from '@/src/hooks'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
@@ -739,6 +740,7 @@ export default function ArchivePage() {
           }
         }
       `}</style>
+      <OrbitalNavBar showPlus={true} layout="archive" />
       <main className="ag-archive-main" style={{
         minHeight:   '100vh',
         background:  PALETTE.warm,
