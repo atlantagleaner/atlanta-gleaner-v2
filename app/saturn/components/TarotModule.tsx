@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import ReactCardFlip from 'react-card-flip'
 import tarotRaw from '@/public/data/tarot_interpretations.json'
 
@@ -64,6 +64,7 @@ export function TarotModule() {
   const [spread,   setSpread]   = useState<DrawnCard[]>([])
   const [flipped,  setFlipped]  = useState<boolean[]>([false, false, false])
   const [active,   setActive]   = useState<number | null>(null)   // which card's detail is showing
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768)
 
   const handleDraw = useCallback(() => {
     setSpread(drawSpread())
@@ -81,15 +82,17 @@ export function TarotModule() {
   }, [])
 
   const drawnCard = active !== null ? spread[active] : null
+  const cardSize = isMobile ? 70 : 90
+  const padding = isMobile ? 12 : 20
 
   return (
     <div style={MODULE_SHELL}>
 
       {/* Body */}
-      <div style={{ padding: '20px', flex: 1 }}>
+      <div style={{ padding: `${padding}px`, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {spread.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '32px 0' }}>
-            <p style={{ ...MUTED_TEXT, margin: '0 0 20px', lineHeight: 1.7 }}>
+          <div style={{ textAlign: 'center', padding: '24px 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <p style={{ ...MUTED_TEXT, margin: '0 0 16px', lineHeight: 1.6, fontSize: '9px' }}>
               Three cards are drawn.<br />
               Past. Present. Future.<br />
               Click to reveal each.
@@ -100,8 +103,8 @@ export function TarotModule() {
           </div>
         ) : (
           <>
-            {/* Card positions */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>
+            {/* Card positions - vertical stack */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginBottom: '16px', overflowY: 'auto', flex: 1 }}>
               {spread.map((drawn, idx) => (
                 <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                   <span style={{ ...MUTED_TEXT, margin: 0 }}>{POSITIONS[idx]}</span>
@@ -111,7 +114,7 @@ export function TarotModule() {
                     <div
                       onClick={() => handleFlip(idx)}
                       style={{
-                        ...CARD_BASE,
+                        ...getCardBaseStyle(cardSize),
                         background: `linear-gradient(135deg, #1A1A2E 0%, #0B0820 100%)`,
                         border:     '1px solid rgba(184,134,11,0.30)',
                         cursor:     'pointer',
@@ -128,7 +131,7 @@ export function TarotModule() {
                     <div
                       onClick={() => setActive(idx)}
                       style={{
-                        ...CARD_BASE,
+                        ...getCardBaseStyle(cardSize),
                         border:   `1px solid rgba(184,134,11,${active === idx ? '0.60' : '0.25'})`,
                         overflow: 'hidden',
                         cursor:   'pointer',
@@ -167,23 +170,24 @@ export function TarotModule() {
             {drawnCard && flipped[active!] && (
               <div style={{
                 borderTop:       '1px solid rgba(184,134,11,0.12)',
-                paddingTop:      '16px',
+                paddingTop:      isMobile ? '12px' : '16px',
                 animation:       'saturn-fade-in 0.3s ease',
+                overflowY:       'auto',
               }}>
                 <style>{`@keyframes saturn-fade-in { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:translateY(0) } }`}</style>
 
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', fontWeight: 600, color: '#B8860B', margin: '0 0 4px', textShadow: '0 0 12px rgba(184,134,11,0.50)' }}>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isMobile ? '14px' : '16px', fontWeight: 600, color: '#B8860B', margin: '0 0 3px', textShadow: '0 0 12px rgba(184,134,11,0.50)' }}>
                   {drawnCard.card.name}
                 </p>
-                <p style={{ ...MUTED_TEXT, margin: '0 0 10px' }}>
+                <p style={{ ...MUTED_TEXT, fontSize: isMobile ? '8px' : '10px', margin: '0 0 8px' }}>
                   {drawnCard.reversed ? 'Reversed' : 'Upright'} · {drawnCard.card.suit}
                 </p>
 
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '13px', color: '#F5F1E8', lineHeight: 1.6, margin: '0 0 8px' }}>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: isMobile ? '11px' : '13px', color: '#F5F1E8', lineHeight: 1.5, margin: '0 0 6px' }}>
                   {drawnCard.card.fortune_telling[0]}
                 </p>
 
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '12px', color: 'rgba(245,241,232,0.75)', lineHeight: 1.55, margin: 0 }}>
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: isMobile ? '10px' : '12px', color: 'rgba(245,241,232,0.75)', lineHeight: 1.4, margin: 0 }}>
                   {drawnCard.reversed
                     ? drawnCard.card.meanings.shadow[0]
                     : drawnCard.card.meanings.light[0]
@@ -249,11 +253,13 @@ const MUTED_TEXT: React.CSSProperties = {
   textTransform: 'uppercase' as const,
 }
 
-const CARD_BASE: React.CSSProperties = {
+// Note: CARD_BASE is now set dynamically based on screen size in the component
+const getCardBaseStyle = (size: number): React.CSSProperties => ({
   aspectRatio:     '2/3',
-  width:           '100%',
+  width:           `${size}px`,
+  height:          `${size * 1.5}px`,
   transition:      'border-color 0.2s ease',
-}
+})
 
 // SVG-based card back pattern (geometric, Saturn-themed)
 function CardBackPattern() {
