@@ -18,7 +18,9 @@ export default function Saturn2Page() {
   const [isGameHubOpen, setIsGameHubOpen] = useState(true)
   const [isGameHubPlaying, setIsGameHubPlaying] = useState(false)
   const [activeGame, setActiveGame] = useState(games[0])
+  const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
@@ -33,6 +35,19 @@ export default function Saturn2Page() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsPlusMenuOpen(false)
+      }
+    }
+    if (isPlusMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isPlusMenuOpen])
 
   const handleSceneReady = (camera: THREE.PerspectiveCamera) => {
     cameraRef.current = camera
@@ -90,9 +105,9 @@ export default function Saturn2Page() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', zIndex: 1000,
         }}>
           {/* Row 1: Date/Time + The Atlanta Gleaner + Plus Button (merged) */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} ref={menuRef}>
             <button
-              onClick={() => {}}
+              onClick={() => setIsPlusMenuOpen(!isPlusMenuOpen)}
               style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
@@ -108,9 +123,18 @@ export default function Saturn2Page() {
               </div>
 
               <div style={{ marginLeft: 'auto' }}>
-                +
+                {isPlusMenuOpen ? '−' : '+'}
               </div>
             </button>
+            {isPlusMenuOpen && (
+              <div style={{...dropdownMenuStyle, right: '0', marginTop: '8px'}}>
+                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
+                <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
+                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
+                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
+                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
+              </div>
+            )}
           </div>
 
           {/* Row 2: Game Hub Toggle */}
@@ -130,7 +154,7 @@ export default function Saturn2Page() {
           {/* Date/Time + Title + Plus Button (merged) */}
           <div style={{ position: 'relative' }}>
             <button
-              onClick={() => {}}
+              onClick={() => setIsPlusMenuOpen(!isPlusMenuOpen)}
               style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
@@ -146,9 +170,18 @@ export default function Saturn2Page() {
               </div>
 
               <div style={{ marginLeft: 'auto' }}>
-                +
+                {isPlusMenuOpen ? '−' : '+'}
               </div>
             </button>
+            {isPlusMenuOpen && (
+              <div style={{...dropdownMenuStyle, left: '0', marginTop: '8px'}}>
+                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
+                <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
+                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
+                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
+                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
+              </div>
+            )}
           </div>
 
           <button onClick={() => setIsGameHubOpen(!isGameHubOpen)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>

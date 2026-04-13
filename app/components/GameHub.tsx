@@ -176,7 +176,7 @@ export const GameHub: React.FC<GameHubProps> = ({
               gap: '8px',
             }}
           >
-            <span style={monoStyle}>Game • {activeGame.name}</span>
+            <span style={monoStyle}>Station • {activeGame.name}</span>
             <ChevronDown
               size={14}
               style={{
