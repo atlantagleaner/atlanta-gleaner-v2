@@ -92,6 +92,12 @@ export function OrbitalNavBar({
             alignItems: 'center',
             gap: '12px',
             zIndex: 1000,
+            ...(layout === 'archive' && {
+              background: 'rgba(0, 0, 0, 0.35)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '12px',
+              padding: '12px 15px',
+            }),
           }}
         >
           {/* Row 1: Date/Time + The Atlanta Gleaner */}
@@ -302,6 +308,12 @@ export function OrbitalNavBar({
             flexDirection: layout === 'orbital' ? 'row' : 'row',
             gap: '15px',
             zIndex: 1000,
+            ...(layout === 'archive' && {
+              background: 'rgba(0, 0, 0, 0.35)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '12px',
+              padding: '12px 15px',
+            }),
           }}
         >
           {/* Date/Time Link + Title */}
