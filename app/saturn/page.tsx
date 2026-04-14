@@ -106,10 +106,10 @@ export default function SaturnPage() {
 
   return (
     <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
-      {/* Saturn Navbar */}
+      {/* Saturn Navbar - Always interactive */}
       <SaturnNavbar onRunwayClick={() => handleCloseGameOverlay()} />
 
-      {/* Interactive Saturn Simulation - Full Background */}
+      {/* Interactive Saturn Simulation - Always interactive */}
       <div style={{
         position: 'fixed',
         inset: 0,
