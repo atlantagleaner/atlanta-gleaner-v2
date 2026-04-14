@@ -3,10 +3,8 @@
 import { useEffect } from 'react'
 import { TarotModule } from './components/TarotModule'
 import { AstrologyModule } from './components/AstrologyModule'
-import { CrystalBallModule } from './components/CrystalBallModule'
-import { BlackjackModule } from './components/BlackjackModule'
-import Starfield from './components/Starfield'
-import { Banner }           from '@/src/components/Banner'
+import SaturnScene from '../components/SaturnScene'
+import { Banner } from '@/src/components/Banner'
 import {
   T, PALETTE_CSS, PAGE_MAX_W, SPACING,
   PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
@@ -21,37 +19,15 @@ export default function SaturnPage() {
 
   return (
     <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
-      {/* Space background with pulsing nebula effect */}
+      {/* Interactive Saturn Simulation - Full Background */}
       <div style={{
         position: 'fixed',
         inset: 0,
-        pointerEvents: 'none',
         zIndex: 0,
+        width: '100%',
+        height: '100%',
       }}>
-        {/* Starfield with box-shadow pattern */}
-        <Starfield />
-        {/* Animated nebula/space gradient */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: `
-            radial-gradient(circle at 20% 50%, rgba(139,69,19,0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(70,130,180,0.12) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(75,0,130,0.10) 0%, transparent 50%)
-          `,
-          animation: 'saturn-nebula-drift 45s ease-in-out infinite, saturn-nebula-pulse 8s ease-in-out infinite',
-        }} />
-        {/* Nebula animations */}
-        <style>{`
-          @keyframes saturn-nebula-drift {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-20px, 15px); }
-          }
-          @keyframes saturn-nebula-pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.7; }
-          }
-        `}</style>
+        <SaturnScene isInteractive={true} isMobile={typeof window !== 'undefined' && window.innerWidth < 768} />
       </div>
 
       <style>{`
@@ -106,19 +82,13 @@ export default function SaturnPage() {
         <div className="saturn-module">
           <AstrologyModule />
         </div>
-        <div className="saturn-module">
-          <CrystalBallModule />
-        </div>
-        <div className="saturn-module">
-          <BlackjackModule />
-        </div>
       </div>
 
       {/* Layout styles */}
       <style>{`
         .saturn-modules-container {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 20px;
           padding: 120px 32px ${PAGE_BOTTOM_PADDING_DESKTOP};
           max-width: 1400px;
@@ -140,11 +110,6 @@ export default function SaturnPage() {
           overflow: hidden;
         }
 
-        /* Bank module spans 2 columns */
-        .saturn-module:nth-child(4) {
-          grid-column: span 2;
-        }
-
         /* Mobile layout */
         @media (max-width: 767px) {
           .saturn-modules-container {
@@ -157,10 +122,6 @@ export default function SaturnPage() {
           .saturn-module {
             width: 100%;
             max-height: 100vh;
-          }
-
-          .saturn-module:nth-child(4) {
-            grid-column: auto;
           }
         }
       `}</style>
