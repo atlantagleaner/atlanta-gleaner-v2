@@ -71,8 +71,10 @@ export default function SaturnPage() {
           padding: 80px 32px ${PAGE_BOTTOM_PADDING_DESKTOP};
           max-width: 1400px;
           margin: 0 auto;
-          position: 'relative';
+          position: relative;
           z-index: 5;
+          justify-items: center;
+          align-items: center;
         }
 
         .saturn-module {
@@ -100,6 +102,8 @@ export default function SaturnPage() {
             padding: 80px 12px ${PAGE_BOTTOM_PADDING_MOBILE};
             max-height: calc(100vh - 100px);
             overflow-y: auto;
+            justify-content: center;
+            align-items: center;
           }
 
           .saturn-module {
