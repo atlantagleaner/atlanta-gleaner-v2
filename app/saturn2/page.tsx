@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import SaturnScene from '../components/SaturnScene';
 import { CrystalBallModule } from '../saturn/components/CrystalBallModule';
-import { TarotModule } from '../saturn/components/TarotModule';
 import { BlackjackModule } from '../saturn/components/BlackjackModule';
 
 export default function Saturn2Page() {
@@ -12,7 +11,7 @@ export default function Saturn2Page() {
   const [isMobile, setIsMobile] = useState(false);
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
   const [isGameModuleOpen, setIsGameModuleOpen] = useState(false);
-  const [activeGameModule, setActiveGameModule] = useState<'crystal-ball' | 'tarot' | 'blackjack' | null>(null);
+  const [activeGameModule, setActiveGameModule] = useState<'crystal-ball' | 'blackjack' | null>(null);
   const [isModuleSelectorOpen, setIsModuleSelectorOpen] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
 
@@ -145,7 +144,7 @@ export default function Saturn2Page() {
   };
 
   // Function to select a game module
-  const selectGameModule = (moduleName: 'crystal-ball' | 'tarot' | 'blackjack') => {
+  const selectGameModule = (moduleName: 'crystal-ball' | 'blackjack') => {
     setActiveGameModule(moduleName);
     setIsGameModuleOpen(true);
     setIsModuleSelectorOpen(false);
@@ -287,7 +286,6 @@ export default function Saturn2Page() {
           </button>
           <div style={gameViewportStyle}>
             {activeGameModule === 'crystal-ball' && <CrystalBallModule />}
-            {activeGameModule === 'tarot' && <TarotModule />}
             {activeGameModule === 'blackjack' && <BlackjackModule />}
           </div>
         </div>
@@ -318,20 +316,12 @@ export default function Saturn2Page() {
         >
           <div style={{ fontSize: '10px', letterSpacing: '0.15em', opacity: 0.6, marginBottom: '4px' }}>SELECT A VISION</div>
           <button
-            onClick={() => selectGameModule('tarot')}
-            style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none', background: 'transparent', padding: '8px 12px', fontSize: '10px', border: 'none', textAlign: 'left' }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-          >
-            THE TAROT READING
-          </button>
-          <button
             onClick={() => selectGameModule('crystal-ball')}
             style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none', background: 'transparent', padding: '8px 12px', fontSize: '10px', border: 'none', textAlign: 'left' }}
             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
-            THE CRYSTAL BALL
+            THE CRYSTAL EYE
           </button>
           <button
             onClick={() => selectGameModule('blackjack')}
