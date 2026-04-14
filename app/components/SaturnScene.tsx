@@ -6,7 +6,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 export interface SaturnSceneProps {
   onSceneReady?: (camera: THREE.PerspectiveCamera) => void
-  isRadioHubOpen?: boolean
+  isInteractive?: boolean
+  isMobile?: boolean
 }
 
 const JWST_DATA = {
@@ -17,7 +18,7 @@ const JWST_DATA = {
   spaceBackground: '#010102'
 }
 
-export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: SaturnSceneProps) {
+export default function SaturnScene({ onSceneReady, isInteractive = true, isMobile = false }: SaturnSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<number>(0)
   const controlsRef = useRef<OrbitControls | null>(null)
@@ -30,6 +31,12 @@ export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: Sa
     ringParticles?: THREE.Points
     planetGroup?: THREE.Group
   } | null>(null)
+
+  useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.enabled = isInteractive
+    }
+  }, [isInteractive])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -71,7 +78,7 @@ export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: Sa
     controls.dampingFactor = 0.05
     controls.minDistance = 12
     controls.maxDistance = 200
-    controls.enabled = !isRadioHubOpen
+    controls.enabled = isInteractive
     controlsRef.current = controls
     sceneRef.current = { scene, camera, renderer, controls }
 
@@ -151,8 +158,8 @@ export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: Sa
     planetMesh.receiveShadow = true
     planetGroup.add(planetMesh)
 
-    // Ring System using particles
-    const particleCount = 22000
+    // Ring System using particles (optimized for mobile)
+    const particleCount = isMobile ? 8000 : 22000
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(particleCount * 3)
     const colors = new Float32Array(particleCount * 3)
@@ -222,8 +229,8 @@ export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: Sa
     planetGroup.rotation.z = (26.73 * Math.PI) / 180
     scene.add(planetGroup)
 
-    // 7. Starfield (JWST views often show distant galaxies)
-    const count = 1500
+    // 7. Starfield (JWST views often show distant galaxies) - optimized for mobile
+    const count = isMobile ? 500 : 1500
     const starGeo = new THREE.BufferGeometry()
     const starPos = new Float32Array(count * 3)
     for (let i = 0; i < count * 3; i++) {
@@ -276,12 +283,6 @@ export default function SaturnScene({ onSceneReady, isRadioHubOpen = false }: Sa
     }
   }, [])
 
-  // Update controls when radio hub state changes
-  useEffect(() => {
-    if (controlsRef.current) {
-      controlsRef.current.enabled = !isRadioHubOpen
-    }
-  }, [isRadioHubOpen])
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }} />
 }
