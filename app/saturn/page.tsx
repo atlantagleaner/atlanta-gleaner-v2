@@ -1,24 +1,39 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { TarotModule } from './components/TarotModule'
 import { AstrologyModule } from './components/AstrologyModule'
+import { SaturnNavbar } from './components/SaturnNavbar'
 import SaturnScene from '../components/SaturnScene'
-import { Banner } from '@/src/components/Banner'
 import {
   T, PALETTE_CSS, PAGE_MAX_W, SPACING,
   PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 
 export default function SaturnPage() {
+  const [showModules, setShowModules] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+
   // Apply Saturn theme to document element for global CSS selectors
   useEffect(() => {
     document.documentElement.setAttribute('data-saturn', 'true')
     return () => document.documentElement.removeAttribute('data-saturn')
   }, [])
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
+      {/* Saturn Navbar */}
+      <SaturnNavbar onRunwayClick={() => setShowModules(!showModules)} />
+
       {/* Interactive Saturn Simulation - Full Background */}
       <div style={{
         position: 'fixed',
@@ -27,7 +42,7 @@ export default function SaturnPage() {
         width: '100%',
         height: '100%',
       }}>
-        <SaturnScene isInteractive={true} isMobile={typeof window !== 'undefined' && window.innerWidth < 768} />
+        <SaturnScene isInteractive={!showModules} isMobile={isMobile} />
       </div>
 
       <style>{`
@@ -35,54 +50,17 @@ export default function SaturnPage() {
         @media (min-width: 768px)  { .saturn-bottom { padding-bottom: ${PAGE_BOTTOM_PADDING_DESKTOP}; } }
       `}</style>
 
-      <Banner />
-
-      {/* Page title block */}
-      <div style={{ maxWidth: PAGE_MAX_W, margin: '0 auto', padding: `0 ${SPACING.lg}`, position: 'relative', zIndex: 5 }}>
-        <div style={{
-          borderBottom: '1px solid rgba(184,134,11,0.20)',
-          padding: `${SPACING.xl} 0 ${SPACING.lg}`,
-          marginBottom: SPACING.xxl,
-        }}>
-          <h1 style={{
-            ...T.pageTitle,
-            color: '#B8860B',
-            margin: 0,
-            letterSpacing: '0.20em',
-            textShadow: '0 0 16px rgba(184,134,11,0.50), 0 0 32px rgba(184,134,11,0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1ch',
-          }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" style={{ display: 'inline-block', flexShrink: 0 }}>
-              <defs>
-                <filter id="saturn-glow">
-                  <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              {/* Rings */}
-              <ellipse cx="16" cy="16" rx="20" ry="6" fill="none" stroke="#B8860B" strokeWidth="1.5" opacity="0.7" filter="url(#saturn-glow)" />
-              {/* Planet */}
-              <circle cx="16" cy="16" r="10" fill="#B8860B" opacity="0.9" filter="url(#saturn-glow)" />
-            </svg>
-            Saturn
-          </h1>
+      {/* Game modules - toggle with Saturn button */}
+      {showModules && (
+        <div className="saturn-modules-container" style={{ position: 'relative', zIndex: 5 }}>
+          <div className="saturn-module">
+            <TarotModule />
+          </div>
+          <div className="saturn-module">
+            <AstrologyModule />
+          </div>
         </div>
-      </div>
-
-      {/* Game modules - simple grid layout */}
-      <div className="saturn-modules-container" style={{ position: 'relative', zIndex: 5 }}>
-        <div className="saturn-module">
-          <TarotModule />
-        </div>
-        <div className="saturn-module">
-          <AstrologyModule />
-        </div>
-      </div>
+      )}
 
       {/* Layout styles */}
       <style>{`
@@ -90,9 +68,11 @@ export default function SaturnPage() {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 20px;
-          padding: 120px 32px ${PAGE_BOTTOM_PADDING_DESKTOP};
+          padding: 80px 32px ${PAGE_BOTTOM_PADDING_DESKTOP};
           max-width: 1400px;
           margin: 0 auto;
+          position: 'relative';
+          z-index: 5;
         }
 
         .saturn-module {
@@ -102,6 +82,7 @@ export default function SaturnPage() {
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          min-height: 500px;
         }
 
         .saturn-module > * {
@@ -116,12 +97,15 @@ export default function SaturnPage() {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding: 120px 12px ${PAGE_BOTTOM_PADDING_MOBILE};
+            padding: 80px 12px ${PAGE_BOTTOM_PADDING_MOBILE};
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
           }
 
           .saturn-module {
             width: 100%;
-            max-height: 100vh;
+            min-height: 400px;
+            flex-shrink: 0;
           }
         }
       `}</style>
