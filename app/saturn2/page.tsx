@@ -5,13 +5,14 @@ import * as THREE from 'three';
 import SaturnScene from '../components/SaturnScene';
 import { CrystalBallModule } from '../saturn/components/CrystalBallModule';
 import { TarotModule } from '../saturn/components/TarotModule';
+import { BlackjackModule } from '../saturn/components/BlackjackModule';
 
 export default function Saturn2Page() {
   const [time, setTime] = useState<Date | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
   const [isGameModuleOpen, setIsGameModuleOpen] = useState(false);
-  const [activeGameModule, setActiveGameModule] = useState<'crystal-ball' | 'tarot' | null>(null);
+  const [activeGameModule, setActiveGameModule] = useState<'crystal-ball' | 'tarot' | 'blackjack' | null>(null);
   const [isModuleSelectorOpen, setIsModuleSelectorOpen] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
 
@@ -144,7 +145,7 @@ export default function Saturn2Page() {
   };
 
   // Function to select a game module
-  const selectGameModule = (moduleName: 'crystal-ball' | 'tarot') => {
+  const selectGameModule = (moduleName: 'crystal-ball' | 'tarot' | 'blackjack') => {
     setActiveGameModule(moduleName);
     setIsGameModuleOpen(true);
     setIsModuleSelectorOpen(false);
@@ -287,6 +288,7 @@ export default function Saturn2Page() {
           <div style={gameViewportStyle}>
             {activeGameModule === 'crystal-ball' && <CrystalBallModule />}
             {activeGameModule === 'tarot' && <TarotModule />}
+            {activeGameModule === 'blackjack' && <BlackjackModule />}
           </div>
         </div>
       )}
@@ -330,6 +332,14 @@ export default function Saturn2Page() {
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
             THE CRYSTAL BALL
+          </button>
+          <button
+            onClick={() => selectGameModule('blackjack')}
+            style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none', background: 'transparent', padding: '8px 12px', fontSize: '10px', border: 'none', textAlign: 'left' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+          >
+            THE SOUL STAKES
           </button>
         </div>
       )}

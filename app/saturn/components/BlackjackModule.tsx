@@ -1,575 +1,425 @@
 'use client'
 
-import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
 
-// --- TYPES & INTERFACES ---
+// --- Assets & Icons ---
+const SuitIcon = ({ suit }: { suit: string }) => {
+  const icons: Record<string, React.ReactNode> = {
+    '♠': <path d="M12 2L4 12c0 3 3 4 8 10 5-6 8-7 8-10L12 2z" fill="currentColor" />,
+    '♥': <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />,
+    '♦': <path d="M12 2L2 12l10 10 10-10L12 2z" fill="currentColor" />,
+    '♣': <path d="M12 2a4 4 0 00-4 4c0 1.5.8 2.8 2 3.5-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4s4-1.8 4-4c0-1.5-.8-2.8-2-3.5 1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z" fill="currentColor" />
+  }
+  return <svg viewBox="0 0 24 24" className="w-8 h-8">{icons[suit]}</svg>
+}
 
 interface Card {
-  suit: string
-  rank: string
-  hidden?: boolean
-  value?: number
-  text?: string
+  r: string
+  s: string
+  v: number
 }
 
-interface CoinData {
-  id: string
-  type: 'copper' | 'silver' | 'gold'
-  location: 'wallet' | 'wager' | '213' | 'pairs' | 'buster'
-}
+export function BlackjackModule() {
+  // Game State
+  const [gold, setGold] = useState(300)
+  const [debt, setDebt] = useState(0)
+  const [wager, setWager] = useState(0)
+  const [insuranceWager, setInsuranceWager] = useState(0)
+  const [deck, setDeck] = useState<Card[]>([])
+  const [playerHand, setPlayerHand] = useState<Card[]>([])
+  const [dealerHand, setDealerHand] = useState<Card[]>([])
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isOfferingInsurance, setIsOfferingInsurance] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
+  const [dialogue, setDialogue] = useState("How about a game?")
+  const [showDebtPrompt, setShowDebtPrompt] = useState(false)
 
-interface GameState {
-  game: any
-  stage: 'ready' | 'players-turn' | 'done' | 'loading'
-  dealerCards: Card[]
-  playerHands: Card[][]
-  dealerValue: number
-  pouchValue: number
-  initialWager: number
-  debt: number
-  dialogue: string
-  sideBets: {
-    '213': number
-    'pairs': number
-    'buster': number
-  }
-}
+  // The Soul Stakes Dialogue Bank
+  const soulStakesQuotes = [
+    "What is another word for the void?",
+    "If this hand fails you, remember that some descents are designed without the possibility of a parachute.",
+    "My broken mirror yielded seven years of misfortune, though my advocate is negotiating for a shorter sentence in the dark.",
+    "Infinity makes every destination a local one, provided you have surrendered your clock to the House.",
+    "The past is a memory that feeds on the living until there is nothing left to remember.",
+    "The monopoly of the grave is absolute; there is only one House and it always wins.",
+    "If the black box is indestructible, perhaps we should construct our coffins from the same tragedy.",
+    "A clear conscience is merely a side effect of a mind that has successfully forgotten its sins.",
+    "I possess dehydrated water, but I lack the vital fluid to make it flow.",
+    "The tomb is always room temperature, provided you are the room.",
+    "I deal the cards far too quickly to worry about the expiration of your pulse.",
+    "For those who believe in possession, please use your will to raise my hand.",
+    "My home has a switch that controls nothing but the flickering of a dying man's eyes.",
+    "I have a microwave furnace that can incinerate a legacy in under two minutes.",
+    "I bought a residence on a one-way dead-end road; the geography of the end is quite simple.",
+    "I am not afraid of the depth of the grave, only the suffocating width of the lid.",
+    "We are 98% water, which makes the human body a very inefficient vessel for a fire.",
+    "I find it curious that we worry about the speed of the car when the destination is always a standstill.",
+    "My microwave fireplace provides the warmth of a lifetime in the span of a single breath.",
+    "I bought a pair of shoes that make me walk like a man who has already been buried.",
+    "The general store had no specifics, much like the afterlife.",
+    "If you fail to succeed at breathing, the rest of your hobbies become irrelevant.",
+    "I have a skylight in my basement; the people upstairs find it very distracting when I look up.",
+    "I have a collection of heads; they don't say much, but they listen with great intensity.",
+    "If you think of the past, make sure the past isn't thinking of you.",
+    "I have a phone that only rings when someone is about to stop breathing.",
+    "I find that everything is within walking distance if you are being pursued.",
+    "The 'Go to Jail' card is the most honest piece of cardboard in the world.",
+    "Why buy a toy train when you can simply wait for the real one to take you away?",
+    "I have a light switch that toggles the stars.",
+    "I bought some instant dust; I'm just waiting for the right breeze.",
+    "The room is room temperature, but the body is cooling rapidly.",
+    "I have a camera that only takes pictures of what will happen tomorrow.",
+    "If you are born by C-section, you spend your life looking for the window.",
+    "Why do they call it a 'living room' when you're clearly dying in it?",
+    "The black box is the only thing that remembers the screaming.",
+    "I have a collection of keys that don't fit any doors in this world.",
+    "I once tried to catch a thought, but it died of exposure.",
+    "The microwave fireplace is a marvel of modern morbidity.",
+    "I have a mirror that shows me the person standing behind you.",
+    "The House always wins because the House is the only thing that doesn't breathe.",
+    "The silence in this room is structural; if you were to scream, the ceiling would likely collapse.",
+    "I possess a map of your central nervous system, and I noticed several corridors that lead to absolute nothingness.",
+    "I have a compass that only points toward the nearest exit, but the needle hasn't moved since the mid-nineteenth century.",
+    "Your heartbeat is a rhythmic countdown that I am currently synchronizing with the clock on the wall.",
+    "Why use a telescope to observe the stars when you can simply wait for them to finish burning out?",
+    "I have a collection of shadows that I have detached from their owners to ensure they don't wander off.",
+    "The 'Hit' you are requesting is quite different from the one the House is prepared to deliver.",
+    "I once purchased a clinical study on spontaneous combustion, but the data vanished before I could reach the conclusion.",
+    "Your pulse is a repetitive argument with the inevitable that you are slowly but surely losing.",
+    "I own a camera with no shutter, designed to capture the uninterrupted passage of the end.",
+    "The vacuum cleaner in the hallway is remarkably quiet, as it only consumes the static of souls.",
+    "I find that the most efficient way to travel is to simply wait for the horizon to move toward you.",
+    "My calendar is entirely blank, as I find the concept of 'tomorrow' to be a rather optimistic assumption.",
+    "Your skeleton is a highly efficient machine that is currently being held hostage by your skin.",
+    "I have a telephone with no dial; it only rings when the House has a specific grievance to air.",
+    "The emergency exit in this room is merely a high-resolution photograph of a door.",
+    "I find that a person's weight decreases slightly at the moment of loss, as if the gravity of their situation has lifted.",
+    "I have a glass of water that is always half-empty, regardless of how much fluid I add.",
+    "The light at the end of the tunnel is actually just the reflection of the cards on the table.",
+    "Why worry about the afterlife when the current life is so clearly coming to a scheduled halt?",
+    "I have a microwave that can freeze time, though it leaves the center of the moment quite cold.",
+    "Your signature on the marker is a very elegant way of saying 'I no longer require this.'",
+    "I find that the most honest conversations happen when one party is no longer capable of speaking.",
+    "I have a collection of echoes; I keep them in jars and listen to them when the silence becomes too loud.",
+    "The floorboards in this room are made from the lids of crates that were never intended to be opened again.",
+    "I have a light switch that toggles the presence of your hope.",
+    "I bought a house with no windows, as I find the outside world to be a distraction from the geometry of the end.",
+    "Your breath is a finite resource that the House is currently measuring in milliliters.",
+    "I have a clock that only ticks when someone in the room makes a mistake.",
+    "I find that the most interesting thing about humans is how they fight to keep a heart destined to stop.",
+    "Your cards are a sequence of failures that have been pre-ordained by the physics of the deck.",
+    "I have a pen that only writes in the past tense.",
+    "The radiator in the corner isn't making noise; it's simply screaming in a frequency you can't hear yet.",
+    "I have a mirror that shows you what you will look like in forty-five minutes.",
+    "The 'Hit' is the sound of the lid closing on your options.",
+    "Why bother with a parachute when the ground is so eager to meet you halfway?",
+    "I have a collection of keys that only unlock the things you've already lost.",
+    "The House is not a building; it is a mathematical certainty.",
+    "I find that the coldness of the room is proportional to the heat of your desperation.",
+    "I bought some instant eternity, but I'm still waiting for the first second to pass.",
+    "The 'Black Box' of your life is currently recording this dialogue for the investigators.",
+    "I find that a clear conscience is often just a symptom of a very efficient incinerator.",
+    "I find that the most beautiful color is the one that appears when the lights are turned off permanently.",
+    "I have a clock that doesn't measure hours, but the distance between your last two heartbeats.",
+    "Your existence is a brief interruption in a very long silence.",
+    "I have a collection of breaths; I keep them in a small box under the table.",
+    "I find that the most honest expression is the one that remains after the mind has left.",
+    "I have a light switch that turns off the sun, but I only use it on special occasions.",
+    "Your soul is a very light wager for a game with such heavy consequences.",
+    "I bought some powdered time, but I'm not sure what to add to make it move.",
+    "The 'Room Temperature' of this tomb is currently dropping to match your expectations.",
+    "I have a mirror that only reflects the things you've forgotten about yourself.",
+    "I find that the best way to deal with the past is to ensure it has no future.",
+    "I find that the House always wins because it is the only thing that doesn't have a heart to lose."
+  ]
 
-// --- ENGINE LOADER ---
-
-let Game: any = null
-let actions: any = null
-
-const loadEngine = async () => {
-  if (typeof window !== 'undefined' && !Game) {
-    try {
-      const module = await import('blackjack-engine')
-      Game = module.Game
-      actions = module.actions
-    } catch (error) {
-      console.error('Failed to load blackjack-engine:', error)
-    }
-  }
-}
-
-// --- UTILS ---
-
-const VALUES: Record<'copper' | 'silver' | 'gold', number> = { copper: 1, silver: 2, gold: 10 }
-
-const generateInitialCoins = (): CoinData[] => {
-  const coins: CoinData[] = []
-  for (let i = 0; i < 4; i++) coins.push({ id: `g-${i}`, type: 'gold', location: 'wallet' })
-  for (let i = 0; i < 4; i++) coins.push({ id: `s-${i}`, type: 'silver', location: 'wallet' })
-  for (let i = 0; i < 2; i++) coins.push({ id: `c-${i}`, type: 'copper', location: 'wallet' })
-  return coins
-}
-
-// --- COMPONENTS ---
-
-const Teletype = ({ text, speed = 40 }: { text?: string, speed?: number }) => {
-  const [displayed, setDisplayed] = useState('')
-  const safeText = text || "The void awaits..."
-
-  useEffect(() => {
-    setDisplayed('')
-    let i = 0
-    const interval = setInterval(() => {
-      if (safeText[i]) {
-        setDisplayed((prev) => prev + safeText[i])
-        i++
-      }
-      if (i >= safeText.length) clearInterval(interval)
-    }, speed)
-    return () => clearInterval(interval)
-  }, [safeText, speed])
-
-  return <span className="font-mono text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]">{displayed}</span>
-}
-
-const BlackjackCard = ({ suit, rank, hidden }: Card) => {
-  const suitSymbols: Record<string, { symbol: string; color: string }> = {
-    hearts: { symbol: '♥', color: '#ef4444' },
-    diamonds: { symbol: '♦', color: '#ef4444' },
-    spades: { symbol: '♠', color: '#f5f1e8' },
-    clubs: { symbol: '♣', color: '#f5f1e8' },
-  }
-
-  const normalizedSuit = suit ? suit.toLowerCase().replace(/s$/, '') : 'spades'
-  const normalizedRank = rank?.toUpperCase() || 'A'
-  const suitInfo = suitSymbols[normalizedSuit] || suitSymbols.spades
-
-  return (
-    <motion.div
-      initial={{ rotateY: 180, opacity: 0 }}
-      animate={{ rotateY: 0, opacity: 1 }}
-      className="relative w-16 h-24 m-1 preserve-3d"
-    >
-      <div className={`absolute inset-0 rounded-md border-2 border-amber-600/50 bg-[#1A1A2E] shadow-xl flex flex-col p-1 ${hidden ? 'hidden' : ''}`}>
-        <div className="text-[10px] font-bold leading-none">{normalizedRank}</div>
-        <div className="text-[8px]" style={{ color: suitInfo.color }}>{suitInfo.symbol}</div>
-        <div className="flex-1 flex items-center justify-center text-3xl" style={{ color: suitInfo.color }}>
-          {suitInfo.symbol}
-        </div>
-        <div className="text-[10px] font-bold leading-none self-end rotate-180">{normalizedRank}</div>
-        <div className="text-[8px] self-end rotate-180" style={{ color: suitInfo.color }}>{suitInfo.symbol}</div>
-      </div>
-      {hidden && (
-        <div className="absolute inset-0 rounded-md border-2 border-amber-600/50 bg-[#0B0820] flex items-center justify-center overflow-hidden">
-          <div className="w-full h-full opacity-20 bg-[radial-gradient(circle_at_center,#B8860B_1px,transparent_1px)] bg-[length:8px_8px]" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border border-amber-600/30 flex items-center justify-center">
-              <div className="w-4 h-4 rounded-full border border-amber-600/10" />
-            </div>
-          </div>
-        </div>
-      )}
-    </motion.div>
-  )
-}
-
-const OccultSigil = ({ name, icon }: { name: string; icon: string }) => {
-  return (
-    <motion.div
-      animate={{ opacity: [0.4, 0.7, 0.4] }}
-      transition={{ duration: 4, repeat: Infinity }}
-      className="flex flex-col items-center justify-center space-y-1"
-    >
-      <div className="text-2xl">{icon}</div>
-      <span className="text-[10px] text-amber-700 uppercase font-bold">{name}</span>
-    </motion.div>
-  )
-}
-
-const Coin = ({ data, onDragEnd }: { data: CoinData, onDragEnd: (id: string, point: { x: number, y: number }) => void }) => {
-  const colors = {
-    copper: 'from-orange-700 to-orange-900 border-orange-400',
-    silver: 'from-slate-400 to-slate-600 border-slate-200',
-    gold: 'from-amber-400 to-amber-600 border-amber-200'
+  const speak = (force = false) => {
+    if (!force && Math.random() > 0.45) return
+    const q = soulStakesQuotes[Math.floor(Math.random() * soulStakesQuotes.length)]
+    setDialogue(q)
   }
 
-  return (
-    <motion.div
-      layout
-      drag
-      dragMomentum={false}
-      onDragEnd={(e, info) => onDragEnd(data.id, { x: info.point.x, y: info.point.y })}
-      className={`w-8 h-8 rounded-full border shadow-lg cursor-grab active:cursor-grabbing flex items-center justify-center bg-gradient-to-br ${colors[data.type]} select-none touch-none coin-glow`}
-      style={{ touchAction: 'none' }}
-      whileHover={{ scale: 1.1 }}
-      whileDrag={{ scale: 1.2, zIndex: 100 }}
-    >
-      <motion.div
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 3, repeat: Infinity }}
-        className="w-6 h-6 rounded-full border border-white/20"
-      />
-      <span className="text-[8px] font-bold text-white/80">{VALUES[data.type]}</span>
-    </motion.div>
-  )
-}
-
-// --- MAIN COMPONENT ---
-
-export const BlackjackModule = () => {
-  const [coins, setCoins] = useState<CoinData[]>(generateInitialCoins())
-  const [gameState, setGameState] = useState<GameState>({
-    game: null,
-    stage: 'loading',
-    dealerCards: [],
-    playerHands: [[]],
-    dealerValue: 0,
-    pouchValue: 50,
-    initialWager: 0,
-    debt: 0,
-    dialogue: "Looks like someone left their coins behind...",
-    sideBets: { '213': 0, 'pairs': 0, 'buster': 0 }
-  })
-
-  const boxesRef = useRef<{
-    walletRef: HTMLDivElement | null
-    wagerRef: HTMLDivElement | null
-    sigil213Ref: HTMLDivElement | null
-    sigilPairsRef: HTMLDivElement | null
-    sigilBusterRef: HTMLDivElement | null
-  }>({
-    walletRef: null,
-    wagerRef: null,
-    sigil213Ref: null,
-    sigilPairsRef: null,
-    sigilBusterRef: null
-  })
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const init = async () => {
-      await loadEngine()
-      if (Game) {
-        const game = new Game()
-        setGameState(prev => ({ ...prev, game, stage: 'ready' }))
-      }
-    }
-    init()
-  }, [])
-
-  const totals = useMemo(() => {
-    let wallet = 0, wager = 0, side = 0
-    coins.forEach(c => {
-      const value = VALUES[c.type]
-      if (c.location === 'wallet') wallet += value
-      else if (c.location === 'wager') wager += value
-      else if (c.location === '213' || c.location === 'pairs' || c.location === 'buster') side += value
+  // Game Logic
+  const createDeck = () => {
+    const suits = ['♠', '♥', '♦', '♣']
+    const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+    let newDeck: Card[] = []
+    suits.forEach(s => {
+      ranks.forEach(r => {
+        let v = isNaN(Number(r)) ? (r === 'A' ? 11 : 10) : parseInt(r)
+        newDeck.push({ r, s, v })
+      })
     })
-    return { wallet, wager, side }
-  }, [coins])
-
-  const handleDrop = (id: string, point: { x: number, y: number }) => {
-    const checkIntersect = (ref: HTMLDivElement | null) => {
-      if (!ref) return false
-      const rect = ref.getBoundingClientRect()
-      return (
-        point.x > rect.left && point.x < rect.right &&
-        point.y > rect.top && point.y < rect.bottom
-      )
-    }
-
-    let newLocation: 'wallet' | 'wager' | '213' | 'pairs' | 'buster' | null = null
-    if (checkIntersect(boxesRef.current.walletRef)) newLocation = 'wallet'
-    else if (checkIntersect(boxesRef.current.wagerRef)) newLocation = 'wager'
-    else if (checkIntersect(boxesRef.current.sigil213Ref)) newLocation = '213'
-    else if (checkIntersect(boxesRef.current.sigilPairsRef)) newLocation = 'pairs'
-    else if (checkIntersect(boxesRef.current.sigilBusterRef)) newLocation = 'buster'
-
-    if (newLocation) {
-      setCoins(prev => prev.map(c => c.id === id ? { ...c, location: newLocation! } : c))
-
-      const dialogueMap: Record<string, string> = {
-        '213': "A poker hand in the cards? Risky... but the 21+3 pays well if the stars align.",
-        'pairs': "Perfect pairs, perfect symmetry. A duplicate fate awaits.",
-        'buster': "You bet on my failure? How rude. But if I bust, you feast."
-      }
-      if (dialogueMap[newLocation]) {
-        setGameState(prev => ({ ...prev, dialogue: dialogueMap[newLocation!] }))
-      }
-    } else {
-      setGameState(prev => ({ ...prev, dialogue: "The void rejects your offering. It returns to its source." }))
-    }
+    return newDeck.sort(() => Math.random() - 0.5)
   }
 
-  const handlePayout = (amount: number) => {
-    let rem = Math.floor(amount)
-    const newCoins: CoinData[] = []
-    const ts = Date.now()
-
-    const add = (type: 'gold' | 'silver' | 'copper', val: number) => {
-      const count = Math.floor(rem / val)
-      rem %= val
-      for (let i = 0; i < count; i++) {
-        newCoins.push({
-          id: `w-${ts}-${type}-${i}`,
-          type,
-          location: 'wallet'
-        })
-      }
+  const calculatePoints = (hand: Card[]) => {
+    let p = 0
+    let a = 0
+    hand.forEach(c => {
+      if (c.r === 'A') a++
+      p += c.v
+    })
+    while (p > 21 && a > 0) {
+      p -= 10
+      a--
     }
-
-    add('gold', 10)
-    add('silver', 2)
-    add('copper', 1)
-    setCoins(prev => [...prev.filter(c => c.location === 'wallet'), ...newCoins])
+    return p
   }
 
   const handleDeal = () => {
-    if (totals.wager === 0) {
-      setGameState(prev => ({ ...prev, dialogue: "No coin, no cards. The Altar demands a sacrifice." }))
-      return
+    if (wager === 0) return
+    const newDeck = createDeck()
+    const pHand = [newDeck.pop()!, newDeck.pop()!]
+    const dHand = [newDeck.pop()!, newDeck.pop()!]
+    setDeck(newDeck)
+    setPlayerHand(pHand)
+    setDealerHand(dHand)
+    setIsPlaying(true)
+    setGameOver(false)
+    setInsuranceWager(0)
+
+    if (dHand[0].r === 'A') {
+      setIsOfferingInsurance(true)
+      setDialogue("Protect yourself?")
+    } else {
+      speak()
+      if (calculatePoints(pHand) === 21) handleEnd('win', pHand, dHand)
     }
-    const game = gameState.game
-    game.dispatch(actions.bet({ bet: totals.wager, playerId: 0 }))
-    game.dispatch(actions.dealCards())
-    const s = game.getState()
-    setGameState(prev => ({
-      ...prev,
-      stage: 'players-turn',
-      dealerCards: s.dealerCards || [],
-      playerHands: s.players?.[0]?.hands?.map((h: any) => h.cards) || [[]],
-      initialWager: totals.wager,
-      dialogue: "The cards are cast. What will you do, seeker?"
-    }))
   }
 
-  const handleAction = (act: string) => {
-    if ((act === 'double' || act === 'split') && totals.wager < gameState.initialWager * 2) {
-      setGameState(prev => ({
-        ...prev,
-        dialogue: `The stakes must be doubled (${gameState.initialWager * 2}). Drag more coins, seeker.`
-      }))
-      return
+  const handleInsurance = (buy: boolean) => {
+    const cost = Math.floor(wager / 2)
+    let currentInsurance = 0
+    if (buy && gold >= cost) {
+      setGold(prev => prev - cost)
+      currentInsurance = cost
+      setInsuranceWager(cost)
+      setDialogue("Safety secured.")
+    } else if (buy) {
+      setDialogue("You lack the funds for safety.")
+    } else {
+      setDialogue("Risky. I like it.")
     }
+    setIsOfferingInsurance(false)
 
-    const game = gameState.game
-    game.dispatch((actions as any)[act]())
-    const s = game.getState()
-    const isDone = s.stage.name === 'STAGE_DONE' || s.stage.name === 'STAGE_SHOWDOWN'
-
-    setGameState(prev => {
-      const ns = {
-        ...prev,
-        stage: (isDone ? 'done' : 'players-turn') as any,
-        dealerCards: s.dealerCards || [],
-        playerHands: s.players?.[0]?.hands?.map((h: any) => h.cards) || [[]],
-        dialogue: isDone ? "The hand is closed. The void settles." : prev.dialogue
-      }
-
-      if (isDone) {
-        const hand = s.players?.[0]?.hands?.[0]
-        if (hand && !hand.playerHasBusted) {
-          const dv = s.dealerValue?.hi || 0
-          const pv = hand.playerValue?.hi || 0
-          if (dv > 21 || pv > dv) {
-            setTimeout(() => handlePayout(totals.wager * 2), 1000)
-            ns.dialogue = "Fortune smiles. Take your winnings."
-          } else if (pv === dv) {
-            setTimeout(() => handlePayout(totals.wager), 1000)
-            ns.dialogue = "A draw. Balance restored."
-          } else {
-            ns.dialogue = "The house claims its due."
-            setCoins(c => c.filter(x => x.location === 'wallet'))
-          }
-        } else {
-          ns.dialogue = "Busted. The void is hungry."
-          setCoins(c => c.filter(x => x.location === 'wallet'))
-        }
-      }
-      return ns
-    })
+    if (calculatePoints(dealerHand) === 21) {
+      const pPoints = calculatePoints(playerHand)
+      handleEnd(pPoints === 21 ? 'push' : 'loss', playerHand, dealerHand, currentInsurance)
+    } else if (buy) {
+      setDialogue("Unnecessary expense. Gone.")
+      setInsuranceWager(0)
+    }
   }
 
-  const handleReplenish = () => {
-    setCoins(prev => [...prev, ...generateInitialCoins()])
-    setGameState(prev => ({ ...prev, debt: prev.debt + 50, dialogue: "A small debt for another chance..." }))
+  const handleHit = () => {
+    const newDeck = [...deck]
+    const card = newDeck.pop()
+    if (!card) return
+    const newHand = [...playerHand, card]
+    setDeck(newDeck)
+    setPlayerHand(newHand)
+    speak()
+    if (calculatePoints(newHand) > 21) handleEnd('loss', newHand, dealerHand)
   }
 
-  const handleForgive = () => {
-    setGameState(prev => ({ ...prev, debt: 0, dialogue: "Karmic debt forgiven. The slate is clean." }))
+  const handleStand = () => {
+    let dHand = [...dealerHand]
+    let currentDeck = [...deck]
+    while (calculatePoints(dHand) < 17) {
+      const card = currentDeck.pop()
+      if (card) dHand.push(card)
+    }
+    setDealerHand(dHand)
+    setDeck(currentDeck)
+    const pPoints = calculatePoints(playerHand)
+    const dPoints = calculatePoints(dHand)
+    if (dPoints > 21 || pPoints > dPoints) handleEnd('win', playerHand, dHand)
+    else if (dPoints > pPoints) handleEnd('loss', playerHand, dHand)
+    else handleEnd('push', playerHand, dHand)
   }
 
-  if (gameState.stage === 'loading') {
-    return (
-      <div className="h-full flex items-center justify-center text-amber-500 font-mono bg-[#0B0820]">
-        Invoking the Alchemist...
+  const handleEnd = (result: string, pHand: Card[], dHand: Card[], insPayout = 0) => {
+    setIsPlaying(false)
+    setIsOfferingInsurance(false)
+    setGameOver(true)
+    let totalWin = 0
+    if (result === 'win') totalWin += wager * 2
+    else if (result === 'push') totalWin += wager
+    if (insPayout > 0 && calculatePoints(dHand) === 21) totalWin += insPayout * 3
+    setGold(prev => prev + totalWin)
+    setWager(0)
+    setInsuranceWager(0)
+    speak(true)
+  }
+
+  const handleWager = (amt: number) => {
+    if (gold >= amt) {
+      setGold(prev => prev - amt)
+      setWager(prev => prev + amt)
+    }
+  }
+
+  const handleReplenish = (accept: boolean) => {
+    if (accept) {
+      setGold(300)
+      setDebt(prev => prev + 300)
+      setShowDebtPrompt(false)
+      setDialogue("The debt grows. Do not falter again.")
+    } else setDialogue("Until we meet again.")
+  }
+
+  useEffect(() => {
+    if (gold < 10 && wager === 0 && !isPlaying) {
+      setShowDebtPrompt(true)
+      setDialogue("More?")
+    }
+  }, [gold, wager, isPlaying])
+
+  // Components
+  const Card = ({ card, hidden }: { card: Card; hidden?: boolean }) => (
+    <div className={`relative w-20 h-28 border-4 border-[#2d1e12] shadow-[6px_6px_0_rgba(0,0,0,0.8)] flex flex-col p-2 font-bold ${hidden ? 'bg-[#3d1d4d] border-[#d4af37]' : 'bg-[#f4ead5] text-[#2d1e12]'}`}>
+      {hidden ? (
+        <div className="w-full h-full bg-[radial-gradient(#d4af37_10%,transparent_11%)] bg-[length:12px_12px] opacity-40" />
+      ) : (
+        <>
+          <div className="text-xl leading-none font-serif">{card.r}</div>
+          <div className={`flex-grow flex items-center justify-center ${['♥', '♦'].includes(card.s) ? 'text-[#8b0000]' : 'text-[#2d1e12]'}`}>
+            <SuitIcon suit={card.s} />
+          </div>
+          <div className="text-xl leading-none self-end rotate-180 font-serif">{card.r}</div>
+        </>
+      )}
+    </div>
+  )
+
+  const SnesButton = ({ children, onClick, active, disabled, color = "white", variant = "default" }: { children: React.ReactNode; onClick?: () => void; active?: boolean; disabled?: boolean; color?: string; variant?: string }) => (
+    <div
+      onClick={!disabled ? onClick : undefined}
+      className={`relative inline-flex items-center justify-center p-1 bg-[#4a4a4a] cursor-pointer transition-transform active:scale-95 ${disabled ? 'opacity-30 grayscale cursor-not-allowed' : 'hover:scale-105'}`}
+    >
+      <div
+        className={`w-full h-full px-8 py-3 border-2 flex items-center justify-center gap-2 ${variant === 'purple' ? 'bg-[#4a00e0]' : 'bg-[#000]'} ${active ? 'ring-2 ring-white/20' : ''}`}
+        style={{
+          borderColor: color,
+          color: color,
+          backgroundImage: 'linear-gradient(transparent 50%, rgba(0,0,0,0.5) 50%)',
+          backgroundSize: '100% 4px'
+        }}
+      >
+        <span className="text-xl font-bold uppercase tracking-[0.15em] font-mono italic">{children}</span>
       </div>
-    )
-  }
+    </div>
+  )
 
   return (
-    <div
-      ref={containerRef}
-      className="bj-triptych-container relative w-full bg-[#0B0820] text-[#F5F1E8] font-mono select-none overflow-hidden"
-      style={{ height: '800px' }}
-    >
+    <div className="min-h-screen bg-[#0a050d] text-[#e0d0b0] p-4 font-mono flex flex-col items-center selection:bg-[#5e2d8a] relative overflow-hidden seance-bg">
+      <div className="fixed inset-0 pointer-events-none z-50 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_4px]" />
+      <div className="fixed inset-0 pointer-events-none z-40 flicker-overlay" />
 
-      {/* SEGMENT 1: THE VOID (25%) */}
-      <div
-        className="absolute top-0 left-0 right-0 border-b border-amber-900/30 flex flex-col items-center justify-center p-4 bg-[#050410]"
-        style={{ height: '25%' }}
-      >
-        <div className="absolute top-2 left-4 text-[10px] uppercase text-amber-600/50 font-bold">The Void</div>
-        <div className="h-12 flex items-center mb-4 text-center px-8 max-w-2xl">
-          <Teletype text={gameState.dialogue} speed={40} />
-        </div>
-        <div className="flex space-x-2 flex-wrap justify-center">
-          {gameState.dealerCards.map((c, i) => (
-            <BlackjackCard
-              key={i}
-              {...c}
-              hidden={gameState.stage === 'players-turn' && i === 1}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* SEGMENT 2: THE ALTAR (40%) */}
-      <div
-        className="absolute left-0 right-0 border-b border-amber-900/30 flex bg-[#0B0820] relative"
-        style={{ top: '25%', height: '40%' }}
-      >
-        <div className="absolute top-2 left-4 text-[10px] uppercase text-amber-600/50 font-bold z-10">The Altar</div>
-
-        {/* Sigils Section */}
-        <div className="w-1/5 border-r border-amber-900/20 flex flex-col p-3 space-y-2 justify-center">
-          <div
-            key="sigil213"
-            ref={el => { boxesRef.current.sigil213Ref = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
-          >
-            <OccultSigil name="21+3" icon="👁️" />
-            {coins.filter(c => c.location === '213').map(c => (
-              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
-            ))}
-          </div>
-
-          <div
-            key="sigilPairs"
-            ref={el => { boxesRef.current.sigilPairsRef = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
-          >
-            <OccultSigil name="Pairs" icon="🌙" />
-            {coins.filter(c => c.location === 'pairs').map(c => (
-              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
-            ))}
-          </div>
-
-          <div
-            key="sigilBuster"
-            ref={el => { boxesRef.current.sigilBusterRef = el }}
-            className="flex-1 border border-amber-900/40 rounded bg-black/40 flex flex-wrap items-center justify-center gap-2 hover:border-amber-700/60 transition-colors"
-          >
-            <OccultSigil name="Buster" icon="⏳" />
-            {coins.filter(c => c.location === 'buster').map(c => (
-              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
+      <div className="w-full max-w-2xl flex flex-col gap-6 z-10 pt-4">
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-sm opacity-50 tracking-[0.4em] uppercase font-serif italic">The Dispassionate Eye</div>
+          <div className="flex gap-4 justify-center min-h-[112px]">
+            {dealerHand.map((c, i) => (
+              <Card key={i} card={c} hidden={i === 1 && !gameOver} />
             ))}
           </div>
         </div>
 
-        {/* Player Hand Section */}
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="flex gap-4 flex-wrap justify-center">
-            {gameState.playerHands.map((h, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="flex space-x-1 flex-wrap justify-center">
-                  {h.map((c, j) => (
-                    <BlackjackCard key={j} {...c} />
-                  ))}
-                </div>
-                {h.length > 0 && (
-                  <div className="text-[11px] text-amber-400 mt-2 font-bold">
-                    Value: {h.reduce((acc, c) => acc + (c.value || 0), 0)}
+        <div className="border-4 border-[#5e2d8a] bg-[#000] p-6 min-h-[140px] flex items-center justify-center text-center relative">
+          <div className="absolute -top-3 -left-3 w-6 h-6 bg-[#5e2d8a] border-2 border-[#d4af37] rotate-45" />
+          <div className="absolute -top-3 -right-3 w-6 h-6 bg-[#5e2d8a] border-2 border-[#d4af37] rotate-45" />
+          <div className="absolute -bottom-3 -left-3 w-6 h-6 bg-[#5e2d8a] border-2 border-[#d4af37] rotate-45" />
+          <div className="absolute -bottom-3 -right-3 w-6 h-6 bg-[#5e2d8a] border-2 border-[#d4af37] rotate-45" />
+          <div className="text-2xl italic text-[#c0a0e0] tracking-tight leading-snug font-serif">
+            "{dialogue}"
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex gap-4 justify-center min-h-[112px]">
+            {playerHand.map((c, i) => (
+              <Card key={i} card={c} />
+            ))}
+          </div>
+          <div className="flex items-center gap-4 mt-2">
+            <div className="text-2xl text-[#d4af37] bg-[#d4af37]/10 px-4 py-1 border-b-2 border-[#d4af37] font-serif">
+              {playerHand.length > 0 ? calculatePoints(playerHand) : 0}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6 bg-[#1a0f1f]/60 p-6 border-y-2 border-[#5e2d8a]/40 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-6">
+            {!showDebtPrompt ? (
+              <>
+                {!isPlaying ? (
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="flex gap-6">
+                      <div onClick={() => handleWager(100)} className="w-14 h-14 bg-[#d4af37] text-black border-4 border-[#2d1e12] flex items-center justify-center font-bold text-lg cursor-pointer hover:-translate-y-1 transition-transform shadow-[4px_4px_0_rgba(0,0,0,0.8)] font-serif">100</div>
+                      <div onClick={() => handleWager(50)} className="w-14 h-14 bg-[#a0a0a0] text-black border-4 border-[#2d1e12] flex items-center justify-center font-bold text-lg cursor-pointer hover:-translate-y-1 transition-transform shadow-[4px_4px_0_rgba(0,0,0,0.8)] font-serif">50</div>
+                      <div onClick={() => handleWager(10)} className="w-14 h-14 bg-[#8b4513] text-[#f4ead5] border-4 border-[#2d1e12] flex items-center justify-center font-bold text-lg cursor-pointer hover:-translate-y-1 transition-transform shadow-[4px_4px_0_rgba(0,0,0,0.8)] font-serif">10</div>
+                    </div>
+                    <div className="flex gap-4">
+                      <SnesButton onClick={handleDeal} active disabled={wager === 0} color="#d4af37">Deal</SnesButton>
+                    </div>
+                  </div>
+                ) : isOfferingInsurance ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="text-xs uppercase opacity-60 tracking-widest font-serif italic">Insurance? (Cost: {Math.floor(wager / 2)})</div>
+                    <div className="flex gap-8">
+                      <SnesButton onClick={() => handleInsurance(true)} active color="#d4af37">Insurance</SnesButton>
+                      <SnesButton onClick={() => handleInsurance(false)} color="#8b0000">No</SnesButton>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-8">
+                    <SnesButton onClick={handleHit} color="#fff" variant="purple">Hit</SnesButton>
+                    <SnesButton onClick={handleStand} color="#fff" variant="black">Stand</SnesButton>
                   </div>
                 )}
+              </>
+            ) : (
+              <div className="flex gap-8">
+                <SnesButton onClick={() => handleReplenish(true)} active color="#d4af37">Yes</SnesButton>
+                <SnesButton onClick={() => handleReplenish(false)} color="#8b0000">No</SnesButton>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* SEGMENT 3: THE TREASURY (35%) */}
-      <div
-        className="absolute left-0 right-0 bottom-0 flex p-4 bg-[#050410] relative"
-        style={{ height: '35%' }}
-      >
-        <div className="absolute top-2 left-4 text-[10px] uppercase text-amber-600/50 font-bold">The Treasury</div>
-
-        {/* Wallet Box */}
-        <div className="w-2/5 flex flex-col pr-4">
-          <div className="text-[11px] text-amber-600 mb-2 font-bold">WALLET ({totals.wallet})</div>
-          <div
-            ref={el => { boxesRef.current.walletRef = el }}
-            className="flex-1 border border-amber-900/40 bg-black/20 rounded flex flex-wrap items-start content-start gap-2 p-2 overflow-auto"
-          >
-            {coins.filter(c => c.location === 'wallet').map(c => (
-              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
-            ))}
-            {totals.wallet === 0 && totals.wager === 0 && (
-              <button
-                onClick={handleReplenish}
-                className="absolute inset-0 text-[11px] text-amber-500 hover:text-amber-400 font-bold hover:bg-amber-900/10 transition-colors w-full h-full flex items-center justify-center"
-              >
-                More?
-              </button>
             )}
           </div>
-        </div>
 
-        {/* Control Center */}
-        <div className="w-1/5 flex flex-col items-center justify-center space-y-3 px-2">
-          {gameState.stage === 'ready' && (
-            <button
-              onClick={handleDeal}
-              className="px-6 py-2 border-2 border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-black uppercase text-xs font-bold rounded transition-colors"
-            >
-              Deal
-            </button>
-          )}
-
-          {gameState.stage === 'players-turn' && (
-            <div className="flex flex-col space-y-2">
-              {['hit', 'stand', 'double'].map(a => (
-                <button
-                  key={a}
-                  onClick={() => handleAction(a)}
-                  className="px-3 py-1 border border-amber-500/50 text-amber-500 text-[10px] uppercase hover:bg-amber-500/10 rounded transition-colors"
-                >
-                  {a}
-                </button>
-              ))}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="border-2 border-[#d4af37]/30 p-2 flex flex-col items-center bg-black/60 shadow-inner">
+              <span className="text-[10px] uppercase text-[#d4af37]/60 font-serif tracking-widest">$$$</span>
+              <span className="text-xl text-[#d4af37] font-serif">{gold}</span>
             </div>
-          )}
-
-          {gameState.stage === 'done' && (
-            <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-2 border border-amber-600/50 text-amber-600 text-xs rounded hover:border-amber-600 transition-colors"
-            >
-              Reset
-            </button>
-          )}
-
-          {gameState.debt > 0 && (
-            <div className="flex flex-col items-center space-y-2">
-              <div className="text-[10px] text-red-500/60 font-bold">Debt: {gameState.debt}</div>
-              <button
-                onClick={handleForgive}
-                className="text-[8px] text-amber-900 uppercase hover:text-amber-700 font-bold transition-colors"
-              >
-                Forgive
-              </button>
+            <div className="border-2 border-[#ff4444]/30 p-2 flex flex-col items-center bg-black/60 shadow-inner">
+              <span className="text-[10px] uppercase text-[#ff4444] font-serif tracking-widest">Wager</span>
+              <span className="text-xl text-[#ff4444] font-serif">{wager + insuranceWager}</span>
             </div>
-          )}
-        </div>
-
-        {/* Wager Box */}
-        <div className="w-2/5 flex flex-col pl-4">
-          <div className="text-[11px] text-amber-600 mb-2 font-bold text-right">WAGER ({totals.wager})</div>
-          <div
-            ref={el => { boxesRef.current.wagerRef = el }}
-            className="flex-1 border border-amber-900/40 bg-black/20 rounded flex flex-wrap items-start content-start gap-2 p-2 overflow-auto"
-          >
-            {coins.filter(c => c.location === 'wager').map(c => (
-              <Coin key={c.id} data={c} onDragEnd={handleDrop} />
-            ))}
+            <div className="border-2 border-[#5e2d8a]/50 p-2 flex flex-col items-center bg-black/60 shadow-[inset_0_0_15px_rgba(94,45,138,0.3)]">
+              <span className="text-[10px] uppercase text-[#c0a0e0]/60 font-serif tracking-widest font-bold">Karmic Debt</span>
+              <span className="text-xl text-[#c0a0e0] font-serif">{debt}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <style jsx global>{`
-        .bj-triptych-container {
-          position: relative;
-          overflow: hidden;
+      <style>{`
+        .seance-bg {
+          background: radial-gradient(circle at center, #1a0f1f 0%, #05050a 100%);
         }
-
-        .preserve-3d {
-          transform-style: preserve-3d;
+        @keyframes flicker {
+          0%, 100% { background: rgba(212, 175, 55, 0.02); }
+          50% { background: rgba(212, 175, 55, 0.05); }
+          75% { background: rgba(212, 175, 55, 0.03); }
         }
-
-        .coin-glow {
-          animation: glow 3s infinite ease-in-out;
+        .flicker-overlay {
+          animation: flicker 4s infinite linear;
+          pointer-events: none;
         }
-
-        @keyframes glow {
-          0%, 100% {
-            box-shadow: 0 0 5px rgba(184, 134, 11, 0.2), inset 0 0 8px rgba(184, 134, 11, 0.1);
-          }
-          50% {
-            box-shadow: 0 0 15px rgba(184, 134, 11, 0.5), inset 0 0 12px rgba(184, 134, 11, 0.2);
-          }
-        }
-
-        /* Touch action for mobile stability */
-        @supports (touch-action: none) {
-          .coin-glow {
-            touch-action: none;
-          }
+        .font-serif {
+          font-family: 'Georgia', serif;
         }
       `}</style>
     </div>
