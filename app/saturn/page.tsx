@@ -117,19 +117,16 @@ export default function SaturnPage() {
         width: '100%',
         height: '100%',
       }}>
-        <SaturnScene isInteractive={!isGameOverlayOpen} isMobile={isMobile} />
+        <SaturnScene isInteractive={true} isMobile={isMobile} />
       </div>
 
       {/* Game Module Selector Pill Button */}
-      {!isGameMenuOpen && !isGameOverlayOpen && (
+      {!isGameOverlayOpen && (
         <div style={{
           position: 'fixed',
-          top: isMobile ? '120px' : '90px',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          top: isMobile ? '80px' : '50px',
+          left: isMobile ? '12px' : 'calc(50% - 450px)',
           zIndex: 1005,
-          display: 'flex',
-          justifyContent: 'center',
         }}>
           <button
             onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
@@ -147,18 +144,17 @@ export default function SaturnPage() {
             }}
             style={pillButtonStyle}
           >
-            {selectedGameModule ? 'SOUL STAKES' : '⚡ GAMES'}
+            STATION {selectedGameModule ? ` - ${selectedGameModule.replace('-', ' ')}` : ''}
           </button>
         </div>
       )}
 
       {/* Game Menu Dropdown */}
-      {isGameMenuOpen && !isGameOverlayOpen && (
+      {isGameMenuOpen && (
         <div style={{
           position: 'fixed',
-          top: isMobile ? '160px' : '120px',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          top: isMobile ? '120px' : '90px',
+          left: isMobile ? '12px' : 'calc(50% - 450px)',
           zIndex: 1005,
         }} ref={gameMenuRef}>
           <div style={dropdownMenuStyle}>
@@ -195,9 +191,8 @@ export default function SaturnPage() {
           {/* Game Module Selector Pill (visible over overlay) */}
           <div style={{
             position: 'fixed',
-            top: isMobile ? '120px' : '90px',
-            left: '50%',
-            transform: 'translateX(-50%)',
+            top: isMobile ? '80px' : '50px',
+            left: isMobile ? '12px' : 'calc(50% - 450px)',
             zIndex: 1002,
           }}>
             <button
@@ -217,7 +212,7 @@ export default function SaturnPage() {
                 color: '#B8860B',
               }}
             >
-              SOUL STAKES
+              STATION {selectedGameModule ? ` - ${selectedGameModule.replace('-', ' ')}` : ''}
             </button>
           </div>
 
