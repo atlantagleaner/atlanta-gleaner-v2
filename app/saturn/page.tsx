@@ -191,7 +191,6 @@ export default function SaturnPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: isMobile ? '60px 12px 12px' : '80px 24px 24px',
         }}>
           {/* Game Module Selector Pill (visible over overlay) */}
           <div style={{
@@ -251,18 +250,17 @@ export default function SaturnPage() {
             </div>
           )}
 
-          {/* Iframe Container */}
+          {/* Iframe Container - Fixed Viewport */}
           <div style={{
             position: 'relative',
-            width: '100%',
-            height: '100%',
-            maxWidth: '900px',
-            maxHeight: '80vh',
+            width: isMobile ? 'calc(100vw - 24px)' : '900px',
+            height: isMobile ? 'calc(100vh - 180px)' : '700px',
             backgroundColor: '#05050a',
             borderRadius: '4px',
             overflow: 'hidden',
             border: '1px solid rgba(94, 45, 138, 0.4)',
             zIndex: 1001,
+            flexShrink: 0,
           }}>
             <iframe
               src="/the-soul-stakes-pro.html"
@@ -271,6 +269,7 @@ export default function SaturnPage() {
                 height: '100%',
                 border: 'none',
                 borderRadius: '4px',
+                display: 'block',
               }}
               title="The Soul Stakes Game"
             />
