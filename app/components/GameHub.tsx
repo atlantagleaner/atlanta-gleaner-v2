@@ -2,22 +2,10 @@
 
 import React, { useRef, useEffect, useState } from 'react'
 import { Play, ChevronDown } from 'lucide-react'
-import { TarotModule } from '@/app/saturn/components/TarotModule'
-import { AstrologyModule } from '@/app/saturn/components/AstrologyModule'
 import { CrystalBallModule } from '@/app/saturn/components/CrystalBallModule'
 import { BlackjackModule } from '@/app/saturn/components/BlackjackModule'
 
 const games = [
-  {
-    id: 'tarot',
-    name: 'TAROT READING',
-    description: 'Past, Present, Future',
-  },
-  {
-    id: 'astrology',
-    name: 'ASTROLOGY',
-    description: 'Daily Reading',
-  },
   {
     id: 'sphere',
     name: 'CRYSTAL SPHERE',
@@ -115,10 +103,6 @@ export const GameHub: React.FC<GameHubProps> = ({
   // Render game module based on active game
   const renderGameModule = () => {
     switch (activeGame.id) {
-      case 'tarot':
-        return <TarotModule />
-      case 'astrology':
-        return <AstrologyModule />
       case 'sphere':
         return <CrystalBallModule />
       case 'blackjack':
