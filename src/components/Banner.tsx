@@ -26,8 +26,11 @@ export function Banner() {
   const [imgSrc,    setImgSrc]    = useState('/washington.png')
   const [logoHover, setLogoHover] = useState(false)
   const [isSaturn,  setIsSaturn]  = useState(false)
-  const isMobile = useMobileDetect(768)
+  const { isMobile, mounted } = useMobileDetect(768)
   const themeIdx = useRef(0)
+
+  // Only apply mobile layout after hydration to prevent mismatch
+  const effectiveIsMobile = mounted ? isMobile : false
 
   useEffect(() => {
     // Check if we're inside a Saturn page container
@@ -79,7 +82,7 @@ export function Banner() {
         gap: SPACING.sm,
         margin: `0 0 ${SPACING.xxl} 0`,
       }}>
-        {isMobile ? (
+        {effectiveIsMobile ? (
           <>
             <p style={TAGLINE_STYLE}>Legal News &</p>
             <p style={TAGLINE_STYLE}>Georgia Case Law Updates</p>

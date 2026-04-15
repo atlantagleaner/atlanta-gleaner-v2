@@ -276,7 +276,10 @@ const monthToggle: CSSProperties = {
 // ── Shared Case Link Component ────────────────────────────────────────────────
 
 function CaseArchiveRow({ c }: { c: CaseLaw }) {
-  const isMobile = useMobileDetect(640)
+  const { isMobile, mounted } = useMobileDetect(640)
+
+  // Only apply mobile layout after hydration to prevent mismatch
+  const effectiveIsMobile = mounted ? isMobile : false
 
   return (
     <Link
@@ -284,11 +287,11 @@ function CaseArchiveRow({ c }: { c: CaseLaw }) {
       className="case-archive-link"
       style={{
         display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) 280px',
+        gridTemplateColumns: effectiveIsMobile ? '1fr' : 'minmax(0, 1fr) 280px',
         columnGap: SPACING.md,
-        rowGap: isMobile ? SPACING.xs : 0,
+        rowGap: effectiveIsMobile ? SPACING.xs : 0,
         alignItems: 'start',
-        padding: isMobile ? `${SPACING.md} ${SPACING.lg}` : undefined,
+        padding: effectiveIsMobile ? `${SPACING.md} ${SPACING.lg}` : undefined,
       }}
     >
       <div style={{
@@ -304,7 +307,7 @@ function CaseArchiveRow({ c }: { c: CaseLaw }) {
           lineHeight: 1.15,
           minWidth: 0,
           marginBottom: 0,
-          minHeight: isMobile ? 'auto' : '2.3em',
+          minHeight: effectiveIsMobile ? 'auto' : '2.3em',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 2,
@@ -334,18 +337,18 @@ function CaseArchiveRow({ c }: { c: CaseLaw }) {
       {c.tags && c.tags.length > 0 && (
         <div style={{
           minWidth: 0,
-          alignSelf: isMobile ? 'start' : 'stretch',
+          alignSelf: effectiveIsMobile ? 'start' : 'stretch',
         }}>
           <div className="case-archive-tags" style={{
             ...T.micro,
-            textAlign: isMobile ? 'left' : 'right',
+            textAlign: effectiveIsMobile ? 'left' : 'right',
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
             lineHeight: 1.45,
             overflow: 'hidden',
             overflowWrap: 'anywhere',
-            paddingLeft: isMobile ? 0 : SPACING.md,
-            borderLeft: isMobile ? 'none' : `1px solid ${PALETTE_CSS.border}`,
+            paddingLeft: effectiveIsMobile ? 0 : SPACING.md,
+            borderLeft: effectiveIsMobile ? 'none' : `1px solid ${PALETTE_CSS.border}`,
           }}>
             {c.tags.join(' · ')}
           </div>

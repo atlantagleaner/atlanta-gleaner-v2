@@ -24,7 +24,10 @@ interface ResizablePanelsProps {
 // ── Main component ─────────────────────────────────────────────────────────
 export function ResizablePanels({ left, center, right, mobileInitialOpen, mobileOrder }: ResizablePanelsProps) {
   const panels = [left, center, right]
-  const isMobile = useMobileDetect(768)
+  const { isMobile, mounted } = useMobileDetect(768)
+
+  // Only apply mobile layout after hydration to prevent mismatch
+  const effectiveIsMobile = mounted ? isMobile : false
 
   const [widths,   setWidths]   = useState([24, 50, 26])
   const [order,    setOrder]    = useState([0, 1, 2])
@@ -208,7 +211,7 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
   }, [])
 
   // ── Mobile ───────────────────────────────────────────────────────────────
-  if (isMobile) {
+  if (effectiveIsMobile) {
     const finalOrder = mobileOrder ?? [0, 1, 2]
     return (
       <div style={{ padding: '0 12px 48px' }}>
