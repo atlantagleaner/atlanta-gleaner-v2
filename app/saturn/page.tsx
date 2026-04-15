@@ -13,6 +13,11 @@ export default function SaturnPage() {
   const [isGameContainerOpen, setIsGameContainerOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
+  const handleToggleGameContainer = () => {
+    console.log('SATURN button clicked. Current state:', isGameContainerOpen)
+    setIsGameContainerOpen(prev => !prev)
+  }
+
   // Apply Saturn theme to document element for global CSS selectors
   useEffect(() => {
     document.documentElement.setAttribute('data-saturn', 'true')
@@ -32,16 +37,17 @@ export default function SaturnPage() {
   return (
     <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Saturn Navbar - Always interactive */}
-      <SaturnNavbar onRunwayClick={() => setIsGameContainerOpen(!isGameContainerOpen)} />
-      {/* Interactive Saturn Simulation - Always interactive */}
+      <SaturnNavbar onRunwayClick={handleToggleGameContainer} />
+      {/* Interactive Saturn Simulation - Background layer */}
       <div style={{
         position: 'fixed',
         inset: 0,
         zIndex: 0,
         width: '100%',
         height: '100%',
+        pointerEvents: isGameContainerOpen ? 'none' : 'auto',
       }}>
-        <SaturnScene isInteractive={true} isMobile={isMobile} />
+        <SaturnScene isInteractive={!isGameContainerOpen} isMobile={isMobile} />
       </div>
 
       {/* Game Container Overlay */}

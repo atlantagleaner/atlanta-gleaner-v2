@@ -38,12 +38,13 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[280]"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+        style={{ zIndex: 1000 }}
         onClick={onClose}
       />
 
       {/* Container */}
-      <div className="fixed inset-0 z-[290] flex items-center justify-center p-4 pointer-events-none">
+      <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none" style={{ zIndex: 1001 }}>
         <div className="pointer-events-auto flex flex-col gap-3 max-w-5xl w-full max-h-[90vh] relative">
 
           {/* Game Selector Pill */}
