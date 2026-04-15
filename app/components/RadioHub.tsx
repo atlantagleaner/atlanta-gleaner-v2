@@ -4,30 +4,50 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Play, Music, ChevronRight, Volume2, ChevronDown } from 'lucide-react';
 
 const artists = [
+  // YouTube stations
   {
     id: 'azealia-banks',
     name: 'AZEALIA BANKS RADIO',
     genre: 'HOUSE / BALLROOM',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRL1aXgmMCI7HTABHPmVkTqP',
   },
   {
     id: 'the-field',
     name: 'THE FIELD RADIO',
     genre: 'MINIMAL TECHNO',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRJcxMG33aQScuQmYIwEuFvS',
   },
   {
     id: 'minimal-techno',
     name: 'MINIMAL TECHNO',
     genre: 'BLUES',
+    type: 'youtube' as const,
     playlistId: 'PL7uGNWx-iG9YZuPa0pfuF1uSrVLCpdoKN',
   },
   {
     id: 'blues-remedy',
     name: 'BLUES REMEDY',
     genre: 'BLUES',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRJEE6DTaigv_JWQ7Anbx9Cu',
-  }
+  },
+  // Spotify stations
+  {
+    id: 'spotify-postpunk',
+    name: 'POST-PUNK ESSENTIALS VOL. 1',
+    genre: 'POST-PUNK',
+    type: 'spotify' as const,
+    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
+  },
+  {
+    id: 'spotify-srv',
+    name: 'STEVIE RAY VAUGHAN RADIO',
+    genre: 'BLUES',
+    type: 'spotify' as const,
+    playlistId: '37i9dQZF1E4qdaF453XK0y' as string | undefined,
+  },
 ];
 
 interface RadioHubProps {
@@ -117,6 +137,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
   // Background playback iframe (hidden, kept in DOM for continuous audio)
   const BackgroundPlayer = () => {
     if (!isPlayingState || isUIVisible) return null;
+    if (activeArtist.type === 'spotify') return null; // Spotify iframes cannot autoplay when hidden
     return (
       <iframe
         width="0"
@@ -140,9 +161,9 @@ export const RadioHub: React.FC<RadioHubProps> = ({
     return (
       <>
         <BackgroundPlayer />
-      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', overflowY: 'auto' }}>
+      <div style={{ background: '#050505', color: '#FFF', padding: '20px', width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '16px', overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
         {/* Station Selector Dropdown */}
-        <div style={{ width: '100%', maxWidth: '280px', margin: '0 auto', position: 'relative' }} ref={menuRef}>
+        <div style={{ width: '100%', position: 'relative' }} ref={menuRef}>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             style={{
@@ -220,11 +241,12 @@ export const RadioHub: React.FC<RadioHubProps> = ({
         <div
           style={{
             ...playerStyle,
-            aspectRatio: '16 / 9',
+            ...(activeArtist.type === 'spotify'
+              ? { height: '152px' }
+              : { aspectRatio: '16 / 9' }),
             overflow: 'hidden',
             position: 'relative',
             width: '100%',
-            maxWidth: '280px',
             boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8)',
           }}
         >
@@ -280,6 +302,17 @@ export const RadioHub: React.FC<RadioHubProps> = ({
                 </h2>
               </div>
             </div>
+          ) : activeArtist.type === 'spotify' && activeArtist.playlistId ? (
+            <iframe
+              src={`https://open.spotify.com/embed/playlist/${activeArtist.playlistId}?utm_source=generator&theme=0`}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              style={{ position: 'absolute', inset: 0 }}
+              title={`${activeArtist.name} Spotify`}
+            ></iframe>
           ) : (
             <iframe
               width="100%"
@@ -295,7 +328,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
         </div>
 
         {/* Compact Controls */}
-        <div style={{ width: '100%', maxWidth: '280px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', paddingLeft: '16px', paddingRight: '16px', boxSizing: 'border-box' }}>
+        <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', paddingLeft: '16px', paddingRight: '16px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div
               style={{
@@ -336,6 +369,10 @@ export const RadioHub: React.FC<RadioHubProps> = ({
           @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
+          }
+          /* Hide scrollbar while maintaining scrollability */
+          div::-webkit-scrollbar {
+            display: none;
           }
         `}</style>
       </div>
@@ -485,6 +522,17 @@ export const RadioHub: React.FC<RadioHubProps> = ({
               </h2>
             </div>
           </div>
+        ) : activeArtist.type === 'spotify' && activeArtist.playlistId ? (
+          <iframe
+            src={`https://open.spotify.com/embed/playlist/${activeArtist.playlistId}?utm_source=generator&theme=0`}
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+            style={{ position: 'absolute', inset: 0 }}
+            title={`${activeArtist.name} Spotify`}
+          ></iframe>
         ) : (
           <iframe
             width="100%"

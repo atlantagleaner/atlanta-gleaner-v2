@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react'
 
 interface SaturnNavbarProps {
-  onRunwayClick?: () => void
+  onResetOrbit?: () => void
 }
 
-export function SaturnNavbar({ onRunwayClick }: SaturnNavbarProps) {
+export function SaturnNavbar({ onResetOrbit }: SaturnNavbarProps) {
   const [time, setTime] = useState(new Date())
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -109,9 +109,9 @@ export function SaturnNavbar({ onRunwayClick }: SaturnNavbarProps) {
             )}
           </div>
 
-          {/* Row 2: Saturn Toggle Button */}
+          {/* Row 2: Saturn Reset Orbit Button */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={onRunwayClick} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
+            <button onClick={onResetOrbit} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
               SATURN
             </button>
           </div>
@@ -156,7 +156,7 @@ export function SaturnNavbar({ onRunwayClick }: SaturnNavbarProps) {
               )}
             </div>
 
-            <button onClick={onRunwayClick} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
+            <button onClick={onResetOrbit} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
               SATURN
             </button>
           </div>
