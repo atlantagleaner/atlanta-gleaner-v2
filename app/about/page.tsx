@@ -181,7 +181,7 @@ export default function AboutPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>THE ATLANTA GLEANER</span>
-                <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>ABOUT</span>
+                <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
               </div>
 
               <div style={{ marginLeft: 'auto' }}>
@@ -218,7 +218,7 @@ export default function AboutPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 <span style={{ fontWeight: 800, color: '#FFB347', fontSize: '12px' }}>THE ATLANTA GLEANER</span>
-                <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>ABOUT</span>
+                <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
               </div>
 
               <div style={{ marginLeft: 'auto' }}>

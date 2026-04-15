@@ -685,7 +685,17 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVolumeNumber, setSelectedVolumeNumber] = useState<typeof VOLUMES[number]['number']>(VOLUMES[0].number)
+  const [isMobile, setIsMobile] = useState(false)
   const deferredSearchQuery = useDeferredValue(searchQuery)
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const searchableData = useMemo(() => CASES.map(buildSearchableCase), [])
 
@@ -747,6 +757,7 @@ export default function ArchivePage() {
       <main className="ag-archive-main" style={{
         minHeight:   '100vh',
         background:  PALETTE.warm,
+        paddingTop: isMobile ? '100px' : '120px',
       }}>
         <Banner />
 
@@ -756,8 +767,8 @@ export default function ArchivePage() {
           padding:  `0 ${SPACING.xl}`,
         }}>
 
-        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: '0' }}>
-          <h1 style={{ ...T.pageTitle, paddingTop: '20px' }}>
+        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
+          <h1 style={{ ...T.pageTitle, paddingTop: SPACING.xl, color: PALETTE.black, margin: 0 }}>
             Archive
           </h1>
         </div>
