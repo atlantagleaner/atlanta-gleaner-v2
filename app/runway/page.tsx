@@ -204,6 +204,7 @@ export default function OrbitalPage() {
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isLandscape, setIsLandscape] = useState(false)
   const [isRadioHubOpen, setIsRadioHubOpen] = useState(true)
   const [isRadioHubPlaying, setIsRadioHubPlaying] = useState(false)
   const [activeArtist, setActiveArtist] = useState(artists[0])
@@ -217,6 +218,7 @@ export default function OrbitalPage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
+      setIsLandscape(window.innerWidth > window.innerHeight)
     }
     handleResize()
     window.addEventListener('resize', handleResize)
@@ -392,7 +394,7 @@ export default function OrbitalPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isMobile ? '130px' : '0',
+            paddingTop: isMobile ? (isLandscape ? '170px' : '130px') : '0',
             animation: 'fadeIn 0.3s ease-out',
             pointerEvents: 'none'
           }}
