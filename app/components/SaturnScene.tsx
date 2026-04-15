@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 export interface SaturnSceneProps {
-  onSceneReady?: (camera: THREE.PerspectiveCamera) => void
+  onSceneReady?: (camera: THREE.PerspectiveCamera, resetOrbit: () => void) => void
   isInteractive?: boolean
   isMobile?: boolean
 }
@@ -82,8 +82,16 @@ export default function SaturnScene({ onSceneReady, isInteractive = true, isMobi
     controlsRef.current = controls
     sceneRef.current = { scene, camera, renderer, controls }
 
-    // Expose camera to parent
-    onSceneReady?.(camera)
+    // Reset orbit to default position
+    const resetOrbit = () => {
+      camera.position.set(0, 18, 65)
+      camera.updateProjectionMatrix()
+      controls.target.set(0, 0, 0)
+      controls.update()
+    }
+
+    // Expose camera and reset function to parent
+    onSceneReady?.(camera, resetOrbit)
 
     // 5. Scientific Lighting (Sunlight is mostly absorbed by the planet in JWST views)
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.05)
