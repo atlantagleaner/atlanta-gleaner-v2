@@ -153,30 +153,57 @@ function EventHorizonScene({ onSceneReady, isRadioHubOpen = false }: EventHorizo
 
 // --- Main Application UI ---
 const artists = [
+  // YouTube stations
   {
     id: 'azealia-banks',
     name: 'AZEALIA BANKS RADIO',
     genre: 'HOUSE / BALLROOM',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRL1aXgmMCI7HTABHPmVkTqP',
   },
   {
     id: 'the-field',
     name: 'THE FIELD RADIO',
     genre: 'MINIMAL TECHNO',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRJcxMG33aQScuQmYIwEuFvS',
   },
   {
     id: 'minimal-techno',
     name: 'MINIMAL TECHNO',
     genre: 'BLUES',
+    type: 'youtube' as const,
     playlistId: 'PL7uGNWx-iG9YZuPa0pfuF1uSrVLCpdoKN',
   },
   {
     id: 'blues-remedy',
     name: 'BLUES REMEDY',
     genre: 'BLUES',
+    type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRJEE6DTaigv_JWQ7Anbx9Cu',
-  }
+  },
+  // Spotify stations
+  {
+    id: 'spotify-chill',
+    name: 'SPOTIFY CHILL',
+    genre: 'AMBIENT',
+    type: 'spotify' as const,
+    playlistId: '37i9dQZF1DXq0flaFJnVdW' as string | undefined,
+  },
+  {
+    id: 'spotify-indie',
+    name: 'SPOTIFY INDIE',
+    genre: 'INDIE',
+    type: 'spotify' as const,
+    playlistId: undefined as string | undefined,
+  },
+  {
+    id: 'spotify-electronic',
+    name: 'SPOTIFY ELECTRONIC',
+    genre: 'ELECTRONIC',
+    type: 'spotify' as const,
+    playlistId: undefined as string | undefined,
+  },
 ];
 
 export default function OrbitalPage() {
@@ -372,7 +399,7 @@ export default function OrbitalPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isMobile ? '80px' : '0',
+            paddingTop: isMobile ? '130px' : '0',
             animation: 'fadeIn 0.3s ease-out',
             pointerEvents: 'none'
           }}
@@ -393,7 +420,7 @@ export default function OrbitalPage() {
             style={{
               maxWidth: isMobile ? '90vw' : '900px',
               width: '100%',
-              maxHeight: isMobile ? '50vh' : '80vh',
+              maxHeight: isMobile ? 'calc(100vh - 140px)' : '80vh',
               borderRadius: '32px',
               overflow: 'hidden',
               boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
