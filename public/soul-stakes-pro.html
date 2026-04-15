@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Stakes Pro Edition</title>
+    <style>
+        :root {
+            --color-bg-dark: #11001c;
+            --color-bg-deeper: #0B0820;
+            --color-bg-gradient-light: #2b0033;
+            --color-bg-gradient-dark: #12001a;
+            --color-card-light: #ffedc7;
+            --color-card-dark: #3a0024;
+            --color-gold: #ffd700;
+            --color-gold-light: #ffea75;
+            --color-cyan: #00f0ff;
+            --color-cyan-light: #ccffff;
+            --color-red: #d90429;
+            --color-red-light: #ff4d6d;
+            --color-text-primary: #ffedc7;
+            --color-text-dark: #1a0011;
+            --color-purple: #59185e;
+            --color-purple-dark: #4a0024;
+            --color-dealer: #ff4d6d;
+            --color-black: #000;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-serif: 'EB Garamond', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: linear-gradient(180deg, #2b0b3a 0%, #15001a 50%, #30051b 100%);
+            color: var(--color-text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 1rem;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Hide scrollbar on mobile, show on desktop */
+        @media (max-width: 768px) {
+            body {
+                scrollbar-width: none;
+            }
+            body::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 64rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding-top: 1rem;
+        }
+
+        /* Scanline effect overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.3) 50%
+            );
+            background-size: 100% 4px;
+        }
+
+        /* Flicker overlay */
+        .flicker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+            animation: flicker 4s infinite linear;
+        }
+
+        @keyframes flicker {
+            0%, 100% { background: rgba(255, 215, 0, 0.02); }
+            50% { background: rgba(255, 215, 0, 0.05); }
+            75% { background: rgba(217, 4, 41, 0.04); }
+        }
+
+        /* Dealer Section */
+        .dealer-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dealer-label {
+            font-size: 0.875rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            font-style: italic;
+            color: var(--color-dealer);
+            text-shadow: 2px 2px 0 var(--color-black);
+            font-weight: bold;
+            font-family: var(--font-serif);
+        }
+
+        .dealer-hand {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            min-height: 7rem;
+            flex-wrap: wrap;
+        }
+
+        .dealer-stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .dealer-points {
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            background: rgba(26, 0, 17, 0.8);
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--color-gold);
+            box-shadow: 4px 4px 0 var(--color-black);
+            font-family: var(--font-serif);
+            text-shadow: 2px 2px 0 var(--color-black);
+        }
+
+        /* Card Styles */
+        .card {
+            position: relative;
+            width: 5rem;
+            height: 7rem;
+            border: 2px solid var(--color-black);
+            box-shadow: 4px 4px 0 var(--color-black);
+            ring: 2px;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem;
+            font-weight: bold;
+            gap: 0.25rem;
+        }
+
+        .card.hidden {
+            background: #3a0024;
+            background-image:
+                radial-gradient(circle at center, #d90429 10%, transparent 20%),
+                radial-gradient(circle at center, #ffd700 10%, transparent 20%);
+            background-size: 16px 16px, 8px 8px;
+            background-position: 0 0, 4px 4px;
+        }
+
+        .card.visible {
+            background: var(--color-card-light);
+            color: var(--color-text-dark);
+        }
+
+        .card-rank-top {
+            font-size: 1.25rem;
+            line-height: 1;
+            font-family: var(--font-serif);
+        }
+
+        .card-suit {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.2));
+        }
+
+        .card-suit svg {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .card-suit.red {
+            color: #d90429;
+        }
+
+        .card-suit.black {
+            color: var(--color-text-dark);
+        }
+
+        .card-rank-bottom {
+            font-size: 1.25rem;
+            line-height: 1;
+            align-self: flex-end;
+            transform: rotate(180deg);
+            font-family: var(--font-serif);
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            width: 66.666%;
+            margin: 0 auto;
+            border: 4px solid var(--color-black);
+            background: linear-gradient(to bottom, #2b0033, #12001a);
+            padding: 1rem;
+            min-height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            box-shadow: 6px 6px 0 var(--color-black);
+            border: 2px inset var(--color-purple);
+        }
+
+        .dialogue-corner {
+            position: absolute;
+            width: 1rem;
+            height: 1rem;
+            background: var(--color-gold);
+            border: 2px solid var(--color-black);
+            box-shadow: 2px 2px 0 var(--color-black);
+        }
+
+        .dialogue-corner.tl { top: -0.5rem; left: -0.5rem; }
+        .dialogue-corner.tr { top: -0.5rem; right: -0.5rem; }
+        .dialogue-corner.bl { bottom: -0.5rem; left: -0.5rem; }
+        .dialogue-corner.br { bottom: -0.5rem; right: -0.5rem; }
+
+        .dialogue-text {
+            font-size: 1.0625rem;
+            font-style: italic;
+            letter-spacing: -0.025em;
+            line-height: 1.375rem;
+            font-family: var(--font-serif);
+            font-weight: bold;
+            color: white;
+            text-shadow:
+                2px 2px 0 var(--color-black),
+                -1px -1px 0 var(--color-black),
+                1px -1px 0 var(--color-black),
+                -1px 1px 0 var(--color-black),
+                1px 1px 0 var(--color-black),
+                0 0 8px var(--color-cyan),
+                0 0 15px #0055ff;
+            animation: floatGhostly 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGhostly {
+            0%, 100% {
+                transform: translateY(0);
+                text-shadow:
+                    2px 2px 0 var(--color-black),
+                    -1px -1px 0 var(--color-black),
+                    1px -1px 0 var(--color-black),
+                    -1px 1px 0 var(--color-black),
+                    1px 1px 0 var(--color-black),
+                    0 0 8px var(--color-cyan),
+                    0 0 15px #0055ff;
+            }
+            50% {
+                transform: translateY(-2px);
+                text-shadow:
+                    3px 4px 0 var(--color-black),
+                    -1px -1px 0 var(--color-black),
+                    1px -1px 0 var(--color-black),
+                    -1px 1px 0 var(--color-black),
+                    1px 1px 0 var(--color-black),
+                    0 0 12px var(--color-cyan),
+                    0 0 25px #0055ff;
+            }
+        }
+
+        /* Player Hands Area */
+        .player-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 10rem;
+        }
+
+        .hands-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .hand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .hand.active {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+        }
+
+        .hand.inactive {
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+
+        .hand-cards {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .hand-stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .hand-points {
+            font-size: 1.25rem;
+            padding: 0.25rem 1rem;
+            border: 2px solid;
+            box-shadow: 4px 4px 0 var(--color-black);
+            font-family: var(--font-serif);
+        }
+
+        .hand-points.normal {
+            color: var(--color-gold);
+            background: rgba(26, 0, 17, 0.8);
+            border-color: var(--color-gold);
+        }
+
+        .hand-points.bust {
+            color: #ff003c;
+            background: rgba(74, 0, 36, 0.8);
+            border-color: #ff003c;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background: linear-gradient(to right, rgba(18, 0, 26, 0.95), rgba(43, 0, 51, 0.95), rgba(18, 0, 26, 0.95));
+            padding: 1.25rem 1rem;
+            border-top: 4px solid var(--color-gold);
+            border-bottom: 4px solid var(--color-gold);
+            box-shadow: 0 0 30px rgba(217, 4, 41, 0.2);
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            max-width: 18.75rem;
+            flex: 1 1 auto;
+            justify-content: flex-end;
+        }
+
+        .stat-boxes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 6.25rem;
+        }
+
+        .stat-box {
+            border: 2px solid var(--color-black);
+            padding: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #2b0033;
+            box-shadow: 4px 4px 0 var(--color-black);
+            border: 2px inset var(--color-purple);
+        }
+
+        .stat-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            font-family: var(--font-serif);
+            letter-spacing: 0.16em;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 var(--color-black);
+        }
+
+        .stat-label.gold {
+            color: var(--color-gold);
+        }
+
+        .stat-label.red {
+            color: var(--color-red-light);
+        }
+
+        .stat-label.cyan {
+            color: var(--color-cyan);
+        }
+
+        .stat-value {
+            font-size: 1.125rem;
+            color: white;
+            font-family: var(--font-serif);
+            font-weight: bold;
+            text-shadow: 2px 2px 0 var(--color-black), 0 0 8px var(--color-gold);
+        }
+
+        .stat-value.cyan {
+            text-shadow: 2px 2px 0 var(--color-black), 0 0 8px var(--color-cyan);
+        }
+
+        /* Coin Buttons */
+        .coin-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 3.75rem;
+        }
+
+        .coin {
+            width: 2.25rem;
+            height: 2.25rem;
+            border: 2px solid var(--color-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 3px 3px 0 var(--color-black);
+            font-family: var(--font-serif);
+        }
+
+        .coin.gold {
+            background: var(--color-gold);
+            color: var(--color-text-dark);
+            border-color: var(--color-gold);
+            border: 1px inset var(--color-gold-light);
+        }
+
+        .coin.cyan {
+            background: var(--color-cyan);
+            color: var(--color-text-dark);
+            border-color: var(--color-cyan);
+            border: 1px inset var(--color-cyan-light);
+        }
+
+        .coin.red {
+            background: var(--color-red);
+            color: white;
+            border-color: var(--color-red);
+            border: 1px inset var(--color-red-light);
+        }
+
+        .coin:hover:not(:disabled) {
+            transform: translateY(-0.25rem);
+        }
+
+        .coin:disabled {
+            opacity: 0.5;
+            filter: grayscale(100%);
+            cursor: not-allowed;
+        }
+
+        /* Action Buttons */
+        .actions-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            min-height: 7.5rem;
+        }
+
+        .actions-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 0.75rem;
+            flex: 1 1 auto;
+            max-width: 18.75rem;
+        }
+
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            background: var(--color-black);
+            transition: transform 0.2s;
+            box-shadow: 4px 4px 0 var(--color-black);
+            cursor: pointer;
+        }
+
+        .btn:not(:disabled):hover {
+            transform: scale(1.05);
+        }
+
+        .btn:not(:disabled):active {
+            transform: scale(0.95);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            filter: grayscale(100%);
+            cursor: not-allowed;
+        }
+
+        .btn-inner {
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem 1.25rem;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+
+        .btn-inner.purple {
+            background: #59185e;
+        }
+
+        .btn-inner.black {
+            background: var(--color-text-dark);
+        }
+
+        .btn-inner.default {
+            background: var(--color-purple-dark);
+        }
+
+        .btn-text {
+            font-size: 0.875rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-family: var(--font-serif);
+            white-space: nowrap;
+            text-shadow: 2px 2px 0 var(--color-black);
+        }
+
+        .btn.active .btn-inner {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card {
+                width: 4rem;
+                height: 5.5rem;
+                font-size: 0.875rem;
+            }
+
+            .card-rank-top,
+            .card-rank-bottom {
+                font-size: 1rem;
+            }
+
+            .card-suit svg {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+
+            .dealer-hand {
+                gap: 0.75rem;
+            }
+
+            .dialogue-box {
+                width: 85%;
+            }
+
+            .dialogue-text {
+                font-size: 0.875rem;
+            }
+
+            .control-panel {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stats-panel,
+            .actions-side {
+                max-width: 100%;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stat-boxes {
+                width: 100%;
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .stat-box {
+                flex: 1;
+                padding: 0.5rem;
+            }
+
+            .coin-buttons {
+                flex-direction: row;
+                width: 100%;
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .coin {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 0.75rem;
+            }
+
+            .actions-center {
+                gap: 0.5rem;
+                min-height: auto;
+            }
+
+            .btn-inner {
+                padding: 0.375rem 1rem;
+            }
+
+            .btn-text {
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
+            }
+
+            .hand-points {
+                font-size: 1rem;
+            }
+
+            .dealer-points {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flicker"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <!-- Dealer Area -->
+        <div class="dealer-area">
+            <div class="dealer-label">The Dispassionate Eye</div>
+            <div class="dealer-hand" id="dealerHand"></div>
+            <div class="dealer-stats">
+                <div class="dealer-points" id="dealerPoints">0</div>
+            </div>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box">
+            <div class="dialogue-corner tl"></div>
+            <div class="dialogue-corner tr"></div>
+            <div class="dialogue-corner bl"></div>
+            <div class="dialogue-corner br"></div>
+            <div class="dialogue-text" id="dialogue">Table open. Place your bets.</div>
+        </div>
+
+        <!-- Player Hands Area -->
+        <div class="player-area">
+            <div class="hands-wrapper" id="playerHands"></div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <!-- Stats & Coins (Left) -->
+            <div class="stats-panel">
+                <div class="stat-boxes">
+                    <div class="stat-box">
+                        <div class="stat-label gold">$$$</div>
+                        <div class="stat-value" id="goldDisplay">300</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label red">Wager</div>
+                        <div class="stat-value" id="wagerDisplay">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label cyan">Karmic Debt</div>
+                        <div class="stat-value cyan" id="debtDisplay">0</div>
+                    </div>
+                </div>
+                <div class="coin-buttons" id="coinButtons">
+                    <div class="coin gold" data-value="100">100</div>
+                    <div class="coin cyan" data-value="50">50</div>
+                    <div class="coin red" data-value="10">10</div>
+                </div>
+            </div>
+
+            <!-- Primary Actions (Center) -->
+            <div class="actions-center">
+                <button class="btn" id="dealBtn">
+                    <div class="btn-inner default">
+                        <span class="btn-text">Deal</span>
+                    </div>
+                </button>
+                <button class="btn" id="hitBtn" style="display:none;">
+                    <div class="btn-inner purple">
+                        <span class="btn-text">Hit</span>
+                    </div>
+                </button>
+                <button class="btn" id="standBtn" style="display:none;">
+                    <div class="btn-inner black">
+                        <span class="btn-text">Stand</span>
+                    </div>
+                </button>
+                <button class="btn" id="doubleBtn" style="display:none;">
+                    <div class="btn-inner default">
+                        <span class="btn-text">Double</span>
+                    </div>
+                </button>
+                <button class="btn" id="replenishBtn" style="display:none;">
+                    <div class="btn-inner default">
+                        <span class="btn-text">Replenish</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Secondary Actions (Right) -->
+            <div class="actions-side">
+                <button class="btn" id="insureBtn" style="display:none;">
+                    <div class="btn-inner default">
+                        <span class="btn-text">Insure</span>
+                    </div>
+                </button>
+                <button class="btn" id="passBtn" style="display:none;">
+                    <div class="btn-inner default" style="background: #4a0024;">
+                        <span class="btn-text" style="color: #ff003c;">Pass</span>
+                    </div>
+                </button>
+                <button class="btn" id="splitBtn" style="display:none;">
+                    <div class="btn-inner purple">
+                        <span class="btn-text" style="color: var(--color-cyan);">Split</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            gold: 300,
+            debt: 0,
+            wager: 0,
+            insuranceWager: 0,
+            deck: [],
+            dealerHand: [],
+            playerHands: [],
+            activeHandIndex: 0,
+            phase: 'betting', // 'betting', 'playing', 'insurance', 'dealer', 'gameOver'
+            dialogue: "Table open. Place your bets.",
+            showDebtPrompt: false
+        };
+
+        const soulStakesQuotes = [
+            "What is another word for the void?",
+            "If this hand fails you, remember that some descents are designed without the possibility of a parachute.",
+            "My broken mirror yielded seven years of misfortune, though my advocate is negotiating for a shorter sentence in the dark.",
+            "Infinity makes every destination a local one, provided you have surrendered your clock to the House.",
+            "The past is a memory that feeds on the living until there is nothing left to remember.",
+            "The monopoly of the grave is absolute; there is only one House and it always wins.",
+            "I possess dehydrated water, but I lack the vital fluid to make it flow.",
+            "The tomb is always room temperature, provided you are the room.",
+            "I deal the cards far too quickly to worry about the expiration of your pulse.",
+            "For those who believe in possession, please use your will to raise my hand.",
+            "My home has a switch that controls nothing but the flickering of a dying man's eyes.",
+            "I am not afraid of the depth of the grave, only the suffocating width of the lid.",
+            "If you fail to succeed at breathing, the rest of your hobbies become irrelevant.",
+            "I have a collection of heads; they don't say much, but they listen with great intensity.",
+            "The black box is the only thing that remembers the screaming.",
+            "I once tried to catch a thought, but it died of exposure.",
+            "The House always wins because the House is the only thing that doesn't breathe.",
+            "Your pulse is a repetitive argument with the inevitable that you are slowly but surely losing.",
+            "Your breath is a finite resource that the House is currently measuring in milliliters.",
+            "I have a clock that only ticks when someone in the room makes a mistake."
+        ];
+
+        // Helper: Create Deck
+        function createDeck() {
+            const suits = ['♠', '♥', '♦', '♣'];
+            const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            let newDeck = [];
+            for (let i = 0; i < 4; i++) {
+                suits.forEach(s => {
+                    ranks.forEach(r => {
+                        let v = isNaN(Number(r)) ? (r === 'A' ? 11 : 10) : parseInt(r);
+                        newDeck.push({ r, s, v });
+                    });
+                });
+            }
+            return newDeck.sort(() => Math.random() - 0.5);
+        }
+
+        // Helper: Calculate Points
+        function calculatePoints(hand) {
+            let p = 0, a = 0;
+            hand.forEach(c => {
+                if (c.r === 'A') a++;
+                p += c.v;
+            });
+            while (p > 21 && a > 0) {
+                p -= 10;
+                a--;
+            }
+            return p;
+        }
+
+        // Helper: Announce
+        function announce(standardText) {
+            let finalDialogue = standardText;
+            if (Math.random() < 0.25) {
+                const q = soulStakesQuotes[Math.floor(Math.random() * soulStakesQuotes.length)];
+                finalDialogue = standardText ? `${standardText} ${q}` : q;
+            }
+            gameState.dialogue = finalDialogue;
+            updateUI();
+        }
+
+        // Helper: Get Total Wager
+        function getTotalActiveWager() {
+            if (gameState.phase === 'betting' || gameState.phase === 'gameOver') {
+                return gameState.wager;
+            }
+            return gameState.playerHands.reduce((sum, h) => sum + h.wager, 0) + gameState.insuranceWager;
+        }
+
+        // UI Rendering
+        function renderCard(card, hidden = false) {
+            const div = document.createElement('div');
+            div.className = `card ${hidden ? 'hidden' : 'visible'}`;
+
+            if (!hidden) {
+                const isSuitRed = ['♥', '♦'].includes(card.s);
+                div.innerHTML = `
+                    <div class="card-rank-top">${card.r}</div>
+                    <div class="card-suit ${isSuitRed ? 'red' : 'black'}">
+                        <svg viewBox="0 0 24 24">
+                            ${getSuitSVG(card.s)}
+                        </svg>
+                    </div>
+                    <div class="card-rank-bottom">${card.r}</div>
+                `;
+            }
+            return div;
+        }
+
+        function getSuitSVG(suit) {
+            const svgs = {
+                '♠': '<path d="M12 2L4 12c0 3 3 4 8 10 5-6 8-7 8-10L12 2z" fill="currentColor" />',
+                '♥': '<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />',
+                '♦': '<path d="M12 2L2 12l10 10 10-10L12 2z" fill="currentColor" />',
+                '♣': '<path d="M12 2a4 4 0 00-4 4c0 1.5.8 2.8 2 3.5-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4s4-1.8 4-4c0-1.5-.8-2.8-2-3.5 1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z" fill="currentColor" />'
+            };
+            return svgs[suit] || '';
+        }
+
+        function updateUI() {
+            // Update dealer hand
+            const dealerHandEl = document.getElementById('dealerHand');
+            dealerHandEl.innerHTML = '';
+            gameState.dealerHand.forEach((c, i) => {
+                const hidden = i === 1 && gameState.phase !== 'gameOver' && gameState.phase !== 'dealer';
+                dealerHandEl.appendChild(renderCard(c, hidden));
+            });
+
+            // Update dealer points
+            const dealerPoints = gameState.dealerHand.length > 0
+                ? (gameState.phase === 'gameOver' || gameState.phase === 'dealer'
+                    ? calculatePoints(gameState.dealerHand)
+                    : calculatePoints([gameState.dealerHand[0]]))
+                : 0;
+            document.getElementById('dealerPoints').textContent = dealerPoints;
+
+            // Update dialogue
+            document.getElementById('dialogue').textContent = gameState.dialogue;
+
+            // Update player hands
+            const playerHandsEl = document.getElementById('playerHands');
+            playerHandsEl.innerHTML = '';
+            gameState.playerHands.forEach((hand, idx) => {
+                const handDiv = document.createElement('div');
+                handDiv.className = `hand ${idx === gameState.activeHandIndex && gameState.phase === 'playing' ? 'active' : 'inactive'}`;
+
+                const cardsDiv = document.createElement('div');
+                cardsDiv.className = 'hand-cards';
+                hand.cards.forEach(c => cardsDiv.appendChild(renderCard(c)));
+
+                const points = calculatePoints(hand.cards);
+                const statsDiv = document.createElement('div');
+                statsDiv.className = 'hand-stats';
+                const pointsDiv = document.createElement('div');
+                pointsDiv.className = `hand-points ${hand.status === 'busted' ? 'bust' : 'normal'}`;
+                pointsDiv.textContent = `${points}${hand.status === 'busted' ? ' (Bust)' : ''}`;
+                statsDiv.appendChild(pointsDiv);
+
+                handDiv.appendChild(cardsDiv);
+                handDiv.appendChild(statsDiv);
+                playerHandsEl.appendChild(handDiv);
+            });
+
+            // Update stats
+            document.getElementById('goldDisplay').textContent = gameState.gold;
+            document.getElementById('wagerDisplay').textContent = getTotalActiveWager();
+            document.getElementById('debtDisplay').textContent = gameState.debt;
+
+            // Update button visibility
+            updateButtonStates();
+        }
+
+        function updateButtonStates() {
+            const isPlaying = gameState.phase === 'playing';
+            const isBetting = gameState.phase === 'betting' || gameState.phase === 'gameOver';
+            const isInsurance = gameState.phase === 'insurance';
+            const activeHand = gameState.playerHands[gameState.activeHandIndex];
+            const currentPoints = activeHand ? calculatePoints(activeHand.cards) : 0;
+            const is21 = currentPoints === 21;
+            const canSplit = isPlaying && activeHand?.cards.length === 2
+                && activeHand.cards[0].r === activeHand.cards[1].r
+                && gameState.gold >= activeHand.wager;
+            const canDouble = isPlaying && activeHand?.cards.length === 2
+                && gameState.gold >= activeHand.wager;
+
+            // Deal button
+            document.getElementById('dealBtn').style.display = isBetting && !gameState.showDebtPrompt ? 'block' : 'none';
+            document.getElementById('dealBtn').disabled = gameState.wager === 0;
+
+            // Hit button
+            document.getElementById('hitBtn').style.display = isPlaying && !gameState.showDebtPrompt ? 'block' : 'none';
+            document.getElementById('hitBtn').disabled = isInsurance || is21;
+
+            // Stand button
+            document.getElementById('standBtn').style.display = isPlaying && !gameState.showDebtPrompt ? 'block' : 'none';
+            document.getElementById('standBtn').disabled = isInsurance;
+
+            // Double button
+            document.getElementById('doubleBtn').style.display = (canDouble && isPlaying && !gameState.showDebtPrompt) ? 'block' : 'none';
+            document.getElementById('doubleBtn').disabled = isInsurance || is21;
+
+            // Insurance buttons
+            document.getElementById('insureBtn').style.display = (isInsurance && !gameState.showDebtPrompt) ? 'block' : 'none';
+            document.getElementById('passBtn').style.display = (isInsurance && !gameState.showDebtPrompt) ? 'block' : 'none';
+
+            // Split button
+            document.getElementById('splitBtn').style.display = (canSplit && !gameState.showDebtPrompt) ? 'block' : 'none';
+
+            // Replenish button
+            document.getElementById('replenishBtn').style.display = gameState.showDebtPrompt ? 'block' : 'none';
+
+            // Coin buttons
+            const coinButtons = document.getElementById('coinButtons');
+            coinButtons.style.display = (isBetting && !gameState.showDebtPrompt) ? 'flex' : 'none';
+        }
+
+        // Game Actions
+        function handleWager(amt) {
+            if (gameState.gold >= amt) {
+                gameState.gold -= amt;
+                gameState.wager += amt;
+                updateUI();
+            }
+        }
+
+        function handleDeal() {
+            if (gameState.wager === 0) return;
+
+            const newDeck = createDeck();
+            const pCards = [newDeck.pop(), newDeck.pop()];
+            const dCards = [newDeck.pop(), newDeck.pop()];
+
+            const initialHand = { id: Math.random(), cards: pCards, wager: gameState.wager, status: 'active', isSplit: false };
+
+            gameState.deck = newDeck;
+            gameState.playerHands = [initialHand];
+            gameState.dealerHand = dCards;
+            gameState.activeHandIndex = 0;
+            gameState.insuranceWager = 0;
+
+            let prefix = "No more bets.";
+
+            if (dCards[0].r === 'A') {
+                gameState.phase = 'insurance';
+                if (calculatePoints(pCards) === 21) {
+                    announce(prefix + " Even money?");
+                } else {
+                    announce(prefix + " Insurance open.");
+                }
+            } else {
+                if (calculatePoints(pCards) === 21) {
+                    resolveGame([initialHand], dCards, prefix);
+                } else {
+                    gameState.phase = 'playing';
+                    announce(prefix);
+                }
+            }
+        }
+
+        function handleInsurance(buy) {
+            let cost = 0;
+            let prefix = "Insurance closed.";
+
+            if (buy) {
+                cost = Math.floor(gameState.wager / 2);
+                if (gameState.gold >= cost) {
+                    gameState.gold -= cost;
+                    gameState.insuranceWager = cost;
+                } else {
+                    buy = false;
+                }
+            }
+
+            const pPoints = calculatePoints(gameState.playerHands[0].cards);
+            const dPoints = calculatePoints(gameState.dealerHand);
+
+            if (dPoints === 21) {
+                resolveGame(gameState.playerHands, gameState.dealerHand, prefix + " Dealer checking.");
+            } else {
+                gameState.insuranceWager = 0;
+                prefix += " Dealer checking... no Blackjack.";
+
+                if (pPoints === 21) {
+                    resolveGame(gameState.playerHands, gameState.dealerHand, prefix);
+                } else {
+                    gameState.phase = 'playing';
+                    announce(prefix);
+                }
+            }
+        }
+
+        function advanceHand(handsToEvaluate, prefix = "") {
+            if (gameState.activeHandIndex < handsToEvaluate.length - 1) {
+                gameState.activeHandIndex++;
+                announce(prefix ? `${prefix} Playing next hand.` : "Playing next hand.");
+            } else {
+                const allBusted = handsToEvaluate.every(h => h.status === 'busted');
+                if (allBusted) {
+                    resolveGame(handsToEvaluate, gameState.dealerHand, prefix);
+                } else {
+                    announce(prefix ? `${prefix} Dealer's turn.` : "Dealer's turn.");
+                    playDealer(handsToEvaluate);
+                }
+            }
+        }
+
+        function handleHit() {
+            const currentDeck = [...gameState.deck];
+            const card = currentDeck.pop();
+            const hands = [...gameState.playerHands];
+            const activeHand = { ...hands[gameState.activeHandIndex], cards: [...hands[gameState.activeHandIndex].cards, card] };
+
+            let prefix = "Hit.";
+            if (calculatePoints(activeHand.cards) > 21) {
+                activeHand.status = 'busted';
+                prefix = "Bust.";
+            }
+
+            hands[gameState.activeHandIndex] = activeHand;
+            gameState.deck = currentDeck;
+            gameState.playerHands = hands;
+
+            if (activeHand.status === 'busted') advanceHand(hands, prefix);
+            else announce(prefix);
+        }
+
+        function handleStand() {
+            const hands = [...gameState.playerHands];
+            hands[gameState.activeHandIndex].status = 'stood';
+            gameState.playerHands = hands;
+            advanceHand(hands, "Stand.");
+        }
+
+        function handleDouble() {
+            const hands = [...gameState.playerHands];
+            const activeHand = { ...hands[gameState.activeHandIndex] };
+
+            if (gameState.gold < activeHand.wager) return;
+
+            gameState.gold -= activeHand.wager;
+            activeHand.wager *= 2;
+
+            const currentDeck = [...gameState.deck];
+            activeHand.cards = [...activeHand.cards, currentDeck.pop()];
+
+            let prefix = "Doubling down.";
+            if (calculatePoints(activeHand.cards) > 21) {
+                activeHand.status = 'busted';
+                prefix = "Bust on double.";
+            } else {
+                activeHand.status = 'stood';
+            }
+
+            hands[gameState.activeHandIndex] = activeHand;
+            gameState.deck = currentDeck;
+            gameState.playerHands = hands;
+            advanceHand(hands, prefix);
+        }
+
+        function handleSplit() {
+            const hands = [...gameState.playerHands];
+            const handToSplit = hands[gameState.activeHandIndex];
+
+            if (gameState.gold < handToSplit.wager) return;
+
+            gameState.gold -= handToSplit.wager;
+
+            const currentDeck = [...gameState.deck];
+
+            const newHand1 = {
+                id: Math.random(),
+                cards: [handToSplit.cards[0], currentDeck.pop()],
+                wager: handToSplit.wager,
+                status: 'active',
+                isSplit: true
+            };
+            const newHand2 = {
+                id: Math.random(),
+                cards: [handToSplit.cards[1], currentDeck.pop()],
+                wager: handToSplit.wager,
+                status: 'active',
+                isSplit: true
+            };
+
+            hands.splice(gameState.activeHandIndex, 1, newHand1, newHand2);
+
+            gameState.deck = currentDeck;
+            gameState.playerHands = hands;
+            announce("Splitting pair.");
+        }
+
+        function playDealer(finalPlayerHands) {
+            gameState.phase = 'dealer';
+            let currentDeck = [...gameState.deck];
+            let dHand = [...gameState.dealerHand];
+
+            while (calculatePoints(dHand) < 17) {
+                dHand.push(currentDeck.pop());
+            }
+
+            gameState.deck = currentDeck;
+            gameState.dealerHand = dHand;
+            resolveGame(finalPlayerHands, dHand);
+        }
+
+        function resolveGame(hands, finalDealerHand, prefix = "") {
+            gameState.phase = 'gameOver';
+            let totalWin = 0;
+            const dPoints = calculatePoints(finalDealerHand);
+            const dealerBusted = dPoints > 21;
+
+            let outcomeStr = [];
+
+            hands.forEach((hand, idx) => {
+                const pPoints = calculatePoints(hand.cards);
+                const isBlackjack = hand.cards.length === 2 && pPoints === 21 && !hand.isSplit;
+                const handLabel = hands.length > 1 ? `Hand ${idx + 1}` : "";
+
+                if (hand.status === 'busted') {
+                    outcomeStr.push(handLabel ? `${handLabel} busts.` : "Bust.");
+                } else if (dealerBusted) {
+                    outcomeStr.push(handLabel ? `${handLabel} wins.` : "Dealer busts.");
+                    totalWin += hand.wager * 2;
+                } else if (isBlackjack) {
+                    outcomeStr.push(handLabel ? `${handLabel} Blackjack.` : "Blackjack.");
+                    totalWin += hand.wager * 2.5;
+                } else if (pPoints > dPoints) {
+                    outcomeStr.push(handLabel ? `${handLabel} wins.` : `${pPoints} pays ${dPoints}.`);
+                    totalWin += hand.wager * 2;
+                } else if (pPoints < dPoints) {
+                    outcomeStr.push(handLabel ? `${handLabel} loses.` : `${pPoints} loses to ${dPoints}.`);
+                } else {
+                    outcomeStr.push(handLabel ? `${handLabel} pushes.` : "Push.");
+                    totalWin += hand.wager;
+                }
+            });
+
+            if (gameState.insuranceWager > 0 && dPoints === 21) {
+                outcomeStr.push("Insurance pays.");
+                totalWin += gameState.insuranceWager * 3;
+            }
+
+            gameState.gold += totalWin;
+            gameState.wager = 0;
+            gameState.insuranceWager = 0;
+            gameState.activeHandIndex = 0;
+
+            let finalAnnounce = prefix ? `${prefix} ${outcomeStr.join(' ')}` : outcomeStr.join(' ');
+            finalAnnounce = finalAnnounce.replace("Bust. Bust.", "Bust.");
+            finalAnnounce = finalAnnounce.replace("Bust on double. Bust.", "Bust on double.");
+
+            announce(finalAnnounce);
+
+            // Check if need replenish
+            if (gameState.gold < 10 && gameState.wager === 0) {
+                gameState.showDebtPrompt = true;
+                gameState.dialogue = "Table minimum is 10.";
+                updateUI();
+            }
+        }
+
+        function handleReplenish() {
+            gameState.gold = 300;
+            gameState.debt += 300;
+            gameState.showDebtPrompt = false;
+            announce("Shoe change. Color up.");
+        }
+
+        // Event Listeners
+        document.getElementById('dealBtn').addEventListener('click', handleDeal);
+        document.getElementById('hitBtn').addEventListener('click', handleHit);
+        document.getElementById('standBtn').addEventListener('click', handleStand);
+        document.getElementById('doubleBtn').addEventListener('click', handleDouble);
+        document.getElementById('splitBtn').addEventListener('click', handleSplit);
+        document.getElementById('insureBtn').addEventListener('click', () => handleInsurance(true));
+        document.getElementById('passBtn').addEventListener('click', () => handleInsurance(false));
+        document.getElementById('replenishBtn').addEventListener('click', handleReplenish);
+
+        document.querySelectorAll('.coin').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = parseInt(btn.dataset.value);
+                handleWager(value);
+            });
+        });
+
+        // Initialize UI
+        updateUI();
+    </script>
+</body>
+</html>
