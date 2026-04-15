@@ -188,14 +188,14 @@ const artists = [
     name: 'SPOTIFY CHILL',
     genre: 'AMBIENT',
     type: 'spotify' as const,
-    playlistId: '37i9dQZF1DXq0flaFJnVdW' as string | undefined,
+    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
   },
   {
     id: 'spotify-indie',
     name: 'SPOTIFY INDIE',
     genre: 'INDIE',
     type: 'spotify' as const,
-    playlistId: undefined as string | undefined,
+    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
   },
   {
     id: 'spotify-electronic',
