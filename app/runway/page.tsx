@@ -184,25 +184,18 @@ const artists = [
   },
   // Spotify stations
   {
-    id: 'spotify-chill',
-    name: 'SPOTIFY CHILL',
-    genre: 'AMBIENT',
+    id: 'spotify-postpunk',
+    name: 'POST-PUNK ESSENTIALS VOL. 1',
+    genre: 'POST-PUNK',
     type: 'spotify' as const,
     playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
   },
   {
-    id: 'spotify-indie',
-    name: 'SPOTIFY INDIE',
-    genre: 'INDIE',
+    id: 'spotify-srv',
+    name: 'STEVIE RAY VAUGHAN RADIO',
+    genre: 'BLUES',
     type: 'spotify' as const,
-    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
-  },
-  {
-    id: 'spotify-electronic',
-    name: 'SPOTIFY ELECTRONIC',
-    genre: 'ELECTRONIC',
-    type: 'spotify' as const,
-    playlistId: undefined as string | undefined,
+    playlistId: '37i9dQZF1E4qdaF453XK0y' as string | undefined,
   },
 ];
 
