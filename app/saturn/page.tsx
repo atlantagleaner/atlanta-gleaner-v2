@@ -53,9 +53,14 @@ export default function SaturnPage() {
     setIsGameMenuOpen(false)
   }
 
-  const handleCloseGameOverlay = () => {
-    setIsGameOverlayOpen(false)
-    setSelectedGameModule(null)
+  const handleToggleGameOverlay = () => {
+    if (isGameOverlayOpen) {
+      setIsGameOverlayOpen(false)
+      setSelectedGameModule(null)
+    } else {
+      setSelectedGameModule('soul-stakes')
+      setIsGameOverlayOpen(true)
+    }
   }
 
   const pillButtonStyle: React.CSSProperties = {
@@ -107,8 +112,7 @@ export default function SaturnPage() {
   return (
     <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden' }}>
       {/* Saturn Navbar - Always interactive */}
-      <SaturnNavbar onRunwayClick={() => handleCloseGameOverlay()} />
-
+      <SaturnNavbar onRunwayClick={() => handleToggleGameOverlay()} />
       {/* Interactive Saturn Simulation - Always interactive */}
       <div style={{
         position: 'fixed',
@@ -245,25 +249,30 @@ export default function SaturnPage() {
             </div>
           )}
 
-          {/* Iframe Container - Fixed Viewport */}
+          {/* Iframe Container - Analog Hub Style */}
           <div style={{
-            position: 'relative',
-            width: isMobile ? 'calc(100vw - 24px)' : '900px',
-            height: isMobile ? 'calc(100vh - 180px)' : '700px',
+            position: 'absolute',
+            top: isMobile ? '100px' : '120px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: isMobile ? 'calc(100vw - 40px)' : '800px',
+            height: isMobile ? '400px' : '500px',
             backgroundColor: '#05050a',
-            borderRadius: '4px',
+            border: '2px solid #B8860B',
+            borderRadius: '12px',
+            boxShadow: '0 0 20px rgba(184, 134, 11, 0.2)',
             overflow: 'hidden',
-            border: '1px solid rgba(94, 45, 138, 0.4)',
             zIndex: 1001,
-            flexShrink: 0,
           }}>
+            <div style={{ padding: '8px 16px', background: 'rgba(184, 134, 11, 0.1)', borderBottom: '1px solid #B8860B', color: '#B8860B', fontSize: '10px', letterSpacing: '0.2em', fontFamily: 'monospace' }}>
+              STATION_MODULE_ACTIVE
+            </div>
             <iframe
               src="/the-soul-stakes-pro.html"
               style={{
                 width: '100%',
-                height: '100%',
+                height: 'calc(100% - 28px)',
                 border: 'none',
-                borderRadius: '4px',
                 display: 'block',
               }}
               title="The Soul Stakes Game"

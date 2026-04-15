@@ -74,7 +74,7 @@ export function SaturnNavbar({ onRunwayClick }: SaturnNavbarProps) {
         // Mobile navbar - two rows
         <nav style={{
           position: 'fixed', top: '15px', left: '15px', right: '15px',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', zIndex: 1000,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', zIndex: 1100,
         }}>
           {/* Row 1: Date/Time + The Atlanta Gleaner + Menu Button (merged) */}
           <div style={{ position: 'relative' }}>
@@ -120,7 +120,7 @@ export function SaturnNavbar({ onRunwayClick }: SaturnNavbarProps) {
         // Desktop navbar
         <nav style={{
           position: 'fixed', top: '25px', left: '25px', right: '25px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1100,
         }}>
           <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
             {/* Date/Time + Title + Menu Button (merged) */}
