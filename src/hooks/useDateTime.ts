@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react'
  * Updates every second.
  *
  * @param publishedDate - Optional ISO date string (e.g., for case pages). If provided, uses this date instead of today.
- * @returns Object with dateStr, timeStr, and now (raw Date object)
+ * @returns Object with dateStr, timeStr, now (raw Date object), and mounted (true after hydration)
  */
 export function useDateTime(publishedDate?: string) {
   const [now, setNow] = useState<Date | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     setNow(new Date())
     const id = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(id)
@@ -27,5 +29,5 @@ export function useDateTime(publishedDate?: string) {
     ? now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })
     : ''
 
-  return { dateStr, timeStr, now }
+  return { dateStr, timeStr, now, mounted }
 }

@@ -20,7 +20,7 @@ const NAV_LINKS = [
 export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const pathname    = usePathname()
   const [open, setOpen] = useState(false)
-  const { dateStr: defaultDateStr, timeStr: defaultTimeStr, now } = useDateTime(publishedDate)
+  const { dateStr: defaultDateStr, timeStr: defaultTimeStr, now, mounted } = useDateTime(publishedDate)
   const navRef      = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -28,8 +28,8 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const isIsolated = pathname === '/saturn' || pathname === '/runway/orbital' || pathname === '/archive'
   if (isIsolated) return null
 
-  // Show date/time on all pages (today's date unless publishedDate provided for case pages)
-  const showDatetime = now
+  // Show date/time only after hydration (defers rendering until client hydration completes)
+  const showDatetime = mounted && now
   const dateStr = defaultDateStr
   const timeStr = defaultTimeStr
 
