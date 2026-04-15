@@ -19,11 +19,14 @@ export function OrbitalNavBar({
   onResetOrbit,
   layout = 'archive',
 }: OrbitalNavBarProps) {
-  const [time, setTime] = useState(new Date())
+  const [time, setTime] = useState<Date | null>(null)
+  const [mounted, setMounted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    setTime(new Date())
     const timer = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
@@ -109,19 +112,28 @@ export function OrbitalNavBar({
                     lineHeight: '1.2',
                   }}
                 >
-                  <span style={{ fontWeight: 600 }}>
-                    {time
-                      .toLocaleString('en-US', { month: 'short' })
-                      .toUpperCase()}{' '}
-                    {time.getDate()}
-                  </span>
-                  <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                    {time.toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                    })}
-                  </span>
+                  {mounted && time ? (
+                    <>
+                      <span style={{ fontWeight: 600 }}>
+                        {time
+                          .toLocaleString('en-US', { month: 'short' })
+                          .toUpperCase()}{' '}
+                        {time.getDate()}
+                      </span>
+                      <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                        {time.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span style={{ fontWeight: 600 }}>—</span>
+                      <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
+                    </>
+                  )}
                 </div>
 
                 <div
@@ -253,7 +265,7 @@ export function OrbitalNavBar({
                 </div>
               )}
             </div>
-          ) : (
+          ) : mounted && time ? (
             <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
               <div
                 style={{
@@ -308,6 +320,10 @@ export function OrbitalNavBar({
                 </span>
               </div>
             </a>
+          ) : (
+            <div style={{ ...navItemStyle, textDecoration: 'none', cursor: 'default', opacity: 0.6 }}>
+              <span>— —</span>
+            </div>
           )}
 
           {/* Row 2: Buttons */}
@@ -479,19 +495,28 @@ export function OrbitalNavBar({
                     lineHeight: '1.2',
                   }}
                 >
-                  <span style={{ fontWeight: 600 }}>
-                    {time
-                      .toLocaleString('en-US', { month: 'short' })
-                      .toUpperCase()}{' '}
-                    {time.getDate()}
-                  </span>
-                  <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                    {time.toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                    })}
-                  </span>
+                  {mounted && time ? (
+                    <>
+                      <span style={{ fontWeight: 600 }}>
+                        {time
+                          .toLocaleString('en-US', { month: 'short' })
+                          .toUpperCase()}{' '}
+                        {time.getDate()}
+                      </span>
+                      <span style={{ opacity: 0.4, fontSize: '9px' }}>
+                        {time.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span style={{ fontWeight: 600 }}>—</span>
+                      <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
+                    </>
+                  )}
                 </div>
 
                 <div
@@ -623,7 +648,7 @@ export function OrbitalNavBar({
                 </div>
               )}
             </div>
-          ) : (
+          ) : mounted && time ? (
             <a href="/archive" style={{ ...navItemStyle, textDecoration: 'none' }}>
               <div
                 style={{
@@ -678,6 +703,10 @@ export function OrbitalNavBar({
                 </span>
               </div>
             </a>
+          ) : (
+            <div style={{ ...navItemStyle, textDecoration: 'none', cursor: 'default', opacity: 0.6 }}>
+              <span>— —</span>
+            </div>
           )}
 
           {layout === 'orbital' && (
