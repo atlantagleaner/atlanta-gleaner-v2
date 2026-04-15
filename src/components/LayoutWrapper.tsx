@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { NavBar } from './NavBar'
+import { OrbitalNavBar } from './OrbitalNavBar'
 import { AnalogShell } from './AnalogShell'
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -9,13 +10,16 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   // Isolated pages: orbital pages (landing/runway) and independent pages (about/vault)
   const isIsolatedPage = pathname === '/' || pathname === '/runway' || pathname.startsWith('/runway/') || pathname === '/about' || pathname === '/vault'
 
+  // Case law pages use OrbitalNavBar instead of standard NavBar
+  const isCaselawPage = pathname.startsWith('/cases/')
+
   if (isIsolatedPage) {
     return <>{children}</>
   }
 
   return (
     <>
-      <NavBar />
+      {isCaselawPage ? <OrbitalNavBar /> : <NavBar />}
       <AnalogShell>
         {children}
       </AnalogShell>
