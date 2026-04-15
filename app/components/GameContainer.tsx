@@ -63,15 +63,15 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
             <div className="relative inline-block">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="px-6 py-2 bg-gradient-to-r from-[#2b0033]/80 to-[#12001a]/80 border-2 border-[#B8860B] text-[#ffd700] rounded-full font-serif font-bold text-sm uppercase tracking-widest hover:bg-[#3a1f42]/80 transition-colors"
-                style={{ boxShadow: '4px 4px 0 rgba(0,0,0,0.4)' }}
+                className="px-6 py-2 border-2 border-[#B8860B] text-[#ffd700] rounded-full font-serif font-bold text-sm uppercase tracking-widest transition-colors"
+                style={{ background: 'linear-gradient(to right, rgba(43,0,51,0.8), rgba(18,0,26,0.8))', boxShadow: '4px 4px 0 rgba(0,0,0,0.4)' }}
               >
                 {currentGame?.label}
               </button>
 
               {/* Dropdown Menu */}
               {isMenuOpen && (
-                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[#0B0820]/95 border-2 border-[#B8860B] rounded-lg overflow-hidden min-w-[200px] z-50" style={{ boxShadow: '6px 6px 0 rgba(0,0,0,0.4)' }}>
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 border-2 border-[#B8860B] rounded-lg overflow-hidden min-w-[200px] z-50" style={{ backgroundColor: 'rgba(11,8,32,0.95)', boxShadow: '6px 6px 0 rgba(0,0,0,0.4)' }}>
                   {GAMES.map(game => (
                     <button
                       key={game.id}
