@@ -63,14 +63,15 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
             <div className="relative inline-block">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="px-6 py-2 bg-gradient-to-r from-[#2b0033]/80 to-[#12001a]/80 border-2 border-[#B8860B] text-[#ffd700] rounded-full font-serif font-bold text-sm uppercase tracking-widest hover:bg-[#3a1f42]/80 transition-colors shadow-[4px_4px_0_rgba(0,0,0,0.4)]"
+                className="px-6 py-2 bg-gradient-to-r from-[#2b0033]/80 to-[#12001a]/80 border-2 border-[#B8860B] text-[#ffd700] rounded-full font-serif font-bold text-sm uppercase tracking-widest hover:bg-[#3a1f42]/80 transition-colors"
+                style={{ boxShadow: '4px 4px 0 rgba(0,0,0,0.4)' }}
               >
                 {currentGame?.label}
               </button>
 
               {/* Dropdown Menu */}
               {isMenuOpen && (
-                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[#0B0820]/95 border-2 border-[#B8860B] rounded-lg overflow-hidden shadow-[6px_6px_0_rgba(0,0,0,0.4)] min-w-[200px] z-50">
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[#0B0820]/95 border-2 border-[#B8860B] rounded-lg overflow-hidden min-w-[200px] z-50" style={{ boxShadow: '6px 6px 0 rgba(0,0,0,0.4)' }}>
                   {GAMES.map(game => (
                     <button
                       key={game.id}
@@ -104,7 +105,7 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
           </div>
 
           {/* Game Iframe */}
-          <div className="bg-[#11001c] border-4 border-[#B8860B] rounded-lg overflow-hidden shadow-[8px_8px_0_rgba(0,0,0,0.4)] relative h-[calc(90vh-100px)]">
+          <div className="bg-[#11001c] border-4 border-[#B8860B] rounded-lg overflow-hidden relative h-[calc(90vh-100px)]" style={{ boxShadow: '8px 8px 0 rgba(0,0,0,0.4)' }}>
             <iframe
               key={selectedGame}
               src={`/soul-stakes-pro.html`}
@@ -118,7 +119,8 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
           <div className="flex justify-center">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-[#4a0024] border-2 border-[#ff003c] text-[#ff003c] rounded-full font-serif font-bold text-sm uppercase tracking-widest hover:bg-[#5a0030] transition-colors shadow-[4px_4px_0_rgba(0,0,0,0.4)]"
+              className="px-6 py-2 bg-[#4a0024] border-2 border-[#ff003c] text-[#ff003c] rounded-full font-serif font-bold text-sm uppercase tracking-widest hover:bg-[#5a0030] transition-colors"
+              style={{ boxShadow: '4px 4px 0 rgba(0,0,0,0.4)' }}
             >
               Close
             </button>
