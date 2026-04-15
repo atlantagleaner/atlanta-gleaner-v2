@@ -78,11 +78,22 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
                         setSelectedGame(game.id)
                         setIsMenuOpen(false)
                       }}
-                      className={`w-full px-4 py-2 text-left font-serif font-bold uppercase text-sm tracking-widest transition-colors ${
+                      className="w-full px-4 py-2 text-left font-serif font-bold uppercase text-sm tracking-widest transition-colors"
+                      style={
                         selectedGame === game.id
-                          ? 'bg-[#B8860B] text-[#0B0820]'
-                          : 'text-[#ffd700] hover:bg-[#B8860B]/20'
-                      }`}
+                          ? { backgroundColor: '#B8860B', color: '#0B0820' }
+                          : { color: '#ffd700' }
+                      }
+                      onMouseEnter={(e) => {
+                        if (selectedGame !== game.id) {
+                          (e.target as HTMLButtonElement).style.backgroundColor = 'rgba(184, 134, 11, 0.2)'
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedGame !== game.id) {
+                          (e.target as HTMLButtonElement).style.backgroundColor = 'transparent'
+                        }
+                      }}
                     >
                       {game.label}
                     </button>
