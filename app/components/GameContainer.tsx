@@ -35,17 +35,28 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
   const currentGame = GAMES.find(g => g.id === selectedGame)
 
   return (
-    <>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+      }}
+    >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-        style={{ zIndex: 1000 }}
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
+        style={{ pointerEvents: 'auto' }}
       />
 
       {/* Container */}
-      <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none" style={{ zIndex: 1001 }}>
-        <div className="pointer-events-auto flex flex-col gap-3 max-w-5xl w-full max-h-[90vh] relative">
+      <div className="relative flex flex-col gap-3 max-w-5xl w-full max-h-[90vh]" style={{ pointerEvents: 'auto' }}>
 
           {/* Game Selector Pill */}
           <div className="flex justify-center" ref={menuRef}>
@@ -103,6 +114,6 @@ export default function GameContainer({ isOpen, onClose }: GameContainerProps) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
