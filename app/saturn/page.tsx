@@ -125,7 +125,6 @@ export default function SaturnPage() {
       </div>
 
       {/* Game Module Selector Pill Button */}
-      {!isGameOverlayOpen && (
         <div style={{
           position: 'fixed',
           top: isMobile ? '80px' : '50px',
@@ -146,12 +145,18 @@ export default function SaturnPage() {
                 e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.20)'
               }
             }}
-            style={pillButtonStyle}
+            style={{
+              ...pillButtonStyle,
+              ...(isGameOverlayOpen && {
+                background: 'rgba(184, 134, 11, 0.15)',
+                borderColor: 'rgba(184, 134, 11, 0.45)',
+                color: '#B8860B',
+              })
+            }}
           >
             STATION {selectedGameModule ? ` - ${selectedGameModule.replace('-', ' ')}` : ''}
           </button>
         </div>
-      )}
 
       {/* Game Menu Dropdown */}
       {isGameMenuOpen && (
@@ -192,63 +197,6 @@ export default function SaturnPage() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-          {/* Game Module Selector Pill (visible over overlay) */}
-          <div style={{
-            position: 'fixed',
-            top: isMobile ? '80px' : '50px',
-            left: isMobile ? '12px' : 'calc(50% - 450px)',
-            zIndex: 1002,
-          }}>
-            <button
-              onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(184, 134, 11, 0.2)'
-                e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(184, 134, 11, 0.15)'
-                e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.45)'
-              }}
-              style={{
-                ...pillButtonStyle,
-                background: 'rgba(184, 134, 11, 0.15)',
-                borderColor: 'rgba(184, 134, 11, 0.45)',
-                color: '#B8860B',
-              }}
-            >
-              STATION {selectedGameModule ? ` - ${selectedGameModule.replace('-', ' ')}` : ''}
-            </button>
-          </div>
-
-          {/* Game Menu Dropdown (visible over overlay) */}
-          {isGameMenuOpen && (
-            <div style={{
-              position: 'fixed',
-              top: isMobile ? '160px' : '120px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 1003,
-            }} ref={gameMenuRef}>
-              <div style={dropdownMenuStyle}>
-                {GAME_MODULES.map((game) => (
-                  <button
-                    key={game.id}
-                    onClick={() => handleSelectGame(game.id as 'soul-stakes')}
-                    style={dropdownItemStyle}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'transparent'
-                    }}
-                  >
-                    {game.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Iframe Container - Analog Hub Style */}
           <div style={{
             position: 'absolute',
