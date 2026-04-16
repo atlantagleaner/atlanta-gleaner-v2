@@ -61,11 +61,21 @@
 
         /* Balance Display */
         #balance-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 14px;
             color: #00E5D8;
             text-shadow: 0 0 15px rgba(0, 229, 216, 0.8);
             border-bottom: 2px solid #8B4FBF;
             padding-bottom: 10px;
+        }
+
+        #karmic-debt-display {
+            color: #B8860B;
+            text-shadow: 0 0 15px rgba(184, 134, 11, 0.8);
+            font-size: 11px;
+            letter-spacing: 0.08em;
         }
 
         /* Game Sections */
@@ -472,6 +482,19 @@
             color: #FF6B9D;
         }
 
+        .dealer-dialogue {
+            font-size: 10px;
+            color: rgba(184, 134, 11, 0.9);
+            text-shadow: 0 0 8px rgba(184, 134, 11, 0.5);
+            font-style: italic;
+            font-family: monospace;
+            letter-spacing: 0.05em;
+            text-align: center;
+            padding: 6px 4px;
+            min-height: 32px;
+            line-height: 1.4;
+        }
+
         /* Result Controls (within control panel) */
         #result-controls {
             text-align: center;
@@ -641,7 +664,10 @@
         <div id="game-container">
 
             <!-- Balance Display -->
-            <div id="balance-display">BALANCE: $<span id="balance-value">1000</span></div>
+            <div id="balance-display">
+                <span>BALANCE: $<span id="balance-value">1000</span></span>
+                <span id="karmic-debt-display">KARMIC DEBT: $<span id="karmic-debt-value">0</span></span>
+            </div>
 
             <!-- Dealer Area -->
             <div id="dealer-area">
@@ -689,6 +715,7 @@
                 <div id="result-controls" class="control-section">
                     <div class="result-message" id="result-message"></div>
                     <div class="result-payout" id="result-payout"></div>
+                    <div class="dealer-dialogue" id="dealer-dialogue"></div>
                     <button id="result-new-hand-btn">NEW HAND</button>
                 </div>
             </div>
@@ -792,9 +819,216 @@
             return cards.length === 2 && cards[0].rank === cards[1].rank;
         }
 
+        // ============ DIALOGUE ============
+        const PLAYER_WIN_DIALOGUE = [
+            "Looks like you've dug yourself out of a deep hole this time!",
+            "A natural twenty-one? You're certainly a 'natural' at cheating death!",
+            "I'm absolutely dying of envy over that winning streak!",
+            "You've got more luck than a graveyard shift worker on a full moon!",
+            "Go ahead, take the chips—it's not like you can take them with you forever!",
+            "A killer hand! I haven't seen a hit that good since the guillotine fell!",
+            "You're really 'slaying' the competition today, aren't you?",
+            "Well, paint me pale and call me a ghost—you actually won!",
+            "Enjoy the loot while your heart is still beating!",
+            "That was a 'grave' mistake on my part, letting you double down!",
+            "I suppose even a blind bat catches a moth every once in a while!",
+            "You've got a real 'skeleton' key to the vault with hands like that!",
+            "Looks like your luck hasn't expired... yet!",
+            "A winning hand? I'll have to notify the local mortician about this miracle!",
+            "You're making a killing! Care to share the recipe?",
+            "I'm losing my head over these payouts—literally!",
+            "A breathtaking performance! Though I prefer it when the breath is actually gone.",
+            "You've beaten the odds! I'll have to check your pulse to make sure you're real.",
+            "Sticking on eighteen? That took some real 'guts'—mind if I have them?",
+            "You're on fire! Careful, or you'll end up as nothing but ash!",
+            "Another win? You're starting to become a real 'pain' in the neck!",
+            "You're as lucky as a black cat in a cream factory!",
+            "I haven't seen a streak this long since the Black Plague!",
+            "You've certainly got a 'ghoul-den' touch today!",
+            "Go on, count your winnings—I love watching greedy fingers work!",
+            "I'm 'shroud-ed' in mystery as to how you keep winning!",
+            "That win was simply 'to-die-for'!",
+            "You must have a four-leaf clover buried in your backyard!",
+            "I'll pay you out, but don't expect a 'wake' for my lost chips!",
+            "You're beating the house! Someone fetch me a coffin to hide in!",
+            "A perfect split! Reminds me of my favorite axe-wielder.",
+            "You've escaped my clutches... for this round, anyway!",
+            "Keep winning like that and you'll be the richest corpse in the cemetery!",
+            "That was a 'bone'-afide victory if I ever saw one!",
+            "You're playing with 'spirit'! I like that in a victim.",
+            "I'm feeling quite 'drained' after that payout!",
+            "Is that a horseshoe in your pocket, or are you just happy to be alive?",
+            "A hauntingly good play, my friend!",
+            "You've got the 'Mummy's' touch—everything you touch turns to gold!",
+            "Don't get too comfortable; fame is fleeting, but death is permanent!",
+            "You win! I guess I'll have to cancel my dinner reservations at the morgue.",
+            "I'm shivering with... well, it's either excitement or rigor mortis!",
+            "You've really 'reaped' the rewards of that hit!",
+            "I'm just 'dying' to see if you can do that again!",
+            "Your bankroll is looking quite healthy—shame about your complexion!",
+            "You've got more lives than a cat in a laboratory!",
+            "You're a real 'scream' when you're winning!",
+            "Take the pot! I hope it weighs you down like a lead casket.",
+            "You've dodged the reaper once more!",
+            "A winning hand? I'll just have to 'bury' my pride and pay up!",
+            "A 'blood-curdling' success! I suppose you're not ready for the slab yet.",
+            "You've got the heart of a champion—care if I take a look at it later?",
+            "A 'ghoul-orious' victory! Your luck is simply immortal.",
+            "You're really 're-animating' your bankroll today!",
+            "I'm 'rattled' by that win—and not just because of my loose ribs!",
+            "You've beaten the reaper this round! I'll just put your scythe on backorder.",
+            "An 'eye-popping' performance! Literally, let me go grab mine from the floor.",
+            "You're as lucky as a vampire in a blood bank!",
+            "A 'specter-cular' hand! You've really got a ghost of a chance now.",
+            "You won? I guess your 'will' to live is stronger than I thought.",
+            "I'm 'dying' to know your secret—is it a deal with the devil or just blind luck?",
+            "You've 'un-earthed' a win! I hope you didn't need a shovel for that.",
+            "That hit was 'dead-on'! You've got a real eye for the cards.",
+            "A 'fang-tastic' double down! You've really got some bite.",
+            "You've escaped my clutches! I'll have to sharpen my claws for the next hand.",
+            "Looks like your luck is in its 'prime'—shame it has to rot eventually.",
+            "A 'wicked' win! You're making me feel positively lively.",
+            "You've got more lives than a cat in an Egyptian tomb!",
+            "That payout is 'frightfully' large. Mind if I help you carry it to the hearse?",
+            "You're on a 'tear'! Reminds me of my favorite werewolf on a full moon.",
+            "Another win? You're becoming a real 'head-ache'—and I have three in my basement!",
+            "You're 'slaying' me! I haven't been this entertained since the Inquisition.",
+            "A 'spine-tingling' victory! You've got some real backbone.",
+            "You've struck gold! Just don't spend it all on your funeral arrangements.",
+            "I'm 'howling' at your good fortune! You're the top dog today.",
+            "A 'monster' win! You're a real beast at the table.",
+            "You've 're-vamped' your strategy! It's working like a charm.",
+            "That was a 'shriek' of a hand! Absolutely terrifying luck.",
+            "You're 'shaking' things up! Or is that just the ground opening beneath you?",
+            "A 'chilling' display of skill! You're as cold as a morgue freezer.",
+            "You've got the 'Midas' touch—everything turns to gold, then decays!",
+            "I'm 'bewitched' by your winning streak! What's your potion?",
+            "You've dodged a 'bullet'! Lucky for you, it wasn't silver.",
+            "A 'hair-raising' win! I'd tell you to keep your head, but mine keeps rolling away.",
+            "You're 'haunting' my bankroll! I'll need an exorcist to get those chips back.",
+            "That win was 'bolt' out of the blue! Like a strike from Frankenstein's lab.",
+            "You've got 'guts'! I hope they stay inside where they belong.",
+            "A 'dead-set' winner! You're really putting me in the ground.",
+            "You're 'creeping' up on the house! I love a good stalker.",
+            "That hand was 'poisonously' good! I'm absolutely green with envy.",
+            "You've 'unlocked' the vault! I hope you didn't find any skeletons inside.",
+            "A 'cadaver-ous' amount of winnings! You're looking very rich today.",
+            "You've 'cheated' the urn! I'll just cancel the cremation for now.",
+            "I'm 'croaking' with surprise! You actually pulled it off.",
+            "You've got 'spirit'! Let's see if we can separate it from your body later.",
+            "A 'vault-ing' success! You're leaping over the competition.",
+            "You're 'drilling' into the house's profits! Very professional of you.",
+            "That win is 'to-die-for'! Literally, any volunteers?",
+            "You've 'reaped' what you sowed! And the harvest is plentiful.",
+            "A 'miracle' win! I'll have to report this to the local head-shrinker."
+        ];
+
+        const DEALER_WIN_DIALOGUE = [
+            "Bust! Just like a cheap pine casket under six feet of dirt!",
+            "The house wins! Consider those chips a 'burial fee'.",
+            "Twenty-one! I guess your luck has finally reached its 'expiration date'!",
+            "I'll take those... your bankroll is officially dead and buried!",
+            "Better luck in the next life, my dear!",
+            "You went over? Now that's what I call a 'grave' disappointment!",
+            "Looks like you've reached the 'end of the line'—and the table!",
+            "I've got blackjack! It's a 'dead' simple game when I'm dealing.",
+            "You look a bit 'pale'—is it the loss, or just the lack of oxygen?",
+            "That's a 'killer' loss! I'll be sure to tell the worms about it.",
+            "I'm cleaning up! This table is going to be as empty as a haunted house.",
+            "Oops! Your chips just 'passed away' into my tray.",
+            "I'll be keeping these—don't worry, they're in a better place now.",
+            "Too bad! I was really hoping you'd have something to 'show' for yourself.",
+            "It's a 'bust'—much like my favorite cousin's ribcage!",
+            "I win! I'm absolutely 'howling' with joy!",
+            "Looks like your strategy has 'decayed' quite rapidly.",
+            "You're out of chips? I suppose it's time for your 'final rest' then.",
+            "Don't cry—it's bad for the upholstery, and I just had it 're-vamped'!",
+            "My hand was just a bit more... 'fleshed out' than yours.",
+            "Twenty! Close, but as they say: 'nearer my God to thee'!",
+            "You've lost your shirt! Good thing I have plenty of 'shrouds' in the back.",
+            "I'll just add these to my 'collection'. I'm a bit of a hoarder!",
+            "A losing hand? I'll be sure to give it a proper 'send-off'.",
+            "Your luck has 'withered' away like a rose on a tombstone!",
+            "I've got the winning card! It was 'hiding' just like a skeleton in a closet.",
+            "The house wins again! It's enough to make a ghoul giggle.",
+            "You bit off more than you could chew—much like a zombie at a buffet!",
+            "Sorry, I don't give refunds... unless you're willing to trade your soul!",
+            "Another loss? You're really 'digging' your own grave now!",
+            "I'm 'dying' to see you try that again—with what money, I don't know!",
+            "That's 'curtains' for your winning streak!",
+            "I've got a 'stiff' hand, but it was enough to beat you!",
+            "My, my! Your stack of chips has 'ghosted' you!",
+            "I win! I'll celebrate with a nice tall glass of... well, never mind.",
+            "Your wallet is looking a bit 'skeletal' after that hand!",
+            "Don't look so 'dead' inside—it's just a game!",
+            "A total collapse! Reminds me of a decrepit old manor.",
+            "I've 'reaped' the benefits of your poor decision-making!",
+            "I'm afraid your credit has 'expired' along with your luck.",
+            "The dealer wins! It's a 'shriek-peek' into your financial future.",
+            "You've been 'axed' from the winner's circle!",
+            "That play was 'dead' on arrival!",
+            "I'll take that bet—it'll make a lovely addition to my 'crypt' currency.",
+            "You should have 'stayed'... in bed!",
+            "A 'frighteningly' easy win for me!",
+            "You're 'history'! And not the boring kind they teach in school.",
+            "I'm the master of the 'under-deal'! Get it?",
+            "Too bad! I guess your 'guardian angel' took a permanent vacation.",
+            "Winner, winner... well, I'm not sure what ghouls eat for dinner!",
+            "Bust! You've reached your 'final' destination—and it isn't the payout window.",
+            "I've 'shroud-ed' your hopes in darkness! Better luck in the afterlife.",
+            "You've been 'ghosted' by your luck! I haven't seen it in years.",
+            "A 'bone-crushing' defeat! I'll just add your chips to my collection.",
+            "Looks like your luck has 'decomposed'! It's starting to smell.",
+            "Twenty-one! I'm 'stiff' competition, wouldn't you say?",
+            "You're 'bankrupt'! Consider it practice for when you're 'life-rupt'.",
+            "I win! I'm absolutely 'dead' serious about collecting every penny.",
+            "That play was a 'nightmare'! And I should know, I live in one.",
+            "Your bankroll has 'passed away'. Shall we hold a moment of silence?",
+            "I've 'eaten' your profits! I'm absolutely famished today.",
+            "Looks like your strategy has 'rigor-mortis'! It's completely frozen.",
+            "Too bad! You're 'history'—and not the kind anyone remembers.",
+            "I've 'buried' your chances! Six feet under should be deep enough.",
+            "A 'fatal' error! You should have stayed in your coffin this morning.",
+            "I'm 'sweeping' the table! Just like I sweep the cobwebs off my dinner.",
+            "You've 'expired'! Please check the date on your luck next time.",
+            "That loss was 'gut-wrenching'! Want me to show you how it's done?",
+            "I've 'axed' your winning streak! It was getting a bit too long anyway.",
+            "You're 'drained'! I hope you weren't too attached to that money.",
+            "The house wins! It's a 'scream' how easily I can take your soul... I mean, chips.",
+            "You've 'fallen' for my trap! I've been waiting for a victim like you.",
+            "A 'blood-less' victory for me! I didn't even have to break a sweat... if I could.",
+            "Your luck has 'departed'! It's probably in the next county by now.",
+            "I'm 'embalming' your losses! They'll stay fresh in your mind forever.",
+            "You've been 'crossed'! And not just by a black cat.",
+            "A 'terrifying' loss for you! I'm absolutely delighted.",
+            "You're 'cold' as a corpse! Maybe a big loss will warm you up.",
+            "I've 'gutted' your stack! I hope you didn't need those for rent.",
+            "That was a 'grave' mistake! You really should watch your step.",
+            "I win! I'm feeling quite 'spirited' after that hand.",
+            "You've reached the 'end of the rope'! I hope you're not hanging around.",
+            "A 'monstrous' defeat! You're just another snack for the house.",
+            "I've 'reaped' your bankroll! It's a bountiful harvest indeed.",
+            "You're 'stuck' in the mud! And I'm not throwing you a line.",
+            "That play was 'corrupt'! But I'm the one who benefits.",
+            "I've 'poisoned' your luck! It's looking a bit green around the edges.",
+            "You've been 'sacrificed' to the house! I appreciate the offering.",
+            "A 'shaking' loss! You're really losing your footing.",
+            "I've 'chilled' your winning streak! It's frozen solid now.",
+            "You're 'buried' in debt! I'll send the debt collectors... eventually.",
+            "That play was 'senseless'! Like a zombie at a math competition.",
+            "I win! I'm 'dying' of laughter at your poor luck.",
+            "You've been 'shattered'! Like a mirror in a haunted house.",
+            "A 'ghastly' performance! You really should practice your poker face.",
+            "I've 'vanished' your chips! Now you see them, now you don't.",
+            "You're 'dead' to me! At least until the next hand starts.",
+            "That loss was 'un-bearable'! Unless you're a werewolf, I suppose.",
+            "I've 'finished' you! It was a pleasure doing business with your wallet."
+        ];
+
         // ============ GAME STATE ============
         const gameState = {
             balance: 1000,
+            karmicDebt: 0,
             currentBet: 0,
             selectedChip: 0,
             wagerTotal: 0,
@@ -813,6 +1047,21 @@
         // ============ UI UPDATES ============
         function updateBalanceDisplay() {
             document.getElementById('balance-value').textContent = gameState.balance;
+        }
+
+        function updateKarmicDebtDisplay() {
+            document.getElementById('karmic-debt-value').textContent = gameState.karmicDebt;
+        }
+
+        function showDealerDialogue(outcome) {
+            const el = document.getElementById('dealer-dialogue');
+            if (outcome === 'player') {
+                el.textContent = PLAYER_WIN_DIALOGUE[Math.floor(Math.random() * PLAYER_WIN_DIALOGUE.length)];
+            } else if (outcome === 'dealer') {
+                el.textContent = DEALER_WIN_DIALOGUE[Math.floor(Math.random() * DEALER_WIN_DIALOGUE.length)];
+            } else {
+                el.textContent = '';
+            }
         }
 
         function updateBetDisplay() {
@@ -1105,6 +1354,7 @@
 
             let payout = 0;
             let message = '';
+            let dialogueOutcome = 'push';
             let insurancePayout = 0;
 
             // Handle insurance payout (2:1 if dealer has blackjack)
@@ -1119,29 +1369,36 @@
             if (isBust(gameState.playerCards)) {
                 message = 'YOU BUST!';
                 payout = -gameState.currentBet;
+                dialogueOutcome = 'dealer';
             } else if (dealerBlackjack && playerBlackjack) {
                 message = 'PUSH - BOTH BLACKJACK';
                 payout = 0;
                 gameState.balance += gameState.currentBet; // Return bet
+                dialogueOutcome = 'push';
             } else if (playerBlackjack) {
                 message = 'BLACKJACK!';
                 payout = Math.floor(gameState.currentBet * 1.5);
                 gameState.balance += gameState.currentBet + payout;
+                dialogueOutcome = 'player';
             } else if (isBust(gameState.dealerCards)) {
                 message = 'DEALER BUST!';
                 payout = gameState.currentBet;
                 gameState.balance += gameState.currentBet + payout;
+                dialogueOutcome = 'player';
             } else if (dealerScore > playerScore) {
                 message = 'DEALER WINS';
                 payout = -gameState.currentBet;
+                dialogueOutcome = 'dealer';
             } else if (playerScore > dealerScore) {
                 message = 'YOU WIN!';
                 payout = gameState.currentBet;
                 gameState.balance += gameState.currentBet + payout;
+                dialogueOutcome = 'player';
             } else {
                 message = 'PUSH';
                 payout = 0;
                 gameState.balance += gameState.currentBet; // Return bet
+                dialogueOutcome = 'push';
             }
 
             gameState.handCount++;
@@ -1151,6 +1408,7 @@
             gameState.insuranceAmount = 0;
             updateBalanceDisplay();
             updateBetDisplay();
+            showDealerDialogue(dialogueOutcome);
             showResult(message, payout);
 
             if (gameState.balance <= 0) {
@@ -1175,6 +1433,7 @@
         }
 
         function resetGame() {
+            gameState.karmicDebt += 1000;
             gameState.balance = 1000;
             gameState.currentBet = 0;
             gameState.selectedChip = 0;
@@ -1184,6 +1443,7 @@
             deck.reset();
 
             updateBalanceDisplay();
+            updateKarmicDebtDisplay();
             updateBetDisplay();
             document.getElementById('game-over-screen').classList.remove('active');
             enableBetting();
@@ -1251,6 +1511,7 @@
 
         // ============ INITIALIZE ============
         updateBalanceDisplay();
+        updateKarmicDebtDisplay();
         updateBetDisplay();
         enableBetting();
     </script>
