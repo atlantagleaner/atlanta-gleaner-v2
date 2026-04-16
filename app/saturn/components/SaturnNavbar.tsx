@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react'
 
 interface SaturnNavbarProps {
   onResetOrbit?: () => void
+  onGamePortalToggle?: () => void
 }
 
-export function SaturnNavbar({ onResetOrbit }: SaturnNavbarProps) {
+export function SaturnNavbar({ onResetOrbit, onGamePortalToggle }: SaturnNavbarProps) {
   const [time, setTime] = useState(new Date())
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -109,9 +110,9 @@ export function SaturnNavbar({ onResetOrbit }: SaturnNavbarProps) {
             )}
           </div>
 
-          {/* Row 2: Saturn Reset Orbit Button */}
+          {/* Row 2: Saturn Game Portal Toggle Button */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={onResetOrbit} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
+            <button onClick={onGamePortalToggle} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
               SATURN
             </button>
           </div>
@@ -156,7 +157,7 @@ export function SaturnNavbar({ onResetOrbit }: SaturnNavbarProps) {
               )}
             </div>
 
-            <button onClick={onResetOrbit} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
+            <button onClick={onGamePortalToggle} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
               SATURN
             </button>
           </div>

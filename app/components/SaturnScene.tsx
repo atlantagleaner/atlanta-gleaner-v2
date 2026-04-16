@@ -8,6 +8,7 @@ export interface SaturnSceneProps {
   onSceneReady?: (camera: THREE.PerspectiveCamera, resetOrbit: () => void) => void
   isInteractive?: boolean
   isMobile?: boolean
+  isGamePortalOpen?: boolean
 }
 
 const JWST_DATA = {
@@ -18,7 +19,7 @@ const JWST_DATA = {
   spaceBackground: '#010102'
 }
 
-export default function SaturnScene({ onSceneReady, isInteractive = true, isMobile = false }: SaturnSceneProps) {
+export default function SaturnScene({ onSceneReady, isInteractive = true, isMobile = false, isGamePortalOpen = false }: SaturnSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<number>(0)
   const controlsRef = useRef<OrbitControls | null>(null)
@@ -34,9 +35,9 @@ export default function SaturnScene({ onSceneReady, isInteractive = true, isMobi
 
   useEffect(() => {
     if (controlsRef.current) {
-      controlsRef.current.enabled = isInteractive
+      controlsRef.current.enabled = isInteractive && !isGamePortalOpen
     }
-  }, [isInteractive])
+  }, [isInteractive, isGamePortalOpen])
 
   useEffect(() => {
     if (!containerRef.current) return
