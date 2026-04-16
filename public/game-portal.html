@@ -178,14 +178,27 @@
             border: 2px solid #00D9FF;
             border-radius: 4px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 2px;
             font-size: 14px;
             color: #00D9FF;
             font-weight: bold;
             box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
             animation: slideIn 0.3s ease-out;
             flex-shrink: 0;
+            padding: 0;
+        }
+
+        .card-rank {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .card-suit {
+            font-size: 14px;
+            line-height: 1;
         }
 
         @keyframes slideIn {
@@ -247,30 +260,37 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 36px;
-            height: 36px;
-            /* Planet body with outline style */
-            border: 2px solid rgba(0, 217, 255, 0.95);
+            width: 40px;
+            height: 12px;
+            /* Tilted ring - create ellipse rotated 30 degrees */
+            border: 1.5px solid rgba(0, 217, 255, 0.85);
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(0, 217, 255, 0.15), rgba(0, 217, 255, 0.05), transparent);
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) rotate(30deg);
             z-index: 1;
-            /* Saturn ring - creates the distinctive ring around planet */
             box-shadow:
-                /* Primary ring - bright and prominent */
-                0 0 0 6px rgba(0, 217, 255, 0.5),
-                0 0 0 8px rgba(0, 217, 255, 0.3),
-                /* Ring glow layers */
-                0 0 10px rgba(0, 217, 255, 0.8),
-                0 0 16px rgba(0, 217, 255, 0.6),
-                0 0 24px rgba(139, 79, 191, 0.4),
+                /* Ring glow */
+                0 0 6px rgba(0, 217, 255, 0.6),
+                0 0 10px rgba(139, 79, 191, 0.3);
+        }
+
+        .card.hidden::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            /* Planet body - solid circle on top of ring */
+            background: radial-gradient(circle at 35% 35%, rgba(0, 217, 255, 0.95), rgba(0, 217, 255, 0.8));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            box-shadow:
                 /* Planet glow */
-                0 0 18px rgba(0, 217, 255, 0.5),
-                /* Deep shadow for depth */
-                inset 0 1px 3px rgba(0, 0, 0, 0.3),
-                inset 0 -1px 3px rgba(0, 217, 255, 0.2);
-            filter: drop-shadow(0 0 5px rgba(0, 217, 255, 0.7))
-                    drop-shadow(0 0 10px rgba(139, 79, 191, 0.5));
+                0 0 8px rgba(0, 217, 255, 0.7),
+                0 0 12px rgba(0, 217, 255, 0.5),
+                0 0 18px rgba(139, 79, 191, 0.3);
+            filter: drop-shadow(0 0 4px rgba(0, 217, 255, 0.6));
         }
 
         .score-display {
@@ -802,10 +822,21 @@
                     cardEl.classList.add('hidden');
                     cardEl.textContent = '?';
                 } else {
-                    cardEl.textContent = `${card.rank}${card.suit}`;
+                    // Create rank element
+                    const rankEl = document.createElement('div');
+                    rankEl.className = 'card-rank';
+                    rankEl.textContent = card.rank;
+                    cardEl.appendChild(rankEl);
+
+                    // Create suit element
+                    const suitEl = document.createElement('div');
+                    suitEl.className = 'card-suit';
+                    suitEl.textContent = card.suit;
                     if (['♥', '♦'].includes(card.suit)) {
-                        cardEl.style.color = '#FF6B9D';
+                        suitEl.style.color = '#FF6B9D';
+                        rankEl.style.color = '#FF6B9D';
                     }
+                    cardEl.appendChild(suitEl);
                 }
                 container.appendChild(cardEl);
             });
