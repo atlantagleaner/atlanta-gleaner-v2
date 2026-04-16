@@ -36,7 +36,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3a 100%);
+            background: transparent;
             padding-top: 20px;
             gap: 20px;
         }
@@ -63,7 +63,7 @@
         #balance-display {
             font-size: 14px;
             color: #00E5D8;
-            text-shadow: 0 0 10px rgba(0, 229, 216, 0.6);
+            text-shadow: 0 0 15px rgba(0, 229, 216, 0.8);
             border-bottom: 2px solid #8B4FBF;
             padding-bottom: 10px;
         }
@@ -84,7 +84,7 @@
             font-size: 10px;
             color: #00D9FF;
             margin-bottom: 10px;
-            text-shadow: 0 0 8px rgba(0, 217, 255, 0.6);
+            text-shadow: 0 0 12px rgba(0, 217, 255, 0.8);
         }
 
         .cards-container {
@@ -237,6 +237,7 @@
             margin-top: 10px;
             font-size: 11px;
             color: #00E5D8;
+            text-shadow: 0 0 10px rgba(0, 229, 216, 0.8);
         }
 
         /* Control Panel */
@@ -259,6 +260,11 @@
             opacity: 1;
             pointer-events: auto;
             animation: ghostlyAppear 400ms ease forwards;
+            border: 2px solid #00D9FF;
+            padding: 12px;
+            border-radius: 4px;
+            background: #1a1a3a;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
         }
 
         /* Action Buttons */
@@ -287,7 +293,7 @@
             font-size: 9px;
             cursor: pointer;
             transition: all 0.1s;
-            box-shadow: 0 0 8px rgba(139, 79, 191, 0.6);
+            box-shadow: none;
             text-transform: uppercase;
         }
 
@@ -319,6 +325,7 @@
             font-size: 10px;
             color: #00D9FF;
             margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
         }
 
         .chip-selector {
@@ -346,6 +353,7 @@
             color: #00E5D8;
             margin: 10px 0;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 229, 216, 0.8);
         }
 
         #place-bet-btn {
@@ -381,6 +389,7 @@
             font-size: 14px;
             color: #00D9FF;
             font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.8);
         }
 
         .result-payout.win {
