@@ -6,6 +6,15 @@
     <title>Game Portal - Blackjack</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        /* Hide scrollbars while keeping scroll functionality */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        html, body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -642,10 +651,7 @@
 
             <!-- Station Dropdown Menu -->
             <div id="station-menu">
-                <button class="game-option available" data-game="blackjack">🃏 BLACKJACK (1/4)</button>
-                <button class="game-option" data-game="baccarat">🎰 BACCARAT (2/4)</button>
-                <button class="game-option" data-game="roulette">🎲 ROULETTE (3/4)</button>
-                <button class="game-option" data-game="craps">🎯 CRAPS (4/4)</button>
+                <button class="game-option available" data-game="blackjack">🃏 BLACKJACK</button>
             </div>
         </div>
 

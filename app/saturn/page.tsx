@@ -27,7 +27,17 @@ export default function SaturnPage() {
   const toggleGamePortal = () => setIsGamePortalOpen(!isGamePortalOpen)
 
   return (
-    <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '600px' }}>
+    <>
+      <style>{`
+        ::-webkit-scrollbar {
+          display: none;
+        }
+        html, body {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+      <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '600px' }}>
       {/* Saturn Navbar */}
       <SaturnNavbar onResetOrbit={resetOrbit || undefined} onGamePortalToggle={toggleGamePortal} />
 
@@ -77,5 +87,6 @@ export default function SaturnPage() {
         </div>
       )}
     </div>
+    </>
   )
 }
