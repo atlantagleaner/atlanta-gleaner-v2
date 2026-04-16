@@ -11,6 +11,19 @@
 // generateMetadata and the page component.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// app/cases/[slug]/page.tsx — Atlanta Gleaner individual case law page
+//
+// Layout mirrors the home page exactly:
+//   Banner → NavBar (from root layout) → ResizablePanels
+//     Left:   NewsBox (live news feed)
+//     Center: CaseLawBox (this case)
+//     Right:  FarSideBox
+//
+// Next.js 15+ note: `params` is a Promise — must be awaited in both
+// generateMetadata and the page component.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { notFound } from 'next/navigation'
 import { PALETTE, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE }         from '@/src/styles/tokens'
 import { Banner }          from '@/src/components/Banner'
@@ -19,6 +32,7 @@ import CaseLawBox          from '@/src/components/CaseLawBox'
 import { FarSideBox }      from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
 import { CasePageLayout }  from '@/src/components/CasePageLayout'
+import { CasePageMain }    from '@/src/components/CasePageMain'
 import { ALL_CASE_SLUGS, getCaseBySlug } from '@/src/data/cases'
 import type { CaseLaw }    from '@/src/data/types'
 
@@ -80,25 +94,7 @@ export default async function CaseLawPage({
         }
       `}</style>
       <CasePageLayout>
-        <main className="ag-case-main" style={{ minHeight: '100vh', background: PALETTE.warm }}>
-          <Banner />
-          <ResizablePanels
-            left={{
-              label: 'Latest News',
-              node:  <NewsBox />,
-            }}
-            center={{
-              label: 'Case Law Updates',
-              node:  <CaseLawBox caseData={caseData!} />,
-            }}
-            right={{
-              label: 'The Far Side',
-              node:  <FarSideBox />,
-            }}
-            mobileInitialOpen={{ 0: false, 1: true, 2: false }}
-            mobileOrder={[2, 0, 1]}
-          />
-        </main>
+        <CasePageMain caseData={caseData} />
       </CasePageLayout>
     </>
   )
