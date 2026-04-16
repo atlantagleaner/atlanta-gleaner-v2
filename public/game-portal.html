@@ -45,7 +45,7 @@
             width: 600px;
             max-width: calc(100vw - 40px);
             height: calc(100vh - 100px);
-            max-height: 750px;
+            max-height: calc(100vh - 80px);
             background: #0a0e27;
             border: 4px solid #8B4FBF;
             box-shadow: 0 0 20px rgba(139, 79, 191, 0.5), 0 0 40px rgba(0, 217, 255, 0.3);
@@ -101,7 +101,9 @@
         .cards-container[data-card-count="6"],
         .cards-container[data-card-count="7"],
         .cards-container[data-card-count="8"] {
-            gap: -10px;
+            --card-width: 50px;
+            --card-height: 75px;
+            gap: 0;
             flex-wrap: nowrap;
             justify-content: center;
         }
@@ -110,8 +112,8 @@
         .cards-container[data-card-count="6"] .card,
         .cards-container[data-card-count="7"] .card,
         .cards-container[data-card-count="8"] .card {
-            width: 50px;
-            height: 75px;
+            width: var(--card-width, 50px);
+            height: var(--card-height, 75px);
             margin-right: -10px;
             flex-shrink: 0;
         }
@@ -147,9 +149,31 @@
         .cards-container[data-card-count="8"] .card:nth-child(7) { transform: rotate(14deg) translateY(7px); }
         .cards-container[data-card-count="8"] .card:nth-child(8) { transform: rotate(16deg) translateY(8px); }
 
+        /* Compact layout for 9-12 cards */
+        .cards-container[data-card-count="9"],
+        .cards-container[data-card-count="10"],
+        .cards-container[data-card-count="11"],
+        .cards-container[data-card-count="12"] {
+            --card-width: 45px;
+            --card-height: 67px;
+            gap: 4px;
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
+        .cards-container[data-card-count="9"] .card,
+        .cards-container[data-card-count="10"] .card,
+        .cards-container[data-card-count="11"] .card,
+        .cards-container[data-card-count="12"] .card {
+            width: var(--card-width, 45px);
+            height: var(--card-height, 67px);
+            margin-right: 0;
+            flex-shrink: 1;
+        }
+
         .card {
-            width: 66px;
-            height: 99px;
+            width: var(--card-width, 66px);
+            height: var(--card-height, 99px);
             background: #2a2a5a;
             border: 2px solid #00D9FF;
             border-radius: 4px;
@@ -161,6 +185,7 @@
             font-weight: bold;
             box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
             animation: slideIn 0.3s ease-out;
+            flex-shrink: 0;
         }
 
         @keyframes slideIn {
@@ -243,8 +268,11 @@
         /* Control Panel */
         #control-panel {
             position: relative;
-            min-height: 115px;
+            min-height: auto;
             margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .control-section {
@@ -455,10 +483,11 @@
         @media (max-width: 600px) {
             #game-container {
                 max-width: 65vw;
-                height: 71.5vh;
+                height: auto;
+                max-height: calc(100vh - 70px);
                 border-radius: 0;
-                padding: 18px;
-                gap: 12px;
+                padding: 16px;
+                gap: 10px;
             }
 
             #balance-display {
@@ -467,7 +496,7 @@
             }
 
             #dealer-area, #player-area {
-                padding: 14px;
+                padding: 12px;
                 flex: 1;
             }
 
@@ -482,9 +511,25 @@
             }
 
             .card {
-                width: 66px;
-                height: 99px;
-                font-size: 13px;
+                width: var(--card-width, 60px);
+                height: var(--card-height, 90px);
+                font-size: 12px;
+            }
+
+            /* Mobile compact card sizes */
+            .cards-container[data-card-count="5"],
+            .cards-container[data-card-count="6"],
+            .cards-container[data-card-count="7"],
+            .cards-container[data-card-count="8"] {
+                --card-width: 48px;
+                --card-height: 72px;
+            }
+
+            .cards-container[data-card-count="9"],
+            .cards-container[data-card-count="10"] {
+                --card-width: 42px;
+                --card-height: 63px;
+                gap: 3px;
             }
 
             .score-display {
