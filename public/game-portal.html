@@ -187,8 +187,8 @@
         }
 
         .card {
-            width: 60px;
-            height: 90px;
+            width: 66px;
+            height: 99px;
             background: #2a2a5a;
             border: 2px solid #00D9FF;
             border-radius: 4px;
@@ -252,19 +252,21 @@
             color: transparent !important;
             position: relative !important;
             display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         .card.hidden::before {
-            content: '';
+            content: '♄';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(0, 217, 255, 0.4);
-            border-radius: 2px;
-            opacity: 0.6;
+            font-size: 48px;
+            color: rgba(0, 217, 255, 0.7);
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.6), 0 0 30px rgba(139, 79, 191, 0.4);
+            font-weight: bold;
+            z-index: 1;
         }
 
         .score-display {
@@ -507,9 +509,9 @@
             }
 
             .card {
-                width: 52px;
-                height: 78px;
-                font-size: 12px;
+                width: 66px;
+                height: 99px;
+                font-size: 13px;
             }
 
             .score-display {
