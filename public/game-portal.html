@@ -76,14 +76,6 @@
             white-space: nowrap;
         }
 
-        #karmic-debt-display {
-            color: #B8860B;
-            text-shadow: 0 0 15px rgba(184, 134, 11, 0.8);
-            font-size: 8px;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-
         /* Game Sections */
         #dealer-area, #player-area {
             flex: 1;
@@ -670,7 +662,6 @@
             <!-- Balance Display -->
             <div id="balance-display">
                 <span>BALANCE:$<span id="balance-value">1000</span></span>
-                <span id="karmic-debt-display">KARMIC DEBT:$<span id="karmic-debt-value">0</span></span>
             </div>
 
             <!-- Dealer Area -->
@@ -692,12 +683,13 @@
                 <!-- Betting Controls -->
                 <div id="betting-controls" class="control-section visible">
                     <div class="bet-label">SELECT BET AMOUNT</div>
-                    <div class="chip-selector">
+                    <div class="chip-selector" id="chip-selector">
                         <button class="chip-btn" data-chip="10">$10</button>
                         <button class="chip-btn" data-chip="25">$25</button>
                         <button class="chip-btn" data-chip="50">$50</button>
                         <button class="chip-btn" data-chip="100">$100</button>
                         <button class="chip-btn" data-chip="500">$500</button>
+                        <button class="chip-btn" id="dynamic-chip-btn" style="display: none;"></button>
                     </div>
                     <div class="bet-display">Current Bet: $<span id="current-bet">0</span></div>
                     <button id="place-bet-btn">PLACE BET</button>
@@ -1032,7 +1024,6 @@
         // ============ GAME STATE ============
         const gameState = {
             balance: 1000,
-            karmicDebt: 0,
             currentBet: 0,
             selectedChip: 0,
             wagerTotal: 0,
@@ -1051,10 +1042,24 @@
         // ============ UI UPDATES ============
         function updateBalanceDisplay() {
             document.getElementById('balance-value').textContent = gameState.balance;
+            updateChipSelector();
         }
 
-        function updateKarmicDebtDisplay() {
-            document.getElementById('karmic-debt-value').textContent = gameState.karmicDebt;
+        function updateChipSelector() {
+            const regularChips = document.querySelectorAll('.chip-btn:not(#dynamic-chip-btn)');
+            const dynamicBtn = document.getElementById('dynamic-chip-btn');
+
+            if (gameState.balance < 10) {
+                // Show dynamic chip, hide regular chips
+                regularChips.forEach(btn => btn.style.display = 'none');
+                dynamicBtn.textContent = '$' + gameState.balance;
+                dynamicBtn.dataset.chip = gameState.balance;
+                dynamicBtn.style.display = 'block';
+            } else {
+                // Show regular chips, hide dynamic
+                regularChips.forEach(btn => btn.style.display = 'block');
+                dynamicBtn.style.display = 'none';
+            }
         }
 
         function showDealerDialogue(outcome) {
@@ -1168,6 +1173,7 @@
             showBettingControls();
             document.getElementById('dealer-cards').innerHTML = '';
             document.getElementById('player-cards').innerHTML = '';
+            updateChipSelector();
             updateButtonStates();
         }
 
@@ -1437,7 +1443,6 @@
         }
 
         function resetGame() {
-            gameState.karmicDebt += 1000;
             gameState.balance = 1000;
             gameState.currentBet = 0;
             gameState.selectedChip = 0;
@@ -1447,7 +1452,6 @@
             deck.reset();
 
             updateBalanceDisplay();
-            updateKarmicDebtDisplay();
             updateBetDisplay();
             document.getElementById('game-over-screen').classList.remove('active');
             enableBetting();
@@ -1519,7 +1523,6 @@
 
         // ============ INITIALIZE ============
         updateBalanceDisplay();
-        updateKarmicDebtDisplay();
         updateBetDisplay();
         enableBetting();
     </script>
