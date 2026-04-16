@@ -709,6 +709,7 @@
             balance: 1000,
             currentBet: 0,
             selectedChip: 0,
+            wagerTotal: 0,
             playerCards: [],
             dealerCards: [],
             phase: 'BETTING', // BETTING, DEAL, PLAYER, DEALER, RESULT
@@ -727,7 +728,7 @@
         }
 
         function updateBetDisplay() {
-            document.getElementById('current-bet').textContent = gameState.currentBet;
+            document.getElementById('current-bet').textContent = gameState.wagerTotal;
         }
 
         function renderCards(containerId, cards, hideFirst = false) {
@@ -819,18 +820,19 @@
         }
 
         function placeBet() {
-            gameState.currentBet = gameState.selectedChip;
+            gameState.currentBet = gameState.wagerTotal;
             gameState.balance -= gameState.currentBet;
             updateBalanceDisplay();
             updateBetDisplay();
             document.getElementById('place-bet-btn').disabled = true;
+            gameState.wagerTotal = 0;
             dealCards();
         }
 
         function updateButtonStates() {
-            // Disable Place Bet if no chip selected or insufficient balance
+            // Disable Place Bet if no wager accumulated or insufficient balance
             const placeBetBtn = document.getElementById('place-bet-btn');
-            placeBetBtn.disabled = gameState.selectedChip === 0 || gameState.selectedChip > gameState.balance;
+            placeBetBtn.disabled = gameState.wagerTotal === 0 || gameState.wagerTotal > gameState.balance;
 
             // Disable Double if insufficient balance
             const doubleBtn = document.getElementById('double-btn');
@@ -1062,6 +1064,7 @@
         function newHand() {
             document.getElementById('result-new-hand-btn').disabled = true;
             gameState.selectedChip = 0;
+            gameState.wagerTotal = 0;
             enableBetting();
             // Reset chip selection
             document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
@@ -1076,6 +1079,7 @@
             gameState.balance = 1000;
             gameState.currentBet = 0;
             gameState.selectedChip = 0;
+            gameState.wagerTotal = 0;
             gameState.handCount = 0;
             gameState.deck = new Deck();
             deck.reset();
@@ -1123,9 +1127,16 @@
 
         document.querySelectorAll('.chip-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                const chipValue = parseInt(e.target.dataset.chip);
+                gameState.wagerTotal += chipValue;
+                gameState.selectedChip = chipValue;
+
+                // Remove active class from all buttons
                 document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+                // Add active class only to the clicked button
                 e.target.classList.add('active');
-                gameState.selectedChip = parseInt(e.target.dataset.chip);
+
+                updateBetDisplay();
                 updateButtonStates();
             });
         });
