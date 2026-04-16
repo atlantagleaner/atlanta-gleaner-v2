@@ -815,26 +815,34 @@
             showBettingControls();
             document.getElementById('dealer-cards').innerHTML = '';
             document.getElementById('player-cards').innerHTML = '';
-            document.getElementById('place-bet-btn').disabled = false;
+            updateButtonStates();
         }
 
         function placeBet() {
-            if (gameState.selectedChip === 0) {
-                alert('Select a chip amount!');
-                return;
-            }
-
-            if (gameState.selectedChip > gameState.balance) {
-                alert('Insufficient balance!');
-                return;
-            }
-
             gameState.currentBet = gameState.selectedChip;
             gameState.balance -= gameState.currentBet;
             updateBalanceDisplay();
             updateBetDisplay();
             document.getElementById('place-bet-btn').disabled = true;
             dealCards();
+        }
+
+        function updateButtonStates() {
+            // Disable Place Bet if no chip selected or insufficient balance
+            const placeBetBtn = document.getElementById('place-bet-btn');
+            placeBetBtn.disabled = gameState.selectedChip === 0 || gameState.selectedChip > gameState.balance;
+
+            // Disable Double if insufficient balance
+            const doubleBtn = document.getElementById('double-btn');
+            if (doubleBtn) {
+                doubleBtn.disabled = gameState.currentBet * 2 > gameState.balance + gameState.currentBet;
+            }
+
+            // Disable Split if insufficient balance
+            const splitBtn = document.getElementById('split-btn');
+            if (splitBtn) {
+                splitBtn.disabled = gameState.currentBet * 2 > gameState.balance + gameState.currentBet;
+            }
         }
 
         function dealCards() {
@@ -925,11 +933,6 @@
         }
 
         function doubleDown() {
-            if (gameState.currentBet * 2 > gameState.balance + gameState.currentBet) {
-                alert('Insufficient balance to double!');
-                return;
-            }
-
             gameState.balance -= gameState.currentBet;
             gameState.currentBet *= 2;
             updateBalanceDisplay();
@@ -944,11 +947,6 @@
         }
 
         function split() {
-            if (gameState.currentBet * 2 > gameState.balance + gameState.currentBet) {
-                alert('Insufficient balance to split!');
-                return;
-            }
-
             gameState.balance -= gameState.currentBet;
             gameState.currentBet *= 2;
             updateBalanceDisplay();
@@ -1063,6 +1061,7 @@
 
         function newHand() {
             document.getElementById('result-new-hand-btn').disabled = true;
+            gameState.selectedChip = 0;
             enableBetting();
             // Reset chip selection
             document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
@@ -1127,6 +1126,7 @@
                 document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 gameState.selectedChip = parseInt(e.target.dataset.chip);
+                updateButtonStates();
             });
         });
 
