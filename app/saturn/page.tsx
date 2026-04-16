@@ -8,6 +8,8 @@ export default function SaturnPage() {
   const [isMobile, setIsMobile] = useState(false)
   const [resetOrbit, setResetOrbit] = useState<(() => void) | null>(null)
   const [isGamePortalOpen, setIsGamePortalOpen] = useState(false)
+  const [selectedGame, setSelectedGame] = useState<string | null>(null)
+  const iframeRef = useState<HTMLIFrameElement | null>(null)[1]
 
   // Apply Saturn theme to document element for global CSS selectors
   useEffect(() => {
@@ -24,7 +26,24 @@ export default function SaturnPage() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const toggleGamePortal = () => setIsGamePortalOpen(!isGamePortalOpen)
+  const handleGameSelected = (gameName: string) => {
+    if (gameName === 'orbit') {
+      // Close the overlay, return to default Saturn view
+      setIsGamePortalOpen(false)
+      setSelectedGame(null)
+    } else {
+      // Open the overlay with the selected game
+      setSelectedGame(gameName)
+      setIsGamePortalOpen(true)
+      // Send postMessage to iframe after it renders
+      setTimeout(() => {
+        const iframe = document.querySelector('iframe[title="Game Portal"]') as HTMLIFrameElement
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage({ type: 'selectGame', game: gameName }, '*')
+        }
+      }, 100)
+    }
+  }
 
   return (
     <>
@@ -39,7 +58,7 @@ export default function SaturnPage() {
       `}</style>
       <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '600px' }}>
       {/* Saturn Navbar */}
-      <SaturnNavbar onResetOrbit={resetOrbit || undefined} onGamePortalToggle={toggleGamePortal} />
+      <SaturnNavbar onResetOrbit={resetOrbit || undefined} onGameSelected={handleGameSelected} />
 
       {/* Interactive Saturn Simulation */}
       <div style={{

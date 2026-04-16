@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react'
 
 interface SaturnNavbarProps {
   onResetOrbit?: () => void
-  onGamePortalToggle?: () => void
+  onGameSelected?: (gameName: string) => void
 }
 
-export function SaturnNavbar({ onResetOrbit, onGamePortalToggle }: SaturnNavbarProps) {
+export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps) {
   const [time, setTime] = useState(new Date())
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isGameMenuOpen, setIsGameMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -69,6 +70,40 @@ export function SaturnNavbar({ onResetOrbit, onGamePortalToggle }: SaturnNavbarP
     transition: 'background 0.2s ease',
   }
 
+  const gameMenuStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '100%',
+    right: '0',
+    marginTop: '8px',
+    background: 'rgba(2, 1, 1, 0.95)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    padding: '8px 0',
+    color: '#FFF',
+    fontSize: '11px',
+    letterSpacing: '0.15em',
+    fontFamily: 'monospace',
+    zIndex: 1100,
+    minWidth: '160px',
+  }
+
+  const gameOptionStyle: React.CSSProperties = {
+    padding: '8px 16px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    transition: 'background 0.2s ease',
+    display: 'block',
+    color: '#FFF',
+    textDecoration: 'none',
+    borderBottom: '1px solid rgba(184, 134, 11, 0.2)',
+  }
+
+  const handleGameSelect = (gameName: string) => {
+    onGameSelected?.(gameName)
+    setIsGameMenuOpen(false)
+  }
+
   return (
     <>
       {isMobile ? (
@@ -110,11 +145,35 @@ export function SaturnNavbar({ onResetOrbit, onGamePortalToggle }: SaturnNavbarP
             )}
           </div>
 
-          {/* Row 2: Saturn Game Portal Toggle Button */}
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <button onClick={onGamePortalToggle} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
+          {/* Row 2: Saturn Game Selection Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
+              style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}
+            >
               SATURN
+              <span style={{ fontSize: '10px', transition: 'transform 0.2s', transform: isGameMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
             </button>
+            {isGameMenuOpen && (
+              <div style={{...gameMenuStyle, left: '0'}}>
+                <div
+                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px'}}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  onClick={() => handleGameSelect('orbit')}
+                >
+                  🌐 Orbit
+                </div>
+                <div
+                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderBottom: 'none'}}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  onClick={() => handleGameSelect('blackjack')}
+                >
+                  🃏 Blackjack
+                </div>
+              </div>
+            )}
           </div>
         </nav>
       ) : (
@@ -157,9 +216,35 @@ export function SaturnNavbar({ onResetOrbit, onGamePortalToggle }: SaturnNavbarP
               )}
             </div>
 
-            <button onClick={onGamePortalToggle} style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}>
-              SATURN
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
+                style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}
+              >
+                SATURN
+                <span style={{ fontSize: '10px', transition: 'transform 0.2s', transform: isGameMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+              </button>
+              {isGameMenuOpen && (
+                <div style={{...gameMenuStyle}}>
+                  <div
+                    style={{...gameOptionStyle}}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    onClick={() => handleGameSelect('orbit')}
+                  >
+                    🌐 Orbit
+                  </div>
+                  <div
+                    style={{...gameOptionStyle, borderBottom: 'none'}}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    onClick={() => handleGameSelect('blackjack')}
+                  >
+                    🃏 Blackjack
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </nav>
       )}

@@ -58,107 +58,6 @@
             align-self: center;
         }
 
-        /* Station Button */
-        #station-button {
-            position: relative;
-            padding: 10px 24px;
-            background: rgba(139, 79, 191, 0.9);
-            border: 2px solid #00D9FF;
-            color: #00D9FF;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            border-radius: 100px;
-            z-index: 300;
-            transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(0, 217, 255, 0.6);
-            font-family: 'Press Start 2P', cursive;
-            white-space: nowrap;
-        }
-
-        #station-button:hover {
-            background: rgba(139, 79, 191, 1);
-            box-shadow: 0 0 20px rgba(0, 217, 255, 1);
-            transform: scale(1.05);
-        }
-
-        #station-button:active {
-            transform: scale(0.98);
-        }
-
-        /* Dropdown Arrow */
-        .station-arrow {
-            font-size: 10px;
-            transition: transform 0.2s;
-        }
-
-        #station-button.open .station-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* Station Dropdown Menu */
-        #station-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #1a1a3a;
-            border: 2px solid #00D9FF;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
-            z-index: 300;
-            min-width: 200px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        #station-menu.open {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .game-option {
-            background: #1a1a3a;
-            color: #00D9FF;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.1s;
-            border: none;
-            text-align: left;
-            border-bottom: 1px solid rgba(139, 79, 191, 0.3);
-            font-family: 'Press Start 2P', cursive;
-        }
-
-        .game-option:last-child {
-            border-bottom: none;
-        }
-
-        .game-option:hover:not(:disabled) {
-            background: rgba(139, 79, 191, 0.6);
-            padding-left: 20px;
-        }
-
-        .game-option.available {
-            opacity: 1;
-        }
-
-        .game-option:not(.available) {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Station Wrapper */
-        #station-container {
-            position: relative;
-            width: fit-content;
-            align-self: flex-start;
-            margin-left: 20px;
-            background: transparent;
-        }
 
         /* Balance Display */
         #balance-display {
@@ -642,19 +541,6 @@
 </head>
 <body>
     <div id="app">
-        <!-- Station Control Container -->
-        <div id="station-container">
-            <!-- Station Button (Floating Pill) -->
-            <button id="station-button">
-                STATION <span class="station-arrow">▼</span>
-            </button>
-
-            <!-- Station Dropdown Menu -->
-            <div id="station-menu">
-                <button class="game-option available" data-game="blackjack">🃏 BLACKJACK</button>
-            </div>
-        </div>
-
         <div id="game-container">
 
             <!-- Balance Display -->
@@ -1213,32 +1099,18 @@
         }
 
         // ============ EVENT LISTENERS ============
-        document.getElementById('station-button').addEventListener('click', () => {
-            const button = document.getElementById('station-button');
-            const menu = document.getElementById('station-menu');
-            button.classList.toggle('open');
-            menu.classList.toggle('open');
-        });
+        // Listen for game selection from parent window (Saturn page)
+        window.addEventListener('message', (event) => {
+            // Only accept messages from same origin
+            if (event.origin !== window.location.origin && event.origin !== '*') return;
 
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const button = document.getElementById('station-button');
-            const menu = document.getElementById('station-menu');
-            if (!button.contains(e.target) && !menu.contains(e.target)) {
-                button.classList.remove('open');
-                menu.classList.remove('open');
-            }
-        });
-
-        document.querySelectorAll('.game-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                const game = e.target.dataset.game;
+            if (event.data.type === 'selectGame') {
+                const game = event.data.game;
                 if (game === 'blackjack') {
-                    // Close menu on selection
-                    document.getElementById('station-button').classList.remove('open');
-                    document.getElementById('station-menu').classList.remove('open');
+                    // Game is already loaded, just ensure it's ready
+                    console.log('Blackjack game loaded via parent selection');
                 }
-            });
+            }
         });
 
         document.querySelectorAll('.chip-btn').forEach(btn => {
