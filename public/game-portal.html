@@ -1491,16 +1491,20 @@
         document.querySelectorAll('.chip-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const chipValue = parseInt(e.target.dataset.chip);
-                gameState.wagerTotal += chipValue;
-                gameState.selectedChip = chipValue;
 
-                // Remove active class from all buttons
-                document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
-                // Add active class only to the clicked button
-                e.target.classList.add('active');
+                // Only add chip if it doesn't exceed remaining balance
+                if (gameState.wagerTotal + chipValue <= gameState.balance) {
+                    gameState.wagerTotal += chipValue;
+                    gameState.selectedChip = chipValue;
 
-                updateBetDisplay();
-                updateButtonStates();
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class only to the clicked button
+                    e.target.classList.add('active');
+
+                    updateBetDisplay();
+                    updateButtonStates();
+                }
             });
         });
 
