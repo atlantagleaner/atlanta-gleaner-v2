@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celestial Tarot — Zodiac Terminal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #0a0015;
+      --bg-space: #1a0a2e;
+      --accent-gold: #f9ca24;
+      --accent-neon: #e056fd;
+      --accent-cyan: #00cec9;
+      --silver: #dfe6e9;
+      --dialogue-bg-top: #1e3799;
+      --dialogue-bg-bot: #0c2461;
+      --border: #dfe6e9;
+    }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--silver);
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .game-container {
+      width: 333px;
+      height: 600px;
+      position: relative;
+      background: var(--bg-deep);
+      border-radius: 12px;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(233, 86, 253, 0.2);
+      overflow: hidden;
+    }
+
+    /* CRT scanlines overlay */
+    .game-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      background: repeating-linear-gradient(
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.18) 2px,
+        rgba(0, 0, 0, 0.18) 4px
+      );
+      border-radius: 12px;
+    }
+
+    /* Scene zone: 0–400px */
+    .scene-zone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 400px;
+      background: var(--bg-space);
+      overflow: hidden;
+    }
+
+    #starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .character-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .character-container.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #character-canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .card-image-zone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 5;
+    }
+
+    .card-image-zone.visible {
+      opacity: 1;
+    }
+
+    .card-image {
+      max-width: 180px;
+      max-height: 280px;
+      object-fit: contain;
+      image-rendering: auto;
+      border: 2px solid var(--accent-gold);
+      border-radius: 2px;
+    }
+
+    .card-fallback {
+      width: 120px;
+      height: 180px;
+      background: linear-gradient(135deg, #1a0a2e, #2d1b69);
+      border: 2px solid var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 7px;
+      color: var(--accent-gold);
+      border-radius: 2px;
+      padding: 8px;
+    }
+
+    .card-metadata {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 6;
+    }
+
+    .card-name {
+      font-size: 11px;
+      color: var(--accent-gold);
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .card-keywords {
+      font-size: 7px;
+      color: var(--accent-cyan);
+      opacity: 0.8;
+    }
+
+    .card-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .card-grid.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .card-grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .card-thumbnail {
+      width: 80px;
+      height: 120px;
+      background: linear-gradient(135deg, #2d1b69, #1a0a2e);
+      border: 2px solid var(--accent-neon);
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6px;
+      text-align: center;
+      padding: 4px;
+      color: var(--accent-neon);
+      transition: all 0.2s ease;
+      transform: scale(1);
+    }
+
+    .card-thumbnail:hover {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 12px rgba(249, 202, 36, 0.5);
+      transform: scale(1.08);
+    }
+
+    /* Dialogue panel: 400–600px */
+    .dialogue-panel {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, var(--dialogue-bg-top), var(--dialogue-bg-bot));
+      border-top: 3px solid var(--border);
+      padding: 12px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+    }
+
+    .dialogue-text {
+      height: 110px;
+      overflow: hidden;
+      font-size: 9px;
+      line-height: 1.8;
+      color: var(--silver);
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+
+    .dialogue-options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .dialogue-options::-webkit-scrollbar {
+      display: none;
+    }
+
+    .option-btn {
+      background: transparent;
+      border: 2px solid var(--accent-neon);
+      color: var(--accent-neon);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      padding: 4px 6px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.1s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+    }
+
+    .option-btn:hover {
+      background: var(--accent-neon);
+      color: var(--dialogue-bg-bot);
+      box-shadow: 0 0 8px rgba(224, 86, 253, 0.6);
+    }
+
+    .option-btn:active {
+      transform: scale(0.98);
+    }
+
+    .nav-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8px;
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-bar.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .back-btn, .sound-btn {
+      background: transparent;
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      font-size: 10px;
+      padding: 2px 6px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+      transition: all 0.1s ease;
+    }
+
+    .back-btn:hover, .sound-btn:hover {
+      background: var(--accent-gold);
+      color: var(--bg-deep);
+    }
+
+    /* Orrery canvas */
+    #orrery-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .orrery-zone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 400px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .orrery-zone.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Boot console */
+    .boot-console {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+      pointer-events: all;
+    }
+
+    .boot-console.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .boot-text {
+      font-size: 9px;
+      color: var(--accent-gold);
+      text-align: left;
+      line-height: 2.2;
+      width: 90%;
+      height: 90%;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Loading bar */
+    .loading-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(249, 202, 36, 0.2);
+      border: 1px solid var(--accent-gold);
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .loading-fill {
+      height: 100%;
+      background: var(--accent-gold);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    @keyframes palette-flash {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(2); }
+      100% { filter: brightness(1); }
+    }
+
+    .flash {
+      animation: palette-flash 0.3s ease;
+    }
+
+    /* Utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <!-- Boot console -->
+    <div class="boot-console" id="boot-console">
+      <div class="boot-text" id="boot-text"></div>
+    </div>
+
+    <!-- Scene zone -->
+    <div class="scene-zone">
+      <canvas id="starfield" width="333" height="400"></canvas>
+
+      <div class="character-container" id="character-container">
+        <canvas id="character-canvas" width="48" height="64"></canvas>
+      </div>
+
+      <div class="card-image-zone" id="card-image-zone">
+        <div id="card-image-container"></div>
+        <div class="card-metadata" id="card-metadata">
+          <div class="card-name" id="card-name"></div>
+          <div class="card-keywords" id="card-keywords"></div>
+        </div>
+      </div>
+
+      <div class="card-grid visible" id="card-grid">
+        <div class="card-grid-container" id="card-grid-container"></div>
+      </div>
+
+      <div class="orrery-zone" id="orrery-zone">
+        <canvas id="orrery-canvas" width="333" height="400"></canvas>
+      </div>
+
+      <div class="nav-bar" id="nav-bar">
+        <button class="back-btn" id="back-btn">← BACK</button>
+        <button class="sound-btn" id="sound-btn">♪</button>
+      </div>
+    </div>
+
+    <!-- Dialogue panel -->
+    <div class="dialogue-panel">
+      <div class="dialogue-text" id="dialogue-text"></div>
+      <div class="dialogue-options" id="dialogue-options"></div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== GLOBAL STATE ====================
+    const gameState = {
+      currentState: 'BOOT',
+      activeGuide: null,
+      isMuted: false,
+      drawnCards: [],
+      currentCardIndex: 0,
+      planetaryInfluence: null,
+      spreadType: null,
+      lightOrShadow: {}, // map card id to 'light' or 'shadow'
+    };
+
+    const audioState = {
+      ctx: null,
+      backgroundOscillators: [],
+      backgroundGains: [],
+    };
+
+    // ==================== CARD DATA ====================
+    const MAJOR_ARCANA = [
+      {
+        id: 0, name: 'The Fool', keywords: ['beginnings', 'innocence', 'spontaneity', 'free spirit'],
+        upright: 'A fresh start, new adventure, taking a leap of faith. Embrace the unknown with childlike wonder.',
+        reversed: 'Recklessness, risk-taking without thinking. Hold on, pause and reconsider your path.',
+        planet: 'Uranus', element: 'Air', hebrew: 'Aleph', alchemical: 'Mercury', esotericTitle: 'The Spirit of Aether', treePath: '11', orreryPlanet: 'uranus'
+      },
+      {
+        id: 1, name: 'The Magician', keywords: ['manifestation', 'power', 'action', 'concentration'],
+        upright: 'You have all the tools you need. Channel your willpower and make things happen.',
+        reversed: 'Manipulation, poor planning, untapped talents. Don\'t waste your gifts.',
+        planet: 'Mercury', element: 'Air', hebrew: 'Beth', alchemical: 'Mercury', esotericTitle: 'The Magus of Power', treePath: '12', orreryPlanet: 'mercury'
+      },
+      {
+        id: 2, name: 'The High Priestess', keywords: ['intuition', 'mystery', 'subconscious', 'wisdom'],
+        upright: 'Trust your intuition. The answers lie within — quiet your mind and listen.',
+        reversed: 'Secrets, withdrawn energy, silence your inner voice. Stop overthinking.',
+        planet: 'Moon', element: 'Water', hebrew: 'Gimel', alchemical: 'Salt', esotericTitle: 'Priestess of the Silver Star', treePath: '13', orreryPlanet: 'moon'
+      },
+      {
+        id: 3, name: 'The Empress', keywords: ['fertility', 'nature', 'abundance', 'nurturing'],
+        upright: 'Abundance and nurturing energy. Create, grow, and enjoy life\'s pleasures.',
+        reversed: 'Creative block, dependence, smothering. Find balance between giving and receiving.',
+        planet: 'Venus', element: 'Earth', hebrew: 'Daleth', alchemical: 'Salt', esotericTitle: 'Daughter of the Mighty Ones', treePath: '14', orreryPlanet: 'venus'
+      },
+      {
+        id: 4, name: 'The Emperor', keywords: ['authority', 'structure', 'control', 'fatherhood'],
+        upright: 'Structure, authority, and leadership. Take charge and build solid foundations.',
+        reversed: 'Domination, rigidity, inflexibility. Loosen your grip — control is an illusion.',
+        planet: 'Aries', element: 'Fire', hebrew: 'Heh', alchemical: 'Sulfur', esotericTitle: 'Son of the Morning', treePath: '15', orreryPlanet: 'mars'
+      },
+      {
+        id: 5, name: 'The Hierophant', keywords: ['tradition', 'conformity', 'education', 'spirituality'],
+        upright: 'Seek guidance from tradition or a mentor. Spiritual wisdom through established paths.',
+        reversed: 'Rebellion, breaking free from convention. Trust your own inner guidance system.',
+        planet: 'Taurus', element: 'Earth', hebrew: 'Vau', alchemical: 'Salt', esotericTitle: 'Magus of the Eternal', treePath: '16', orreryPlanet: 'saturn'
+      },
+      {
+        id: 6, name: 'The Lovers', keywords: ['love', 'harmony', 'relationships', 'values'],
+        upright: 'A meaningful choice or deep connection. Follow your heart, but use your head too.',
+        reversed: 'Disharmony, imbalance, misalignment. Reconnect with what truly matters.',
+        planet: 'Gemini', element: 'Air', hebrew: 'Zain', alchemical: 'Mercury', esotericTitle: 'Children of the Voice', treePath: '17', orreryPlanet: 'mercury'
+      },
+      {
+        id: 7, name: 'The Chariot', keywords: ['determination', 'willpower', 'victory', 'assertiveness'],
+        upright: 'Victory through determination. Charge forward with confidence and focus.',
+        reversed: 'Lack of direction, aggression, no control. Realign before moving forward.',
+        planet: 'Cancer', element: 'Water', hebrew: 'Cheth', alchemical: 'Mercury', esotericTitle: 'Child of the Powers of the Waters', treePath: '18', orreryPlanet: 'moon'
+      },
+      {
+        id: 8, name: 'Strength', keywords: ['courage', 'patience', 'compassion', 'inner strength'],
+        upright: 'Inner strength and courage. Face challenges with grace, not force.',
+        reversed: 'Self-doubt, weakness, insecurity. Remember your own power.',
+        planet: 'Leo', element: 'Fire', hebrew: 'Teth', alchemical: 'Sulfur', esotericTitle: 'Daughter of the Flaming Sword', treePath: '19', orreryPlanet: 'sun'
+      },
+      {
+        id: 9, name: 'The Hermit', keywords: ['introspection', 'solitude', 'guidance', 'reflection'],
+        upright: 'Time for solitude and reflection. Your inner light will guide the way.',
+        reversed: 'Isolation, loneliness, withdrawal. Don\'t cut yourself off from the world.',
+        planet: 'Virgo', element: 'Earth', hebrew: 'Yod', alchemical: 'Mercury', esotericTitle: 'Prophet of the Eternal', treePath: '20', orreryPlanet: 'mercury'
+      },
+      {
+        id: 10, name: 'Wheel of Fortune', keywords: ['cycles', 'destiny', 'turning point', 'luck'],
+        upright: 'A turning point. The wheel turns in your favor — embrace the change.',
+        reversed: 'Bad luck, resistance to change, breaking cycles. What goes down must come up.',
+        planet: 'Jupiter', element: 'Fire', hebrew: 'Kaph', alchemical: 'Mercury', esotericTitle: 'Lord of the Forces of Life', treePath: '21', orreryPlanet: 'jupiter'
+      },
+      {
+        id: 11, name: 'Justice', keywords: ['fairness', 'truth', 'cause-effect', 'law'],
+        upright: 'Justice and fairness prevail. Honesty leads to the right outcome.',
+        reversed: 'Unfairness, dishonesty, lack of accountability. Restore balance.',
+        planet: 'Libra', element: 'Air', hebrew: 'Lamed', alchemical: 'Mercury', esotericTitle: 'Daughter of the Lords of Truth', treePath: '22', orreryPlanet: 'venus'
+      },
+      {
+        id: 12, name: 'The Hanged Man', keywords: ['surrender', 'new perspective', 'letting go', 'pause'],
+        upright: 'Surrender and gain a new perspective. Sometimes doing nothing is doing everything.',
+        reversed: 'Delays, resistance, stalling. Stop fighting the current.',
+        planet: 'Neptune', element: 'Water', hebrew: 'Mem', alchemical: 'Salt', esotericTitle: 'Spirit of the Mighty Waters', treePath: '23', orreryPlanet: 'moon'
+      },
+      {
+        id: 13, name: 'Death', keywords: ['transformation', 'endings', 'change', 'transition'],
+        upright: 'Transformation and new beginnings. Endings clear the path for fresh starts.',
+        reversed: 'Resistance to change, fear of endings. Embrace transformation — it\'s natural.',
+        planet: 'Scorpio', element: 'Water', hebrew: 'Nun', alchemical: 'Sulfur', esotericTitle: 'Child of the Great Transformers', treePath: '24', orreryPlanet: 'mars'
+      },
+      {
+        id: 14, name: 'Temperance', keywords: ['balance', 'moderation', 'patience', 'purpose'],
+        upright: 'Balance and moderation. Find your middle path and walk it with patience.',
+        reversed: 'Imbalance, excess, lack of long-term vision. Recalibrate your life.',
+        planet: 'Sagittarius', element: 'Fire', hebrew: 'Samekh', alchemical: 'Mercury', esotericTitle: 'Daughter of the Reconcilers', treePath: '25', orreryPlanet: 'jupiter'
+      },
+      {
+        id: 15, name: 'The Devil', keywords: ['shadow', 'attachment', 'addiction', 'materialism'],
+        upright: 'Examine your shadow side. What binds you? Awareness is the first step to freedom.',
+        reversed: 'Release, freedom, breaking free. You have the power to unchain yourself.',
+        planet: 'Capricorn', element: 'Earth', hebrew: 'Ayin', alchemical: 'Sulfur', esotericTitle: 'Lord of the Gates of Matter', treePath: '26', orreryPlanet: 'saturn'
+      },
+      {
+        id: 16, name: 'The Tower', keywords: ['upheaval', 'revelation', 'awakening', 'change'],
+        upright: 'Sudden change and upheaval. Sometimes structures must fall to build something better.',
+        reversed: 'Avoidance of disaster, fear of change. Face the truth — it will set you free.',
+        planet: 'Mars', element: 'Fire', hebrew: 'Peh', alchemical: 'Sulfur', esotericTitle: 'Lord of the Hosts of the Mighty', treePath: '27', orreryPlanet: 'mars'
+      },
+      {
+        id: 17, name: 'The Star', keywords: ['hope', 'inspiration', 'serenity', 'renewal'],
+        upright: 'Hope and inspiration after the storm. Trust — the universe is guiding you.',
+        reversed: 'Despair, lack of faith, disconnection. Look up — the stars still shine.',
+        planet: 'Aquarius', element: 'Air', hebrew: 'Tzaddi', alchemical: 'Mercury', esotericTitle: 'Daughter of the Firmament', treePath: '28', orreryPlanet: 'saturn'
+      },
+      {
+        id: 18, name: 'The Moon', keywords: ['illusion', 'fear', 'subconscious', 'intuition'],
+        upright: 'Not everything is as it seems. Trust your intuition through the darkness.',
+        reversed: 'Release of fear, repressed emotions coming to light. Face the shadows.',
+        planet: 'Pisces', element: 'Water', hebrew: 'Qoph', alchemical: 'Salt', esotericTitle: 'Ruler of Flux & Reflux', treePath: '29', orreryPlanet: 'moon'
+      },
+      {
+        id: 19, name: 'The Sun', keywords: ['joy', 'success', 'vitality', 'positivity'],
+        upright: 'Joy, success, and vitality! Everything is illuminated — enjoy this radiant energy.',
+        reversed: 'Temporary depression, overly optimistic, inner child needs attention.',
+        planet: 'Sun', element: 'Fire', hebrew: 'Resh', alchemical: 'Sulfur', esotericTitle: 'Lord of the Fire of the World', treePath: '30', orreryPlanet: 'sun'
+      },
+      {
+        id: 20, name: 'Judgement', keywords: ['judgement', 'rebirth', 'absolution', 'reflection'],
+        upright: 'A call to rise up and answer your higher purpose. Self-evaluation leads to renewal.',
+        reversed: 'Self-doubt, ignoring the call, poor judgement. Listen to your awakening.',
+        planet: 'Pluto', element: 'Fire', hebrew: 'Shin', alchemical: 'Sulfur', esotericTitle: 'Spirit of the Primal Fire', treePath: '31', orreryPlanet: 'mars'
+      },
+      {
+        id: 21, name: 'The World', keywords: ['completion', 'accomplishment', 'travel', 'harmony'],
+        upright: 'Completion and accomplishment. You\'ve come full circle — celebrate your journey.',
+        reversed: 'Incompletion, shortcuts, delays. Don\'t rush — finish what you started.',
+        planet: 'Saturn', element: 'Earth', hebrew: 'Tau', alchemical: 'Salt', esotericTitle: 'Great One of the Night of Time', treePath: '32', orreryPlanet: 'saturn'
+      },
+    ];
+
+    // Minor Arcana template
+    function generateMinorArcana() {
+      const SUITS = {
+        wands: { name: 'Wands', element: 'Fire', keywords: ['creativity', 'action', 'passion'], orreryPlanet: 'mars' },
+        cups: { name: 'Cups', element: 'Water', keywords: ['emotions', 'relationships', 'intuition'], orreryPlanet: 'moon' },
+        swords: { name: 'Swords', element: 'Air', keywords: ['intellect', 'conflict', 'truth'], orreryPlanet: 'mercury' },
+        pentacles: { name: 'Pentacles', element: 'Earth', keywords: ['material', 'career', 'prosperity'], orreryPlanet: 'saturn' },
+      };
+
+      const NUMBER_MEANINGS = {
+        ace: { upright: 'New opportunity and potential awaits.', reversed: 'Missed chance, blocked energy.' },
+        2: { upright: 'A decision or partnership. Balance two paths.', reversed: 'Indecision, imbalance.' },
+        3: { upright: 'Collaboration and growth. Working together succeeds.', reversed: 'Delays, lack of teamwork.' },
+        4: { upright: 'Stability and security. Solid foundation built.', reversed: 'Stagnation, possessiveness.' },
+        5: { upright: 'Conflict and challenge. Growth through adversity.', reversed: 'Recovery from loss.' },
+        6: { upright: 'Harmony and generosity. Give and receive.', reversed: 'Unequal exchange.' },
+        7: { upright: 'Reflection and assessment. Reevaluate your path.', reversed: 'Confusion, dishonesty.' },
+        8: { upright: 'Movement and progress. Stay focused.', reversed: 'Delays, frustration.' },
+        9: { upright: 'Abundance and wish fulfillment achieved.', reversed: 'Disappointment.' },
+        10: { upright: 'Completion and responsibility. Success carries weight.', reversed: 'Burden, inability to delegate.' },
+      };
+
+      const COURT_MEANINGS = {
+        page: { upright: 'A messenger or new beginnings. Curiosity and learning.', reversed: 'Immaturity, lack of direction.' },
+        knight: { upright: 'Action and pursuit. Charging forward. A quest begins.', reversed: 'Impulsiveness, recklessness.' },
+        queen: { upright: 'Nurturing mastery. Compassion, empathy, inner strength.', reversed: 'Insecurity, emotional manipulation.' },
+        king: { upright: 'Mastery and authority. Leadership and vision.', reversed: 'Domination, tyranny.' },
+      };
+
+      const cards = [];
+      const ranks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'page', 'knight', 'queen', 'king'];
+
+      for (const [suitKey, suit] of Object.entries(SUITS)) {
+        for (const rank of ranks) {
+          const isCourt = ['page', 'knight', 'queen', 'king'].includes(rank);
+          const meanings = isCourt ? COURT_MEANINGS[rank] : (rank === 'ace' ? NUMBER_MEANINGS.ace : NUMBER_MEANINGS[rank]);
+
+          const displayName = rank === 'ace'
+            ? `Ace of ${suit.name}`
+            : `${rank.charAt(0).toUpperCase() + rank.slice(1)} of ${suit.name}`;
+
+          cards.push({
+            id: 22 + cards.length,
+            name: displayName,
+            suit: suitKey,
+            rank: rank,
+            element: suit.element,
+            keywords: suit.keywords,
+            upright: meanings.upright,
+            reversed: meanings.reversed,
+            orreryPlanet: suit.orreryPlanet,
+          });
+        }
+      }
+      return cards;
+    }
+
+    const ALL_CARDS = [...MAJOR_ARCANA, ...generateMinorArcana()];
+
+    // ==================== UTILITY FUNCTIONS ====================
+    function getCardById(id) {
+      return ALL_CARDS.find(c => c.id === id);
+    }
+
+    function getImagePath(cardId) {
+      // m630_01 = card 0, m630_22 = card 21, m630_23 = card 22, etc.
+      if (cardId <= 21) {
+        return `./tarot/m630_${String(cardId + 1).padStart(2, '0')}.jpg`;
+      } else if (cardId <= 34) {
+        return `./tarot/m630_${String(cardId + 1).padStart(2, '0')}.jpg`;
+      }
+      return null; // Use CSS fallback
+    }
+
+    function getActiveGuide() {
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 12) return 'scribe';
+      if (hour >= 18 && hour < 24) return 'weaver';
+      return 'psychic';
+    }
+
+    function getGuideText(name) {
+      const guides = {
+        scribe: { speed: 50, color: '#f9ca24' },
+        weaver: { speed: 35, color: '#a29bfe' },
+        psychic: { speed: 25, color: '#fd79a8' },
+      };
+      return guides[name] || guides.psychic;
+    }
+
+    // ==================== DIALOGUE SYSTEM ====================
+    async function typeText(text, speed = 0) {
+      const el = document.getElementById('dialogue-text');
+      el.textContent = text; // Instant display for game flow
+    }
+
+    async function showOptions(options) {
+      return new Promise((resolve) => {
+        const optionsEl = document.getElementById('dialogue-options');
+        optionsEl.innerHTML = '';
+        options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt.label;
+          btn.onclick = () => {
+            playSound('select');
+            resolve(opt.value);
+          };
+          optionsEl.appendChild(btn);
+        });
+      });
+    }
+
+    // ==================== STATE MACHINE ====================
+    async function setState(name) {
+      gameState.currentState = name;
+      const stateHandlers = {
+        BOOT: stateBoot,
+        GREET: stateGreet,
+        INTENT: stateIntent,
+        SPREAD_SELECT: stateSpreadSelect,
+        SHUFFLE: stateShuffle,
+        DEAL: stateDeal,
+        SPREAD_GRID: stateSpreadGrid,
+        REVEAL: stateReveal,
+        INTERPRET: stateInterpret,
+        DEEP_DIVE: stateDeepDive,
+        ORRERY: stateOrrery,
+        END: stateEnd,
+      };
+
+      if (stateHandlers[name]) {
+        await stateHandlers[name]();
+      }
+    }
+
+    async function stateBoot() {
+      showBootConsole();
+      bootSequenceQuick();
+      // Boot completes in ~1.5s, then transitions
+      setTimeout(() => {
+        hideBootConsole();
+        setState('GREET');
+      }, 1500);
+    }
+
+    async function stateGreet() {
+      gameState.activeGuide = getActiveGuide();
+      drawCharacter(gameState.activeGuide);
+      showCharacter();
+
+      const greetings = {
+        scribe: "Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?",
+        weaver: "The night speaks softly. You have found your way to the threads. Welcome.",
+        psychic: "Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.",
+      };
+
+      await typeText(greetings[gameState.activeGuide], 5);
+      await showOptions([{ label: 'BEGIN', value: 'begin' }]);
+      await setState('INTENT');
+    }
+
+    async function stateIntent() {
+      hideCharacter();
+      await typeText("Before the heavens speak, they must know your frequency.\nWhich sphere calls to you?", 5);
+
+      gameState.planetaryInfluence = await showOptions([
+        { label: 'MARS', value: 'mars' },
+        { label: 'VENUS', value: 'venus' },
+        { label: 'MERCURY', value: 'mercury' },
+        { label: 'MOON', value: 'moon' },
+        { label: 'JUPITER', value: 'jupiter' },
+        { label: 'SATURN', value: 'saturn' },
+        { label: 'SUN', value: 'sun' },
+      ]);
+
+      setPlanetPalette(gameState.planetaryInfluence);
+      await setState('SPREAD_SELECT');
+    }
+
+    async function stateSpreadSelect() {
+      await typeText("How many stars shall illuminate your path?", 25);
+
+      gameState.spreadType = await showOptions([
+        { label: 'CELESTIAL MIRROR (1)', value: 'mirror' },
+        { label: 'PATH OF THREE (3)', value: 'three' },
+        { label: 'PLANETARY CHAMBER (5)', value: 'five' },
+        { label: 'SEVEN-FOLD (7)', value: 'seven' },
+      ]);
+
+      const spreadSizes = { mirror: 1, three: 3, five: 5, seven: 7 };
+      const deckInstance = new TarotDeck();
+      gameState.drawnCards = deckInstance.draw(spreadSizes[gameState.spreadType]);
+
+      await setState('SHUFFLE');
+    }
+
+    async function stateShuffle() {
+      showCharacter('weaver');
+      drawCharacter('weaver');
+      await typeText("The threads await your intention.\nStill your thoughts.\nWhen the silence is complete—press the seal.", 35);
+
+      await showOptions([{ label: '✦ SET YOUR INTENTION ✦', value: 'done' }]);
+      hideCharacter();
+      await setState('SPREAD_GRID');
+    }
+
+    async function stateSpreadGrid() {
+      showCardGrid();
+      await typeText("Touch a card to receive its message.", 25);
+      // Grid click handlers set in renderCardGrid
+    }
+
+    async function stateReveal() {
+      hideCardGrid();
+      showCardImage();
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      updateCardDisplay(card);
+      showNavBar();
+
+      await typeText("The card has been drawn.\nHow shall its force move through you?", 25);
+
+      gameState.lightOrShadow[card.id] = await showOptions([
+        { label: 'VIEW IN ITS LIGHT', value: 'light' },
+        { label: 'VIEW IN ITS SHADOW', value: 'shadow' },
+      ]);
+
+      await setState('INTERPRET');
+    }
+
+    async function stateInterpret() {
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      const isLight = gameState.lightOrShadow[card.id] === 'light';
+      const interpretation = isLight ? card.upright : card.reversed;
+
+      await typeText(interpretation, 20);
+
+      const deepDiveOptions = [{ label: 'NEXT CARD', value: 'next' }];
+      if (card.id < 22) { // Major Arcana
+        deepDiveOptions.unshift({ label: 'ALCHEMICAL KEY', value: 'alchemical' });
+        deepDiveOptions.unshift({ label: 'CELESTIAL PATH', value: 'celestial' });
+      }
+      if (gameState.currentCardIndex < gameState.drawnCards.length - 1) {
+        deepDiveOptions.push({ label: 'VIEW THE ORRERY', value: 'orrery' });
+      } else {
+        deepDiveOptions[deepDiveOptions.length - 1].label = 'FINISH';
+      }
+
+      const choice = await showOptions(deepDiveOptions);
+
+      if (choice === 'next') {
+        gameState.currentCardIndex++;
+        if (gameState.currentCardIndex < gameState.drawnCards.length) {
+          await setState('REVEAL');
+        } else {
+          await setState('END');
+        }
+      } else if (choice === 'orrery') {
+        await setState('ORRERY');
+      } else {
+        await setState('DEEP_DIVE');
+      }
+    }
+
+    async function stateDeepDive() {
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+
+      if (gameState.currentState === 'INTERPRET') return;
+
+      const choice = await (async () => {
+        // This is called from INTERPRET after selecting alchemical/celestial
+        // For now, we'll show it inline
+        await typeText(`The ${card.name} carries deep meaning...`, 25);
+        return 'next';
+      })();
+
+      if (choice === 'next') {
+        gameState.currentCardIndex++;
+        if (gameState.currentCardIndex < gameState.drawnCards.length) {
+          await setState('REVEAL');
+        } else {
+          await setState('END');
+        }
+      }
+    }
+
+    async function stateOrrery() {
+      hideCardImage();
+      showOrrery();
+      await typeText("The celestial sphere reveals the shape of your reading.", 25);
+
+      await showOptions([{ label: '← RETURN TO READING', value: 'back' }]);
+      hideOrrery();
+      hideNavBar();
+      await setState('INTERPRET');
+    }
+
+    async function stateEnd() {
+      hideCardImage();
+      hideNavBar();
+      showCharacter(gameState.activeGuide);
+      drawCharacter(gameState.activeGuide);
+
+      await typeText("The reading is complete. The stars have spoken.\nMay their wisdom guide your path.", 25);
+
+      await showOptions([{ label: 'BEGIN A NEW READING', value: 'new' }]);
+      gameState.drawnCards = [];
+      gameState.currentCardIndex = 0;
+      gameState.lightOrShadow = {};
+      await setState('GREET');
+    }
+
+    // ==================== DECK ENGINE ====================
+    class TarotDeck {
+      constructor(options = {}) {
+        this.allowReversed = options.allowReversed !== false;
+        this.rng = mulberry32(options.seed ?? Date.now());
+      }
+
+      shuffle() {
+        const arr = [...ALL_CARDS];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(this.rng() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      draw(count = 1) {
+        const shuffled = this.shuffle();
+        return shuffled.slice(0, count).map(cardData => ({ ...cardData }));
+      }
+    }
+
+    function mulberry32(seed) {
+      return function () {
+        seed |= 0;
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    // ==================== UI FUNCTIONS ====================
+    function showBootConsole() {
+      document.getElementById('boot-console').classList.remove('hidden');
+    }
+
+    function hideBootConsole() {
+      document.getElementById('boot-console').classList.add('hidden');
+    }
+
+    function bootSequenceQuick() {
+      const bootEl = document.getElementById('boot-text');
+      let bootText = '';
+      let progress = 0;
+
+      const bootInterval = setInterval(() => {
+        if (progress === 0) {
+          bootText = '> ZODIAC TERMINAL v.XVI\n';
+        } else if (progress === 1) {
+          bootText += '> INITIATING STAR ALIGNMENT...\n';
+        } else if (progress >= 2 && progress <= 8) {
+          const pct = (progress - 2) * 14;
+          bootText = bootText.split('\n').slice(0, 2).join('\n') + '\n[' + '█'.repeat(Math.floor(pct / 10)) + '░'.repeat(10 - Math.floor(pct / 10)) + '] ' + pct + '%\n';
+        } else if (progress === 9) {
+          bootText += '> STAR ALIGNMENT COMPLETE\n> CELESTIAL GUIDES: ONLINE\n> READY\n';
+        } else if (progress === 10) {
+          document.querySelector('.game-container').classList.add('flash');
+        } else if (progress === 11) {
+          document.querySelector('.game-container').classList.remove('flash');
+          clearInterval(bootInterval);
+          return;
+        }
+
+        bootEl.textContent = bootText;
+        progress++;
+      }, 150);
+    }
+
+    function showCharacter(guide = gameState.activeGuide) {
+      document.getElementById('character-container').classList.remove('hidden');
+    }
+
+    function hideCharacter() {
+      document.getElementById('character-container').classList.add('hidden');
+    }
+
+    function drawCharacter(guide) {
+      const canvas = document.getElementById('character-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 48, 64);
+
+      const sprites = {
+        scribe: () => {
+          ctx.fillStyle = '#f9ca24';
+          // Body
+          ctx.fillRect(12, 20, 24, 20);
+          // Head (sun disk)
+          ctx.beginPath();
+          ctx.arc(24, 12, 8, 0, Math.PI * 2);
+          ctx.fill();
+          // Rays
+          for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const x1 = 24 + Math.cos(angle) * 8;
+            const y1 = 12 + Math.sin(angle) * 8;
+            const x2 = 24 + Math.cos(angle) * 12;
+            const y2 = 12 + Math.sin(angle) * 12;
+            ctx.strokeStyle = '#f9ca24';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          }
+        },
+        weaver: () => {
+          ctx.fillStyle = '#a29bfe';
+          ctx.globalAlpha = 0.7;
+          // Hooded robe
+          ctx.beginPath();
+          ctx.moveTo(8, 10);
+          ctx.lineTo(40, 10);
+          ctx.lineTo(36, 40);
+          ctx.lineTo(12, 40);
+          ctx.closePath();
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          // Threads
+          ctx.strokeStyle = '#74b9ff';
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(12 + i * 7, 12);
+            ctx.lineTo(12 + i * 7, 35);
+            ctx.stroke();
+          }
+        },
+        psychic: () => {
+          ctx.fillStyle = '#fd79a8';
+          // Body
+          ctx.fillRect(10, 24, 28, 18);
+          // Crown (5-point star)
+          const starX = 24, starY = 8;
+          const points = 5;
+          const outerR = 8, innerR = 4;
+          ctx.beginPath();
+          for (let i = 0; i < points * 2; i++) {
+            const r = i % 2 === 0 ? outerR : innerR;
+            const angle = (i * Math.PI) / points - Math.PI / 2;
+            const x = starX + Math.cos(angle) * r;
+            const y = starY + Math.sin(angle) * r;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          ctx.fill();
+        },
+      };
+
+      if (sprites[guide]) {
+        sprites[guide]();
+      }
+    }
+
+    function updateCardDisplay(card) {
+      const imgPath = getImagePath(card.id);
+      const container = document.getElementById('card-image-container');
+      container.innerHTML = '';
+
+      if (imgPath) {
+        const img = document.createElement('img');
+        img.src = imgPath;
+        img.className = 'card-image';
+        img.onerror = () => {
+          // Fallback to CSS
+          container.innerHTML = `<div class="card-fallback">${card.name}</div>`;
+        };
+        container.appendChild(img);
+      } else {
+        container.innerHTML = `<div class="card-fallback">${card.name}</div>`;
+      }
+
+      document.getElementById('card-name').textContent = card.name;
+      document.getElementById('card-keywords').textContent = card.keywords.join(' • ');
+    }
+
+    function showCardImage() {
+      document.getElementById('card-image-zone').classList.add('visible');
+    }
+
+    function hideCardImage() {
+      document.getElementById('card-image-zone').classList.remove('visible');
+    }
+
+    function showCardGrid() {
+      const container = document.getElementById('card-grid-container');
+      container.innerHTML = '';
+
+      gameState.drawnCards.forEach((card, idx) => {
+        const btn = document.createElement('div');
+        btn.className = 'card-thumbnail';
+        btn.textContent = card.name.substring(0, 10);
+        btn.onclick = () => {
+          gameState.currentCardIndex = idx;
+          playSound('reveal');
+          setState('REVEAL');
+        };
+        container.appendChild(btn);
+      });
+
+      document.getElementById('card-grid').classList.add('visible');
+    }
+
+    function hideCardGrid() {
+      document.getElementById('card-grid').classList.remove('visible');
+    }
+
+    function showNavBar() {
+      document.getElementById('nav-bar').classList.add('visible');
+    }
+
+    function hideNavBar() {
+      document.getElementById('nav-bar').classList.remove('visible');
+    }
+
+    function showOrrery() {
+      document.getElementById('orrery-zone').classList.add('visible');
+      drawOrrery();
+    }
+
+    function hideOrrery() {
+      document.getElementById('orrery-zone').classList.remove('visible');
+    }
+
+    function drawOrrery() {
+      const canvas = document.getElementById('orrery-canvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      const cx = w / 2, cy = h / 2;
+
+      ctx.fillStyle = '#0a0015';
+      ctx.fillRect(0, 0, w, h);
+
+      // Starfield
+      ctx.fillStyle = '#dfe6e9';
+      for (let i = 0; i < 100; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const s = Math.random() * 0.8;
+        ctx.fillRect(x, y, s, s);
+      }
+
+      // Planets
+      const planets = [
+        { name: 'Moon', r: 45, color: '#dfe6e9' },
+        { name: 'Mercury', r: 75, color: '#fdcb6e' },
+        { name: 'Venus', r: 100, color: '#fd79a8' },
+        { name: 'Mars', r: 128, color: '#e17055' },
+        { name: 'Jupiter', r: 158, color: '#a29bfe' },
+        { name: 'Saturn', r: 185, color: '#636e72' },
+      ];
+
+      const now = Date.now() / 10000;
+      planets.forEach((p, idx) => {
+        const angle = now + (idx / planets.length) * Math.PI * 2;
+        const x = cx + Math.cos(angle) * p.r;
+        const y = cy + Math.sin(angle) * p.r;
+
+        // Planet
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = p.color;
+        ctx.font = '7px "Press Start 2P"';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.name, x, y + 16);
+      });
+
+      // Sun
+      ctx.fillStyle = '#f9ca24';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Cards on planets
+      const planetMap = {};
+      planets.forEach(p => planetMap[p.name.toLowerCase()] = p);
+
+      gameState.drawnCards.forEach((card, idx) => {
+        const planetKey = card.orreryPlanet;
+        const planet = planets.find(p => p.name.toLowerCase() === planetKey);
+        if (!planet) return;
+
+        const angle = now + (planets.indexOf(planet) / planets.length) * Math.PI * 2;
+        const x = cx + Math.cos(angle) * planet.r;
+        const y = cy + Math.sin(angle) * planet.r;
+
+        // Card thumbnail (small rectangle with glow)
+        ctx.shadowColor = '#f9ca24';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = 'rgba(249, 202, 36, 0.3)';
+        ctx.fillRect(x - 8, y - 12, 16, 24);
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function setPlanetPalette(planet) {
+      const palettes = {
+        moon: { space: '#1a2f4a', neon: '#74b9ff' },
+        venus: { space: '#1a0a2e', neon: '#ff7675' },
+        mars: { space: '#1a0a2e', neon: '#e17055' },
+        saturn: { space: '#1a0a2e', neon: '#636e72' },
+        mercury: { space: '#1a0a2e', neon: '#fdcb6e' },
+        jupiter: { space: '#1a0a2e', neon: '#a29bfe' },
+        sun: { space: '#1a0a2e', neon: '#f9ca24' },
+      };
+
+      const pal = palettes[planet] || palettes.moon;
+      document.documentElement.style.setProperty('--bg-space', pal.space);
+      document.documentElement.style.setProperty('--accent-neon', pal.neon);
+    }
+
+    // ==================== AUDIO ====================
+    function initAudio() {
+      if (audioState.ctx) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      audioState.ctx = new AudioCtx();
+      startBackgroundMusic();
+    }
+
+    function playSound(type) {
+      if (gameState.isMuted || !audioState.ctx) return;
+      const ctx = audioState.ctx;
+
+      if (type === 'select') {
+        fmTone(523, 1.5, 50, 0.12, 0.08);
+        setTimeout(() => fmTone(659, 1.5, 50, 0.12, 0.08), 140);
+      } else if (type === 'reveal') {
+        fmTone(440, 2, 80, 0.6, 0.1);
+        setTimeout(() => fmTone(554, 2, 80, 0.6, 0.1), 150);
+        setTimeout(() => fmTone(659, 2, 80, 0.6, 0.1), 300);
+      }
+    }
+
+    function fmTone(freq, modRatio, modDepth, duration, gain = 0.1) {
+      if (gameState.isMuted || !audioState.ctx) return;
+      const ctx = audioState.ctx;
+
+      const carrier = ctx.createOscillator();
+      const mod = ctx.createOscillator();
+      const modGain = ctx.createGain();
+      const ampGain = ctx.createGain();
+
+      mod.frequency.value = freq * modRatio;
+      modGain.gain.value = modDepth;
+      mod.connect(modGain);
+      modGain.connect(carrier.frequency);
+
+      carrier.type = 'sine';
+      carrier.connect(ampGain);
+      ampGain.connect(ctx.destination);
+
+      ampGain.gain.setValueAtTime(gain, ctx.currentTime);
+      ampGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+      carrier.start(ctx.currentTime);
+      mod.start(ctx.currentTime);
+      carrier.stop(ctx.currentTime + duration);
+      mod.stop(ctx.currentTime + duration);
+    }
+
+    function startBackgroundMusic() {
+      if (gameState.isMuted || !audioState.ctx) return;
+      const ctx = audioState.ctx;
+
+      const bass = ctx.createOscillator();
+      const bassGain = ctx.createGain();
+      bass.frequency.value = 55; // A1
+      bass.type = 'square';
+      bass.connect(bassGain);
+      bassGain.gain.value = 0.02;
+      bassGain.connect(ctx.destination);
+      bass.start();
+      audioState.backgroundOscillators.push(bass);
+      audioState.backgroundGains.push(bassGain);
+    }
+
+    document.getElementById('sound-btn').addEventListener('click', () => {
+      gameState.isMuted = !gameState.isMuted;
+      document.getElementById('sound-btn').textContent = gameState.isMuted ? '♫' : '♪';
+    });
+
+    document.getElementById('back-btn').addEventListener('click', () => {
+      setState('SPREAD_GRID');
+    });
+
+    // ==================== STARFIELD ====================
+    function initStarfield() {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      const stars = [];
+
+      // Create star layers
+      for (let layer = 0; layer < 3; layer++) {
+        const layerStars = layer === 0 ? 80 : layer === 1 ? 40 : 15;
+        const sizes = layer === 0 ? 1 : layer === 1 ? 1.5 : 2.5;
+        for (let i = 0; i < layerStars; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: sizes,
+            layer: layer,
+            speed: [0.05, 0.15, 0.3][layer],
+            opacity: Math.random() * 0.5 + 0.5,
+          });
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = '#0a0015';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        stars.forEach(star => {
+          star.x -= star.speed;
+          if (star.x < 0) star.x = canvas.width;
+
+          ctx.fillStyle = `rgba(223, 230, 233, ${star.opacity})`;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (star.layer === 1 && Math.random() > 0.9) {
+            star.opacity = Math.random() * 0.5 + 0.5;
+          }
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('click', initAudio, { once: true });
+    document.addEventListener('touchstart', initAudio, { once: true });
+
+    initStarfield();
+
+    // Skip boot sequence and set up GREET state directly
+    document.getElementById('boot-console').classList.add('hidden');
+
+    // Set initial state
+    gameState.activeGuide = getActiveGuide();
+    gameState.currentState = 'GREET';
+
+    // Draw character
+    drawCharacter(gameState.activeGuide);
+
+    // Show character container
+    const charContainer = document.getElementById('character-container');
+    if (charContainer) {
+      charContainer.classList.remove('hidden');
+    }
+
+    // Set greeting dialogue
+    const greetings = {
+      scribe: "Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?",
+      weaver: "The night speaks softly. You have found your way to the threads. Welcome.",
+      psychic: "Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.",
+    };
+
+    document.getElementById('dialogue-text').textContent = greetings[gameState.activeGuide];
+
+    // Set up BEGIN button
+    const optionsEl = document.getElementById('dialogue-options');
+    optionsEl.innerHTML = '';
+    const beginBtn = document.createElement('button');
+    beginBtn.className = 'option-btn';
+    beginBtn.textContent = 'BEGIN';
+    beginBtn.onclick = async () => {
+      playSound('select');
+      await setState('INTENT');
+    };
+    optionsEl.appendChild(beginBtn);
+  </script>
+</body>
+</html>

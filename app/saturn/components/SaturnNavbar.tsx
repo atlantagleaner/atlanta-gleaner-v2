@@ -176,6 +176,14 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                   🃏 Blackjack
                 </div>
                 <div
+                  style={{...gameOptionStyle}}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  onClick={() => handleGameSelect('tarot')}
+                >
+                  🌙 Tarot
+                </div>
+                <div
                   style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderBottom: 'none'}}
                   onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
@@ -252,6 +260,14 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                     onClick={() => handleGameSelect('blackjack')}
                   >
                     🃏 Blackjack
+                  </div>
+                  <div
+                    style={{...gameOptionStyle}}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    onClick={() => handleGameSelect('tarot')}
+                  >
+                    🌙 Tarot
                   </div>
                   <div
                     style={{...gameOptionStyle, borderBottom: 'none'}}

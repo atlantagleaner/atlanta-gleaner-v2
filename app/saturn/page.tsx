@@ -95,7 +95,7 @@ export default function SaturnPage() {
           background: 'transparent'
         }}>
           <iframe
-            src={selectedGame === 'oracle' ? '/oracle-portal.html' : '/game-portal.html'}
+            src={selectedGame === 'oracle' ? '/oracle-portal.html' : selectedGame === 'tarot' ? '/game-model.html' : '/game-portal.html'}
             style={{
               width: '500px',
               height: '500px',
