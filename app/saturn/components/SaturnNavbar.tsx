@@ -165,12 +165,20 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                   🌐 Orbit
                 </div>
                 <div
-                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderBottom: 'none'}}
+                  style={{...gameOptionStyle}}
                   onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   onClick={() => handleGameSelect('blackjack')}
                 >
                   🃏 Blackjack
+                </div>
+                <div
+                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderBottom: 'none'}}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  onClick={() => handleGameSelect('oracle')}
+                >
+                  🔮 Oracle
                 </div>
               </div>
             )}
@@ -235,12 +243,20 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                     🌐 Orbit
                   </div>
                   <div
-                    style={{...gameOptionStyle, borderBottom: 'none'}}
+                    style={{...gameOptionStyle}}
                     onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     onClick={() => handleGameSelect('blackjack')}
                   >
                     🃏 Blackjack
+                  </div>
+                  <div
+                    style={{...gameOptionStyle, borderBottom: 'none'}}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    onClick={() => handleGameSelect('oracle')}
+                  >
+                    🔮 Oracle
                   </div>
                 </div>
               )}

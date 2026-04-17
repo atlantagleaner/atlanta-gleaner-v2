@@ -541,15 +541,17 @@
             color: #00D9FF;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
+        /* Responsive - Mobile Portrait & Landscape */
+        @media (max-width: 600px), (max-height: 600px) {
             #game-container {
-                max-width: 65vw;
-                height: auto;
-                max-height: calc(100vh - 70px);
+                width: 333px;
+                max-width: none;
+                height: 600px;
+                max-height: none;
                 border-radius: 0;
                 padding: 16px;
                 gap: 10px;
+                overflow-y: auto;
             }
 
             #balance-display {

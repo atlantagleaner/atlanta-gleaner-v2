@@ -32,16 +32,9 @@ export default function SaturnPage() {
       setIsGamePortalOpen(false)
       setSelectedGame(null)
     } else {
-      // Open the overlay with the selected game
+      // Open the overlay with the selected game (iframe src will update automatically)
       setSelectedGame(gameName)
       setIsGamePortalOpen(true)
-      // Send postMessage to iframe after it renders
-      setTimeout(() => {
-        const iframe = document.querySelector('iframe[title="Game Portal"]') as HTMLIFrameElement
-        if (iframe?.contentWindow) {
-          iframe.contentWindow.postMessage({ type: 'selectGame', game: gameName }, '*')
-        }
-      }, 100)
     }
   }
 
@@ -54,6 +47,12 @@ export default function SaturnPage() {
         html, body {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        @media (max-width: 600px) {
+          iframe {
+            width: 333px !important;
+            height: 600px !important;
+          }
         }
       `}</style>
       <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '600px' }}>
@@ -90,10 +89,10 @@ export default function SaturnPage() {
           background: 'transparent'
         }}>
           <iframe
-            src="/game-portal.html"
+            src={selectedGame === 'oracle' ? '/oracle-portal.html' : '/game-portal.html'}
             style={{
-              width: isMobile ? '400px' : '650px',
-              height: isMobile ? '850px' : '900px',
+              width: '500px',
+              height: '500px',
               border: 'none',
               borderRadius: '8px',
               boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
@@ -102,6 +101,7 @@ export default function SaturnPage() {
             }}
             frameBorder="0"
             title="Game Portal"
+            key={selectedGame}
           />
         </div>
       )}

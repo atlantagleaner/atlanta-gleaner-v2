@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Portal - The Pythia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        html, body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #0d0221;
+            color: #ffffff;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background: transparent;
+            padding-top: 20px;
+            gap: 20px;
+        }
+
+        #game-container {
+            width: 600px;
+            max-width: calc(100vw - 40px);
+            height: calc(100vh - 100px);
+            max-height: calc(100vh - 80px);
+            background: #0a0e27;
+            border: 4px solid #8B4FBF;
+            box-shadow: 0 0 20px rgba(139, 79, 191, 0.5), 0 0 40px rgba(0, 217, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            align-self: center;
+        }
+
+        .oracle-header {
+            text-align: center;
+            color: #d4af37;
+            font-size: 12px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .oracle-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pythia-container {
+            position: relative;
+            width: 100px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #pythia-canvas {
+            width: 100%;
+            height: 100px;
+            border: none;
+            image-rendering: pixelated;
+        }
+
+        .tripod-base {
+            width: 60px;
+            height: 30px;
+            border-bottom: 3px solid #d4af37;
+            border-left: 3px solid #8b6914;
+            border-right: 3px solid #8b6914;
+            margin-top: -5px;
+        }
+
+        .oracle-ball-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #oracle-ball {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(200, 150, 255, 0.3), rgba(100, 50, 150, 0.8));
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset -8px -8px 30px rgba(0, 0, 0, 0.7), 0 0 40px rgba(138, 43, 226, 0.6);
+        }
+
+        #oracle-mist {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .oracle-dialogue {
+            background: #1a1a3a;
+            border: 2px solid #8B4FBF;
+            padding: 15px;
+            min-height: 100px;
+            border-radius: 4px;
+            color: #00E5D8;
+            font-size: 8px;
+            line-height: 1.8;
+            margin-top: 15px;
+            text-shadow: 0 0 10px rgba(0, 229, 216, 0.5);
+        }
+
+        .oracle-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .oracle-choices.single-row {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        .oracle-btn {
+            background: #333;
+            border: 2px solid #8B4FBF;
+            color: #00E5D8;
+            padding: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 7px;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .oracle-btn:hover {
+            background: #6600cc;
+            border-color: #00D9FF;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+        }
+
+        .oracle-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .oracle-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .pythia-container {
+                width: 70px;
+                height: 90px;
+            }
+
+            #pythia-canvas {
+                width: 100%;
+                height: 70px;
+            }
+
+            .oracle-ball-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            #oracle-ball {
+                width: 100px;
+                height: 100px;
+            }
+
+            #oracle-mist {
+                width: 100px;
+                height: 100px;
+            }
+
+            .oracle-choices.single-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Responsive - Mobile Portrait & Landscape */
+        @media (max-width: 600px), (max-height: 600px) {
+            #game-container {
+                width: 333px;
+                max-width: none;
+                height: 600px;
+                max-height: none;
+                padding: 16px;
+                gap: 10px;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="game-container">
+            <div class="oracle-header">THE PYTHIA SPEAKS</div>
+
+            <div class="oracle-content">
+                <div class="pythia-container">
+                    <canvas id="pythia-canvas" width="80" height="100"></canvas>
+                    <div class="tripod-base"></div>
+                </div>
+
+                <div class="oracle-ball-container">
+                    <div id="oracle-ball">
+                        <canvas id="oracle-mist" width="140" height="140"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="oracle-dialogue" id="oracle-dialogue">
+                <p id="oracle-text">Peer into the sacred crystal...</p>
+                <div class="oracle-choices" id="oracle-choices"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const oracleRoles = [
+            { icon: '⚔️', name: 'SOLDIER', flavor: 'The sacred guards part. A warrior approaches the inner chamber...' },
+            { icon: '💰', name: 'MERCHANT', flavor: 'The smoke thickens. The scales of commerce tip in the vapors...' },
+            { icon: '🌿', name: 'EXILE', flavor: 'The Pythia stirs. The ghost of a homeland drifts through the mist...' },
+            { icon: '❤️', name: 'LOVER', flavor: 'The flames flicker. A heart\'s yearning enters the temple...' },
+            { icon: '👑', name: 'KING', flavor: 'The tripod trembles. Power seeks its mirror in the Oracle...' },
+            { icon: '🌟', name: 'PILGRIM', flavor: 'The vapors rise. One who truly seeks has entered the sanctuary...' }
+        ];
+
+        const oracleOfferings = [
+            { icon: '🌿', name: 'LAUREL WREATH', flavor: 'Apollo accepts the laurel. His light shines upon you...' },
+            { icon: '🍯', name: 'HONEY CAKE', flavor: 'The pelanos is received. The Oracle\'s trance deepens...' },
+            { icon: '🪙', name: 'SILVER COIN', flavor: 'The coin turns. Hermes marks your passage onward...' },
+            { icon: '💧', name: 'CASTALIAN WATER', flavor: 'You are purified by Castalia\'s waters. The Pythia opens her eyes...' }
+        ];
+
+        const oracleQuestions = [
+            { icon: '⚔️', name: 'WAR & CONQUEST' },
+            { icon: '❤️', name: 'LOVE & UNION' },
+            { icon: '💰', name: 'WEALTH & TRADE' },
+            { icon: '🏠', name: 'EXILE & RETURN' },
+            { icon: '🧠', name: 'WISDOM & TRUTH' },
+            { icon: '⚰️', name: 'FATE & DEATH' }
+        ];
+
+        const fortunes = {
+            'WAR & CONQUEST': [
+                'The sword that strikes first will taste its own edge.',
+                'Your enemy builds his tomb with your victories.',
+                'The battle already fought lives in tomorrow\'s field.',
+                'He who counts the dead has yet to count himself.'
+            ],
+            'LOVE & UNION': [
+                'She who stands behind you has already arrived.',
+                'The tie that binds was woven before your birth.',
+                'Your heart\'s door opens only from the inside.',
+                'The one you seek seeks the one behind you.'
+            ],
+            'WEALTH & TRADE': [
+                'Your greatest gain conceals its greatest loss.',
+                'The coin you refused returns in a stranger\'s purse.',
+                'The merchant who sells everything has bought his ruin.',
+                'Silver opens doors. Gold seals them.'
+            ],
+            'EXILE & RETURN': [
+                'The road home begins where you chose to leave.',
+                'What you fled has already returned.',
+                'Your home has moved to where your feet now stand.',
+                'The exile carries his homeland in his throat.'
+            ],
+            'WISDOM & TRUTH': [
+                'The answer has always stood beside the question.',
+                'What you know is the door. What you forget is the key.',
+                'Wisdom drinks from the same cup as folly.',
+                'The truth you seek is what you said this morning.'
+            ],
+            'FATE & DEATH': [
+                'What you fear has already passed. What you welcome has not arrived.',
+                'The thread is long. But it ends where it began.',
+                'You have already made the choice you believe you are approaching.',
+                'Death asks only one question. You have already answered.'
+            ]
+        };
+
+        let oracleState = {
+            stage: 'role',
+            role: null,
+            offering: null,
+            question: null
+        };
+
+        const oracleCharacters = ['priestess', 'ethereal', 'spirit', 'mystic'];
+
+        function initializeOracleGame() {
+            oracleState.oracle = oracleCharacters[Math.floor(Math.random() * oracleCharacters.length)];
+            if (oracleState.stage === 'role') {
+                showRoleChoices();
+            }
+            startOracleAnimation();
+        }
+
+        let animationFrameId = null;
+        function startOracleAnimation() {
+            const canvas = document.getElementById('pythia-canvas');
+            let frameCount = 0;
+
+            const animate = () => {
+                drawOracle(oracleState.oracle, oracleState.animationState, frameCount);
+                frameCount++;
+                animationFrameId = requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        function drawOracle(type, state, frame) {
+            const canvas = document.getElementById('pythia-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#1a0840';
+            ctx.fillRect(0, 0, 80, 100);
+
+            switch(type) {
+                case 'priestess': drawPriestess(ctx, state, frame); break;
+                case 'ethereal': drawEthereal(ctx, state, frame); break;
+                case 'spirit': drawSpirit(ctx, state, frame); break;
+                case 'mystic': drawMystic(ctx, state, frame); break;
+            }
+        }
+
+        function drawPriestess(ctx, state, frame) {
+            // Silver priestess with dark purple robes and halo
+            const glowPulse = Math.sin(frame * 0.05) * 0.3 + 0.7;
+
+            // Halo
+            ctx.fillStyle = `rgba(212, 175, 55, ${0.4 * glowPulse})`;
+            ctx.beginPath();
+            ctx.arc(40, 20, 18, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hair (silver/white flowing)
+            ctx.fillStyle = '#e8f4f8';
+            for (let i = 0; i < 12; i++) {
+                ctx.fillRect(28 + i, 12 + (i % 3), 2, 3);
+            }
+            ctx.fillStyle = '#c8e0e8';
+            for (let i = 0; i < 10; i++) {
+                ctx.fillRect(32 + i * 0.8, 18 + (Math.sin(i) * 2), 2, 2);
+            }
+
+            // Face
+            ctx.fillStyle = '#e8c99d';
+            ctx.fillRect(32, 18, 16, 14);
+
+            // Eyes
+            ctx.fillStyle = state === 'consulting' ? '#00ff88' : '#ffffff';
+            ctx.fillRect(35, 21, 3, 3);
+            ctx.fillRect(45, 21, 3, 3);
+            if (state === 'consulting') {
+                ctx.fillStyle = '#00ff88';
+                ctx.globalAlpha = 0.5;
+                ctx.fillRect(34, 20, 5, 5);
+                ctx.fillRect(44, 20, 5, 5);
+                ctx.globalAlpha = 1;
+            }
+
+            // Dark robe
+            ctx.fillStyle = '#4a1f8c';
+            ctx.fillRect(24, 32, 32, 35);
+            ctx.fillStyle = '#2d0f5c';
+            ctx.fillRect(24, 40, 32, 20);
+
+            // Gold trim
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(24, 32, 32, 3);
+            ctx.fillRect(28, 38, 24, 2);
+
+            // Ethereal glow if consulting
+            if (state === 'consulting') {
+                ctx.fillStyle = `rgba(0, 255, 136, ${0.3 * glowPulse})`;
+                ctx.fillRect(20, 28, 40, 50);
+            }
+        }
+
+        function drawEthereal(ctx, state, frame) {
+            // Pink oracle in light dress with ethereal presence
+            const sway = Math.sin(frame * 0.03) * 2;
+
+            // Hair glow (pink/magenta)
+            ctx.fillStyle = `rgba(200, 100, 180, ${0.3 * (Math.sin(frame * 0.05) * 0.5 + 0.5)})`;
+            ctx.beginPath();
+            ctx.arc(40, 18, 16, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hair (wavy pink)
+            ctx.fillStyle = '#d080c0';
+            for (let i = 0; i < 14; i++) {
+                ctx.fillRect(26 + i + sway * 0.3, 14 + (Math.sin(i * 0.4) * 2), 3, 4);
+            }
+            ctx.fillStyle = '#e0a0d8';
+            for (let i = 0; i < 10; i++) {
+                ctx.fillRect(30 + i * 0.8, 16 + Math.cos(i * 0.5) * 1.5, 2, 2);
+            }
+
+            // Face (serene)
+            ctx.fillStyle = '#f4d8c0';
+            ctx.fillRect(33, 19, 14, 12);
+
+            // Eyes (calm blue)
+            ctx.fillStyle = state === 'consulting' ? '#00d9ff' : '#8cc8ff';
+            ctx.fillRect(36, 22, 2, 2);
+            ctx.fillRect(45, 22, 2, 2);
+
+            // Light cream dress
+            ctx.fillStyle = '#f0ebe0';
+            ctx.fillRect(26, 32, 28, 32);
+            ctx.fillStyle = '#e8ddd0';
+            ctx.fillRect(26, 42, 28, 15);
+
+            // Blue belt
+            ctx.fillStyle = '#3366cc';
+            ctx.fillRect(26, 42, 28, 4);
+
+            // Gold jewelry
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(32, 34, 3, 3);
+            ctx.fillRect(45, 34, 3, 3);
+
+            // Ethereal aura if consulting
+            if (state === 'consulting') {
+                ctx.fillStyle = `rgba(0, 217, 255, ${0.2 * (Math.sin(frame * 0.06) * 0.5 + 0.5)})`;
+                for (let i = 0; i < 8; i++) {
+                    ctx.fillRect(20 + i * 5 + sway, 28, 2, 40);
+                }
+            }
+        }
+
+        function drawSpirit(ctx, state, frame) {
+            // Green otherworldly spirit with glowing aura
+            const glow = Math.sin(frame * 0.04) * 0.4 + 0.6;
+
+            // Outer glow aura
+            ctx.fillStyle = `rgba(100, 200, 100, ${0.25 * glow})`;
+            for (let r = 20; r > 10; r -= 3) {
+                ctx.beginPath();
+                ctx.arc(40, 30, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Hair/wisps (green spectral)
+            ctx.fillStyle = '#66dd66';
+            for (let i = 0; i < 16; i++) {
+                const waveX = Math.sin(frame * 0.03 + i * 0.3) * 4;
+                ctx.fillRect(24 + i * 2 + waveX, 12 + (i % 4), 2, 3);
+            }
+
+            // Face (pale green)
+            ctx.fillStyle = '#99cc99';
+            ctx.fillRect(34, 18, 12, 11);
+
+            // Glowing eyes
+            ctx.fillStyle = state === 'consulting' ? '#ffff00' : '#aaff00';
+            ctx.fillRect(37, 21, 2, 2);
+            ctx.fillRect(45, 21, 2, 2);
+            if (state === 'consulting') {
+                ctx.fillStyle = `rgba(255, 255, 0, ${0.5 * glow})`;
+                ctx.fillRect(36, 20, 4, 4);
+                ctx.fillRect(44, 20, 4, 4);
+            }
+
+            // Spectral robes
+            ctx.fillStyle = '#447744';
+            ctx.fillRect(25, 30, 30, 35);
+            ctx.fillStyle = '#225522';
+            ctx.fillRect(25, 40, 30, 18);
+
+            // Glowing center line
+            ctx.fillStyle = `rgba(100, 255, 100, ${0.4 * glow})`;
+            ctx.fillRect(38, 30, 4, 35);
+
+            // Gold ornaments
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(32, 36, 3, 3);
+            ctx.fillRect(45, 36, 3, 3);
+        }
+
+        function drawMystic(ctx, state, frame) {
+            // Hooded mystic with blue energy and mystery
+            const energyPulse = Math.sin(frame * 0.04) * 0.3 + 0.7;
+
+            // Blue energy aura
+            ctx.fillStyle = `rgba(0, 150, 255, ${0.2 * energyPulse})`;
+            ctx.beginPath();
+            ctx.arc(40, 35, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hood (dark)
+            ctx.fillStyle = '#0a0820';
+            ctx.beginPath();
+            ctx.arc(40, 22, 14, 0, Math.PI, true);
+            ctx.fill();
+            ctx.fillRect(26, 22, 28, 8);
+
+            // Hood edge (blue highlight)
+            ctx.strokeStyle = '#0099ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(40, 22, 14, 0, Math.PI, true);
+            ctx.stroke();
+
+            // Hair (blue wavy underneath)
+            ctx.fillStyle = '#4488ff';
+            for (let i = 0; i < 10; i++) {
+                const wave = Math.sin(frame * 0.03 + i * 0.4) * 2;
+                ctx.fillRect(30 + i * 2 + wave, 20, 2, 4);
+            }
+
+            // Face (mysterious, mostly shadowed)
+            ctx.fillStyle = '#c8b8c0';
+            ctx.fillRect(35, 22, 10, 8);
+
+            // Eyes (blue glow)
+            ctx.fillStyle = state === 'consulting' ? '#00ffff' : '#0099ff';
+            ctx.fillRect(37, 24, 2, 2);
+            ctx.fillRect(43, 24, 2, 2);
+
+            // Dark robes
+            ctx.fillStyle = '#1a0a30';
+            ctx.fillRect(22, 31, 36, 36);
+
+            // Blue energy trails
+            ctx.fillStyle = `rgba(0, 200, 255, ${0.3 * energyPulse})`;
+            ctx.fillRect(20, 32 + (Math.sin(frame * 0.04) * 3), 6, 20);
+            ctx.fillRect(54, 36 + (Math.cos(frame * 0.04) * 3), 6, 16);
+
+            // Gold trim
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(26, 34, 28, 2);
+
+            // Consulting glow
+            if (state === 'consulting') {
+                ctx.fillStyle = `rgba(0, 255, 255, ${0.25 * energyPulse})`;
+                ctx.fillRect(18, 28, 44, 45);
+            }
+        }
+
+        function showRoleChoices() {
+            oracleState.animationState = 'idle';
+            const dialogue = document.getElementById('oracle-dialogue');
+            const text = document.getElementById('oracle-text');
+            const choices = document.getElementById('oracle-choices');
+
+            text.textContent = 'Who seeks the Pythia\'s counsel?';
+            choices.className = 'oracle-choices';
+            choices.innerHTML = '';
+
+            oracleRoles.forEach(role => {
+                const btn = document.createElement('button');
+                btn.className = 'oracle-btn';
+                btn.innerHTML = `${role.icon} ${role.name}`;
+                btn.onclick = () => selectRole(role);
+                choices.appendChild(btn);
+            });
+        }
+
+        function selectRole(role) {
+            oracleState.role = role;
+            showOfferingChoices();
+        }
+
+        function showOfferingChoices() {
+            oracleState.animationState = 'idle';
+            const text = document.getElementById('oracle-text');
+            const choices = document.getElementById('oracle-choices');
+
+            text.textContent = oracleState.role.flavor;
+            choices.className = 'oracle-choices single-row';
+            choices.innerHTML = '';
+
+            oracleOfferings.forEach(offering => {
+                const btn = document.createElement('button');
+                btn.className = 'oracle-btn';
+                btn.innerHTML = `${offering.icon} ${offering.name}`;
+                btn.onclick = () => selectOffering(offering);
+                choices.appendChild(btn);
+            });
+        }
+
+        function selectOffering(offering) {
+            oracleState.offering = offering;
+            const text = document.getElementById('oracle-text');
+            text.textContent = offering.flavor;
+
+            setTimeout(() => {
+                showQuestionChoices();
+            }, 2000);
+        }
+
+        function showQuestionChoices() {
+            oracleState.animationState = 'idle';
+            const text = document.getElementById('oracle-text');
+            const choices = document.getElementById('oracle-choices');
+
+            text.textContent = 'What troubles your heart, seeker?';
+            choices.className = 'oracle-choices';
+            choices.innerHTML = '';
+
+            oracleQuestions.forEach(question => {
+                const btn = document.createElement('button');
+                btn.className = 'oracle-btn';
+                btn.innerHTML = `${question.icon}<br>${question.name}`;
+                btn.onclick = () => consultCrystal(question);
+                choices.appendChild(btn);
+            });
+        }
+
+        function consultCrystal(question) {
+            oracleState.question = question;
+            oracleState.animationState = 'consulting';
+            const text = document.getElementById('oracle-text');
+            const choices = document.getElementById('oracle-choices');
+
+            text.textContent = 'The vapors rise... The crystal glows...';
+            choices.innerHTML = '';
+
+            const mistCanvas = document.getElementById('oracle-mist');
+            mistCanvas.style.opacity = '1';
+
+            animateMist(mistCanvas);
+
+            setTimeout(() => {
+                revealFortune();
+            }, 3000);
+        }
+
+        function animateMist(canvas) {
+            const ctx = canvas.getContext('2d');
+            const duration = 3000;
+            const start = Date.now();
+
+            function animateFrame() {
+                const elapsed = Date.now() - start;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < 400; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const dist = Math.sqrt((x - canvas.width / 2) ** 2 + (y - canvas.height / 2) ** 2);
+
+                    if (dist < canvas.width / 2) {
+                        const alpha = Math.random() * 0.6;
+                        const colors = ['#ffffff', '#9966cc', '#6666ff'];
+                        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                        ctx.globalAlpha = alpha;
+                        ctx.fillRect(x, y, 4, 4);
+                    }
+                }
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(animateFrame);
+                } else {
+                    canvas.style.opacity = '0';
+                }
+            }
+
+            animateFrame();
+        }
+
+        function revealFortune() {
+            oracleState.animationState = 'speaking';
+            const text = document.getElementById('oracle-text');
+            const choices = document.getElementById('oracle-choices');
+            const mistCanvas = document.getElementById('oracle-mist');
+
+            mistCanvas.style.opacity = '0';
+
+            const pool = fortunes[oracleState.question.name];
+            const fortune = pool[Math.floor(Math.random() * pool.length)];
+
+            text.textContent = '';
+            choices.innerHTML = '';
+
+            typeOutFortune(fortune);
+
+            setTimeout(() => {
+                const btn = document.createElement('button');
+                btn.className = 'oracle-btn';
+                btn.textContent = 'CONSULT AGAIN';
+                btn.style.marginTop = '10px';
+                btn.onclick = () => resetOracle();
+                choices.appendChild(btn);
+            }, fortune.length * 50 + 1000);
+        }
+
+        function typeOutFortune(text) {
+            const textEl = document.getElementById('oracle-text');
+            textEl.textContent = '';
+            let i = 0;
+
+            function typeChar() {
+                if (i < text.length) {
+                    textEl.textContent += text[i];
+                    i++;
+                    setTimeout(typeChar, 50);
+                }
+            }
+
+            typeChar();
+        }
+
+        function resetOracle() {
+            oracleState = {
+                stage: 'role',
+                role: null,
+                offering: null,
+                question: null,
+                oracle: oracleState.oracle,
+                animationFrame: 0,
+                animationState: 'idle'
+            };
+            showRoleChoices();
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeOracleGame();
+        });
+
+        // Cleanup animation on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+        });
+    </script>
+</body>
+</html>
