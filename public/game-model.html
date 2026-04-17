@@ -306,7 +306,7 @@
       pointer-events: auto;
     }
 
-    .back-btn, .sound-btn {
+    .back-btn {
       background: transparent;
       border: 1px solid var(--accent-gold);
       color: var(--accent-gold);
@@ -317,7 +317,7 @@
       transition: all 0.1s ease;
     }
 
-    .back-btn:hover, .sound-btn:hover {
+    .back-btn:hover {
       background: var(--accent-gold);
       color: var(--bg-deep);
     }
@@ -450,7 +450,6 @@
 
       <div class="nav-bar" id="nav-bar">
         <button class="back-btn" id="back-btn">← BACK</button>
-        <button class="sound-btn" id="sound-btn">♪</button>
       </div>
     </div>
 
@@ -472,12 +471,6 @@
       planetaryInfluence: null,
       spreadType: null,
       lightOrShadow: {}, // map card id to 'light' or 'shadow'
-    };
-
-    const audioState = {
-      ctx: null,
-      backgroundOscillators: [],
-      backgroundGains: [],
     };
 
     // ==================== CARD DATA ====================
@@ -766,7 +759,6 @@
           btn.className = 'option-btn';
           btn.textContent = opt.label;
           btn.onclick = () => {
-            playSound('select');
             resolve(opt.value);
           };
           optionsEl.appendChild(btn);
@@ -1177,10 +1169,9 @@
         const btn = document.createElement('div');
         btn.className = 'card-thumbnail';
         btn.textContent = card.name.substring(0, 10);
-        btn.onclick = () => {
+        btn.onclick = async () => {
           gameState.currentCardIndex = idx;
-          playSound('reveal');
-          setState('REVEAL');
+          await setState('REVEAL');
         };
         container.appendChild(btn);
       });
@@ -1300,77 +1291,7 @@
       document.documentElement.style.setProperty('--accent-neon', pal.neon);
     }
 
-    // ==================== AUDIO ====================
-    function initAudio() {
-      if (audioState.ctx) return;
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      audioState.ctx = new AudioCtx();
-      startBackgroundMusic();
-    }
-
-    function playSound(type) {
-      if (gameState.isMuted || !audioState.ctx) return;
-      const ctx = audioState.ctx;
-
-      if (type === 'select') {
-        fmTone(523, 1.5, 50, 0.12, 0.08);
-        setTimeout(() => fmTone(659, 1.5, 50, 0.12, 0.08), 140);
-      } else if (type === 'reveal') {
-        fmTone(440, 2, 80, 0.6, 0.1);
-        setTimeout(() => fmTone(554, 2, 80, 0.6, 0.1), 150);
-        setTimeout(() => fmTone(659, 2, 80, 0.6, 0.1), 300);
-      }
-    }
-
-    function fmTone(freq, modRatio, modDepth, duration, gain = 0.1) {
-      if (gameState.isMuted || !audioState.ctx) return;
-      const ctx = audioState.ctx;
-
-      const carrier = ctx.createOscillator();
-      const mod = ctx.createOscillator();
-      const modGain = ctx.createGain();
-      const ampGain = ctx.createGain();
-
-      mod.frequency.value = freq * modRatio;
-      modGain.gain.value = modDepth;
-      mod.connect(modGain);
-      modGain.connect(carrier.frequency);
-
-      carrier.type = 'sine';
-      carrier.connect(ampGain);
-      ampGain.connect(ctx.destination);
-
-      ampGain.gain.setValueAtTime(gain, ctx.currentTime);
-      ampGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-      carrier.start(ctx.currentTime);
-      mod.start(ctx.currentTime);
-      carrier.stop(ctx.currentTime + duration);
-      mod.stop(ctx.currentTime + duration);
-    }
-
-    function startBackgroundMusic() {
-      if (gameState.isMuted || !audioState.ctx) return;
-      const ctx = audioState.ctx;
-
-      const bass = ctx.createOscillator();
-      const bassGain = ctx.createGain();
-      bass.frequency.value = 55; // A1
-      bass.type = 'square';
-      bass.connect(bassGain);
-      bassGain.gain.value = 0.02;
-      bassGain.connect(ctx.destination);
-      bass.start();
-      audioState.backgroundOscillators.push(bass);
-      audioState.backgroundGains.push(bassGain);
-    }
-
-    document.getElementById('sound-btn').addEventListener('click', () => {
-      gameState.isMuted = !gameState.isMuted;
-      document.getElementById('sound-btn').textContent = gameState.isMuted ? '♫' : '♪';
-    });
-
-    document.getElementById('back-btn').addEventListener('click', () => {
+document.getElementById('back-btn').addEventListener('click', () => {
       setState('SPREAD_GRID');
     });
 
@@ -1421,9 +1342,6 @@
     }
 
     // ==================== INIT ====================
-    document.addEventListener('click', initAudio, { once: true });
-    document.addEventListener('touchstart', initAudio, { once: true });
-
     initStarfield();
 
     // Skip boot sequence and set up GREET state directly
@@ -1458,7 +1376,6 @@
     beginBtn.className = 'option-btn';
     beginBtn.textContent = 'BEGIN';
     beginBtn.onclick = async () => {
-      playSound('select');
       await setState('INTENT');
     };
     optionsEl.appendChild(beginBtn);
