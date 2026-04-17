@@ -105,15 +105,23 @@
     "title": "Badie v. State",
     "docketNumber": "S26A0051",
     "dateDecided": "March 17, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Homicide",
+      "Party Liability",
+      "Confrontation Clause",
+      "Ineffective Assistance of Counsel",
+      "Evidentiary Sufficiency",
+      "Tales From The Crypt"
+    ],
+    "summary": "Maurice Badie was convicted of murder in a public gunfight shooting that killed Christopher Ramsay. The incident erupted after Ramsay put a gun in the mouth of the brother of Badie's co-defendant, Matthew Benton. Multiple eyewitnesses placed Badie at the scene before and during the shooting; one saw him firing a gun toward the victims, another saw him on a hill from which shots were later fired. Badie appealed on sufficiency of evidence, Confrontation Clause violations, and ineffective assistance of counsel grounds. The Georgia Supreme Court held that evidence viewed in the light most favorable to verdicts was constitutionally sufficient to support conviction as a party to the murder. Liability as a party depends on common criminal intent inferred from presence, companionship, and conduct—not the co-defendant's ultimate conviction level. All claims failed and conviction was affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.614Z"
+    "updatedAt": "2026-04-17T23:49:58.331Z"
   },
   "baker-v-state-318-ga-431": {
     "slug": "baker-v-state-318-ga-431",
@@ -242,15 +250,23 @@
     "title": "Bodie v. State",
     "docketNumber": "S26A0168",
     "dateDecided": "March 17, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Homicide",
+      "Malice Murder",
+      "Accident Instruction",
+      "Ineffective Assistance of Counsel",
+      "Self-Defense Doctrine",
+      "Tales From The Crypt"
+    ],
+    "summary": "Alexandra Bodie shot and killed Brandy Brummett on commercial building stairs. Bodie claimed the shooting was accidental—that as Brummett approached, Bodie believed Brummett knew she carried a gun and was reaching for it. Bodie's account: she pushed Brummett away twice, then believing it was \"either you or me,\" grabbed her gun; \"the safety went off\" and \"my finger slipped,\" resulting in a single fatal shot. Bodie argued trial counsel was ineffective for failing to request a jury accident instruction. Georgia Supreme Court held counsel's strategic decision to omit the instruction was reasonable: the evidence (flight from scene, deliberate gun grab, controlled shot) made accident a weak defense that counsel reasonably declined to pursue. Conviction affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "body-v-state-367-ga-app-506": {
     "slug": "body-v-state-367-ga-app-506",
@@ -901,15 +917,23 @@
     "title": "Doe v. Archdiocese of Atlanta",
     "docketNumber": "A25A1760, A25A1785, A25A1786, A25A1787, A25A1788, A25A1789, A25A1790, A25A1791, A25A1792, A25A1794, A25A1848, A25A1849",
     "dateDecided": "March 9, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Civil",
+      "Sexual Abuse of Minors",
+      "Statute of Limitations",
+      "Fraud Tolling",
+      "Confidential Relationship",
+      "Due Diligence",
+      "Tales From The Crypt"
+    ],
+    "summary": "Twelve victims sued the Archdiocese of Atlanta and two former priests for decades of sexual misconduct against children. The trial court granted summary judgment dismissing claims on statute of limitations grounds. Victims argued claims should be tolled for fraud, alleging the priests' confidential clergy relationship concealed the wrongdoing. The key issue: whether victims' duty to investigate increased upon reaching adulthood when the confidential relationship ended. Court of Appeals affirmed dismissal, holding victims failed to establish fraud tolling. The court found news articles about abuse at other parishes put victims on notice to investigate; they did not exercise due diligence in pursuing claims; and the clergy authority relationship—while confidential during childhood—did not justify indefinite delay in investigating after adulthood. Claims were time-barred.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "drucker-v-morgan-371-ga-app-334": {
     "slug": "drucker-v-morgan-371-ga-app-334",
@@ -956,15 +980,23 @@
     "title": "Fadesire v. State",
     "docketNumber": "S26A0174",
     "dateDecided": "March 17, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Homicide",
+      "Murder",
+      "Prosecutorial Misconduct",
+      "Right to Remain Silent",
+      "Ineffective Assistance of Counsel",
+      "Tales From The Crypt"
+    ],
+    "summary": "Faruk Adedapo Fadesire was convicted of murder in the shooting death of Mikfeesha Dotson in a Stone Mountain motel room. On a rainy evening, Dotson knocked on Fadesire's door; his companion let her in. As Dotson sat down, a witness heard gunshots while her back was turned. Dotson had been shot; Fadesire, the only other occupant, looked \"scared\" and immediately fled. On appeal, Fadesire claimed trial counsel was ineffective for failing to object to two prosecutor closing statements allegedly commenting on Fadesire's right to remain silent and expressing the prosecutor's personal belief in guilt. Georgia Supreme Court held a reasonable lawyer could strategically decline to object—the statements, though aggressive, were tethered to evidence presented at trial. Counsel's tactical decisions do not constitute ineffective assistance without deficiency and prejudice. Conviction affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "fleureme-v-city-of-atlanta-2026-ga-app-lexis-37": {
     "slug": "fleureme-v-city-of-atlanta-2026-ga-app-lexis-37",
@@ -1152,15 +1184,22 @@
     "title": "Garrett v. Sandersville R.R. Co.",
     "docketNumber": "A26A0274, A26A0275",
     "dateDecided": "April 15, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Civil",
+      "Eminent Domain",
+      "Condemnation",
+      "Public Use",
+      "Administrative Law",
+      "Railroad Law"
+    ],
+    "summary": "Members of the Garrett, Smith, Reed, and Briggs families owned private land that the Sandersville Railroad Company sought to obtain by condemnation. The families challenged the PSC's approval of the railroad's petition, arguing the taking was not for valid public use and the PSC violated procedural law. In two companion appeals, the families appealed the PSC's approval while the railroad cross-appealed a trial court stay of enforcement pending appeal. The Court of Appeals applied the strict standard of administrative review: courts cannot substitute judgment for the agency on factual questions but may reverse only if substantial rights were prejudiced by administrative error. The court found the PSC acted within its authority in determining the railroad's use qualified as public use. Both appeals affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "gates-v-state-317-ga-889": {
     "slug": "gates-v-state-317-ga-889",
@@ -1187,30 +1226,45 @@
     "title": "GEICO Indem. Co. v. Abdel-Rahman",
     "docketNumber": "A26A0656",
     "dateDecided": "April 8, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Civil",
+      "Insurance Law",
+      "Settlement Agreements",
+      "Contract Interpretation",
+      "Personal Injury",
+      "Statutory Compliance"
+    ],
+    "summary": "GEICO Indemnity Co. sought damages for breach of a settlement agreement reached with a motor vehicle accident claimant. The claimant's settlement offer included both the statutory material terms required under OCGA § 9-11-67.1 and other terms contradicting that statute, stating the offer was not controlled by that statute. GEICO accepted the statutory material terms but explicitly rejected the disclaiming statement. The question: was an enforceable settlement agreement formed as to the statutory material terms? Following recent precedent in Gomez and Squires, the Court of Appeals held that when parties accept statutory material terms despite conflicting language about whether the statute applies, the statute governs the settlement. GEICO therefore formed an enforceable agreement and was entitled to judgment on its breach claim. Judgment reversed in GEICO's favor.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "gines-v-state": {
     "slug": "gines-v-state",
     "title": "Gines v. State",
     "docketNumber": "S25A1305, S25A1306, S25A1307",
     "dateDecided": "March 12, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Homicide",
+      "Murder",
+      "Home Invasion",
+      "Torture",
+      "Confrontation Clause",
+      "Tales From The Crypt"
+    ],
+    "summary": "Jamel Kweisi Gines, Dontravious Mahone, and Michael Jamar Dawson were convicted of murder for the shooting death of Kadarius Medlock. The trio invaded Medlock's townhome; a neighbor saw a man in a safety vest holding an orange traffic cone in the driveway moments before a maroon vehicle arrived. Inside, Medlock was found tied to a bar stool, shot in the back of the head, with his waist and hands bound. Eyewitnesses placed all three men at the scene and fleeing in the vehicle. Appellants raised insufficient evidence, Confrontation Clause violations from co-defendant statements, and trial error claims. Georgia Supreme Court affirmed. Under the light-most-favorable standard, eyewitness and circumstantial evidence—placement at scene, coordinated flight, vehicle evidence—established guilt beyond reasonable doubt. Co-defendant statements were properly admitted with proper foundational testimony. All claims failed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "girls-galore-inc-v-city-of-atlanta-2026-ga-app-lexis-128": {
     "slug": "girls-galore-inc-v-city-of-atlanta-2026-ga-app-lexis-128",
@@ -1398,15 +1452,22 @@
     "title": "Henry County v. Greater Atlanta Home Builders Assn.",
     "docketNumber": "A25A1843",
     "dateDecided": "February 27, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Civil",
+      "Municipal Law",
+      "Regulatory Takings",
+      "Impact Fees",
+      "Sovereign Immunity",
+      "Standing"
+    ],
+    "summary": "Greater Atlanta Home Builders Association, Peachtree Building Group, and ResiBuilt Home challenged two Henry County ordinances increasing impact fees for residential development. Builders sought declaratory relief under Georgia's constitutional Article I, Section II, claiming the fee increases were unlawful. The trial court granted partial summary judgment for the builders, declared the ordinances illegal, enjoined enforcement, ordered disgorgement of all fees to all payors, and awarded attorney fees. Henry County appealed on sovereign immunity, standing, and exhaustion of remedies grounds. Court of Appeals reversed in part, vacated in part, and remanded. The court found jurisdictional defects requiring dismissal: standing and exhaustion issues created constitutional questions about justiciability. Rather than reaching the merits of the fee challenge, the appellate court resolved the case on foundational grounds.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "hightower-v-state-315-ga-399": {
     "slug": "hightower-v-state-315-ga-399",
@@ -2218,15 +2279,22 @@
     "title": "Neal v. State",
     "docketNumber": "A26A0535. A26A0579",
     "dateDecided": "April 8, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Home Invasion",
+      "Armed Robbery",
+      "Evidentiary Sufficiency",
+      "Confrontation Clause",
+      "Accomplice Liability"
+    ],
+    "summary": "Hakeem Neal and Lokari Boyd were tried jointly and convicted of home invasion and armed robbery. Neal challenged the denial of his directed verdict and new trial motions, arguing insufficient evidence. Boyd raised ineffective assistance of counsel and plain error for admission of a statement he claimed violated the Confrontation Clause. Court of Appeals applied the rational-trier-of-fact standard: evidence is sufficient if any rational jury viewing it most favorably to verdicts could find guilt beyond reasonable doubt. The evidence—identification testimony, circumstantial evidence of scene presence, and corroborating robbery details—met that threshold. Boyd's Confrontation Clause claim failed under proper foundational authentication. Both convictions affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "norris-v-atlanta-braves-inc": {
     "slug": "norris-v-atlanta-braves-inc",
@@ -2575,15 +2643,23 @@
     "title": "Rainey v. State",
     "docketNumber": "S26A0399",
     "dateDecided": "March 17, 2026",
-    "tags": [],
-    "summary": "",
-    "status": "pending",
+    "tags": [
+      "Criminal",
+      "Felony Murder",
+      "Home Invasion",
+      "Multiple Victims",
+      "Voice Identification",
+      "Conspiracy as Lesser-Included Offense",
+      "Tales From The Crypt"
+    ],
+    "summary": "Shadreen Rainey and her mother lived in a 12-room rooming house where they rented upstairs bedrooms. On a fateful night, Rainey committed a home invasion shooting spree within the building, killing Joshua Ellison and wounding Aldean Clark Kinsey and Elante Jose Elias Medina. Charges included felony murder, home invasion, and related offenses. On appeal, Rainey argued evidence was constitutionally insufficient to prove the \"without authority\" element of home invasion—her theory being residency gave her authority to enter the entire building. She also challenged voice identification testimony and claimed the trial court erred by refusing to instruct on conspiracy as a lesser-included offense. Georgia Supreme Court held the \"without authority\" element was satisfied: residency gave authority only to her own bedroom, not the entire building or other tenants' rooms. Voice identification was properly authenticated. No conspiracy instruction was required. Convictions affirmed.",
+    "status": "drafted",
     "source": "parsed",
     "flags": [
       "missing-tags",
       "missing-summary"
     ],
-    "updatedAt": "2026-04-17T23:42:55.615Z"
+    "updatedAt": "2026-04-17T23:49:58.332Z"
   },
   "ramos-v-owens-366-ga-app-216": {
     "slug": "ramos-v-owens-366-ga-app-216",
