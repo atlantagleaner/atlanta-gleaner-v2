@@ -101,6 +101,9 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
 
   const handleGameSelect = (gameName: string) => {
     onGameSelected?.(gameName)
+    if (gameName === 'orbit') {
+      onResetOrbit?.()
+    }
     setIsGameMenuOpen(false)
   }
 
