@@ -6,22 +6,17 @@
   <title>Celestial Tarot — Zodiac Terminal</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg-deep: #0a0015;
-      --bg-space: #1a0a2e;
+      --bg-space: #0d0921;
       --accent-gold: #f9ca24;
       --accent-neon: #e056fd;
       --accent-cyan: #00cec9;
-      --silver: #dfe6e9;
-      --dialogue-bg-top: #1e3799;
-      --dialogue-bg-bot: #0c2461;
-      --border: #dfe6e9;
+      --silver: #c8d4e8;
+      --dialogue-bg: #0a0818;
+      --border: #7880a0;
     }
 
     body {
@@ -40,9 +35,8 @@
       height: 600px;
       position: relative;
       background: var(--bg-deep);
-      border-radius: 12px;
-      border: 3px solid #e056fd;
-      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(233, 86, 253, 0.4);
+      border: 4px solid #e056fd;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.8), 0 0 40px rgba(233,86,253,0.4);
       overflow: hidden;
     }
 
@@ -54,47 +48,35 @@
       pointer-events: none;
       z-index: 999;
       background: repeating-linear-gradient(
-        transparent 0px,
-        transparent 2px,
-        rgba(0, 0, 0, 0.18) 2px,
-        rgba(0, 0, 0, 0.18) 4px
+        transparent 0px, transparent 2px,
+        rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
       );
-      border-radius: 12px;
     }
 
-    /* Scene zone: 0–400px */
+    /* Scene zone: top 370px */
     .scene-zone {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
-      height: 400px;
+      height: 370px;
       background: var(--bg-space);
       overflow: hidden;
     }
 
     #starfield {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
     }
 
     .character-container {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
-      opacity: 1;
       transition: opacity 0.5s ease;
     }
-
-    .character-container.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .character-container.hidden { opacity: 0; pointer-events: none; }
 
     #character-canvas {
       display: block;
@@ -103,12 +85,12 @@
       image-rendering: crisp-edges;
     }
 
+    /* Card image zone */
     .card-image-zone {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
-      height: 300px;
+      height: 270px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -117,182 +99,137 @@
       transition: opacity 0.4s ease;
       z-index: 5;
     }
-
-    .card-image-zone.visible {
-      opacity: 1;
-    }
+    .card-image-zone.visible { opacity: 1; }
 
     .card-image {
-      max-width: 180px;
-      max-height: 280px;
+      max-width: 160px;
+      max-height: 235px;
       object-fit: contain;
       image-rendering: auto;
-      border: 2px solid var(--accent-gold);
-      border-radius: 2px;
+      border: 3px solid var(--accent-gold);
     }
 
+    /* SNES-style Minor Arcana fallback card */
     .card-fallback {
-      width: 120px;
-      height: 180px;
-      background: linear-gradient(135deg, #1a0a2e, #2d1b69);
-      border: 2px solid var(--accent-gold);
+      width: 110px;
+      height: 160px;
+      background: linear-gradient(160deg, #1a0640 0%, #0d0921 55%, #120435 100%);
+      border: 3px solid var(--accent-gold);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
+      justify-content: space-between;
+      padding: 10px 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-fallback::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(249,202,36,0.25);
+      pointer-events: none;
+    }
+    .card-fallback-suit { font-size: 22px; line-height: 1; }
+    .card-fallback-rank {
       font-size: 7px;
       color: var(--accent-gold);
-      border-radius: 2px;
-      padding: 8px;
+      text-align: center;
+      line-height: 1.7;
+      word-wrap: break-word;
     }
+    .card-fallback-suit-bottom { font-size: 14px; line-height: 1; transform: rotate(180deg); opacity: 0.5; }
 
     .card-metadata {
       position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
+      bottom: 14px;
+      left: 0; right: 0;
       text-align: center;
       z-index: 6;
     }
+    .card-name { font-size: 9px; color: var(--accent-gold); margin-bottom: 4px; }
+    .card-keywords { font-size: 6px; color: var(--accent-cyan); opacity: 0.8; }
 
-    .card-name {
-      font-size: 11px;
-      color: var(--accent-gold);
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .card-keywords {
-      font-size: 7px;
-      color: var(--accent-cyan);
-      opacity: 0.8;
-    }
-
+    /* Decorative card grid (scene zone, non-interactive) */
     .card-grid {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      flex-direction: column;
+      padding: 16px 12px;
+      gap: 8px;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
+      z-index: 3;
     }
-
-    .card-grid.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .card-grid.visible { opacity: 1; }
 
     .card-grid-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
       justify-content: center;
+      align-items: center;
     }
 
-    .card-thumbnail {
-      width: 80px;
-      height: 120px;
-      background: linear-gradient(135deg, #2d1b69, #1a0a2e);
+    .card-back {
+      background: linear-gradient(135deg, #1e0a50 0%, #0d0921 50%, #1e0a50 100%);
       border: 2px solid var(--accent-neon);
-      border-radius: 2px;
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 6px;
-      text-align: center;
-      padding: 4px;
-      color: var(--accent-neon);
-      transition: all 0.2s ease;
-      transform: scale(1);
-    }
-
-    .card-thumbnail:hover {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 12px rgba(249, 202, 36, 0.5);
-      transform: scale(1.08);
-    }
-
-    /* Dialogue panel: 400–600px */
-    .dialogue-panel {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 200px;
-      background: linear-gradient(180deg, var(--dialogue-bg-top), var(--dialogue-bg-bot));
-      border-top: 3px solid var(--border);
-      padding: 12px 14px 10px;
-      display: flex;
-      flex-direction: column;
-      z-index: 20;
-    }
-
-    .dialogue-text {
-      height: 110px;
+      position: relative;
       overflow: hidden;
-      font-size: 9px;
-      line-height: 1.8;
-      color: var(--silver);
-      margin-bottom: 6px;
-      word-wrap: break-word;
-    }
-
-    .dialogue-options {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
-
-    .dialogue-options::-webkit-scrollbar {
-      display: none;
-    }
-
-    .option-btn {
-      background: transparent;
-      border: 2px solid var(--accent-neon);
-      color: var(--accent-neon);
-      font-family: 'Press Start 2P', monospace;
-      font-size: 7px;
-      padding: 4px 6px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.1s ease;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       flex-shrink: 0;
     }
-
-    .option-btn:hover {
-      background: var(--accent-neon);
-      color: var(--dialogue-bg-bot);
-      box-shadow: 0 0 8px rgba(224, 86, 253, 0.6);
+    .card-back::before {
+      content: '✦';
+      font-size: 12px;
+      color: var(--accent-neon);
+      opacity: 0.5;
+    }
+    .card-back.revealed {
+      border-color: rgba(249,202,36,0.4);
+      opacity: 0.35;
+    }
+    .card-back.revealed::before {
+      content: '★';
+      color: var(--accent-gold);
+      opacity: 0.6;
     }
 
-    .option-btn:active {
-      transform: scale(0.98);
+    /* Orrery */
+    .orrery-zone {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 370px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 8;
+    }
+    .orrery-zone.visible { opacity: 1; pointer-events: auto; }
+    #orrery-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      image-rendering: pixelated;
+      cursor: pointer;
     }
 
+    /* Nav bar */
     .nav-bar {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 28px;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0,0,0,0.5);
       border-bottom: 2px solid var(--accent-gold);
       display: flex;
-      justify-content: space-between;
       align-items: center;
       padding: 0 8px;
       z-index: 25;
@@ -300,136 +237,159 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
     }
-
-    .nav-bar.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
+    .nav-bar.visible { opacity: 1; pointer-events: auto; }
     .back-btn {
       background: transparent;
       border: 1px solid var(--accent-gold);
       color: var(--accent-gold);
-      font-size: 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
       padding: 2px 6px;
       cursor: pointer;
+    }
+    .back-btn:hover { background: var(--accent-gold); color: var(--bg-deep); }
+
+    /* ═══════════════════════════════════
+       SNES RPG DIALOGUE PANEL
+    ═══════════════════════════════════ */
+    .dialogue-panel {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 230px;
+      background: #09071a;
+      background-image:
+        radial-gradient(circle 1px at 2px 2px, rgba(140,140,255,0.06) 100%, transparent 0);
+      background-size: 4px 4px;
+      border-top: 4px solid #7880a0;
+      box-shadow:
+        inset 4px 4px 0 rgba(255,255,255,0.10),
+        inset -4px 4px 0 rgba(255,255,255,0.10),
+        inset 8px 8px 0 rgba(0,0,0,0.25),
+        inset -8px 8px 0 rgba(0,0,0,0.25);
+      padding: 10px 14px 8px;
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+    }
+
+    .dialogue-text {
+      height: 108px;
+      overflow: hidden;
+      font-size: 8px;
+      line-height: 1.9;
+      color: var(--silver);
+      margin-bottom: 4px;
+      word-wrap: break-word;
+    }
+
+    .dialogue-separator {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(120,128,160,0.5), transparent);
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .dialogue-options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Two-column grid for planet selection (7 buttons) */
+    .dialogue-options.two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      align-content: start;
+    }
+
+    /* SNES RPG arrow-selector buttons */
+    .option-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      color: var(--silver);
       font-family: 'Press Start 2P', monospace;
-      transition: all 0.1s ease;
+      font-size: 6px;
+      padding: 2px 4px 2px 14px;
+      cursor: pointer;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+      line-height: 1.2;
+      transition: color 0.06s ease;
     }
-
-    .back-btn:hover {
-      background: var(--accent-gold);
-      color: var(--bg-deep);
-    }
-
-    /* Orrery canvas */
-    #orrery-canvas {
+    .option-btn::before {
+      content: ' ';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      image-rendering: pixelated;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: crisp-edges;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-gold);
+      font-size: 6px;
     }
+    .option-btn:hover, .option-btn:focus {
+      color: var(--accent-gold);
+      outline: none;
+    }
+    .option-btn:hover::before, .option-btn:focus::before { content: '▶'; }
+    .option-btn:active { opacity: 0.7; }
 
-    .orrery-zone {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 400px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+    .option-btn.revealed-pos {
+      opacity: 0.38;
+      cursor: default;
+      color: var(--accent-gold);
     }
-
-    .orrery-zone.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .option-btn.revealed-pos::before { content: '✓'; color: var(--accent-gold); }
 
     /* Boot console */
     .boot-console {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000000;
+      inset: 0;
+      background: #000;
       z-index: 50;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 1;
       transition: opacity 0.5s ease;
-      pointer-events: all;
     }
-
-    .boot-console.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .boot-console.hidden { opacity: 0; pointer-events: none; }
     .boot-text {
       font-size: 9px;
       color: var(--accent-gold);
-      text-align: left;
       line-height: 2.2;
-      width: 90%;
-      height: 90%;
+      width: 90%; height: 90%;
       overflow: hidden;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
 
-    /* Loading bar */
-    .loading-bar {
-      width: 100%;
-      height: 8px;
-      background: rgba(249, 202, 36, 0.2);
-      border: 1px solid var(--accent-gold);
-      margin: 8px 0;
-      overflow: hidden;
-    }
-
-    .loading-fill {
-      height: 100%;
-      background: var(--accent-gold);
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
     @keyframes palette-flash {
-      0% { filter: brightness(1); }
-      50% { filter: brightness(2); }
+      0%   { filter: brightness(1); }
+      50%  { filter: brightness(2.2); }
       100% { filter: brightness(1); }
     }
-
-    .flash {
-      animation: palette-flash 0.3s ease;
-    }
-
-    /* Utility */
-    .hidden {
-      display: none !important;
-    }
+    .flash { animation: palette-flash 0.3s ease; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <div class="game-container">
-    <!-- Boot console -->
-    <div class="boot-console" id="boot-console">
+
+    <div class="boot-console hidden" id="boot-console">
       <div class="boot-text" id="boot-text"></div>
     </div>
 
-    <!-- Scene zone -->
     <div class="scene-zone">
-      <canvas id="starfield" width="333" height="400"></canvas>
+      <canvas id="starfield" width="333" height="370"></canvas>
 
       <div class="character-container" id="character-container">
-        <canvas id="character-canvas" width="48" height="64"></canvas>
+        <canvas id="character-canvas" width="80" height="96"></canvas>
       </div>
 
       <div class="card-image-zone" id="card-image-zone">
@@ -440,24 +400,25 @@
         </div>
       </div>
 
-      <div class="card-grid visible" id="card-grid">
+      <div class="card-grid" id="card-grid">
         <div class="card-grid-container" id="card-grid-container"></div>
       </div>
 
       <div class="orrery-zone" id="orrery-zone">
-        <canvas id="orrery-canvas" width="333" height="400"></canvas>
+        <canvas id="orrery-canvas" width="333" height="370"></canvas>
       </div>
 
       <div class="nav-bar" id="nav-bar">
-        <button class="back-btn" id="back-btn">← BACK</button>
+        <button class="back-btn" id="back-btn">← SPREAD</button>
       </div>
     </div>
 
-    <!-- Dialogue panel -->
     <div class="dialogue-panel">
       <div class="dialogue-text" id="dialogue-text"></div>
+      <div class="dialogue-separator"></div>
       <div class="dialogue-options" id="dialogue-options"></div>
     </div>
+
   </div>
 
   <script>
@@ -465,163 +426,250 @@
     const gameState = {
       currentState: 'BOOT',
       activeGuide: null,
-      isMuted: false,
       drawnCards: [],
       currentCardIndex: 0,
       planetaryInfluence: null,
       spreadType: null,
-      lightOrShadow: {}, // map card id to 'light' or 'shadow'
+      lightOrShadow: {},
+      deepDiveChoice: null,
     };
 
     // ==================== CARD DATA ====================
     const MAJOR_ARCANA = [
       {
-        id: 0, name: 'The Fool', keywords: ['beginnings', 'innocence', 'spontaneity', 'free spirit'],
+        id: 0, name: 'The Fool',
+        keywords: ['beginnings', 'innocence', 'spontaneity', 'free spirit'],
         upright: 'A fresh start, new adventure, taking a leap of faith. Embrace the unknown with childlike wonder.',
         reversed: 'Recklessness, risk-taking without thinking. Hold on, pause and reconsider your path.',
-        planet: 'Uranus', element: 'Air', hebrew: 'Aleph', alchemical: 'Mercury', esotericTitle: 'The Spirit of Aether', treePath: '11', orreryPlanet: 'uranus',
-        preReveal: 'A figure stands at the cliff edge, one foot already over the void. A small dog barks below. The wind fills the fool\'s cloak as they smile, ready to leap.'
+        planet: 'Uranus', element: 'Air', hebrew: 'Aleph', alchemical: 'Mercury',
+        esotericTitle: 'The Spirit of Aether', treePath: '11', orreryPlanet: 'uranus',
+        alchemicalKey: 'The Fool carries the seal of Uranus and the Hebrew letter Aleph — the Ox, the first breath of creation. Uranus governs the lightning of inspiration that cares nothing for consequence or form. Alchemically, this card is Mercury — the volatile spirit that flies free before it can be fixed. The Fool is the Aether itself: pure potential before the Great Work begins, the divine madness that precedes all manifestation.',
+        celestialPath: 'The Fool walks the 11th path between Kether and Chokmah — the first path of the Lightning Flash, the pure descent of divine will into form. This is the path of pure potential before differentiation, where the infinite breathes its first breath into the structure of creation. The Hebrew letter Aleph, the Ox, marks this as the path of the breath of life — the divine exhalation that sets the entire Tree trembling.',
       },
       {
-        id: 1, name: 'The Magician', keywords: ['manifestation', 'power', 'action', 'concentration'],
+        id: 1, name: 'The Magician',
+        keywords: ['manifestation', 'power', 'action', 'concentration'],
         upright: 'You have all the tools you need. Channel your willpower and make things happen.',
-        reversed: 'Manipulation, poor planning, untapped talents. Don\'t waste your gifts.',
-        planet: 'Mercury', element: 'Air', hebrew: 'Beth', alchemical: 'Mercury', esotericTitle: 'The Magus of Power', treePath: '12', orreryPlanet: 'mercury'
+        reversed: 'Manipulation, poor planning, untapped talents. Do not waste your gifts.',
+        planet: 'Mercury', element: 'Air', hebrew: 'Beth', alchemical: 'Mercury',
+        esotericTitle: 'The Magus of Power', treePath: '12', orreryPlanet: 'mercury',
+        alchemicalKey: 'The Magician bears the seal of Mercury and the Hebrew letter Beth — the House. Mercury is the mind that moves between realms, the principle of correspondence that links above and below. The alchemical Mercury is the universal solvent: it can dissolve all things and become all things. The Magician\'s table holds the four tools because he has mastered the art of transformation — he is the laboratory and the alchemist both.',
+        celestialPath: 'The Magician walks the 12th path between Kether and Binah — the path of the Director of Forces. Here the divine will of Kether takes its first definite form through the organizing intelligence of Binah, the Great Mother. The Hebrew letter Beth, the House, marks this as the path of the first dwelling: the sacred container in which cosmic consciousness begins to know itself through reflection.',
       },
       {
-        id: 2, name: 'The High Priestess', keywords: ['intuition', 'mystery', 'subconscious', 'wisdom'],
+        id: 2, name: 'The High Priestess',
+        keywords: ['intuition', 'mystery', 'subconscious', 'wisdom'],
         upright: 'Trust your intuition. The answers lie within — quiet your mind and listen.',
-        reversed: 'Secrets, withdrawn energy, silence your inner voice. Stop overthinking.',
-        planet: 'Moon', element: 'Water', hebrew: 'Gimel', alchemical: 'Salt', esotericTitle: 'Priestess of the Silver Star', treePath: '13', orreryPlanet: 'moon'
+        reversed: 'Secrets, withdrawn energy. Stop overthinking and trust your inner voice.',
+        planet: 'Moon', element: 'Water', hebrew: 'Gimel', alchemical: 'Salt',
+        esotericTitle: 'Priestess of the Silver Star', treePath: '13', orreryPlanet: 'moon',
+        alchemicalKey: 'The High Priestess is sealed by the Moon and the Hebrew letter Gimel — the Camel, the bridge between worlds. The Moon governs the tides of the unconscious, the silver vessel of reflected light. Alchemically, this card is Salt — the fixed, crystalline principle that holds the pattern of memory and form. She is the guardian of the Book of Thoth, the silent knowing that exists before thought.',
+        celestialPath: 'The High Priestess walks the 13th path between Kether and Tiphareth — the great middle pillar of the Tree, the longest path, connecting the crown to the heart of beauty. This is the path of the Uniting Intelligence, the direct channel through which divine light descends to the center of conscious human experience. The Hebrew letter Gimel, the Camel, marks her as the carrier across the void — the bridge over the Abyss itself.',
       },
       {
-        id: 3, name: 'The Empress', keywords: ['fertility', 'nature', 'abundance', 'nurturing'],
+        id: 3, name: 'The Empress',
+        keywords: ['fertility', 'nature', 'abundance', 'nurturing'],
         upright: 'Abundance and nurturing energy. Create, grow, and enjoy life\'s pleasures.',
         reversed: 'Creative block, dependence, smothering. Find balance between giving and receiving.',
-        planet: 'Venus', element: 'Earth', hebrew: 'Daleth', alchemical: 'Salt', esotericTitle: 'Daughter of the Mighty Ones', treePath: '14', orreryPlanet: 'venus'
+        planet: 'Venus', element: 'Earth', hebrew: 'Daleth', alchemical: 'Salt',
+        esotericTitle: 'Daughter of the Mighty Ones', treePath: '14', orreryPlanet: 'venus',
+        alchemicalKey: 'The Empress bears the seal of Venus and the Hebrew letter Daleth — the Door. Venus governs the law of attraction, the force that draws beauty and abundance into being. Alchemically, this card is Salt — the fertile earth that receives the seed and transforms it into life. The Empress is the alchemical vessel itself: the Prima Materia in its most generative state, the matrix of all creation.',
+        celestialPath: 'The Empress walks the 14th path between Chokmah and Binah — the luminous intelligence connecting Wisdom to Understanding across the Abyss. This is the union of the Father and Mother above the veil, the sacred marriage that generates all existence below. The Hebrew letter Daleth, the Door, marks this as the path of abundance: every doorway that opens into creation passes through the Empress\'s domain.',
       },
       {
-        id: 4, name: 'The Emperor', keywords: ['authority', 'structure', 'control', 'fatherhood'],
+        id: 4, name: 'The Emperor',
+        keywords: ['authority', 'structure', 'control', 'fatherhood'],
         upright: 'Structure, authority, and leadership. Take charge and build solid foundations.',
         reversed: 'Domination, rigidity, inflexibility. Loosen your grip — control is an illusion.',
-        planet: 'Aries', element: 'Fire', hebrew: 'Heh', alchemical: 'Sulfur', esotericTitle: 'Son of the Morning', treePath: '15', orreryPlanet: 'mars'
+        planet: 'Aries', element: 'Fire', hebrew: 'Heh', alchemical: 'Sulfur',
+        esotericTitle: 'Son of the Morning', treePath: '15', orreryPlanet: 'mars',
+        alchemicalKey: 'The Emperor carries the seal of Aries and the Hebrew letter Heh — the Window, the breath of vision. Aries governs the first fire, the pure will that initiates action without hesitation. Alchemically, this card is Sulfur — the active, volcanic principle that imposes structure through force. The Emperor is the fixed point around which the world organizes: the alchemical Coagula, the solidifying power that gives form to chaos.',
+        celestialPath: 'The Emperor walks the 15th path between Chokmah and Tiphareth — the constituting intelligence that carries the raw wisdom of Chokmah down into the heart of manifest beauty. This is the path of the first law: the principle that gives chaos a throne and calls it order. The Hebrew letter Heh, the Window, marks this path as the opening through which divine vision enters the world of form as sovereign authority.',
       },
       {
-        id: 5, name: 'The Hierophant', keywords: ['tradition', 'conformity', 'education', 'spirituality'],
+        id: 5, name: 'The Hierophant',
+        keywords: ['tradition', 'conformity', 'education', 'spirituality'],
         upright: 'Seek guidance from tradition or a mentor. Spiritual wisdom through established paths.',
         reversed: 'Rebellion, breaking free from convention. Trust your own inner guidance system.',
-        planet: 'Taurus', element: 'Earth', hebrew: 'Vau', alchemical: 'Salt', esotericTitle: 'Magus of the Eternal', treePath: '16', orreryPlanet: 'saturn'
+        planet: 'Taurus', element: 'Earth', hebrew: 'Vau', alchemical: 'Salt',
+        esotericTitle: 'Magus of the Eternal', treePath: '16', orreryPlanet: 'saturn',
+        alchemicalKey: 'The Hierophant bears the seal of Taurus and the Hebrew letter Vau — the Nail that fixes heaven to earth. Taurus governs the enduring material world, the body\'s wisdom accumulated over generations. Alchemically, this card is Salt — the inherited crystalline structure of tradition and doctrine. The Hierophant is the keeper of the fixed flame: the initiated priest who guards the inner fire within the temple of accumulated form.',
+        celestialPath: 'The Hierophant walks the 16th path between Chokmah and Chesed — the triumphal or eternal intelligence that preserves the pattern of divine wisdom within the mercy of the material world. This is the path of transmission: the channel through which esoteric knowledge descends from its pure form and becomes teachable, codified, preserved in ceremony. The Hebrew letter Vau, the Nail, holds this knowledge in place across time.',
       },
       {
-        id: 6, name: 'The Lovers', keywords: ['love', 'harmony', 'relationships', 'values'],
+        id: 6, name: 'The Lovers',
+        keywords: ['love', 'harmony', 'relationships', 'values'],
         upright: 'A meaningful choice or deep connection. Follow your heart, but use your head too.',
         reversed: 'Disharmony, imbalance, misalignment. Reconnect with what truly matters.',
-        planet: 'Gemini', element: 'Air', hebrew: 'Zain', alchemical: 'Mercury', esotericTitle: 'Children of the Voice', treePath: '17', orreryPlanet: 'mercury'
+        planet: 'Gemini', element: 'Air', hebrew: 'Zain', alchemical: 'Mercury',
+        esotericTitle: 'Children of the Voice', treePath: '17', orreryPlanet: 'mercury',
+        alchemicalKey: 'The Lovers carry the seal of Gemini and the Hebrew letter Zain — the Sword of discernment. Gemini governs the dual nature of mind: the capacity to perceive two things simultaneously and choose between them. Alchemically, this card is Mercury — the quicksilver that flows between states, never fixed, always choosing its form. The Lovers represent the Chemical Wedding: the union of opposites that creates something wholly new.',
+        celestialPath: 'The Lovers walk the 17th path between Binah and Tiphareth — the path of the Disposing Intelligence. This is the channel through which the formative wisdom of the Great Mother descends into the beauty of conscious experience, and where the soul first encounters the great dividing force: the necessity of choosing between paths. The Hebrew letter Zain, the Sword, divides the world into yes and no, demanding the soul develop the faculty of discernment.',
       },
       {
-        id: 7, name: 'The Chariot', keywords: ['determination', 'willpower', 'victory', 'assertiveness'],
+        id: 7, name: 'The Chariot',
+        keywords: ['determination', 'willpower', 'victory', 'assertiveness'],
         upright: 'Victory through determination. Charge forward with confidence and focus.',
         reversed: 'Lack of direction, aggression, no control. Realign before moving forward.',
-        planet: 'Cancer', element: 'Water', hebrew: 'Cheth', alchemical: 'Mercury', esotericTitle: 'Child of the Powers of the Waters', treePath: '18', orreryPlanet: 'moon'
+        planet: 'Cancer', element: 'Water', hebrew: 'Cheth', alchemical: 'Mercury',
+        esotericTitle: 'Child of the Powers of the Waters', treePath: '18', orreryPlanet: 'moon',
+        alchemicalKey: 'The Chariot bears the seal of Cancer and the Hebrew letter Cheth — the Fence or field of enclosure. Cancer governs the shell that protects the living center, the home that moves with the creature within it. Alchemically, this card is Mercury — the directed will that channels volatile forces through a contained vessel. The Chariot is the alchemical crucible in motion: the Great Work carried forward by directed intention.',
+        celestialPath: 'The Chariot walks the 18th path between Binah and Geburah — the intelligence of the house of influence, through which the organizing power of form meets the severity of divine will. This is the path of directed force: where the Mother\'s protective shell channels the Father\'s martial energy into purposeful motion. The Hebrew letter Cheth, the Fence, marks the path of the warrior who knows both where to go and where the boundaries lie.',
       },
       {
-        id: 8, name: 'Strength', keywords: ['courage', 'patience', 'compassion', 'inner strength'],
+        id: 8, name: 'Strength',
+        keywords: ['courage', 'patience', 'compassion', 'inner strength'],
         upright: 'Inner strength and courage. Face challenges with grace, not force.',
         reversed: 'Self-doubt, weakness, insecurity. Remember your own power.',
-        planet: 'Leo', element: 'Fire', hebrew: 'Teth', alchemical: 'Sulfur', esotericTitle: 'Daughter of the Flaming Sword', treePath: '19', orreryPlanet: 'sun'
+        planet: 'Leo', element: 'Fire', hebrew: 'Teth', alchemical: 'Sulfur',
+        esotericTitle: 'Daughter of the Flaming Sword', treePath: '19', orreryPlanet: 'sun',
+        alchemicalKey: 'Strength carries the seal of Leo and the Hebrew letter Teth — the Serpent. Leo governs the solar heart, the radiant core of individual identity. Alchemically, this card is Sulfur — the fiery principle, but here refined: not the volcano, but the steady internal flame of courage. The Serpent of Teth is the Kundalini — the life force that rises through patience and gentleness rather than conquest.',
+        celestialPath: 'Strength walks the 19th path between Chesed and Geburah — the path of the Secret of all Spiritual Activities, where the mercy of expansion and the severity of contraction meet and are reconciled by love. This is the central drama of the middle pillars: the fierce grace that tames the lion not through force but through the quiet authority of inner fire. The Hebrew letter Teth, the Serpent, marks this as the path of the risen life-force.',
       },
       {
-        id: 9, name: 'The Hermit', keywords: ['introspection', 'solitude', 'guidance', 'reflection'],
+        id: 9, name: 'The Hermit',
+        keywords: ['introspection', 'solitude', 'guidance', 'reflection'],
         upright: 'Time for solitude and reflection. Your inner light will guide the way.',
-        reversed: 'Isolation, loneliness, withdrawal. Don\'t cut yourself off from the world.',
-        planet: 'Virgo', element: 'Earth', hebrew: 'Yod', alchemical: 'Mercury', esotericTitle: 'Prophet of the Eternal', treePath: '20', orreryPlanet: 'mercury'
+        reversed: 'Isolation, loneliness, withdrawal. Do not cut yourself off from the world.',
+        planet: 'Virgo', element: 'Earth', hebrew: 'Yod', alchemical: 'Mercury',
+        esotericTitle: 'Prophet of the Eternal', treePath: '20', orreryPlanet: 'mercury',
+        alchemicalKey: 'The Hermit bears the seal of Virgo and the Hebrew letter Yod — the Hand, the smallest letter, the divine spark. Virgo governs analysis, purification, and the discernment of essence from impurity. Alchemically, this card is Mercury — but Mercury turned inward, the solvent applied to the self. The Hermit\'s lantern contains the Yod — the primordial point of divine light that illuminates the path of inner refinement.',
+        celestialPath: 'The Hermit walks the 20th path between Chesed and Tiphareth — the path of the Will, where the expansive mercy of Chesed turns its light inward toward the beauty of the self. This is the path of conscious self-examination: where the soul retreats from the world of action to find the still point from which all true action proceeds. The Hebrew letter Yod, the Hand, marks this as the path of the divine spark cupped in a mortal palm.',
       },
       {
-        id: 10, name: 'Wheel of Fortune', keywords: ['cycles', 'destiny', 'turning point', 'luck'],
+        id: 10, name: 'Wheel of Fortune',
+        keywords: ['cycles', 'destiny', 'turning point', 'luck'],
         upright: 'A turning point. The wheel turns in your favor — embrace the change.',
-        reversed: 'Bad luck, resistance to change, breaking cycles. What goes down must come up.',
-        planet: 'Jupiter', element: 'Fire', hebrew: 'Kaph', alchemical: 'Mercury', esotericTitle: 'Lord of the Forces of Life', treePath: '21', orreryPlanet: 'jupiter'
+        reversed: 'Bad luck, resistance to change. What goes down must come up.',
+        planet: 'Jupiter', element: 'Fire', hebrew: 'Kaph', alchemical: 'Mercury',
+        esotericTitle: 'Lord of the Forces of Life', treePath: '21', orreryPlanet: 'jupiter',
+        alchemicalKey: 'The Wheel of Fortune carries the seal of Jupiter and the Hebrew letter Kaph — the Palm that gives and receives. Jupiter governs the expansion of fortune, the principle of abundance and cyclical growth. Alchemically, this card is Mercury — the ever-moving principle that neither rests nor fixes, but turns ceaselessly between dissolution and coagulation. The Wheel is the alchemical process itself: the prima materia cycling through death and rebirth.',
+        celestialPath: 'The Wheel of Fortune walks the 21st path between Chesed and Netzach — the intelligence of Conciliation, reconciling the expansive mercy of Jupiter with the passionate desire of Venus. Here the great cycles of fortune flow between the realm of divine ordering and the realm of elemental desire. The Hebrew letter Kaph, the Palm, marks this as the path of receiving: what the hand opens to receive, the wheel delivers.',
       },
       {
-        id: 11, name: 'Justice', keywords: ['fairness', 'truth', 'cause-effect', 'law'],
+        id: 11, name: 'Justice',
+        keywords: ['fairness', 'truth', 'cause-effect', 'law'],
         upright: 'Justice and fairness prevail. Honesty leads to the right outcome.',
         reversed: 'Unfairness, dishonesty, lack of accountability. Restore balance.',
-        planet: 'Libra', element: 'Air', hebrew: 'Lamed', alchemical: 'Mercury', esotericTitle: 'Daughter of the Lords of Truth', treePath: '22', orreryPlanet: 'venus'
+        planet: 'Libra', element: 'Air', hebrew: 'Lamed', alchemical: 'Mercury',
+        esotericTitle: 'Daughter of the Lords of Truth', treePath: '22', orreryPlanet: 'venus',
+        alchemicalKey: 'Justice bears the seal of Libra and the Hebrew letter Lamed — the Ox-Goad that directs. Libra governs the equilibrium of forces, the precise balance point where all polarities neutralize. Alchemically, this card is Mercury — the weighing principle, the universal measure. Justice holds the scales because she embodies the alchemical axiom: equal parts sulfur and salt, precisely measured, yield the philosopher\'s stone.',
+        celestialPath: 'Justice walks the 22nd path between Geburah and Tiphareth — the faithful intelligence, the axis of divine measurement connecting the severity of cosmic law to the beauty of balanced manifestation. This is the path of cosmic accountability: where every action that has passed through the severity of Mars must be weighed against the beauty of what it was meant to serve. The Hebrew letter Lamed, the Ox-Goad, marks this as the path of purposeful correction.',
       },
       {
-        id: 12, name: 'The Hanged Man', keywords: ['surrender', 'new perspective', 'letting go', 'pause'],
+        id: 12, name: 'The Hanged Man',
+        keywords: ['surrender', 'new perspective', 'letting go', 'pause'],
         upright: 'Surrender and gain a new perspective. Sometimes doing nothing is doing everything.',
         reversed: 'Delays, resistance, stalling. Stop fighting the current.',
-        planet: 'Neptune', element: 'Water', hebrew: 'Mem', alchemical: 'Salt', esotericTitle: 'Spirit of the Mighty Waters', treePath: '23', orreryPlanet: 'moon'
+        planet: 'Neptune', element: 'Water', hebrew: 'Mem', alchemical: 'Salt',
+        esotericTitle: 'Spirit of the Mighty Waters', treePath: '23', orreryPlanet: 'moon',
+        alchemicalKey: 'The Hanged Man carries the seal of Neptune and the Hebrew letter Mem — the Water, the sea of consciousness. Neptune governs the dissolution of boundaries, the longing to return to the undifferentiated source. Alchemically, this card is Salt — but salt dissolved in water, the fixed principle suspended in the universal solvent. The Hanged Man is the Great Solve: the deliberate dissolution of fixed identity in order to perceive a deeper pattern.',
+        celestialPath: 'The Hanged Man walks the 23rd path between Geburah and Hod — the stable intelligence, the suspension that connects the severity of divine power to the intellect that renders it comprehensible. This is the path of sacred reversal: where the practitioner learns to see the world turned upside down and finds it more true that way. The Hebrew letter Mem, the Water, marks this as the path of the primordial flood that precedes all new creation.',
       },
       {
-        id: 13, name: 'Death', keywords: ['transformation', 'endings', 'change', 'transition'],
+        id: 13, name: 'Death',
+        keywords: ['transformation', 'endings', 'change', 'transition'],
         upright: 'Transformation and new beginnings. Endings clear the path for fresh starts.',
-        reversed: 'Resistance to change, fear of endings. Embrace transformation — it\'s natural.',
-        planet: 'Scorpio', element: 'Water', hebrew: 'Nun', alchemical: 'Sulfur', esotericTitle: 'Child of the Great Transformers', treePath: '24', orreryPlanet: 'mars'
+        reversed: 'Resistance to change, fear of endings. Embrace transformation — it is natural.',
+        planet: 'Scorpio', element: 'Water', hebrew: 'Nun', alchemical: 'Sulfur',
+        esotericTitle: 'Child of the Great Transformers', treePath: '24', orreryPlanet: 'mars',
+        alchemicalKey: 'Death bears the seal of Scorpio and the Hebrew letter Nun — the Fish, the creature that breathes death and lives within it. Scorpio governs the sacred alchemy of ending — the transmutation that can only occur when the old form releases completely. Alchemically, this card is Sulfur — the volatile fire that reduces matter to ash, the nigredo of the Great Work where all false forms are burned away before the albedo can begin.',
+        celestialPath: 'Death walks the 24th path between Tiphareth and Netzach — the imaginative intelligence, the path of sacred transformation connecting the beauty of the awakened self to the domain of elemental desire and natural cycle. This is the path of the great release: where the beauty of what has been must dissolve completely into the churning waters of Netzach before it can re-emerge in new form. The Hebrew letter Nun, the Fish, marks this as the path of life within death.',
       },
       {
-        id: 14, name: 'Temperance', keywords: ['balance', 'moderation', 'patience', 'purpose'],
+        id: 14, name: 'Temperance',
+        keywords: ['balance', 'moderation', 'patience', 'purpose'],
         upright: 'Balance and moderation. Find your middle path and walk it with patience.',
         reversed: 'Imbalance, excess, lack of long-term vision. Recalibrate your life.',
-        planet: 'Sagittarius', element: 'Fire', hebrew: 'Samekh', alchemical: 'Mercury', esotericTitle: 'Daughter of the Reconcilers', treePath: '25', orreryPlanet: 'jupiter'
+        planet: 'Sagittarius', element: 'Fire', hebrew: 'Samekh', alchemical: 'Mercury',
+        esotericTitle: 'Daughter of the Reconcilers', treePath: '25', orreryPlanet: 'jupiter',
+        alchemicalKey: 'Temperance carries the seal of Sagittarius and the Hebrew letter Samekh — the Prop or support structure. Sagittarius governs the aspiring fire, the philosophical arrow aimed always at higher understanding. Alchemically, this card is Mercury — the principle of circulation and refinement. The angel pours endlessly between vessels because the Great Work requires constant circulation: the distillation that refines crude matter into subtle spirit.',
+        celestialPath: 'Temperance walks the 25th path between Tiphareth and Yesod — the path of Intelligence of Probation or Trial, the direct channel of the middle pillar connecting the heart of beauty to the foundation of the astral world. This is the path of the alchemical angel: the great mediator who circulates the waters of heaven and earth between the two vessels of above and below. The Hebrew letter Samekh, the Prop, marks this as the path that supports the connection between worlds.',
       },
       {
-        id: 15, name: 'The Devil', keywords: ['shadow', 'attachment', 'addiction', 'materialism'],
+        id: 15, name: 'The Devil',
+        keywords: ['shadow', 'attachment', 'addiction', 'materialism'],
         upright: 'Examine your shadow side. What binds you? Awareness is the first step to freedom.',
         reversed: 'Release, freedom, breaking free. You have the power to unchain yourself.',
-        planet: 'Capricorn', element: 'Earth', hebrew: 'Ayin', alchemical: 'Sulfur', esotericTitle: 'Lord of the Gates of Matter', treePath: '26', orreryPlanet: 'saturn'
+        planet: 'Capricorn', element: 'Earth', hebrew: 'Ayin', alchemical: 'Sulfur',
+        esotericTitle: 'Lord of the Gates of Matter', treePath: '26', orreryPlanet: 'saturn',
+        alchemicalKey: 'The Devil bears the seal of Capricorn and the Hebrew letter Ayin — the Eye, the organ of perception that mistakes the material for the ultimate. Capricorn governs material ambition and the structures that both build and imprison. Alchemically, this card is Sulfur in its unrefined state — the volatile fire turned inward, consuming the self. The Devil is the alchemical fixation: consciousness crystallized around the shadow, mistaking its chains for its nature.',
+        celestialPath: 'The Devil walks the 26th path between Tiphareth and Hod — the Renovating Intelligence, where the beauty of solar consciousness meets the mercurial realm of the concrete intellect in its most limiting expression. This is the path of the shadow that the light casts: where the rational mind, disconnected from its source in Tiphareth, creates the chains of materialism and addiction. The Hebrew letter Ayin, the Eye, marks this as the path of the unexamined gaze.',
       },
       {
-        id: 16, name: 'The Tower', keywords: ['upheaval', 'revelation', 'awakening', 'change'],
+        id: 16, name: 'The Tower',
+        keywords: ['upheaval', 'revelation', 'awakening', 'change'],
         upright: 'Sudden change and upheaval. Sometimes structures must fall to build something better.',
         reversed: 'Avoidance of disaster, fear of change. Face the truth — it will set you free.',
-        planet: 'Mars', element: 'Fire', hebrew: 'Peh', alchemical: 'Sulfur', esotericTitle: 'Lord of the Hosts of the Mighty', treePath: '27', orreryPlanet: 'mars'
+        planet: 'Mars', element: 'Fire', hebrew: 'Peh', alchemical: 'Sulfur',
+        esotericTitle: 'Lord of the Hosts of the Mighty', treePath: '27', orreryPlanet: 'mars',
+        alchemicalKey: 'The Tower carries the seal of Mars and the Hebrew letter Peh — the Mouth. It is through the divine utterance that false structures are shattered. Mars governs iron, war, and the sacred will to destroy what no longer serves the living spirit. Alchemically, this card is Sulfur at its most violent: the volatile fire that cannot be contained within corrupted forms. When the Tower falls, the Magnum Opus begins again — the purifying fire is always the gateway to new creation.',
+        celestialPath: 'The Tower walks the 27th path between Netzach and Hod — the Active or Exciting Intelligence, where the volcanic passion of Venus and the rational structures of Mercury collide and ignite. This is the path of the lightning flash at its most purifying: where what feeling has built and reason has calcified is shattered by divine intervention. The Hebrew letter Peh, the Mouth, marks this as the path of the speaking fire — truth that must be said regardless of consequence.',
       },
       {
-        id: 17, name: 'The Star', keywords: ['hope', 'inspiration', 'serenity', 'renewal'],
+        id: 17, name: 'The Star',
+        keywords: ['hope', 'inspiration', 'serenity', 'renewal'],
         upright: 'Hope and inspiration after the storm. Trust — the universe is guiding you.',
         reversed: 'Despair, lack of faith, disconnection. Look up — the stars still shine.',
-        planet: 'Aquarius', element: 'Air', hebrew: 'Tzaddi', alchemical: 'Mercury', esotericTitle: 'Daughter of the Firmament', treePath: '28', orreryPlanet: 'saturn'
+        planet: 'Aquarius', element: 'Air', hebrew: 'Tzaddi', alchemical: 'Mercury',
+        esotericTitle: 'Daughter of the Firmament', treePath: '28', orreryPlanet: 'saturn',
+        alchemicalKey: 'The Star bears the seal of Aquarius and the Hebrew letter Tzaddi — the Fish-Hook, the tool that draws hidden things to the surface. Aquarius governs the universal mind, the stream of cosmic intelligence that flows through all forms equally. Alchemically, this card is Mercury — the subtlest, most refined expression of the volatile principle, the spirit distilled to its purest essence after the ordeal of the Tower. The Star pours the waters of rebirth.',
+        celestialPath: 'The Star walks the 28th path between Netzach and Yesod — the path of Natural Intelligence, the serene channel connecting elemental desire to the astral foundation of the visible world. After the Tower\'s devastation, this is the path of healing: where the soul, stripped bare of false structure, reconnects with the deep natural rhythms of the cosmos. The Hebrew letter Tzaddi, the Fish-Hook, marks this as the path that draws stars down into the wells of the earth.',
       },
       {
-        id: 18, name: 'The Moon', keywords: ['illusion', 'fear', 'subconscious', 'intuition'],
+        id: 18, name: 'The Moon',
+        keywords: ['illusion', 'fear', 'subconscious', 'intuition'],
         upright: 'Not everything is as it seems. Trust your intuition through the darkness.',
         reversed: 'Release of fear, repressed emotions coming to light. Face the shadows.',
-        planet: 'Pisces', element: 'Water', hebrew: 'Qoph', alchemical: 'Salt', esotericTitle: 'Ruler of Flux & Reflux', treePath: '29', orreryPlanet: 'moon'
+        planet: 'Pisces', element: 'Water', hebrew: 'Qoph', alchemical: 'Salt',
+        esotericTitle: 'Ruler of Flux and Reflux', treePath: '29', orreryPlanet: 'moon',
+        alchemicalKey: 'The Moon carries the seal of Pisces and the Hebrew letter Qoph — the Back of the Head, the unconscious mind. Pisces governs the dissolving waters where all boundaries blur and all possibilities coexist simultaneously. Alchemically, this card is Salt in its most treacherous form — the crystalline structure of the unconscious, solid and real but nearly impossible to perceive clearly. The Moon\'s domain is the nigredo of the psyche: the shadow that must be traversed.',
+        celestialPath: 'The Moon walks the 29th path between Netzach and Malkuth — the path of the Corporeal Intelligence, the shadowed passage through the astral threshold into physical reality. This is the most treacherous path on the Tree of Life: where the domain of elemental passion pours its dreams and illusions directly into the material world. The line between vision and hallucination is impossible to see. The Hebrew letter Qoph, the Back of the Head, marks the unconscious as the gate.',
       },
       {
-        id: 19, name: 'The Sun', keywords: ['joy', 'success', 'vitality', 'positivity'],
+        id: 19, name: 'The Sun',
+        keywords: ['joy', 'success', 'vitality', 'positivity'],
         upright: 'Joy, success, and vitality! Everything is illuminated — enjoy this radiant energy.',
         reversed: 'Temporary depression, overly optimistic, inner child needs attention.',
-        planet: 'Sun', element: 'Fire', hebrew: 'Resh', alchemical: 'Sulfur', esotericTitle: 'Lord of the Fire of the World', treePath: '30', orreryPlanet: 'sun'
+        planet: 'Sun', element: 'Fire', hebrew: 'Resh', alchemical: 'Sulfur',
+        esotericTitle: 'Lord of the Fire of the World', treePath: '30', orreryPlanet: 'sun',
+        alchemicalKey: 'The Sun bears the seal of the Sun itself and the Hebrew letter Resh — the Head, the seat of consciousness and sovereignty. The Sun governs vital force, creative identity, and the golden center around which all life organizes. Alchemically, this card is Sulfur at its most exalted — the perfected, radiant fire of the Great Work made manifest. The Sun is the alchemical gold: not the crude metal, but the principle of incorruptible divine consciousness.',
+        celestialPath: 'The Sun walks the 30th path between Hod and Yesod — the path of the Collective Intelligence, the radiant channel connecting the mercurial realm of the rational mind to the astral foundation of all experience. This is the path of illuminated consciousness: where the mind, refined by the mercurial principle, becomes a clear vessel for solar radiance and illuminates the entire astral world below. The Hebrew letter Resh, the Head, marks this as the path of sovereign wakefulness.',
       },
       {
-        id: 20, name: 'Judgement', keywords: ['judgement', 'rebirth', 'absolution', 'reflection'],
+        id: 20, name: 'Judgement',
+        keywords: ['judgement', 'rebirth', 'absolution', 'reflection'],
         upright: 'A call to rise up and answer your higher purpose. Self-evaluation leads to renewal.',
         reversed: 'Self-doubt, ignoring the call, poor judgement. Listen to your awakening.',
-        planet: 'Pluto', element: 'Fire', hebrew: 'Shin', alchemical: 'Sulfur', esotericTitle: 'Spirit of the Primal Fire', treePath: '31', orreryPlanet: 'mars'
+        planet: 'Pluto', element: 'Fire', hebrew: 'Shin', alchemical: 'Sulfur',
+        esotericTitle: 'Spirit of the Primal Fire', treePath: '31', orreryPlanet: 'mars',
+        alchemicalKey: 'Judgement carries the seal of Pluto and the Hebrew letter Shin — the Tooth, the triple flame, the sacred fire that consumes and transforms. Pluto governs the deep underworld where all matter eventually dissolves and is reborn in new form. Alchemically, this card is Sulfur in its most sublime expression — the final fire that separates what is immortal from what is dross. Judgement is the alchemical Rubedo: the moment when the Great Work is complete.',
+        celestialPath: 'Judgement walks the 31st path between Hod and Malkuth — the path of Perpetual Intelligence, the sacred fire connecting the intellectual sphere of Mercury to the material world in its final transformation. This is the path of the great calling: where the rational and the material are simultaneously called to account and found worthy of transcendence. The Hebrew letter Shin, the triple flame of divine fire, marks this as the path of the final purification before return to the source.',
       },
       {
-        id: 21, name: 'The World', keywords: ['completion', 'accomplishment', 'travel', 'harmony'],
+        id: 21, name: 'The World',
+        keywords: ['completion', 'accomplishment', 'travel', 'harmony'],
         upright: 'Completion and accomplishment. You\'ve come full circle — celebrate your journey.',
-        reversed: 'Incompletion, shortcuts, delays. Don\'t rush — finish what you started.',
-        planet: 'Saturn', element: 'Earth', hebrew: 'Tau', alchemical: 'Salt', esotericTitle: 'Great One of the Night of Time', treePath: '32', orreryPlanet: 'saturn'
+        reversed: 'Incompletion, shortcuts, delays. Do not rush — finish what you started.',
+        planet: 'Saturn', element: 'Earth', hebrew: 'Tau', alchemical: 'Salt',
+        esotericTitle: 'Great One of the Night of Time', treePath: '32', orreryPlanet: 'saturn',
+        alchemicalKey: 'The World bears the seal of Saturn and the Hebrew letter Tau — the Cross, the final letter, the completion of the alphabet of creation. Saturn governs time, consequence, and the enduring structures that outlast all things. Alchemically, this card is Salt — but Salt perfected: the crystalline matrix of completion, the form that has passed through every fire and every dissolution and remained. The World dancer moves within the wreath of the fulfilled Great Work.',
+        celestialPath: 'The World walks the 32nd path between Yesod and Malkuth — the Administrative Intelligence, the final path connecting the astral foundation to physical reality, completing the descent of the Lightning Flash. This is the path of the completed circle: where the primordial energy that began its journey at Kether finally arrives in full, conscious manifestation in the material world. The Hebrew letter Tau, the Cross, marks this as the seal placed at the end of the alchemical Great Work.',
       },
     ];
 
-    // Pre-reveal atmospheric descriptions for all cards
+    // Pre-reveal atmospheric descriptions
     const PRE_REVEAL_DESCRIPTIONS = {
-      0: 'A figure stands at the cliff edge, one foot over the void. A dog barks below. The wind fills the fool\'s cloak.',
-      1: 'At a table of four elements, a robed figure stands tall, hand raised. Before him: wand, cup, sword, pentacle.',
-      2: 'From the dark water, two towers rise. A crayfish climbs toward a path that disappears into hills.',
-      3: 'A crowned figure sits amid pomegranate groves, holding scepter and orb. Golden light surrounds her throne.',
-      4: 'An armored king sits rigid upon his stone throne, holding scepter and cube. His gaze is cold and absolute.',
-      5: 'A robed figure stands between two pillars, holding a key. Before him kneel two disciples seeking wisdom.',
-      6: 'A man and woman stand naked beneath Cupid\'s arrow. Behind them: a paradise garden blooming with choice.',
-      7: 'A crowned figure rides a chariot drawn by sphinxes, moving swiftly through desert sands toward distant mountains.',
-      8: 'A woman sits calmly, gentle hand upon a lion\'s mane. The beast\'s eyes close in trust beneath her touch.',
-      9: 'An old hermit stands alone in high mountains, lantern held aloft. His light cuts through the darkness.',
+      0:  'A figure stands at the cliff edge, one foot already over the void. A small dog barks below. The wind fills the fool\'s cloak as they smile, ready to leap.',
+      1:  'At a table of four elements, a robed figure stands tall, hand raised. Before him: wand, cup, sword, pentacle.',
+      2:  'Between two pillars of black and white, a veiled figure sits motionless. A crescent moon rests at her feet.',
+      3:  'A crowned figure sits amid pomegranate groves, holding scepter and orb. Golden light surrounds her throne.',
+      4:  'An armored king sits rigid upon his stone throne, holding scepter and cube. His gaze is cold and absolute.',
+      5:  'A robed figure stands between two pillars, holding a key. Before him kneel two disciples seeking wisdom.',
+      6:  'A man and woman stand beneath Cupid\'s arrow. Behind them: a paradise garden blooming with choice.',
+      7:  'A crowned figure rides a chariot drawn by sphinxes, moving swiftly through desert sands toward distant mountains.',
+      8:  'A woman sits calmly, gentle hand upon a lion\'s mane. The beast\'s eyes close in trust beneath her touch.',
+      9:  'An old hermit stands alone in high mountains, lantern held aloft. His light cuts through the darkness.',
       10: 'A great wheel turns in the void. Four figures cling to its spinning rim as cosmic forces move it.',
       11: 'A figure in balance stands before scales, sword upright between justice and consequence.',
       12: 'A man hangs inverted from a tree by one foot, expression peaceful. His other leg crosses forming a cross.',
@@ -630,76 +678,87 @@
       15: 'In darkness, two chained figures kneel beneath a horned demon king. His shadow looms massive and absolute.',
       16: 'Stone and wood collapse in flame. A crowned figure falls. Lightning splits the sky in two.',
       17: 'A naked woman kneels by a pool beneath eight stars. She pours water, one stream to earth, one to sky.',
-      18: 'From the dark water, two towers rise. A lobster crawls forth. Above: a moon with a human face.',
+      18: 'From dark water, two towers rise. A lobster crawls forth. Above: a moon with a human face watches all.',
       19: 'Golden sunlight floods a garden. A naked child dances beneath a gold sun, surrounded by sunflowers.',
       20: 'An angel sounds a trumpet. The dead rise from their graves. All are called to account and transformation.',
       21: 'A nude figure dances within a wreath of laurel. Four sphinx figures mark the corners of all creation.',
-      // Minor arcana - simple templates by suit
       ...[...Array(56)].reduce((acc, _, i) => {
         const cardId = 22 + i;
-        const suitIndex = Math.floor(i / 14);
-        const rankIndex = i % 14;
         const suits = ['Wands', 'Cups', 'Swords', 'Pentacles'];
         const ranks = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Page', 'Knight', 'Queen', 'King'];
-        const suit = suits[suitIndex];
-        const rank = ranks[rankIndex];
+        const suit = suits[Math.floor(i / 14)];
+        const rank = ranks[i % 14];
         const suitDescriptions = {
-          'Wands': 'A staff of fire descends from the clouds.',
-          'Cups': 'A chalice overflows with golden water.',
-          'Swords': 'Blades cross in the air, sharp and true.',
-          'Pentacles': 'A golden coin spins in the light.'
+          Wands:    'A staff of living fire descends from the clouds.',
+          Cups:     'A chalice overflows with golden water.',
+          Swords:   'Blades cross in the air, sharp and true.',
+          Pentacles:'A golden coin spins slowly in the light.',
         };
         acc[cardId] = `${rank} of ${suit}: ${suitDescriptions[suit]}`;
         return acc;
-      }, {})
+      }, {}),
     };
 
-    // Minor Arcana template
+    // Spread position names
+    const SPREAD_POSITIONS = {
+      mirror: ['THE MIRROR'],
+      three:  ['THE SHADOW BEHIND', 'THE FLAME NOW', 'THE HORIZON AHEAD'],
+      five:   ['THE ROOT', 'THE WOUND', 'THE GIFT', 'THE PATH', 'THE CROWN'],
+      seven:  ['THE PAST', 'THE SHADOW', 'THE PRESENT', 'THE HIDDEN', 'THE FUTURE', 'THE GUIDE', 'THE OUTCOME'],
+    };
+
+    // Planet lore for orrery interaction
+    const PLANET_LORE = {
+      moon:    'The Moon governs the tides of feeling, memory, and the unconscious. She is the silver mirror of the Sun — absorbing light, reflecting change. Her domain: dreams, instinct, and the ancestral body.',
+      mercury: 'Mercury is the swift messenger who walks between worlds. He governs thought, speech, trade, and transition. In alchemy, Mercury is the universal solvent — the principle that dissolves all fixed forms.',
+      venus:   'Venus rules desire, beauty, and the law of attraction. She draws what we love toward us through resonance, not force. Her metal is copper, warm and conductive — she is the bridge between heart and form.',
+      mars:    'Mars is the iron will and the sacred flame of action. He governs courage, conflict, and the drive to create through destruction. In the body: the blood. In the world: the sword that cuts away the false.',
+      jupiter: 'Jupiter expands all he touches — fortune, wisdom, faith, and excess alike. He is the philosopher king of the celestial sphere, ruling abundance and the hunger for meaning beyond the material.',
+      saturn:  'Saturn is the great teacher who disciplines through limitation. He rules time, consequence, and the boundary between the known and the void. His gift is mastery — earned through patience and endurance.',
+      sun:     'The Sun is the source and center — consciousness, vitality, and sovereign identity. He illuminates what the Moon conceals. In alchemy: gold. In the soul: the divine spark that animates all living things.',
+      uranus:  'Uranus rules the lightning of sudden revelation — the awakening that arrives without warning. He governs eccentricity, invention, and the refusal of all imposed order. The Fool\'s spirit walks his orbit.',
+    };
+
+    // Minor Arcana generation
     function generateMinorArcana() {
       const SUITS = {
-        wands: { name: 'Wands', element: 'Fire', keywords: ['creativity', 'action', 'passion'], orreryPlanet: 'mars' },
-        cups: { name: 'Cups', element: 'Water', keywords: ['emotions', 'relationships', 'intuition'], orreryPlanet: 'moon' },
-        swords: { name: 'Swords', element: 'Air', keywords: ['intellect', 'conflict', 'truth'], orreryPlanet: 'mercury' },
-        pentacles: { name: 'Pentacles', element: 'Earth', keywords: ['material', 'career', 'prosperity'], orreryPlanet: 'saturn' },
+        wands:    { name: 'Wands',    element: 'Fire',  keywords: ['creativity','action','passion'],   orreryPlanet: 'mars' },
+        cups:     { name: 'Cups',     element: 'Water', keywords: ['emotions','relationships','intuition'], orreryPlanet: 'moon' },
+        swords:   { name: 'Swords',   element: 'Air',   keywords: ['intellect','conflict','truth'],    orreryPlanet: 'mercury' },
+        pentacles:{ name: 'Pentacles',element: 'Earth', keywords: ['material','career','prosperity'],  orreryPlanet: 'saturn' },
       };
-
       const NUMBER_MEANINGS = {
-        ace: { upright: 'New opportunity and potential awaits.', reversed: 'Missed chance, blocked energy.' },
-        2: { upright: 'A decision or partnership. Balance two paths.', reversed: 'Indecision, imbalance.' },
-        3: { upright: 'Collaboration and growth. Working together succeeds.', reversed: 'Delays, lack of teamwork.' },
-        4: { upright: 'Stability and security. Solid foundation built.', reversed: 'Stagnation, possessiveness.' },
-        5: { upright: 'Conflict and challenge. Growth through adversity.', reversed: 'Recovery from loss.' },
-        6: { upright: 'Harmony and generosity. Give and receive.', reversed: 'Unequal exchange.' },
-        7: { upright: 'Reflection and assessment. Reevaluate your path.', reversed: 'Confusion, dishonesty.' },
-        8: { upright: 'Movement and progress. Stay focused.', reversed: 'Delays, frustration.' },
-        9: { upright: 'Abundance and wish fulfillment achieved.', reversed: 'Disappointment.' },
-        10: { upright: 'Completion and responsibility. Success carries weight.', reversed: 'Burden, inability to delegate.' },
+        ace:  { upright: 'New opportunity and potential awaits.', reversed: 'Missed chance, blocked energy.' },
+        2:    { upright: 'A decision or partnership. Balance two paths.', reversed: 'Indecision, imbalance.' },
+        3:    { upright: 'Collaboration and growth. Working together succeeds.', reversed: 'Delays, lack of teamwork.' },
+        4:    { upright: 'Stability and security. Solid foundation built.', reversed: 'Stagnation, possessiveness.' },
+        5:    { upright: 'Conflict and challenge. Growth through adversity.', reversed: 'Recovery from loss.' },
+        6:    { upright: 'Harmony and generosity. Give and receive.', reversed: 'Unequal exchange.' },
+        7:    { upright: 'Reflection and assessment. Reevaluate your path.', reversed: 'Confusion, dishonesty.' },
+        8:    { upright: 'Movement and progress. Stay focused.', reversed: 'Delays, frustration.' },
+        9:    { upright: 'Abundance and wish fulfillment achieved.', reversed: 'Disappointment.' },
+        10:   { upright: 'Completion and responsibility. Success carries weight.', reversed: 'Burden, inability to delegate.' },
       };
-
       const COURT_MEANINGS = {
-        page: { upright: 'A messenger or new beginnings. Curiosity and learning.', reversed: 'Immaturity, lack of direction.' },
+        page:   { upright: 'A messenger or new beginnings. Curiosity and learning.', reversed: 'Immaturity, lack of direction.' },
         knight: { upright: 'Action and pursuit. Charging forward. A quest begins.', reversed: 'Impulsiveness, recklessness.' },
-        queen: { upright: 'Nurturing mastery. Compassion, empathy, inner strength.', reversed: 'Insecurity, emotional manipulation.' },
-        king: { upright: 'Mastery and authority. Leadership and vision.', reversed: 'Domination, tyranny.' },
+        queen:  { upright: 'Nurturing mastery. Compassion, empathy, inner strength.', reversed: 'Insecurity, emotional manipulation.' },
+        king:   { upright: 'Mastery and authority. Leadership and vision.', reversed: 'Domination, tyranny.' },
       };
-
       const cards = [];
-      const ranks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'page', 'knight', 'queen', 'king'];
-
+      const ranks = ['ace','2','3','4','5','6','7','8','9','10','page','knight','queen','king'];
       for (const [suitKey, suit] of Object.entries(SUITS)) {
         for (const rank of ranks) {
-          const isCourt = ['page', 'knight', 'queen', 'king'].includes(rank);
+          const isCourt = ['page','knight','queen','king'].includes(rank);
           const meanings = isCourt ? COURT_MEANINGS[rank] : (rank === 'ace' ? NUMBER_MEANINGS.ace : NUMBER_MEANINGS[rank]);
-
           const displayName = rank === 'ace'
             ? `Ace of ${suit.name}`
             : `${rank.charAt(0).toUpperCase() + rank.slice(1)} of ${suit.name}`;
-
           cards.push({
             id: 22 + cards.length,
             name: displayName,
             suit: suitKey,
-            rank: rank,
+            rank,
             element: suit.element,
             keywords: suit.keywords,
             upright: meanings.upright,
@@ -713,289 +772,19 @@
 
     const ALL_CARDS = [...MAJOR_ARCANA, ...generateMinorArcana()];
 
-    // ==================== UTILITY FUNCTIONS ====================
-    function getCardById(id) {
-      return ALL_CARDS.find(c => c.id === id);
-    }
-
+    // ==================== UTILITY ====================
     function getImagePath(cardId) {
-      // m630_01 = card 0, m630_22 = card 21, m630_23 = card 22, etc.
-      if (cardId <= 21) {
-        return `./tarot/m630_${String(cardId + 1).padStart(2, '0')}.jpg`;
-      } else if (cardId <= 34) {
+      if (cardId <= 34) {
         return `./tarot/m630_${String(cardId + 1).padStart(2, '0')}.jpg`;
       }
-      return null; // Use CSS fallback
+      return null;
     }
 
     function getActiveGuide() {
-      const hour = new Date().getHours();
-      if (hour >= 6 && hour < 12) return 'scribe';
-      if (hour >= 18 && hour < 24) return 'weaver';
+      const h = new Date().getHours();
+      if (h >= 6 && h < 12) return 'scribe';
+      if (h >= 18)          return 'weaver';
       return 'psychic';
-    }
-
-    function getGuideText(name) {
-      const guides = {
-        scribe: { speed: 50, color: '#f9ca24' },
-        weaver: { speed: 35, color: '#a29bfe' },
-        psychic: { speed: 25, color: '#fd79a8' },
-      };
-      return guides[name] || guides.psychic;
-    }
-
-    // ==================== DIALOGUE SYSTEM ====================
-    async function typeText(text, speed = 0) {
-      const el = document.getElementById('dialogue-text');
-      el.textContent = text; // Instant display for game flow
-    }
-
-    async function showOptions(options) {
-      return new Promise((resolve) => {
-        const optionsEl = document.getElementById('dialogue-options');
-        optionsEl.innerHTML = '';
-        options.forEach((opt, idx) => {
-          const btn = document.createElement('button');
-          btn.className = 'option-btn';
-          btn.textContent = opt.label;
-          btn.onclick = () => {
-            resolve(opt.value);
-          };
-          optionsEl.appendChild(btn);
-        });
-      });
-    }
-
-    // ==================== STATE MACHINE ====================
-    async function setState(name) {
-      gameState.currentState = name;
-      const stateHandlers = {
-        BOOT: stateBoot,
-        GREET: stateGreet,
-        INTENT: stateIntent,
-        SPREAD_SELECT: stateSpreadSelect,
-        SHUFFLE: stateShuffle,
-        DEAL: stateDeal,
-        SPREAD_GRID: stateSpreadGrid,
-        REVEAL: stateReveal,
-        INTERPRET: stateInterpret,
-        DEEP_DIVE: stateDeepDive,
-        ORRERY: stateOrrery,
-        END: stateEnd,
-      };
-
-      if (stateHandlers[name]) {
-        await stateHandlers[name]();
-      }
-    }
-
-    async function stateBoot() {
-      showBootConsole();
-      bootSequenceQuick();
-      // Boot completes in ~1.5s, then transitions
-      setTimeout(() => {
-        hideBootConsole();
-        setState('GREET');
-      }, 1500);
-    }
-
-    async function stateGreet() {
-      gameState.activeGuide = getActiveGuide();
-      drawCharacter(gameState.activeGuide);
-      showCharacter();
-
-      const greetings = {
-        scribe: "Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?",
-        weaver: "The night speaks softly. You have found your way to the threads. Welcome.",
-        psychic: "Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.",
-      };
-
-      await typeText(greetings[gameState.activeGuide], 5);
-      await showOptions([{ label: 'BEGIN', value: 'begin' }]);
-      await setState('INTENT');
-    }
-
-    async function stateIntent() {
-      hideCharacter();
-      await typeText("Before the heavens speak, they must know your frequency.\nWhich sphere calls to you?", 5);
-
-      gameState.planetaryInfluence = await showOptions([
-        { label: 'MARS', value: 'mars' },
-        { label: 'VENUS', value: 'venus' },
-        { label: 'MERCURY', value: 'mercury' },
-        { label: 'MOON', value: 'moon' },
-        { label: 'JUPITER', value: 'jupiter' },
-        { label: 'SATURN', value: 'saturn' },
-        { label: 'SUN', value: 'sun' },
-      ]);
-
-      setPlanetPalette(gameState.planetaryInfluence);
-      await setState('SPREAD_SELECT');
-    }
-
-    async function stateSpreadSelect() {
-      await typeText("How many stars shall illuminate your path?", 25);
-
-      gameState.spreadType = await showOptions([
-        { label: 'CELESTIAL MIRROR (1)', value: 'mirror' },
-        { label: 'PATH OF THREE (3)', value: 'three' },
-        { label: 'PLANETARY CHAMBER (5)', value: 'five' },
-        { label: 'SEVEN-FOLD (7)', value: 'seven' },
-      ]);
-
-      const spreadSizes = { mirror: 1, three: 3, five: 5, seven: 7 };
-      const deckInstance = new TarotDeck();
-      gameState.drawnCards = deckInstance.draw(spreadSizes[gameState.spreadType]);
-
-      await setState('SHUFFLE');
-    }
-
-    async function stateShuffle() {
-      showCharacter('weaver');
-      drawCharacter('weaver');
-      await typeText("The threads await your intention.\nStill your thoughts.\nWhen the silence is complete—press the seal.", 35);
-
-      await showOptions([{ label: '✦ SET YOUR INTENTION ✦', value: 'done' }]);
-      hideCharacter();
-      await setState('DEAL');
-    }
-
-    async function stateDeal() {
-      const card = gameState.drawnCards[gameState.currentCardIndex || 0];
-      const preRevealText = PRE_REVEAL_DESCRIPTIONS[card.id] || `The ${card.name} appears before you.`;
-      await typeText(preRevealText, 25);
-      await showOptions([{ label: 'REVEAL THE CARD', value: 'done' }]);
-      await setState('SPREAD_GRID');
-    }
-
-    async function stateSpreadGrid() {
-      showCardGrid();
-      await typeText("Touch a card to receive its message.", 25);
-      // Grid click handlers set in renderCardGrid
-    }
-
-    async function stateReveal() {
-      hideCardGrid();
-      showCardImage();
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      updateCardDisplay(card);
-      showNavBar();
-
-      await typeText("The card has been drawn.\nHow shall its force move through you?", 25);
-
-      gameState.lightOrShadow[card.id] = await showOptions([
-        { label: 'VIEW IN ITS LIGHT', value: 'light' },
-        { label: 'VIEW IN ITS SHADOW', value: 'shadow' },
-      ]);
-
-      await setState('INTERPRET');
-    }
-
-    async function stateInterpret() {
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      const isLight = gameState.lightOrShadow[card.id] === 'light';
-      const interpretation = isLight ? card.upright : card.reversed;
-
-      await typeText(interpretation, 20);
-
-      const deepDiveOptions = [{ label: 'NEXT CARD', value: 'next' }];
-      if (card.id < 22) { // Major Arcana
-        deepDiveOptions.unshift({ label: 'ALCHEMICAL KEY', value: 'alchemical' });
-        deepDiveOptions.unshift({ label: 'CELESTIAL PATH', value: 'celestial' });
-      }
-      if (gameState.currentCardIndex < gameState.drawnCards.length - 1) {
-        deepDiveOptions.push({ label: 'VIEW THE ORRERY', value: 'orrery' });
-      } else {
-        deepDiveOptions[deepDiveOptions.length - 1].label = 'FINISH';
-      }
-
-      const choice = await showOptions(deepDiveOptions);
-
-      if (choice === 'next') {
-        gameState.currentCardIndex++;
-        if (gameState.currentCardIndex < gameState.drawnCards.length) {
-          await setState('REVEAL');
-        } else {
-          await setState('END');
-        }
-      } else if (choice === 'orrery') {
-        await setState('ORRERY');
-      } else {
-        await setState('DEEP_DIVE');
-      }
-    }
-
-    async function stateDeepDive() {
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-
-      if (gameState.currentState === 'INTERPRET') return;
-
-      const choice = await (async () => {
-        // This is called from INTERPRET after selecting alchemical/celestial
-        // For now, we'll show it inline
-        await typeText(`The ${card.name} carries deep meaning...`, 25);
-        return 'next';
-      })();
-
-      if (choice === 'next') {
-        gameState.currentCardIndex++;
-        if (gameState.currentCardIndex < gameState.drawnCards.length) {
-          await setState('REVEAL');
-        } else {
-          await setState('END');
-        }
-      }
-    }
-
-    async function stateOrrery() {
-      hideCardImage();
-      showOrrery();
-      await typeText("The celestial sphere reveals the shape of your reading.", 25);
-
-      await showOptions([{ label: '← RETURN TO READING', value: 'back' }]);
-      hideOrrery();
-      hideNavBar();
-      await setState('INTERPRET');
-    }
-
-    async function stateEnd() {
-      hideCardImage();
-      hideNavBar();
-      showCharacter(gameState.activeGuide);
-      drawCharacter(gameState.activeGuide);
-
-      await typeText("The reading is complete. The stars have spoken.\nMay their wisdom guide your path.", 25);
-
-      await showOptions([{ label: 'BEGIN A NEW READING', value: 'new' }]);
-      gameState.drawnCards = [];
-      gameState.currentCardIndex = 0;
-      gameState.lightOrShadow = {};
-      await setState('GREET');
-    }
-
-    // ==================== DECK ENGINE ====================
-    class TarotDeck {
-      constructor(options = {}) {
-        this.allowReversed = options.allowReversed !== false;
-        this.rng = mulberry32(options.seed ?? Date.now());
-      }
-
-      shuffle() {
-        const arr = [...ALL_CARDS];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(this.rng() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      }
-
-      draw(count = 1) {
-        const shuffled = this.shuffle();
-        return shuffled.slice(0, count).map(cardData => ({
-          ...cardData,
-          preReveal: PRE_REVEAL_DESCRIPTIONS[cardData.id] || `The ${cardData.name} appears.`
-        }));
-      }
     }
 
     function mulberry32(seed) {
@@ -1008,47 +797,274 @@
       };
     }
 
-    // ==================== UI FUNCTIONS ====================
-    function showBootConsole() {
-      document.getElementById('boot-console').classList.remove('hidden');
+    // ==================== DIALOGUE SYSTEM ====================
+    function typeText(text) {
+      document.getElementById('dialogue-text').textContent = text;
     }
 
-    function hideBootConsole() {
-      document.getElementById('boot-console').classList.add('hidden');
+    function showOptions(options) {
+      return new Promise((resolve) => {
+        const el = document.getElementById('dialogue-options');
+        el.innerHTML = '';
+        el.className = options.length >= 6 ? 'dialogue-options two-col' : 'dialogue-options';
+        options.forEach((opt) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = opt.label;
+          btn.onclick = () => resolve(opt.value);
+          el.appendChild(btn);
+        });
+      });
     }
 
-    function bootSequenceQuick() {
-      const bootEl = document.getElementById('boot-text');
-      let bootText = '';
-      let progress = 0;
+    function clearOptions() {
+      document.getElementById('dialogue-options').innerHTML = '';
+    }
 
-      const bootInterval = setInterval(() => {
-        if (progress === 0) {
-          bootText = '> SATURN TERMINAL v.XVI\n';
-        } else if (progress === 1) {
-          bootText += '> INITIATING STAR ALIGNMENT...\n';
-        } else if (progress >= 2 && progress <= 8) {
-          const pct = (progress - 2) * 14;
-          bootText = bootText.split('\n').slice(0, 2).join('\n') + '\n[' + '█'.repeat(Math.floor(pct / 10)) + '░'.repeat(10 - Math.floor(pct / 10)) + '] ' + pct + '%\n';
-        } else if (progress === 9) {
-          bootText += '> STAR ALIGNMENT COMPLETE\n> CELESTIAL GUIDES: ONLINE\n> READY\n';
-        } else if (progress === 10) {
-          document.querySelector('.game-container').classList.add('flash');
-        } else if (progress === 11) {
-          document.querySelector('.game-container').classList.remove('flash');
-          clearInterval(bootInterval);
-          return;
+    // ==================== STATE MACHINE ====================
+    async function setState(name) {
+      gameState.currentState = name;
+      const handlers = {
+        GREET:       stateGreet,
+        INTENT:      stateIntent,
+        SPREAD_SELECT: stateSpreadSelect,
+        SPREAD_GRID: stateSpreadGrid,
+        DEAL:        stateDeal,
+        REVEAL:      stateReveal,
+        INTERPRET:   stateInterpret,
+        DEEP_DIVE:   stateDeepDive,
+        ORRERY:      stateOrrery,
+        END:         stateEnd,
+      };
+      if (handlers[name]) await handlers[name]();
+    }
+
+    async function stateGreet() {
+      gameState.activeGuide = getActiveGuide();
+      drawCharacter(gameState.activeGuide);
+      showCharacter();
+      const msgs = {
+        scribe:  'Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?',
+        weaver:  'The night speaks softly. You have found your way to the threads. Welcome.',
+        psychic: 'Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.',
+      };
+      typeText(msgs[gameState.activeGuide]);
+      await showOptions([{ label: 'BEGIN', value: 'begin' }]);
+      await setState('INTENT');
+    }
+
+    async function stateIntent() {
+      hideCharacter();
+      typeText('Before the heavens speak, they must know your frequency.\nWhich sphere calls to you?');
+      gameState.planetaryInfluence = await showOptions([
+        { label: 'MARS',    value: 'mars' },
+        { label: 'VENUS',   value: 'venus' },
+        { label: 'MERCURY', value: 'mercury' },
+        { label: 'MOON',    value: 'moon' },
+        { label: 'JUPITER', value: 'jupiter' },
+        { label: 'SATURN',  value: 'saturn' },
+        { label: 'SUN',     value: 'sun' },
+      ]);
+      setPlanetPalette(gameState.planetaryInfluence);
+      await setState('SPREAD_SELECT');
+    }
+
+    async function stateSpreadSelect() {
+      typeText('How many stars shall illuminate your path?');
+      gameState.spreadType = await showOptions([
+        { label: 'CELESTIAL MIRROR (1)', value: 'mirror' },
+        { label: 'PATH OF THREE (3)',    value: 'three' },
+        { label: 'PLANETARY CHAMBER (5)', value: 'five' },
+        { label: 'SEVEN-FOLD (7)',       value: 'seven' },
+      ]);
+      const sizes = { mirror: 1, three: 3, five: 5, seven: 7 };
+      const deck = new TarotDeck();
+      gameState.drawnCards = deck.draw(sizes[gameState.spreadType]);
+      gameState.lightOrShadow = {};
+      gameState.currentCardIndex = 0;
+      await setState('SPREAD_GRID');
+    }
+
+    async function stateSpreadGrid() {
+      hideCardImage();
+      hideNavBar();
+      showDecorativeCards();
+
+      const allRevealed = gameState.drawnCards.every(c => gameState.lightOrShadow[c.id] !== undefined);
+      if (allRevealed) {
+        await setState('END');
+        return;
+      }
+
+      typeText('The cards have been drawn.\nChoose a position to reveal.');
+
+      const positions = SPREAD_POSITIONS[gameState.spreadType] || ['THE MIRROR'];
+      return new Promise((resolve) => {
+        const el = document.getElementById('dialogue-options');
+        el.innerHTML = '';
+        el.className = positions.length >= 6 ? 'dialogue-options two-col' : 'dialogue-options';
+
+        positions.forEach((pos, idx) => {
+          const card = gameState.drawnCards[idx];
+          if (!card) return;
+          const revealed = gameState.lightOrShadow[card.id] !== undefined;
+
+          const btn = document.createElement('button');
+          const roman = ['I','II','III','IV','V','VI','VII'][idx];
+
+          if (revealed) {
+            btn.className = 'option-btn revealed-pos';
+            btn.textContent = roman + '. ' + pos;
+          } else {
+            btn.className = 'option-btn';
+            btn.textContent = roman + '. ' + pos;
+            btn.onclick = () => {
+              gameState.currentCardIndex = idx;
+              resolve();
+              setState('DEAL');
+            };
+          }
+          el.appendChild(btn);
+        });
+      });
+    }
+
+    async function stateDeal() {
+      hideCardGrid();
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      const preReveal = PRE_REVEAL_DESCRIPTIONS[card.id] || `The ${card.name} appears before you.`;
+      typeText(preReveal);
+      await showOptions([{ label: 'REVEAL THE CARD', value: 'done' }]);
+      await setState('REVEAL');
+    }
+
+    async function stateReveal() {
+      showCardImage();
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      updateCardDisplay(card);
+      showNavBar();
+      typeText('The card has been drawn.\nHow shall its force move through you?');
+      gameState.lightOrShadow[card.id] = await showOptions([
+        { label: 'VIEW IN ITS LIGHT',  value: 'light' },
+        { label: 'VIEW IN ITS SHADOW', value: 'shadow' },
+      ]);
+      await setState('INTERPRET');
+    }
+
+    async function stateInterpret() {
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      const isLight = gameState.lightOrShadow[card.id] === 'light';
+      typeText(isLight ? card.upright : card.reversed);
+
+      const opts = [];
+      if (card.id < 22) {
+        opts.push({ label: 'ALCHEMICAL KEY',  value: 'alchemical' });
+        opts.push({ label: 'CELESTIAL PATH',  value: 'celestial' });
+      }
+      opts.push({ label: 'VIEW THE ORRERY', value: 'orrery' });
+
+      const unrevealed = gameState.drawnCards.filter(c => gameState.lightOrShadow[c.id] === undefined);
+      if (unrevealed.length > 0) {
+        opts.push({ label: 'CHOOSE NEXT CARD', value: 'grid' });
+      } else {
+        opts.push({ label: 'FINISH READING',   value: 'end' });
+      }
+
+      const choice = await showOptions(opts);
+
+      if (choice === 'grid') {
+        hideCardImage();
+        hideNavBar();
+        await setState('SPREAD_GRID');
+      } else if (choice === 'end') {
+        hideCardImage();
+        hideNavBar();
+        await setState('END');
+      } else if (choice === 'orrery') {
+        await setState('ORRERY');
+      } else {
+        gameState.deepDiveChoice = choice;
+        await setState('DEEP_DIVE');
+      }
+    }
+
+    async function stateDeepDive() {
+      const card = gameState.drawnCards[gameState.currentCardIndex];
+      const choice = gameState.deepDiveChoice;
+
+      if (choice === 'alchemical' && card.alchemicalKey) {
+        typeText(card.alchemicalKey);
+      } else if (choice === 'celestial' && card.celestialPath) {
+        typeText(card.celestialPath);
+      } else {
+        typeText(`The ${card.name} holds mysteries beyond the words of any tongue.`);
+      }
+
+      await showOptions([{ label: '← RETURN TO READING', value: 'back' }]);
+      await setState('INTERPRET');
+    }
+
+    let _orreryResolve = null;
+
+    async function stateOrrery() {
+      hideCardImage();
+      showOrrery();
+      typeText('Touch a planet to learn its celestial influence.');
+      showOrreryReturnBtn();
+      await new Promise((resolve) => { _orreryResolve = resolve; });
+      _orreryResolve = null;
+      hideOrrery();
+      showCardImage();
+      await setState('INTERPRET');
+    }
+
+    function showOrreryReturnBtn() {
+      const el = document.getElementById('dialogue-options');
+      el.innerHTML = '';
+      el.className = 'dialogue-options';
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = '← RETURN TO READING';
+      btn.onclick = () => { if (_orreryResolve) _orreryResolve(); };
+      el.appendChild(btn);
+    }
+
+    async function stateEnd() {
+      hideCardImage();
+      hideNavBar();
+      hideCardGrid();
+      drawCharacter(gameState.activeGuide);
+      showCharacter();
+      typeText('The reading is complete. The stars have spoken.\nMay their wisdom guide your path.');
+      await showOptions([{ label: 'BEGIN A NEW READING', value: 'new' }]);
+      gameState.drawnCards = [];
+      gameState.currentCardIndex = 0;
+      gameState.lightOrShadow = {};
+      await setState('GREET');
+    }
+
+    // ==================== DECK ENGINE ====================
+    class TarotDeck {
+      constructor(options = {}) {
+        this.rng = mulberry32(options.seed ?? Date.now());
+      }
+      shuffle() {
+        const arr = [...ALL_CARDS];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(this.rng() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-
-        bootEl.textContent = bootText;
-        progress++;
-      }, 150);
+        return arr;
+      }
+      draw(count = 1) {
+        return this.shuffle().slice(0, count);
+      }
     }
 
-    function showCharacter(guide = gameState.activeGuide) {
+    // ==================== UI FUNCTIONS ====================
+    function showCharacter() {
       document.getElementById('character-container').classList.remove('hidden');
     }
-
     function hideCharacter() {
       document.getElementById('character-container').classList.add('hidden');
     }
@@ -1056,78 +1072,117 @@
     function drawCharacter(guide) {
       const canvas = document.getElementById('character-canvas');
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, 48, 64);
+      ctx.clearRect(0, 0, 80, 96);
 
-      const sprites = {
-        scribe: () => {
-          ctx.fillStyle = '#f9ca24';
-          // Body
-          ctx.fillRect(12, 20, 24, 20);
-          // Head (sun disk)
+      if (guide === 'scribe') {
+        // Golden sun-priest — scaled 48×64 → 80×96 (~1.67×)
+        const cx = 40, cy = 22, r = 13;
+        // Rays
+        ctx.strokeStyle = '#c8a000';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2;
           ctx.beginPath();
-          ctx.arc(24, 12, 8, 0, Math.PI * 2);
-          ctx.fill();
-          // Rays
-          for (let i = 0; i < 8; i++) {
-            const angle = (i / 8) * Math.PI * 2;
-            const x1 = 24 + Math.cos(angle) * 8;
-            const y1 = 12 + Math.sin(angle) * 8;
-            const x2 = 24 + Math.cos(angle) * 12;
-            const y2 = 12 + Math.sin(angle) * 12;
-            ctx.strokeStyle = '#f9ca24';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-          }
-        },
-        weaver: () => {
-          ctx.fillStyle = '#a29bfe';
-          ctx.globalAlpha = 0.7;
-          // Hooded robe
-          ctx.beginPath();
-          ctx.moveTo(8, 10);
-          ctx.lineTo(40, 10);
-          ctx.lineTo(36, 40);
-          ctx.lineTo(12, 40);
-          ctx.closePath();
-          ctx.fill();
-          ctx.globalAlpha = 1;
-          // Threads
-          ctx.strokeStyle = '#74b9ff';
-          ctx.lineWidth = 1;
-          for (let i = 0; i < 4; i++) {
-            ctx.beginPath();
-            ctx.moveTo(12 + i * 7, 12);
-            ctx.lineTo(12 + i * 7, 35);
-            ctx.stroke();
-          }
-        },
-        psychic: () => {
-          ctx.fillStyle = '#fd79a8';
-          // Body
-          ctx.fillRect(10, 24, 28, 18);
-          // Crown (5-point star)
-          const starX = 24, starY = 8;
-          const points = 5;
-          const outerR = 8, innerR = 4;
-          ctx.beginPath();
-          for (let i = 0; i < points * 2; i++) {
-            const r = i % 2 === 0 ? outerR : innerR;
-            const angle = (i * Math.PI) / points - Math.PI / 2;
-            const x = starX + Math.cos(angle) * r;
-            const y = starY + Math.sin(angle) * r;
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-          ctx.closePath();
-          ctx.fill();
-        },
-      };
+          ctx.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+          ctx.lineTo(cx + Math.cos(a) * 20, cy + Math.sin(a) * 20);
+          ctx.stroke();
+        }
+        // Head disk
+        ctx.fillStyle = '#f9ca24';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+        // Face details
+        ctx.fillStyle = '#c8a000';
+        ctx.fillRect(35, 18, 4, 4); // left eye
+        ctx.fillRect(43, 18, 4, 4); // right eye
+        // Body robe
+        ctx.fillStyle = '#e8b800';
+        ctx.fillRect(20, 34, 40, 34);
+        // Robe shadow
+        ctx.fillStyle = '#b89000';
+        ctx.fillRect(20, 55, 40, 13);
+        // Collar
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(28, 34, 24, 8);
+        // Arms
+        ctx.fillStyle = '#e8b800';
+        ctx.fillRect(8, 36, 14, 10);
+        ctx.fillRect(58, 36, 14, 10);
 
-      if (sprites[guide]) {
-        sprites[guide]();
+      } else if (guide === 'weaver') {
+        // Purple-robed weaver — scaled up
+        ctx.fillStyle = '#6040a0';
+        ctx.globalAlpha = 0.85;
+        ctx.beginPath();
+        ctx.moveTo(13, 14);
+        ctx.lineTo(67, 14);
+        ctx.lineTo(60, 68);
+        ctx.lineTo(20, 68);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        // Robe shading
+        ctx.fillStyle = '#3a2060';
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(40, 14);
+        ctx.lineTo(60, 14);
+        ctx.lineTo(60, 68);
+        ctx.lineTo(40, 68);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        // Hood top
+        ctx.fillStyle = '#8060c0';
+        ctx.beginPath();
+        ctx.arc(40, 14, 14, Math.PI, 0);
+        ctx.fill();
+        // Threads
+        ctx.strokeStyle = '#a0c8ff';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.moveTo(18 + i * 10, 18);
+          ctx.lineTo(16 + i * 10, 64);
+          ctx.stroke();
+        }
+        // Eyes glow
+        ctx.fillStyle = '#c8aaff';
+        ctx.fillRect(33, 14, 4, 3);
+        ctx.fillRect(43, 14, 4, 3);
+
+      } else {
+        // Psychic — pink robes with star crown
+        const sx = 40, sy = 12, outerR = 13, innerR = 7;
+        ctx.fillStyle = '#ff88cc';
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? outerR : innerR;
+          const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+          const x = sx + Math.cos(a) * r;
+          const y = sy + Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        // Star glow
+        ctx.strokeStyle = '#ffaadd';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        // Body
+        ctx.fillStyle = '#e060a0';
+        ctx.fillRect(17, 38, 46, 32);
+        // Body shading
+        ctx.fillStyle = '#b04080';
+        ctx.fillRect(40, 38, 23, 32);
+        // Collar gem
+        ctx.fillStyle = '#ff44bb';
+        ctx.fillRect(34, 38, 12, 6);
+        // Arms
+        ctx.fillStyle = '#e060a0';
+        ctx.fillRect(6, 40, 13, 10);
+        ctx.fillRect(61, 40, 13, 10);
       }
     }
 
@@ -1140,40 +1195,49 @@
         const img = document.createElement('img');
         img.src = imgPath;
         img.className = 'card-image';
-        img.onerror = () => {
-          // Fallback to CSS
-          container.innerHTML = `<div class="card-fallback">${card.name}</div>`;
-        };
+        img.onerror = () => { container.innerHTML = buildFallbackCard(card); };
         container.appendChild(img);
       } else {
-        container.innerHTML = `<div class="card-fallback">${card.name}</div>`;
+        container.innerHTML = buildFallbackCard(card);
       }
 
       document.getElementById('card-name').textContent = card.name;
-      document.getElementById('card-keywords').textContent = card.keywords.join(' • ');
+      document.getElementById('card-keywords').textContent = card.keywords.join(' · ');
     }
 
-    function showCardImage() {
-      document.getElementById('card-image-zone').classList.add('visible');
+    function buildFallbackCard(card) {
+      const suitSymbols = { wands: '🔥', cups: '🌊', swords: '⚡', pentacles: '⭐' };
+      const suit = card.suit || '';
+      const sym = suitSymbols[suit] || '✦';
+      const rankDisplay = card.rank
+        ? (card.rank.charAt(0).toUpperCase() + card.rank.slice(1))
+        : card.name;
+      return `<div class="card-fallback">
+        <div class="card-fallback-suit">${sym}</div>
+        <div class="card-fallback-rank">${rankDisplay}<br>of<br>${card.suit ? card.suit.charAt(0).toUpperCase() + card.suit.slice(1) : ''}</div>
+        <div class="card-fallback-suit-bottom">${sym}</div>
+      </div>`;
     }
 
-    function hideCardImage() {
-      document.getElementById('card-image-zone').classList.remove('visible');
-    }
+    function showCardImage()  { document.getElementById('card-image-zone').classList.add('visible'); }
+    function hideCardImage()  { document.getElementById('card-image-zone').classList.remove('visible'); }
+    function showNavBar()     { document.getElementById('nav-bar').classList.add('visible'); }
+    function hideNavBar()     { document.getElementById('nav-bar').classList.remove('visible'); }
 
-    function showCardGrid() {
+    function showDecorativeCards() {
       const container = document.getElementById('card-grid-container');
       container.innerHTML = '';
 
-      gameState.drawnCards.forEach((card, idx) => {
-        const btn = document.createElement('div');
-        btn.className = 'card-thumbnail';
-        btn.textContent = card.name.substring(0, 10);
-        btn.onclick = async () => {
-          gameState.currentCardIndex = idx;
-          await setState('REVEAL');
-        };
-        container.appendChild(btn);
+      const count = gameState.drawnCards.length;
+      const sizeMap = { 1: [130,195], 3: [78,117], 5: [60,90], 7: [52,78] };
+      const [w, h] = sizeMap[count] || [60, 90];
+
+      gameState.drawnCards.forEach((card) => {
+        const back = document.createElement('div');
+        back.className = 'card-back' + (gameState.lightOrShadow[card.id] !== undefined ? ' revealed' : '');
+        back.style.width  = w + 'px';
+        back.style.height = h + 'px';
+        container.appendChild(back);
       });
 
       document.getElementById('card-grid').classList.add('visible');
@@ -1183,25 +1247,22 @@
       document.getElementById('card-grid').classList.remove('visible');
     }
 
-    function showNavBar() {
-      document.getElementById('nav-bar').classList.add('visible');
-    }
+    // ==================== ORRERY ====================
+    let orreryAnimFrame = null;
+    let orreryPlanetPositions = {};
 
-    function hideNavBar() {
-      document.getElementById('nav-bar').classList.remove('visible');
-    }
+    const ORRERY_PLANETS = [
+      { name: 'Moon',    key: 'moon',    r: 38,  color: '#dfe6e9' },
+      { name: 'Mercury', key: 'mercury', r: 62,  color: '#fdcb6e' },
+      { name: 'Venus',   key: 'venus',   r: 84,  color: '#fd79a8' },
+      { name: 'Mars',    key: 'mars',    r: 108, color: '#e17055' },
+      { name: 'Jupiter', key: 'jupiter', r: 132, color: '#a29bfe' },
+      { name: 'Saturn',  key: 'saturn',  r: 156, color: '#636e72' },
+    ];
 
-    function showOrrery() {
-      document.getElementById('orrery-zone').classList.add('visible');
-      drawOrrery();
-    }
-
-    function hideOrrery() {
-      document.getElementById('orrery-zone').classList.remove('visible');
-    }
-
-    function drawOrrery() {
+    function drawOrreryFrame() {
       const canvas = document.getElementById('orrery-canvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
       const cx = w / 2, cy = h / 2;
@@ -1209,176 +1270,229 @@
       ctx.fillStyle = '#0a0015';
       ctx.fillRect(0, 0, w, h);
 
-      // Starfield
-      ctx.fillStyle = '#dfe6e9';
-      for (let i = 0; i < 100; i++) {
-        const x = Math.random() * w;
-        const y = Math.random() * h;
-        const s = Math.random() * 0.8;
-        ctx.fillRect(x, y, s, s);
+      // Stars
+      ctx.fillStyle = 'rgba(223,230,233,0.7)';
+      for (let i = 0; i < 80; i++) {
+        const sx = (Math.sin(i * 137.5) * 0.5 + 0.5) * w;
+        const sy = (Math.cos(i * 97.3)  * 0.5 + 0.5) * h;
+        const ss = (Math.sin(i * 53.1)  * 0.5 + 0.5) * 1.2;
+        ctx.fillRect(sx, sy, ss, ss);
       }
 
+      const now = Date.now() / 12000;
+      orreryPlanetPositions = {};
+
+      // Orbits
+      ORRERY_PLANETS.forEach((p) => {
+        ctx.strokeStyle = 'rgba(140,140,180,0.15)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
       // Planets
-      const planets = [
-        { name: 'Moon', r: 45, color: '#dfe6e9' },
-        { name: 'Mercury', r: 75, color: '#fdcb6e' },
-        { name: 'Venus', r: 100, color: '#fd79a8' },
-        { name: 'Mars', r: 128, color: '#e17055' },
-        { name: 'Jupiter', r: 158, color: '#a29bfe' },
-        { name: 'Saturn', r: 185, color: '#636e72' },
-      ];
+      ORRERY_PLANETS.forEach((p, idx) => {
+        const angle = now * (0.5 + idx * 0.08) + (idx / ORRERY_PLANETS.length) * Math.PI * 2;
+        const px = cx + Math.cos(angle) * p.r;
+        const py = cy + Math.sin(angle) * p.r;
+        orreryPlanetPositions[p.key] = { x: px, y: py, name: p.name };
 
-      const now = Date.now() / 10000;
-      planets.forEach((p, idx) => {
-        const angle = now + (idx / planets.length) * Math.PI * 2;
-        const x = cx + Math.cos(angle) * p.r;
-        const y = cy + Math.sin(angle) * p.r;
+        // Planet glow
+        const grad = ctx.createRadialGradient(px, py, 0, px, py, 10);
+        grad.addColorStop(0, p.color);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(px - 10, py - 10, 20, 20);
 
-        // Planet
+        // Planet body
         ctx.fillStyle = p.color;
         ctx.beginPath();
-        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
         ctx.fill();
 
         // Label
         ctx.fillStyle = p.color;
-        ctx.font = '7px "Press Start 2P"';
+        ctx.font = '5px "Press Start 2P"';
         ctx.textAlign = 'center';
-        ctx.fillText(p.name, x, y + 16);
+        ctx.fillText(p.name, px, py + 15);
+
+        // Cards on this planet
+        const cardsHere = gameState.drawnCards.filter(c => c.orreryPlanet === p.key);
+        if (cardsHere.length > 0) {
+          ctx.shadowColor = '#f9ca24';
+          ctx.shadowBlur = 6;
+          ctx.strokeStyle = 'rgba(249,202,36,0.8)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(px - 7, py - 10, 14, 20);
+          ctx.shadowBlur = 0;
+        }
       });
 
       // Sun
+      orreryPlanetPositions['sun'] = { x: cx, y: cy, name: 'Sun' };
       ctx.fillStyle = '#f9ca24';
+      ctx.shadowColor = '#f9ca24';
+      ctx.shadowBlur = 12;
       ctx.beginPath();
-      ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 9, 0, Math.PI * 2);
       ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.font = '5px "Press Start 2P"';
+      ctx.fillStyle = '#f9ca24';
+      ctx.textAlign = 'center';
+      ctx.fillText('Sun', cx, cy + 20);
 
-      // Cards on planets
-      const planetMap = {};
-      planets.forEach(p => planetMap[p.name.toLowerCase()] = p);
-
-      gameState.drawnCards.forEach((card, idx) => {
-        const planetKey = card.orreryPlanet;
-        const planet = planets.find(p => p.name.toLowerCase() === planetKey);
-        if (!planet) return;
-
-        const angle = now + (planets.indexOf(planet) / planets.length) * Math.PI * 2;
-        const x = cx + Math.cos(angle) * planet.r;
-        const y = cy + Math.sin(angle) * planet.r;
-
-        // Card thumbnail (small rectangle with glow)
-        ctx.shadowColor = '#f9ca24';
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = 'rgba(249, 202, 36, 0.3)';
-        ctx.fillRect(x - 8, y - 12, 16, 24);
-        ctx.shadowBlur = 0;
-      });
+      if (document.getElementById('orrery-zone').classList.contains('visible')) {
+        orreryAnimFrame = requestAnimationFrame(drawOrreryFrame);
+      }
     }
 
+    function showOrrery() {
+      document.getElementById('orrery-zone').classList.add('visible');
+      drawOrreryFrame();
+      const canvas = document.getElementById('orrery-canvas');
+      canvas.addEventListener('click', handleOrreryClick);
+      canvas.addEventListener('touchstart', handleOrreryTouch, { passive: false });
+    }
+
+    function hideOrrery() {
+      document.getElementById('orrery-zone').classList.remove('visible');
+      if (orreryAnimFrame) { cancelAnimationFrame(orreryAnimFrame); orreryAnimFrame = null; }
+      const canvas = document.getElementById('orrery-canvas');
+      canvas.removeEventListener('click', handleOrreryClick);
+      canvas.removeEventListener('touchstart', handleOrreryTouch);
+    }
+
+    function handleOrreryClick(e) {
+      const canvas = document.getElementById('orrery-canvas');
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width  / rect.width;
+      const scaleY = canvas.height / rect.height;
+      checkOrreryHit((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
+    }
+
+    function handleOrreryTouch(e) {
+      e.preventDefault();
+      const canvas = document.getElementById('orrery-canvas');
+      const rect = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      const scaleX = canvas.width  / rect.width;
+      const scaleY = canvas.height / rect.height;
+      checkOrreryHit((t.clientX - rect.left) * scaleX, (t.clientY - rect.top) * scaleY);
+    }
+
+    function checkOrreryHit(x, y) {
+      for (const [key, pos] of Object.entries(orreryPlanetPositions)) {
+        const dx = x - pos.x, dy = y - pos.y;
+        if (Math.sqrt(dx*dx + dy*dy) < 22) {
+          const lore = PLANET_LORE[key];
+          if (lore) {
+            typeText(pos.name.toUpperCase() + '\n' + lore);
+            const el = document.getElementById('dialogue-options');
+            el.innerHTML = '';
+            el.className = 'dialogue-options';
+            const backBtn = document.createElement('button');
+            backBtn.className = 'option-btn';
+            backBtn.textContent = '← BACK TO ORRERY';
+            backBtn.onclick = () => {
+              typeText('Touch a planet to learn its celestial influence.');
+              showOrreryReturnBtn();
+            };
+            const returnBtn = document.createElement('button');
+            returnBtn.className = 'option-btn';
+            returnBtn.textContent = '← RETURN TO READING';
+            returnBtn.onclick = () => { if (_orreryResolve) _orreryResolve(); };
+            el.appendChild(backBtn);
+            el.appendChild(returnBtn);
+          }
+          break;
+        }
+      }
+    }
+
+    // ==================== PLANET PALETTE ====================
     function setPlanetPalette(planet) {
       const palettes = {
-        moon: { space: '#1a2f4a', neon: '#74b9ff' },
-        venus: { space: '#1a0a2e', neon: '#ff7675' },
-        mars: { space: '#1a0a2e', neon: '#e17055' },
-        saturn: { space: '#1a0a2e', neon: '#636e72' },
+        moon:    { space: '#1a2f4a', neon: '#74b9ff' },
+        venus:   { space: '#1a0a2e', neon: '#ff7675' },
+        mars:    { space: '#1a0a2e', neon: '#e17055' },
+        saturn:  { space: '#1a0a2e', neon: '#636e72' },
         mercury: { space: '#1a0a2e', neon: '#fdcb6e' },
         jupiter: { space: '#1a0a2e', neon: '#a29bfe' },
-        sun: { space: '#1a0a2e', neon: '#f9ca24' },
+        sun:     { space: '#1a0a2e', neon: '#f9ca24' },
       };
-
       const pal = palettes[planet] || palettes.moon;
       document.documentElement.style.setProperty('--bg-space', pal.space);
       document.documentElement.style.setProperty('--accent-neon', pal.neon);
     }
-
-document.getElementById('back-btn').addEventListener('click', () => {
-      setState('SPREAD_GRID');
-    });
 
     // ==================== STARFIELD ====================
     function initStarfield() {
       const canvas = document.getElementById('starfield');
       const ctx = canvas.getContext('2d');
       const stars = [];
-
-      // Create star layers
       for (let layer = 0; layer < 3; layer++) {
-        const layerStars = layer === 0 ? 80 : layer === 1 ? 40 : 15;
-        const sizes = layer === 0 ? 1 : layer === 1 ? 1.5 : 2.5;
-        for (let i = 0; i < layerStars; i++) {
+        const count = [80, 40, 15][layer];
+        const size  = [0.8, 1.4, 2.2][layer];
+        const speed = [0.06, 0.16, 0.32][layer];
+        for (let i = 0; i < count; i++) {
           stars.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: sizes,
-            layer: layer,
-            speed: [0.05, 0.15, 0.3][layer],
-            opacity: Math.random() * 0.5 + 0.5,
+            size, layer, speed,
+            opacity: Math.random() * 0.5 + 0.4,
           });
         }
       }
-
       function animate() {
-        ctx.fillStyle = '#0a0015';
+        const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-space').trim() || '#0d0921';
+        ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        stars.forEach(star => {
-          star.x -= star.speed;
-          if (star.x < 0) star.x = canvas.width;
-
-          ctx.fillStyle = `rgba(223, 230, 233, ${star.opacity})`;
+        stars.forEach(s => {
+          s.x -= s.speed;
+          if (s.x < 0) s.x = canvas.width;
+          if (s.layer === 1 && Math.random() > 0.94) s.opacity = Math.random() * 0.5 + 0.4;
+          ctx.fillStyle = `rgba(200,212,232,${s.opacity})`;
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size / 2, 0, Math.PI * 2);
+          ctx.arc(s.x, s.y, s.size / 2, 0, Math.PI * 2);
           ctx.fill();
-
-          if (star.layer === 1 && Math.random() > 0.9) {
-            star.opacity = Math.random() * 0.5 + 0.5;
-          }
         });
-
         requestAnimationFrame(animate);
       }
-
       animate();
     }
+
+    // ==================== BACK BUTTON ====================
+    document.getElementById('back-btn').addEventListener('click', () => {
+      hideCardImage();
+      hideNavBar();
+      setState('SPREAD_GRID');
+    });
 
     // ==================== INIT ====================
     initStarfield();
 
-    // Skip boot sequence and set up GREET state directly
-    document.getElementById('boot-console').classList.add('hidden');
-
-    // Set initial state
     gameState.activeGuide = getActiveGuide();
     gameState.currentState = 'GREET';
-
-    // Draw character
     drawCharacter(gameState.activeGuide);
+    document.getElementById('character-container').classList.remove('hidden');
 
-    // Show character container
-    const charContainer = document.getElementById('character-container');
-    if (charContainer) {
-      charContainer.classList.remove('hidden');
-    }
-
-    // Set greeting dialogue
-    const greetings = {
-      scribe: "Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?",
-      weaver: "The night speaks softly. You have found your way to the threads. Welcome.",
-      psychic: "Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.",
+    const msgs = {
+      scribe:  'Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?',
+      weaver:  'The night speaks softly. You have found your way to the threads. Welcome.',
+      psychic: 'Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.',
     };
+    typeText(msgs[gameState.activeGuide]);
 
-    document.getElementById('dialogue-text').textContent = greetings[gameState.activeGuide];
+    const initEl = document.getElementById('dialogue-options');
+    initEl.innerHTML = '';
+    const initBtn = document.createElement('button');
+    initBtn.className = 'option-btn';
+    initBtn.textContent = 'BEGIN';
+    initBtn.onclick = async () => { await setState('INTENT'); };
+    initEl.appendChild(initBtn);
 
-    // Set up BEGIN button
-    const optionsEl = document.getElementById('dialogue-options');
-    optionsEl.innerHTML = '';
-    const beginBtn = document.createElement('button');
-    beginBtn.className = 'option-btn';
-    beginBtn.textContent = 'BEGIN';
-    beginBtn.onclick = async () => {
-      await setState('INTENT');
-    };
-    optionsEl.appendChild(beginBtn);
   </script>
 </body>
 </html>
