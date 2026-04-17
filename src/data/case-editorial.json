@@ -100,6 +100,21 @@
     "flags": [],
     "updatedAt": "2026-04-06T21:15:30.274Z"
   },
+  "badie-v-state": {
+    "slug": "badie-v-state",
+    "title": "Badie v. State",
+    "docketNumber": "S26A0051",
+    "dateDecided": "March 17, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.614Z"
+  },
   "baker-v-state-318-ga-431": {
     "slug": "baker-v-state-318-ga-431",
     "title": "Baker v. State",
@@ -221,6 +236,21 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T21:22:00.713Z"
+  },
+  "bodie-v-state": {
+    "slug": "bodie-v-state",
+    "title": "Bodie v. State",
+    "docketNumber": "S26A0168",
+    "dateDecided": "March 17, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
   },
   "body-v-state-367-ga-app-506": {
     "slug": "body-v-state-367-ga-app-506",
@@ -866,6 +896,21 @@
     "flags": [],
     "updatedAt": "2026-04-06T21:29:18.764Z"
   },
+  "doe-v-archdiocese-of-atlanta": {
+    "slug": "doe-v-archdiocese-of-atlanta",
+    "title": "Doe v. Archdiocese of Atlanta",
+    "docketNumber": "A25A1760, A25A1785, A25A1786, A25A1787, A25A1788, A25A1789, A25A1790, A25A1791, A25A1792, A25A1794, A25A1848, A25A1849",
+    "dateDecided": "March 9, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
+  },
   "drucker-v-morgan-371-ga-app-334": {
     "slug": "drucker-v-morgan-371-ga-app-334",
     "title": "Drucker v. Morgan",
@@ -905,6 +950,21 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T21:29:18.764Z"
+  },
+  "fadesire-v-state": {
+    "slug": "fadesire-v-state",
+    "title": "Fadesire v. State",
+    "docketNumber": "S26A0174",
+    "dateDecided": "March 17, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
   },
   "fleureme-v-city-of-atlanta-2026-ga-app-lexis-37": {
     "slug": "fleureme-v-city-of-atlanta-2026-ga-app-lexis-37",
@@ -1087,6 +1147,21 @@
     "flags": [],
     "updatedAt": "2026-04-06T21:09:15.340Z"
   },
+  "garrett-v-sandersville-r-r-co": {
+    "slug": "garrett-v-sandersville-r-r-co",
+    "title": "Garrett v. Sandersville R.R. Co.",
+    "docketNumber": "A26A0274, A26A0275",
+    "dateDecided": "April 15, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
+  },
   "gates-v-state-317-ga-889": {
     "slug": "gates-v-state-317-ga-889",
     "title": "Gates v. State",
@@ -1106,6 +1181,36 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T21:31:17.618Z"
+  },
+  "geico-indem-co-v-abdel-rahman": {
+    "slug": "geico-indem-co-v-abdel-rahman",
+    "title": "GEICO Indem. Co. v. Abdel-Rahman",
+    "docketNumber": "A26A0656",
+    "dateDecided": "April 8, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
+  },
+  "gines-v-state": {
+    "slug": "gines-v-state",
+    "title": "Gines v. State",
+    "docketNumber": "S25A1305, S25A1306, S25A1307",
+    "dateDecided": "March 12, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
   },
   "girls-galore-inc-v-city-of-atlanta-2026-ga-app-lexis-128": {
     "slug": "girls-galore-inc-v-city-of-atlanta-2026-ga-app-lexis-128",
@@ -1287,6 +1392,21 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T21:34:18.509Z"
+  },
+  "henry-county-v-greater-atlanta-home-builders-assn-2026-ga-app-lexis-121": {
+    "slug": "henry-county-v-greater-atlanta-home-builders-assn-2026-ga-app-lexis-121",
+    "title": "Henry County v. Greater Atlanta Home Builders Assn.",
+    "docketNumber": "A25A1843",
+    "dateDecided": "February 27, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
   },
   "hightower-v-state-315-ga-399": {
     "slug": "hightower-v-state-315-ga-399",
@@ -2093,6 +2213,21 @@
     "flags": [],
     "updatedAt": "2026-04-06T20:45:00.901Z"
   },
+  "neal-v-state": {
+    "slug": "neal-v-state",
+    "title": "Neal v. State",
+    "docketNumber": "A26A0535. A26A0579",
+    "dateDecided": "April 8, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
+  },
   "norris-v-atlanta-braves-inc": {
     "slug": "norris-v-atlanta-braves-inc",
     "title": "Norris v. Atlanta Braves, Inc.",
@@ -2434,6 +2569,21 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T21:52:25.312Z"
+  },
+  "rainey-v-state": {
+    "slug": "rainey-v-state",
+    "title": "Rainey v. State",
+    "docketNumber": "S26A0399",
+    "dateDecided": "March 17, 2026",
+    "tags": [],
+    "summary": "",
+    "status": "pending",
+    "source": "parsed",
+    "flags": [
+      "missing-tags",
+      "missing-summary"
+    ],
+    "updatedAt": "2026-04-17T23:42:55.615Z"
   },
   "ramos-v-owens-366-ga-app-216": {
     "slug": "ramos-v-owens-366-ga-app-216",
