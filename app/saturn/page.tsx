@@ -18,12 +18,21 @@ export default function SaturnPage() {
   }, [])
 
   useEffect(() => {
+    const isPortraitOnly = () => {
+      const isPortrait = window.matchMedia('(orientation: portrait)').matches
+      return window.innerWidth < 768 && isPortrait
+    }
+
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
+      setIsMobile(isPortraitOnly())
     }
     handleResize()
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleResize)
+    }
   }, [])
 
   const handleGameSelected = (gameName: string) => {
@@ -54,6 +63,12 @@ export default function SaturnPage() {
             height: 600px !important;
           }
         }
+        @media (orientation: landscape) and (max-width: 1000px) {
+          iframe {
+            width: 333px !important;
+            height: 600px !important;
+          }
+        }
         @media (min-width: 1000px) {
           iframe {
             width: 333px !important;
@@ -61,7 +76,7 @@ export default function SaturnPage() {
           }
         }
       `}</style>
-      <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '0' }}>
+      <div data-saturn="true" suppressHydrationWarning style={{ height: '100vh', width: '100vw', backgroundColor: '#0B0820', position: 'relative', overflow: isGamePortalOpen ? 'auto' : 'hidden' }}>
       {/* Saturn Navbar */}
       <SaturnNavbar onResetOrbit={resetOrbit || undefined} onGameSelected={handleGameSelected} />
 
@@ -85,15 +100,22 @@ export default function SaturnPage() {
       {isGamePortalOpen && (
         <div style={{
           position: 'fixed',
-          top: '140px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 40,
-          display: 'flex',
-          justifyContent: 'center',
-          pointerEvents: 'auto',
+          inset: 0,
+          zIndex: 30,
+          pointerEvents: 'none',
           background: 'transparent'
         }}>
+          <div style={{
+            position: 'fixed',
+            top: '140px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 40,
+            display: 'flex',
+            justifyContent: 'center',
+            pointerEvents: 'auto',
+            background: 'transparent'
+          }}>
           <iframe
             src={selectedGame === 'oracle' ? '/oracle-portal.html' : '/game-portal.html'}
             style={{
@@ -109,6 +131,7 @@ export default function SaturnPage() {
             title="Game Portal"
             key={selectedGame}
           />
+          </div>
         </div>
       )}
     </div>
