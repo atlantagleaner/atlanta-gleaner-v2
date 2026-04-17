@@ -19,21 +19,12 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
   }, [])
 
   useEffect(() => {
-    const isPortraitOnly = () => {
-      const isPortrait = window.matchMedia('(orientation: portrait)').matches
-      return window.innerWidth < 768 && isPortrait
-    }
-
     const handleResize = () => {
-      setIsMobile(isPortraitOnly())
+      setIsMobile(window.innerWidth < 768)
     }
     handleResize()
     window.addEventListener('resize', handleResize)
-    window.addEventListener('orientationchange', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('orientationchange', handleResize)
-    }
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const navItemStyle: React.CSSProperties = {
