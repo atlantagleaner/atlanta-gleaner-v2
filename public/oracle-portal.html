@@ -212,6 +212,10 @@
 
         /* Responsive - Mobile Portrait & Landscape */
         @media (max-width: 600px), (max-height: 600px) {
+            #app {
+                padding-top: 0;
+            }
+
             #game-container {
                 width: 333px;
                 max-width: none;
@@ -220,6 +224,16 @@
                 padding: 16px;
                 gap: 10px;
                 overflow-y: auto;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1000px) {
+            #game-container {
+                width: 333px;
+                max-width: none;
+                height: 700px;
+                max-height: none;
             }
         }
     </style>

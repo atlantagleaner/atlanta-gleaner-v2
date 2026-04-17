@@ -54,6 +54,12 @@ export default function SaturnPage() {
             height: 600px !important;
           }
         }
+        @media (min-width: 1000px) {
+          iframe {
+            width: 333px !important;
+            height: 700px !important;
+          }
+        }
       `}</style>
       <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '600px' }}>
       {/* Saturn Navbar */}
