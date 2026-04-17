@@ -609,15 +609,20 @@
 
         function selectRole(role) {
             oracleState.role = role;
-            showOfferingChoices();
-        }
-
-        function showOfferingChoices() {
             oracleState.animationState = 'idle';
             const text = document.getElementById('oracle-text');
             const choices = document.getElementById('oracle-choices');
 
-            text.textContent = oracleState.role.flavor;
+            text.textContent = '';
+            choices.innerHTML = '';
+
+            typeOutText(oracleState.role.flavor, () => {
+                showOfferingChoices();
+            });
+        }
+
+        function showOfferingChoices() {
+            const choices = document.getElementById('oracle-choices');
             choices.className = 'oracle-choices single-row';
             choices.innerHTML = '';
 
@@ -633,11 +638,14 @@
         function selectOffering(offering) {
             oracleState.offering = offering;
             const text = document.getElementById('oracle-text');
-            text.textContent = offering.flavor;
+            const choices = document.getElementById('oracle-choices');
 
-            setTimeout(() => {
+            text.textContent = '';
+            choices.innerHTML = '';
+
+            typeOutText(offering.flavor, () => {
                 showQuestionChoices();
-            }, 2000);
+            });
         }
 
         function showQuestionChoices() {
@@ -725,19 +733,17 @@
             text.textContent = '';
             choices.innerHTML = '';
 
-            typeOutFortune(fortune);
-
-            setTimeout(() => {
+            typeOutText(fortune, () => {
                 const btn = document.createElement('button');
                 btn.className = 'oracle-btn';
                 btn.textContent = 'CONSULT AGAIN';
                 btn.style.marginTop = '10px';
                 btn.onclick = () => resetOracle();
                 choices.appendChild(btn);
-            }, fortune.length * 50 + 1000);
+            });
         }
 
-        function typeOutFortune(text) {
+        function typeOutText(text, onComplete) {
             const textEl = document.getElementById('oracle-text');
             textEl.textContent = '';
             let i = 0;
@@ -747,6 +753,8 @@
                     textEl.textContent += text[i];
                     i++;
                     setTimeout(typeChar, 50);
+                } else if (onComplete) {
+                    setTimeout(onComplete, 600);
                 }
             }
 
