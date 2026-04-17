@@ -41,7 +41,8 @@
       position: relative;
       background: var(--bg-deep);
       border-radius: 12px;
-      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(233, 86, 253, 0.2);
+      border: 3px solid #e056fd;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(233, 86, 253, 0.4);
       overflow: hidden;
     }
 
@@ -485,7 +486,8 @@
         id: 0, name: 'The Fool', keywords: ['beginnings', 'innocence', 'spontaneity', 'free spirit'],
         upright: 'A fresh start, new adventure, taking a leap of faith. Embrace the unknown with childlike wonder.',
         reversed: 'Recklessness, risk-taking without thinking. Hold on, pause and reconsider your path.',
-        planet: 'Uranus', element: 'Air', hebrew: 'Aleph', alchemical: 'Mercury', esotericTitle: 'The Spirit of Aether', treePath: '11', orreryPlanet: 'uranus'
+        planet: 'Uranus', element: 'Air', hebrew: 'Aleph', alchemical: 'Mercury', esotericTitle: 'The Spirit of Aether', treePath: '11', orreryPlanet: 'uranus',
+        preReveal: 'A figure stands at the cliff edge, one foot already over the void. A small dog barks below. The wind fills the fool\'s cloak as they smile, ready to leap.'
       },
       {
         id: 1, name: 'The Magician', keywords: ['manifestation', 'power', 'action', 'concentration'],
@@ -614,6 +616,50 @@
         planet: 'Saturn', element: 'Earth', hebrew: 'Tau', alchemical: 'Salt', esotericTitle: 'Great One of the Night of Time', treePath: '32', orreryPlanet: 'saturn'
       },
     ];
+
+    // Pre-reveal atmospheric descriptions for all cards
+    const PRE_REVEAL_DESCRIPTIONS = {
+      0: 'A figure stands at the cliff edge, one foot over the void. A dog barks below. The wind fills the fool\'s cloak.',
+      1: 'At a table of four elements, a robed figure stands tall, hand raised. Before him: wand, cup, sword, pentacle.',
+      2: 'From the dark water, two towers rise. A crayfish climbs toward a path that disappears into hills.',
+      3: 'A crowned figure sits amid pomegranate groves, holding scepter and orb. Golden light surrounds her throne.',
+      4: 'An armored king sits rigid upon his stone throne, holding scepter and cube. His gaze is cold and absolute.',
+      5: 'A robed figure stands between two pillars, holding a key. Before him kneel two disciples seeking wisdom.',
+      6: 'A man and woman stand naked beneath Cupid\'s arrow. Behind them: a paradise garden blooming with choice.',
+      7: 'A crowned figure rides a chariot drawn by sphinxes, moving swiftly through desert sands toward distant mountains.',
+      8: 'A woman sits calmly, gentle hand upon a lion\'s mane. The beast\'s eyes close in trust beneath her touch.',
+      9: 'An old hermit stands alone in high mountains, lantern held aloft. His light cuts through the darkness.',
+      10: 'A great wheel turns in the void. Four figures cling to its spinning rim as cosmic forces move it.',
+      11: 'A figure in balance stands before scales, sword upright between justice and consequence.',
+      12: 'A man hangs inverted from a tree by one foot, expression peaceful. His other leg crosses forming a cross.',
+      13: 'A skeleton rides a pale horse across a battlefield of bones. A banner of roses lies beneath his feet.',
+      14: 'An angel pours liquid between two cups. Golden light flows eternal between heaven and earth.',
+      15: 'In darkness, two chained figures kneel beneath a horned demon king. His shadow looms massive and absolute.',
+      16: 'Stone and wood collapse in flame. A crowned figure falls. Lightning splits the sky in two.',
+      17: 'A naked woman kneels by a pool beneath eight stars. She pours water, one stream to earth, one to sky.',
+      18: 'From the dark water, two towers rise. A lobster crawls forth. Above: a moon with a human face.',
+      19: 'Golden sunlight floods a garden. A naked child dances beneath a gold sun, surrounded by sunflowers.',
+      20: 'An angel sounds a trumpet. The dead rise from their graves. All are called to account and transformation.',
+      21: 'A nude figure dances within a wreath of laurel. Four sphinx figures mark the corners of all creation.',
+      // Minor arcana - simple templates by suit
+      ...[...Array(56)].reduce((acc, _, i) => {
+        const cardId = 22 + i;
+        const suitIndex = Math.floor(i / 14);
+        const rankIndex = i % 14;
+        const suits = ['Wands', 'Cups', 'Swords', 'Pentacles'];
+        const ranks = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Page', 'Knight', 'Queen', 'King'];
+        const suit = suits[suitIndex];
+        const rank = ranks[rankIndex];
+        const suitDescriptions = {
+          'Wands': 'A staff of fire descends from the clouds.',
+          'Cups': 'A chalice overflows with golden water.',
+          'Swords': 'Blades cross in the air, sharp and true.',
+          'Pentacles': 'A golden coin spins in the light.'
+        };
+        acc[cardId] = `${rank} of ${suit}: ${suitDescriptions[suit]}`;
+        return acc;
+      }, {})
+    };
 
     // Minor Arcana template
     function generateMinorArcana() {
@@ -819,6 +865,14 @@
 
       await showOptions([{ label: '✦ SET YOUR INTENTION ✦', value: 'done' }]);
       hideCharacter();
+      await setState('DEAL');
+    }
+
+    async function stateDeal() {
+      const card = gameState.drawnCards[gameState.currentCardIndex || 0];
+      const preRevealText = PRE_REVEAL_DESCRIPTIONS[card.id] || `The ${card.name} appears before you.`;
+      await typeText(preRevealText, 25);
+      await showOptions([{ label: 'REVEAL THE CARD', value: 'done' }]);
       await setState('SPREAD_GRID');
     }
 
@@ -945,7 +999,10 @@
 
       draw(count = 1) {
         const shuffled = this.shuffle();
-        return shuffled.slice(0, count).map(cardData => ({ ...cardData }));
+        return shuffled.slice(0, count).map(cardData => ({
+          ...cardData,
+          preReveal: PRE_REVEAL_DESCRIPTIONS[cardData.id] || `The ${cardData.name} appears.`
+        }));
       }
     }
 
@@ -975,7 +1032,7 @@
 
       const bootInterval = setInterval(() => {
         if (progress === 0) {
-          bootText = '> ZODIAC TERMINAL v.XVI\n';
+          bootText = '> SATURN TERMINAL v.XVI\n';
         } else if (progress === 1) {
           bootText += '> INITIATING STAR ALIGNMENT...\n';
         } else if (progress >= 2 && progress <= 8) {
