@@ -1089,6 +1089,67 @@ function stripHyperlinks(html) {
   return html.replace(/<a[^>]*>([\s\S]*?)<\/a>/g, '$1');
 }
 
+/**
+ * Apply Bluebook citation formatting to opinion HTML (Bluebook Rule 10).
+ *
+ * LexisNexis source DOCX files hyperlink case citations and sometimes italicize
+ * them inside the <a> tag. After stripping hyperlinks, many citations are left
+ * as plain text. This function re-applies proper Bluebook italics to case names.
+ *
+ * Rules applied:
+ *   - Case names "Party v. Party" → <em>Party v. Party</em>
+ *   - OCGA § references remain plain (no "v." pattern, not affected)
+ *   - Already-italicized citations (inside <em>) are skipped (no double-wrap)
+ *   - HTML tags are passed through unchanged
+ *
+ * Pattern matched: "[Word(s)] v. [Word(s)]" where both sides start uppercase,
+ * stopping before the reporter citation (", 123 Ga." or "(2020)").
+ */
+function applyBluebookFormatting(html) {
+  // Walk the HTML as alternating tag/text segments so we only touch text nodes
+  const parts = html.split(/(<[^>]+>)/);
+  let insideEm = false;
+
+  return parts.map(part => {
+    // HTML tag — track <em> depth and pass through unchanged
+    if (part.startsWith('<')) {
+      if (/^<em[\s>]/i.test(part))  insideEm = true;
+      if (/^<\/em>/i.test(part))    insideEm = false;
+      return part;
+    }
+
+    // Text inside an existing <em> — skip to avoid double-wrapping
+    if (insideEm) return part;
+
+    // Italicize case name patterns in plain text nodes.
+    // Captures: "[Party1] v. [Party2]"
+    // - Party names: one or more words starting uppercase, may include
+    //   abbreviations (Inc., LLC., Corp.), apostrophes, hyphens
+    // - Stops before reporter citation (", 123") or year "( 2020)" or sentence end
+    return part.replace(
+      /\b([A-Z][A-Za-z'&.,\u2019-]*(?:\s+[A-Za-z'&.,\u2019-]+){0,8}?)\s+v\.\s+([A-Z][A-Za-z'&.,\u2019-]*(?:\s+[A-Za-z'&.,\u2019-]+){0,6}?)(?=\s*,\s*\d|\s*\(\d{4}\)|\s*[.;]|$)/g,
+      (match, p1, p2) => {
+        const t1 = p1.trim();
+        const t2 = p2.trim();
+        // Sanity: both sides must start uppercase and have real content
+        if (!t1 || !t2 || !/^[A-Z]/.test(t1) || !/^[A-Z]/.test(t2)) return match;
+        // Citation signal words (Bluebook Table of Authorities) may be captured as
+        // the start of p1 (e.g. "See Harris v. State" → p1 = "See Harris").
+        // Strip the signal prefix and italicize only the true case name.
+        const SIGNAL_PREFIX = /^(See|Cf\.|Compare|Accord|Contra|Although|However|Therefore|Thus|Similarly|Furthermore|Moreover|Additionally|Nevertheless|Accordingly)\.?\s+/;
+        const signalMatch = t1.match(SIGNAL_PREFIX);
+        if (signalMatch) {
+          const signal    = signalMatch[0];           // e.g. "See "
+          const caseName1 = t1.slice(signal.length);  // e.g. "Harris"
+          if (!caseName1 || !/^[A-Z]/.test(caseName1)) return match;
+          return `${signal}<em>${caseName1} v. ${t2}</em>`;
+        }
+        return `<em>${t1} v. ${t2}</em>`;
+      }
+    );
+  }).join('');
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // SECTION 13 — DOCX PRE-PROCESSING (blockquote injection via JSZip)
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1254,6 +1315,7 @@ async function parseDocxFile(filename) {
   bodyHtml     = injectFnMarkers(bodyHtml);
   bodyHtml     = markStarPagination(bodyHtml);
   bodyHtml     = stripHyperlinks(bodyHtml);
+  bodyHtml     = applyBluebookFormatting(bodyHtml);
 
   // ── 14. Extract footnotes ─────────────────────────────────────────────────
   const footnotes = extractFootnotes(fullHtml);

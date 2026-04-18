@@ -170,7 +170,7 @@ function buildCanonicalCaseIndex(records: CaseLaw[]) {
 const CASES_2026: CaseLaw[] = [
   {
     id:           'brosnan-2026',
-    slug:         'brosnan-v-ibpo-local-623-a25a1973',
+    slug:         'int-l-bhd-of-police-officers-local-623-inc-v-brosnan-2026-ga-app-lexis-92',
     title:        "Int'l Bhd. of Police Officers Local 623, Inc. v. Brosnan",
     shortTitle:   'IBPO v. Brosnan',
     court:        'Court of Appeals of Georgia, Third Division',
