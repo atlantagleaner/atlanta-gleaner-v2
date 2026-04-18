@@ -989,7 +989,8 @@ function extractFootnotes(html) {
  * Remove the footnote <ol> block from body HTML.
  */
 function removeFootnoteList(html) {
-  html = html.replace(/<ol>[\s\S]*?<\/ol>\s*$/i, '');
+  // Remove ONLY the final <ol>...</ol> block (the footnote list), not lists within the opinion
+  html = html.replace(/<ol>(?![\s\S]*<ol>)[\s\S]*?<\/ol>\s*$/i, '');
   html = html.replace(/<a[^>]*id="footnote-\d+"[^>]*><\/a>/gi, '');
   return html;
 }
@@ -1178,12 +1179,12 @@ async function parseDocxFile(filename) {
       { styleMap: ["p[style-name='BlockQuote'] => blockquote:fresh"] }
     );
     // Detect truncation: if HTML is much smaller than expected, fallback
-    // Rough heuristic: DOCX files typically yield 1-5 bytes of HTML per byte of DOCX
-    // If ratio is <0.5 (e.g., 1MB DOCX → <500KB HTML), assume corruption
+    // For complex nested XML (especially with dense footnotes), extraction often fails silently
     const docxSize = (await fs.stat(filePath)).size;
     const htmlSize = htmlResult.value.length;
     const ratio = htmlSize / docxSize;
-    if (ratio < 0.5 && htmlSize < 50000) {
+    // Flag for: very low ratio (<0.35) OR suspiciously low ratio even for small files
+    if (ratio < 0.35 || (docxSize > 20000 && ratio < 0.4)) {
       throw new Error(`Suspected truncation: ${ratio.toFixed(2)}x ratio (${htmlSize} bytes HTML from ${docxSize} byte DOCX)`);
     }
   } catch (err) {
