@@ -1107,12 +1107,13 @@ function stripHyperlinks(html) {
  * stopping before the reporter citation (", 123 Ga." or "(2020)").
  */
 function applyBluebookFormatting(html) {
-  // Step 1: De-italicize statute references.
-  // LexisNexis italicizes OCGA § and similar refs; Bluebook does not.
-  // Match <em>...</em> blocks whose text content contains a statute marker.
-  html = html.replace(/<em>((?:[^<]|<(?!\/em>))*?(?:OCGA|O\.C\.G\.A\.|U\.S\.C\.|§)[^<]*?)<\/em>/g, '$1');
+  // Step 1: Strip all <em> tags from hyperlinked text.
+  // After stripHyperlinks(), any <em> tags came from LexisNexis formatting inside
+  // the hyperlinks. We don't trust that formatting—start fresh with plain text.
+  // This removes <em>...</em> but keeps the text inside.
+  html = html.replace(/<\/?em>/g, '');
 
-  // Step 2: Italicize case names in text nodes (skipping existing <em> blocks).
+  // Step 2: Italicize case names in plain text.
   // Walk the HTML as alternating tag/text segments so we only touch text nodes
   const parts = html.split(/(<[^>]+>)/);
   let insideEm = false;
