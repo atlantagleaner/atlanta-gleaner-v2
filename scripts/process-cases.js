@@ -58,9 +58,16 @@ function cleanHtml(s) {
   return decodeEntities(stripHtml(s)).replace(/\s+/g, ' ').trim();
 }
 
-/** Normalize whitespace and non-breaking spaces. */
+/** Normalize whitespace, non-breaking spaces, and Unicode smart quotes. */
 function cleanStr(s) {
-  return (s || '').replace(/\u00A0/g, ' ').replace(/\s+/g, ' ').trim();
+  return (s || '')
+    .replace(/\u00A0/g, ' ')           // non-breaking space → space
+    .replace(/[\u201C\u201D]/g, '"')   // curly quotes → "
+    .replace(/[\u2018\u2019]/g, "'")   // curly apostrophes → '
+    .replace(/\u2014/g, '—')           // em-dash → — (preserve for typography)
+    .replace(/\u2013/g, '–')           // en-dash → – (preserve for typography)
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /**
