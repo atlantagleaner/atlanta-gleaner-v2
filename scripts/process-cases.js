@@ -1098,14 +1098,21 @@ function stripHyperlinks(html) {
  *
  * Rules applied:
  *   - Case names "Party v. Party" → <em>Party v. Party</em>
- *   - OCGA § references remain plain (no "v." pattern, not affected)
- *   - Already-italicized citations (inside <em>) are skipped (no double-wrap)
+ *   - Statute references (OCGA §, U.S.C. §, § alone) are de-italicized if
+ *     LexisNexis wrapped them in <em> (Bluebook does NOT italicize statutes)
+ *   - Already-italicized case citations are kept; no double-wrapping
  *   - HTML tags are passed through unchanged
  *
  * Pattern matched: "[Word(s)] v. [Word(s)]" where both sides start uppercase,
  * stopping before the reporter citation (", 123 Ga." or "(2020)").
  */
 function applyBluebookFormatting(html) {
+  // Step 1: De-italicize statute references.
+  // LexisNexis italicizes OCGA § and similar refs; Bluebook does not.
+  // Match <em>...</em> blocks whose text content contains a statute marker.
+  html = html.replace(/<em>((?:[^<]|<(?!\/em>))*?(?:OCGA|O\.C\.G\.A\.|U\.S\.C\.|§)[^<]*?)<\/em>/g, '$1');
+
+  // Step 2: Italicize case names in text nodes (skipping existing <em> blocks).
   // Walk the HTML as alternating tag/text segments so we only touch text nodes
   const parts = html.split(/(<[^>]+>)/);
   let insideEm = false;
