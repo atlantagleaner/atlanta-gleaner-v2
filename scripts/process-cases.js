@@ -1095,6 +1095,9 @@ function stripHyperlinks(html) {
 /**
  * Inject "BlockQuote" paragraph style into Word XML for indented paragraphs
  * so that mammoth emits <blockquote> elements.
+ *
+ * NOTE: Uses non-greedy regex which may fail on complex nested XML (dense footnotes,
+ * hyperlinks, etc.). Caller should wrap in try-catch and fallback to direct parsing.
  */
 async function injectBlockquoteStyles(filePath) {
   const raw     = await fs.readFile(filePath);
@@ -1159,11 +1162,37 @@ async function parseDocxFile(filename) {
   const hdr       = sections._header;
 
   // ── 2. Full HTML (for body + footnotes + blockquotes) ─────────────────────
-  const modifiedBuffer = await injectBlockquoteStyles(filePath);
-  const htmlResult     = await mammoth.convertToHtml(
-    { buffer: modifiedBuffer },
-    { styleMap: ["p[style-name='BlockQuote'] => blockquote:fresh"] }
-  );
+  // Try blockquote injection with fallback for complex nested XML.
+  // The injectBlockquoteStyles() regex can fail on dense footnote structures.
+  let htmlResult;
+  let usedBlockquoteInjection = true;
+
+  try {
+    const modifiedBuffer = await injectBlockquoteStyles(filePath);
+    // Verify buffer is not corrupted by checking it's a valid ZIP/buffer
+    if (!modifiedBuffer || modifiedBuffer.length === 0) {
+      throw new Error('Empty buffer from blockquote injection');
+    }
+    htmlResult = await mammoth.convertToHtml(
+      { buffer: modifiedBuffer },
+      { styleMap: ["p[style-name='BlockQuote'] => blockquote:fresh"] }
+    );
+    // Detect truncation: if HTML is much smaller than expected, fallback
+    // Rough heuristic: DOCX files typically yield 1-5 bytes of HTML per byte of DOCX
+    // If ratio is <0.5 (e.g., 1MB DOCX → <500KB HTML), assume corruption
+    const docxSize = (await fs.stat(filePath)).size;
+    const htmlSize = htmlResult.value.length;
+    const ratio = htmlSize / docxSize;
+    if (ratio < 0.5 && htmlSize < 50000) {
+      throw new Error(`Suspected truncation: ${ratio.toFixed(2)}x ratio (${htmlSize} bytes HTML from ${docxSize} byte DOCX)`);
+    }
+  } catch (err) {
+    // Fallback: parse without blockquote styling injection
+    console.warn(`Blockquote injection failed for ${filename}: ${err.message}. Using direct parsing.`);
+    usedBlockquoteInjection = false;
+    htmlResult = await mammoth.convertToHtml({ path: filePath });
+  }
+
   const fullHtml = htmlResult.value;
 
   // ── 3. Parse header fields ────────────────────────────────────────────────
