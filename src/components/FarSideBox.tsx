@@ -10,7 +10,7 @@ export function FarSideBox() {
   return (
     <div style={{ ...BOX_SHELL, height: 'fit-content' }}>
       <img
-        src="/03.22.86.jpg"
+        src="/01.23.88.jpg"
         alt="The Far Side"
         style={{
           width: '100%',
