@@ -56,12 +56,12 @@
       );
     }
 
-    /* Scene zone: top 370px */
+    /* Scene zone: 50% of container (300px) */
     .scene-zone {
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 370px;
+      height: 300px;
       background: var(--bg-space);
       overflow: hidden;
       position: relative;
@@ -288,13 +288,13 @@
     .back-btn:hover { background: var(--accent-gold); color: var(--bg-deep); }
 
     /* ═══════════════════════════════════
-       SNES RPG DIALOGUE PANEL
+       SNES RPG DIALOGUE PANEL (50% of container)
     ═══════════════════════════════════ */
     .dialogue-panel {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 230px;
-      max-height: 230px;
+      height: 300px;
+      max-height: 300px;
       background: #09071a;
       background-image:
         radial-gradient(circle 1px at 2px 2px, rgba(140,140,255,0.06) 100%, transparent 0);
@@ -313,14 +313,46 @@
     }
 
     .dialogue-text {
-      height: 108px;
-      overflow: hidden;
-      font-size: 8px;
-      line-height: 1.9;
+      height: 140px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 9px;
+      line-height: 1.8;
       color: var(--silver);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       word-wrap: break-word;
       flex-shrink: 0;
+      padding-right: 6px;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    /* SNES-style scroll down indicator */
+    .dialogue-text.has-overflow::after {
+      content: '▼';
+      position: absolute;
+      right: 0;
+      bottom: 2px;
+      font-size: 8px;
+      color: var(--accent-gold);
+      opacity: 0.8;
+      animation: scrollIndicator 1s infinite;
+    }
+
+    /* SNES-style scroll up indicator */
+    .dialogue-text.has-overflow-top::before {
+      content: '▲';
+      position: absolute;
+      right: 0;
+      top: 2px;
+      font-size: 8px;
+      color: var(--accent-gold);
+      opacity: 0.8;
+    }
+
+    @keyframes scrollIndicator {
+      0%, 100% { transform: translateY(0); opacity: 0.8; }
+      50% { transform: translateY(3px); opacity: 0.5; }
     }
 
     .dialogue-separator {
@@ -349,25 +381,25 @@
       align-content: start;
     }
 
-    /* SNES RPG arrow-selector buttons */
+    /* SNES RPG arrow-selector buttons (ENLARGED) */
     .option-btn {
       position: relative;
       background: transparent;
       border: none;
       color: var(--silver);
       font-family: 'Press Start 2P', monospace;
-      font-size: 6px;
-      padding: 2px 4px 2px 14px;
+      font-size: 7px;
+      padding: 4px 6px 4px 16px;
       cursor: pointer;
       text-align: left;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       flex-shrink: 0;
-      line-height: 1.2;
+      line-height: 1.3;
       transition: color 0.06s ease;
       max-width: 100%;
-      min-height: 12px;
+      min-height: 16px;
     }
     .option-btn::before {
       content: ' ';
@@ -527,7 +559,7 @@
     </div>
 
     <div class="scene-zone">
-      <canvas id="starfield" width="333" height="370"></canvas>
+      <canvas id="starfield" width="333" height="300"></canvas>
 
       <div class="character-container" id="character-container">
         <canvas id="character-canvas" width="80" height="96"></canvas>
@@ -546,7 +578,7 @@
       </div>
 
       <div class="orrery-zone" id="orrery-zone">
-        <canvas id="orrery-canvas" width="333" height="370"></canvas>
+        <canvas id="orrery-canvas" width="333" height="300"></canvas>
       </div>
 
       <div class="nav-bar" id="nav-bar">
@@ -938,8 +970,28 @@
 
     // ==================== DIALOGUE SYSTEM ====================
     function typeText(text) {
-      document.getElementById('dialogue-text').textContent = text;
+      const el = document.getElementById('dialogue-text');
+      el.textContent = text;
+      updateScrollIndicators(el);
     }
+
+    function updateScrollIndicators(el) {
+      // Check if content overflows
+      const hasOverflow = el.scrollHeight > el.clientHeight;
+      const isScrolledToTop = el.scrollTop === 0;
+      const isScrolledToBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+
+      el.classList.toggle('has-overflow', hasOverflow && !isScrolledToBottom);
+      el.classList.toggle('has-overflow-top', hasOverflow && !isScrolledToTop);
+    }
+
+    // Listen for scroll events to update indicators
+    document.addEventListener('DOMContentLoaded', () => {
+      const dialogueText = document.getElementById('dialogue-text');
+      dialogueText?.addEventListener('scroll', (e) => {
+        updateScrollIndicators(e.target);
+      });
+    });
 
     function showOptions(options) {
       return new Promise((resolve) => {
