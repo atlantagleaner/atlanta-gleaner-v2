@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Celestial Tarot — Zodiac Terminal</title>
+  <title>Celestial Tarot — Saturn Terminal</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1570,36 +1570,109 @@
     }
 
     function updateCardDisplay(card) {
-      const imgPath = getImagePath(card.id);
       const container = document.getElementById('card-image-container');
       container.innerHTML = '';
 
-      if (imgPath) {
-        const img = document.createElement('img');
-        img.src = imgPath;
-        img.className = 'card-image';
-        img.onerror = () => { container.innerHTML = buildFallbackCard(card); };
-        container.appendChild(img);
+      // Use celestial SVG cards for Minor Arcana
+      if (card.suit) {
+        const lightOrShadow = gameState.lightOrShadow[card.id] || 'light';
+        const cardElement = CardGenerator.generateMinorCard(card.suit, card.rank, lightOrShadow);
+        container.appendChild(cardElement);
       } else {
-        container.innerHTML = buildFallbackCard(card);
+        // Major Arcana: generate celestial-themed card
+        container.appendChild(generateMajorArcanaCard(card));
       }
 
+      // Metadata display (below card, not overlaid)
       document.getElementById('card-name').textContent = card.name;
       document.getElementById('card-keywords').textContent = card.keywords.join(' · ');
     }
 
-    function buildFallbackCard(card) {
-      const suitSymbols = { wands: '🔥', cups: '🌊', swords: '⚡', pentacles: '⭐' };
-      const suit = card.suit || '';
-      const sym = suitSymbols[suit] || '✦';
-      const rankDisplay = card.rank
-        ? (card.rank.charAt(0).toUpperCase() + card.rank.slice(1))
-        : card.name;
-      return `<div class="card-fallback">
-        <div class="card-fallback-suit">${sym}</div>
-        <div class="card-fallback-rank">${rankDisplay}<br>of<br>${card.suit ? card.suit.charAt(0).toUpperCase() + card.suit.slice(1) : ''}</div>
-        <div class="card-fallback-suit-bottom">${sym}</div>
-      </div>`;
+    function generateMajorArcanaCard(card) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '110');
+      svg.setAttribute('height', '160');
+      svg.setAttribute('viewBox', '0 0 110 160');
+
+      // Gradient background (purple to deep blue)
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      grad.setAttribute('id', 'majorGrad');
+      grad.setAttribute('x1', '0%');
+      grad.setAttribute('y1', '0%');
+      grad.setAttribute('x2', '100%');
+      grad.setAttribute('y2', '100%');
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', '#2a0845');
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', '#0f1a3a');
+      grad.appendChild(stop1);
+      grad.appendChild(stop2);
+      defs.appendChild(grad);
+      svg.appendChild(defs);
+
+      // Background
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width', '110');
+      bg.setAttribute('height', '160');
+      bg.setAttribute('fill', 'url(#majorGrad)');
+      svg.appendChild(bg);
+
+      // Border
+      const border = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      border.setAttribute('width', '110');
+      border.setAttribute('height', '160');
+      border.setAttribute('fill', 'none');
+      border.setAttribute('stroke', '#e056fd');
+      border.setAttribute('stroke-width', '2');
+      svg.appendChild(border);
+
+      // Central symbol - cosmic eye or star for major arcana
+      const symbol = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      symbol.setAttribute('cx', '55');
+      symbol.setAttribute('cy', '90');
+      symbol.setAttribute('r', '20');
+      symbol.setAttribute('fill', 'none');
+      symbol.setAttribute('stroke', '#f9ca24');
+      symbol.setAttribute('stroke-width', '1.5');
+      svg.appendChild(symbol);
+
+      const inner = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      inner.setAttribute('cx', '55');
+      inner.setAttribute('cy', '90');
+      inner.setAttribute('r', '8');
+      inner.setAttribute('fill', '#e056fd');
+      svg.appendChild(inner);
+
+      // Roman numeral
+      const numeral = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      numeral.setAttribute('x', '8');
+      numeral.setAttribute('y', '16');
+      numeral.setAttribute('font-size', '8');
+      numeral.setAttribute('fill', '#f9ca24');
+      numeral.setAttribute('font-weight', 'bold');
+      numeral.textContent = card.id.toString();
+      svg.appendChild(numeral);
+
+      // Card name
+      const name = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      name.setAttribute('x', '55');
+      name.setAttribute('y', '153');
+      name.setAttribute('text-anchor', 'middle');
+      name.setAttribute('font-size', '6');
+      name.setAttribute('fill', '#c8d4e8');
+      name.textContent = 'MAJOR';
+      svg.appendChild(name);
+
+      const container = document.createElement('div');
+      container.className = 'generated-card';
+      container.style.width = '110px';
+      container.style.height = '160px';
+      container.appendChild(svg);
+
+      return container;
     }
 
     function showCardImage()  { document.getElementById('card-image-zone').classList.add('visible'); }
@@ -1908,9 +1981,9 @@
     document.getElementById('character-container').classList.remove('hidden');
 
     const msgs = {
-      scribe:  'Seeker. The sun has noted your arrival. What brings you to the Zodiac Terminal?',
+      scribe:  'Seeker. The sun has noted your arrival. What brings you to the Saturn Terminal?',
       weaver:  'The night speaks softly. You have found your way to the threads. Welcome.',
-      psychic: 'Seeker. You have entered the Zodiac Terminal. The stars have noted your arrival.',
+      psychic: 'Seeker. You have entered the Saturn Terminal. The stars have noted your arrival.',
     };
     typeText(msgs[gameState.activeGuide]);
 
@@ -1923,5 +1996,6 @@
     initEl.appendChild(initBtn);
 
   </script>
+  <script src="./card-generator.js"></script>
 </body>
 </html>
