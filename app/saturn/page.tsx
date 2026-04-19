@@ -48,14 +48,21 @@ export default function SaturnPage() {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        /* Game iframes maintain consistent sizing across breakpoints */
         @media (max-width: 600px) {
-          iframe {
+          iframe[title="Game Portal"] {
+            width: 333px !important;
+            height: 600px !important;
+          }
+        }
+        @media (min-width: 601px) and (max-width: 999px) {
+          iframe[title="Game Portal"] {
             width: 333px !important;
             height: 600px !important;
           }
         }
         @media (min-width: 1000px) {
-          iframe {
+          iframe[title="Game Portal"] {
             width: 333px !important;
             height: 600px !important;
           }
@@ -97,8 +104,8 @@ export default function SaturnPage() {
           <iframe
             src={selectedGame === 'oracle' ? '/oracle-portal.html' : selectedGame === 'tarot' ? '/game-model.html' : '/game-portal.html'}
             style={{
-              width: '500px',
-              height: '500px',
+              width: selectedGame === 'tarot' ? '333px' : '500px',
+              height: selectedGame === 'tarot' ? '600px' : '500px',
               border: 'none',
               borderRadius: '8px',
               boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
