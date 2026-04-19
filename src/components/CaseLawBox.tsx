@@ -662,14 +662,15 @@ export default function CaseLawBox({ caseData, label = 'Case Law Updates' }: Cas
                   >
                     {displayNum}↑
                   </a>
-                  <span style={{
-                    ...FONT.sans,
-                    fontSize:   '12px',
-                    lineHeight: 1.55,
-                    color:      PALETTE.black,
-                  }}>
-                    {text}
-                  </span>
+                  <span
+                    style={{
+                      ...FONT.sans,
+                      fontSize:   '12px',
+                      lineHeight: 1.55,
+                      color:      PALETTE.black,
+                    }}
+                    dangerouslySetInnerHTML={{ __html: text }}
+                  />
                 </div>
               )
             })}
