@@ -1166,11 +1166,11 @@ function applyBluebookFormatting(html) {
     );
 
     // Pattern 2: Short-form case citations "[CaseName], [Citation]"
-    // Handles: "Southern Bell, 254 Ga. at 247" or "Southern Bell, 254 Ga. App. 123"
-    // Match: Capitalized name(s) followed by comma, then reporter citation
+    // Handles: "Southern Bell, 254 Ga. at 247" or "Gomez and Smith, 254 Ga. App. 123"
+    // Match: One or more capitalized words (with optional conjunctions) followed by comma, then reporter citation
     // Note: Match includes trailing char (whitespace/digit/period) to avoid consuming reporter names
     result = result.replace(
-      /\b([A-Z][A-Za-z'&.,\u2019-]*(?:\s+(?:and|or|&)\s+)?(?:[A-Z][A-Za-z'&.,\u2019-]*)?)(?:\s*,\s*(?:\d+\s+)?(?:U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.|LEXIS|WL)(?:\s|$|\d|\.|\)))/g,
+      /\b([A-Z](?:[A-Za-z'&.,\u2019-]*\s+)*[A-Z][A-Za-z'&.,\u2019-]*(?:\s+(?:and|or|&)\s+[A-Z][A-Za-z'&.,\u2019-]*)*)(?:\s*,\s*(?:\d+\s+)?(?:U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.|LEXIS|WL)(?:\s|$|\d|\.|\)))/g,
       (match) => {
         // Extract just the case name part (before the comma)
         const commaIdx = match.indexOf(',');

@@ -30,8 +30,9 @@ function applyBluebookFormatting(text) {
   );
 
   // Pattern 2: Short-form case citations "[CaseName], [Citation]"
+  // Handles multi-word case names: "Southern Bell, 254 Ga." or "Gomez and Smith, 254 Ga."
   result = result.replace(
-    /\b([A-Z][A-Za-z'&.,\u2019-]*(?:\s+(?:and|or|&)\s+)?(?:[A-Z][A-Za-z'&.,\u2019-]*)?)(?:\s*,\s*(?:\d+\s+)?(?:U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.|LEXIS|WL)(?:\s|$|\d|\.|\)))/g,
+    /\b([A-Z](?:[A-Za-z'&.,\u2019-]*\s+)*[A-Z][A-Za-z'&.,\u2019-]*(?:\s+(?:and|or|&)\s+[A-Z][A-Za-z'&.,\u2019-]*)*)(?:\s*,\s*(?:\d+\s+)?(?:U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.|LEXIS|WL)(?:\s|$|\d|\.|\)))/g,
     (match) => {
       const commaIdx = match.indexOf(',');
       if (commaIdx === -1) return match;
