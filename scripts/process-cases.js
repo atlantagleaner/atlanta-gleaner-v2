@@ -1136,12 +1136,15 @@ function applyBluebookFormatting(html) {
     // Text inside an existing <em> — skip to avoid double-wrapping
     if (insideEm) return part;
 
+    const SIGNAL_PREFIX = /^(See|Cf\.|Compare|Accord|Contra|Although|However|Therefore|Thus|Similarly|Furthermore|Moreover|Additionally|Nevertheless|Accordingly)\.?\s+/;
+
     // Italicize case name patterns in plain text nodes.
-    // Captures: "[Party1] v. [Party2]"
+
+    // Pattern 1: Full case names "[Party1] v. [Party2]"
     // - Party names: one or more words starting uppercase, may include
     //   abbreviations (Inc., LLC., Corp.), apostrophes, hyphens
     // - Stops before reporter citation (", 123") or year "( 2020)" or sentence end
-    return part.replace(
+    let result = part.replace(
       /\b([A-Z][A-Za-z'&.,\u2019-]*(?:\s+[A-Za-z'&.,\u2019-]+){0,8}?)\s+v\.\s+([A-Z][A-Za-z'&.,\u2019-]*(?:\s+[A-Za-z'&.,\u2019-]+){0,6}?)(?=\s*,\s*\d|\s*\(\d{4}\)|\s*[.;]|$)/g,
       (match, p1, p2) => {
         const t1 = p1.trim();
@@ -1151,7 +1154,6 @@ function applyBluebookFormatting(html) {
         // Citation signal words (Bluebook Table of Authorities) may be captured as
         // the start of p1 (e.g. "See Harris v. State" → p1 = "See Harris").
         // Strip the signal prefix and italicize only the true case name.
-        const SIGNAL_PREFIX = /^(See|Cf\.|Compare|Accord|Contra|Although|However|Therefore|Thus|Similarly|Furthermore|Moreover|Additionally|Nevertheless|Accordingly)\.?\s+/;
         const signalMatch = t1.match(SIGNAL_PREFIX);
         if (signalMatch) {
           const signal    = signalMatch[0];           // e.g. "See "
@@ -1162,6 +1164,36 @@ function applyBluebookFormatting(html) {
         return `<em>${t1} v. ${t2}</em>`;
       }
     );
+
+    // Pattern 2: Short-form case citations "[CaseName], [Citation]"
+    // Handles: "Southern Bell, 254 Ga. at 247" or "Southern Bell, 254 Ga. App. 123"
+    // Match: Capitalized name(s) followed by comma, then reporter citation
+    // Note: Match includes trailing char (whitespace/digit/period) to avoid consuming reporter names
+    result = result.replace(
+      /\b([A-Z][A-Za-z'&.,\u2019-]*(?:\s+(?:and|or|&)\s+)?(?:[A-Z][A-Za-z'&.,\u2019-]*)?)(?:\s*,\s*(?:\d+\s+)?(?:U\.S\.|S\.Ct\.|L\.Ed|F\.[2-3]d|Ga\.|App\.|LEXIS|WL)(?:\s|$|\d|\.|\)))/g,
+      (match) => {
+        // Extract just the case name part (before the comma)
+        const commaIdx = match.indexOf(',');
+        if (commaIdx === -1) return match;
+        const caseName = match.slice(0, commaIdx).trim();
+        const citation = match.slice(commaIdx, -1).trim();
+
+        // Skip if it looks like a statute (starts with number or has § symbol)
+        if (/^\d|^§/.test(caseName)) return match;
+        // Skip if case name is too short (likely abbreviation)
+        if (caseName.length < 3) return match;
+        // Skip if it's a signal word
+        if (SIGNAL_PREFIX.test(caseName)) return match;
+
+        // Check if case name has "v." inside it (full case name, already handled)
+        if (/\bv\.\s+/.test(caseName)) return match;
+
+        // Restore the trailing character that was consumed by the lookahead
+        return `<em>${caseName}</em>${citation}${match.slice(-1)}`;
+      }
+    );
+
+    return result;
   }).join('');
 }
 
