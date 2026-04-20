@@ -758,7 +758,7 @@ export default function ArchivePage() {
         }
       `}</style>
       <OrbitalNavBar showPlus={true} layout="archive" />
-      <main className=”ag-archive-main” style={{
+      <main className="ag-archive-main" style={{
         minHeight:   '100vh',
         background:  PALETTE.warm,
         paddingTop: isMobile ? '100px' : '120px',
@@ -851,7 +851,7 @@ export default function ArchivePage() {
             border: `1px solid ${PALETTE_CSS.border}`,
             padding: `${SPACING.lg}`,
           }}>
-            No cases matched “{searchQuery.trim()}”. Try a docket number, court, or a phrase from the opinion text.
+            No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
           </div>
         ) : (
           <div style={{ maxWidth: '760px' }}>
