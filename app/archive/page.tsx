@@ -757,7 +757,7 @@ export default function ArchivePage() {
           }
         }
       `}</style>
-      <OrbitalNavBar showPlus={true} layout=”archive” />
+      <OrbitalNavBar showPlus={true} layout="archive" />
       <main className=”ag-archive-main” style={{
         minHeight:   '100vh',
         background:  PALETTE.warm,
