@@ -772,7 +772,7 @@ export default function ArchivePage() {
             label: 'ARCHIVE',
             node: (
               <>
-                <div style={{ marginTop: SPACING.lg, marginBottom: SPACING.lg }}>
+                <div style={{ marginBottom: SPACING.md }}>
                   <SearchInput
                     value={searchQuery}
                     onChange={setSearchQuery}
