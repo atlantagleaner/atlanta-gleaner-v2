@@ -10,11 +10,13 @@ import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
 import { SearchInput } from '@/src/components/common/SearchInput'
 import { OrbitalNavBar } from '@/src/components/OrbitalNavBar'
+import { NewsBox } from '@/src/components/NewsBox'
+import { FarSideBox } from '@/src/components/FarSideBox'
 import { useMobileDetect } from '@/src/hooks'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
   ITEM_RULE, SPACING, SIZE_SM,
-  PAGE_TITLE_BLOCK, PAGE_MAX_W, ANIMATION, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
+  PAGE_MAX_W, ANIMATION, PAGE_BOTTOM_PADDING_DESKTOP, PAGE_BOTTOM_PADDING_MOBILE,
 } from '@/src/styles/tokens'
 import { CASES } from '@/src/data/cases'
 import type { CaseLaw } from '@/src/data/types'
@@ -686,6 +688,8 @@ export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVolumeNumber, setSelectedVolumeNumber] = useState<typeof VOLUMES[number]['number']>(VOLUMES[0].number)
   const [isMobile, setIsMobile] = useState(false)
+  const [isNewsBoxOpen, setIsNewsBoxOpen] = useState(false)
+  const [isFarSideOpen, setIsFarSideOpen] = useState(false)
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
   React.useEffect(() => {
@@ -753,8 +757,8 @@ export default function ArchivePage() {
           }
         }
       `}</style>
-      <OrbitalNavBar showPlus={true} layout="archive" />
-      <main className="ag-archive-main" style={{
+      <OrbitalNavBar showPlus={true} layout=”archive” />
+      <main className=”ag-archive-main” style={{
         minHeight:   '100vh',
         background:  PALETTE.warm,
         paddingTop: isMobile ? '100px' : '120px',
@@ -767,11 +771,67 @@ export default function ArchivePage() {
           padding:  `0 ${SPACING.xl}`,
         }}>
 
-        <div style={{ ...PAGE_TITLE_BLOCK, marginTop: 0 }}>
-          <h1 style={{ ...T.pageTitle, paddingTop: SPACING.xl, color: PALETTE.black, margin: 0 }}>
-            Archive
-          </h1>
-        </div>
+        {isMobile && (
+          <>
+            {/* NewsBox Toggle */}
+            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
+              <button
+                onClick={() => setIsNewsBoxOpen(!isNewsBoxOpen)}
+                style={{
+                  width: '100%',
+                  background: PALETTE.white,
+                  border: `1px solid ${PALETTE_CSS.border}`,
+                  padding: `${SPACING.md} ${SPACING.lg}`,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  ...T.micro,
+                  color: PALETTE.black,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: SPACING.sm,
+                }}
+              >
+                <span>NEWS BOX</span>
+                <span style={{ display: 'inline-block', transform: isNewsBoxOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
+              </button>
+              {isNewsBoxOpen && (
+                <div style={{ marginBottom: SPACING.lg }}>
+                  <NewsBox />
+                </div>
+              )}
+            </div>
+
+            {/* FarSideBox Toggle */}
+            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
+              <button
+                onClick={() => setIsFarSideOpen(!isFarSideOpen)}
+                style={{
+                  width: '100%',
+                  background: PALETTE.white,
+                  border: `1px solid ${PALETTE_CSS.border}`,
+                  padding: `${SPACING.md} ${SPACING.lg}`,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  ...T.micro,
+                  color: PALETTE.black,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: SPACING.sm,
+                }}
+              >
+                <span>THE FAR SIDE</span>
+                <span style={{ display: 'inline-block', transform: isFarSideOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
+              </button>
+              {isFarSideOpen && (
+                <div style={{ marginBottom: SPACING.lg }}>
+                  <FarSideBox />
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
           <SearchInput
