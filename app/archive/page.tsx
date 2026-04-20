@@ -773,35 +773,6 @@ export default function ArchivePage() {
 
         {isMobile && (
           <>
-            {/* NewsBox Toggle */}
-            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
-              <button
-                onClick={() => setIsNewsBoxOpen(!isNewsBoxOpen)}
-                style={{
-                  width: '100%',
-                  background: PALETTE.white,
-                  border: `1px solid ${PALETTE_CSS.border}`,
-                  padding: `${SPACING.md} ${SPACING.lg}`,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  ...T.micro,
-                  color: PALETTE.black,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: SPACING.sm,
-                }}
-              >
-                <span>NEWS BOX</span>
-                <span style={{ display: 'inline-block', transform: isNewsBoxOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
-              </button>
-              {isNewsBoxOpen && (
-                <div style={{ marginBottom: SPACING.lg }}>
-                  <NewsBox />
-                </div>
-              )}
-            </div>
-
             {/* FarSideBox Toggle */}
             <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
               <button
@@ -827,6 +798,35 @@ export default function ArchivePage() {
               {isFarSideOpen && (
                 <div style={{ marginBottom: SPACING.lg }}>
                   <FarSideBox />
+                </div>
+              )}
+            </div>
+
+            {/* NewsBox Toggle */}
+            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
+              <button
+                onClick={() => setIsNewsBoxOpen(!isNewsBoxOpen)}
+                style={{
+                  width: '100%',
+                  background: PALETTE.white,
+                  border: `1px solid ${PALETTE_CSS.border}`,
+                  padding: `${SPACING.md} ${SPACING.lg}`,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  ...T.micro,
+                  color: PALETTE.black,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: SPACING.sm,
+                }}
+              >
+                <span>NEWS BOX</span>
+                <span style={{ display: 'inline-block', transform: isNewsBoxOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
+              </button>
+              {isNewsBoxOpen && (
+                <div style={{ marginBottom: SPACING.lg }}>
+                  <NewsBox />
                 </div>
               )}
             </div>
