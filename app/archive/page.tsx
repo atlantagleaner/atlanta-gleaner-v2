@@ -12,7 +12,7 @@ import { SearchInput } from '@/src/components/common/SearchInput'
 import { OrbitalNavBar } from '@/src/components/OrbitalNavBar'
 import { NewsBox } from '@/src/components/NewsBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
-import { useMobileDetect } from '@/src/hooks'
+import { ResizablePanels } from '@/src/components/ResizablePanels'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
   ITEM_RULE, SPACING, SIZE_SM,
@@ -687,19 +687,7 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVolumeNumber, setSelectedVolumeNumber] = useState<typeof VOLUMES[number]['number']>(VOLUMES[0].number)
-  const [isMobile, setIsMobile] = useState(false)
-  const [isNewsBoxOpen, setIsNewsBoxOpen] = useState(false)
-  const [isFarSideOpen, setIsFarSideOpen] = useState(false)
   const deferredSearchQuery = useDeferredValue(searchQuery)
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   const searchableData = useMemo(() => CASES.map(buildSearchableCase), [])
 
@@ -764,155 +752,52 @@ export default function ArchivePage() {
         paddingTop: isMobile ? '100px' : '120px',
       }}>
         <Banner />
-
-        {isMobile ? (
-          <div style={{
-            maxWidth: PAGE_MAX_W,
-            margin:   '0 auto',
-            padding:  `0 ${SPACING.xl}`,
-          }}>
-            {/* Mobile: Stacked layout */}
-            {/* FarSideBox Toggle */}
-            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
-              <button
-                onClick={() => setIsFarSideOpen(!isFarSideOpen)}
-                style={{
-                  width: '100%',
-                  background: PALETTE.white,
-                  border: `1px solid ${PALETTE_CSS.border}`,
-                  padding: `${SPACING.md} ${SPACING.lg}`,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  ...T.micro,
-                  color: PALETTE.black,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: SPACING.sm,
-                }}
-              >
-                <span>THE FAR SIDE</span>
-                <span style={{ display: 'inline-block', transform: isFarSideOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
-              </button>
-              {isFarSideOpen && (
+        <ResizablePanels
+          left={{
+            label: 'Latest News',
+            node: <NewsBox />,
+          }}
+          center={{
+            label: 'Case Law Updates',
+            node: (
+              <>
                 <div style={{ marginBottom: SPACING.lg }}>
-                  <FarSideBox />
+                  <SearchInput
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    resultCount={resultCount}
+                    noResults={searchNoResults}
+                  />
                 </div>
-              )}
-            </div>
 
-            {/* NewsBox Toggle */}
-            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
-              <button
-                onClick={() => setIsNewsBoxOpen(!isNewsBoxOpen)}
-                style={{
-                  width: '100%',
-                  background: PALETTE.white,
-                  border: `1px solid ${PALETTE_CSS.border}`,
-                  padding: `${SPACING.md} ${SPACING.lg}`,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  ...T.micro,
-                  color: PALETTE.black,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: SPACING.sm,
-                }}
-              >
-                <span>NEWS BOX</span>
-                <span style={{ display: 'inline-block', transform: isNewsBoxOpen ? 'rotate(90deg)' : 'rotate(0)', transition: `transform ${ANIMATION.fast} ${ANIMATION.ease}` }}>▶</span>
-              </button>
-              {isNewsBoxOpen && (
-                <div style={{ marginBottom: SPACING.lg }}>
-                  <NewsBox />
-                </div>
-              )}
-            </div>
-
-            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-                resultCount={resultCount}
-                noResults={searchNoResults}
-              />
-            </div>
-
-            {searchNoResults ? (
-              <div style={{
-                ...T.body,
-                maxWidth: '760px',
-                color: PALETTE_CSS.meta,
-                background: PALETTE.white,
-                border: `1px solid ${PALETTE_CSS.border}`,
-                padding: `${SPACING.lg}`,
-              }}>
-                No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
-              </div>
-            ) : (
-              <div style={{ maxWidth: '760px' }}>
-                <ArchiveVolumePanel
-                  volumes={VOLUMES}
-                  cases={filteredCases}
-                  selectedVolumeNumber={selectedVolumeNumber}
-                  onSelectVolume={setSelectedVolumeNumber}
-                />
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{
-            maxWidth: '100%',
-            margin:   '0 auto',
-            padding:  `0 ${SPACING.xl}`,
-            display: 'grid',
-            gridTemplateColumns: '1fr 2fr 1fr',
-            gap: SPACING.lg,
-            alignItems: 'start',
-          }}>
-            {/* Desktop: NewsBox (left) */}
-            <div>
-              <NewsBox />
-            </div>
-
-            {/* Desktop: Archive (center) */}
-            <div>
-              <div style={{ marginBottom: SPACING.lg }}>
-                <SearchInput
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  resultCount={resultCount}
-                  noResults={searchNoResults}
-                />
-              </div>
-
-              {searchNoResults ? (
-                <div style={{
-                  ...T.body,
-                  color: PALETTE_CSS.meta,
-                  background: PALETTE.white,
-                  border: `1px solid ${PALETTE_CSS.border}`,
-                  padding: `${SPACING.lg}`,
-                }}>
-                  No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
-                </div>
-              ) : (
-                <ArchiveVolumePanel
-                  volumes={VOLUMES}
-                  cases={filteredCases}
-                  selectedVolumeNumber={selectedVolumeNumber}
-                  onSelectVolume={setSelectedVolumeNumber}
-                />
-              )}
-            </div>
-
-            {/* Desktop: FarSideBox (right) */}
-            <div>
-              <FarSideBox />
-            </div>
-          </div>
-        )}
+                {searchNoResults ? (
+                  <div style={{
+                    ...T.body,
+                    color: PALETTE_CSS.meta,
+                    background: PALETTE.white,
+                    border: `1px solid ${PALETTE_CSS.border}`,
+                    padding: `${SPACING.lg}`,
+                  }}>
+                    No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
+                  </div>
+                ) : (
+                  <ArchiveVolumePanel
+                    volumes={VOLUMES}
+                    cases={filteredCases}
+                    selectedVolumeNumber={selectedVolumeNumber}
+                    onSelectVolume={setSelectedVolumeNumber}
+                  />
+                )}
+              </>
+            ),
+          }}
+          right={{
+            label: 'The Far Side',
+            node: <FarSideBox />,
+          }}
+          mobileInitialOpen={{ 0: false, 1: true, 2: false }}
+          mobileOrder={[2, 0, 1]}
+        />
       </main>
     </>
   )
