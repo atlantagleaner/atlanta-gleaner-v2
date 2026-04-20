@@ -765,14 +765,13 @@ export default function ArchivePage() {
       }}>
         <Banner />
 
-        <div style={{
-          maxWidth: PAGE_MAX_W,
-          margin:   '0 auto',
-          padding:  `0 ${SPACING.xl}`,
-        }}>
-
-        {isMobile && (
-          <>
+        {isMobile ? (
+          <div style={{
+            maxWidth: PAGE_MAX_W,
+            margin:   '0 auto',
+            padding:  `0 ${SPACING.xl}`,
+          }}>
+            {/* Mobile: Stacked layout */}
             {/* FarSideBox Toggle */}
             <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
               <button
@@ -830,41 +829,90 @@ export default function ArchivePage() {
                 </div>
               )}
             </div>
-          </>
-        )}
 
-        <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            resultCount={resultCount}
-            noResults={searchNoResults}
-          />
-        </div>
+            <div style={{ maxWidth: '760px', marginBottom: SPACING.lg }}>
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                resultCount={resultCount}
+                noResults={searchNoResults}
+              />
+            </div>
 
-        {searchNoResults ? (
-          <div style={{
-            ...T.body,
-            maxWidth: '760px',
-            color: PALETTE_CSS.meta,
-            background: PALETTE.white,
-            border: `1px solid ${PALETTE_CSS.border}`,
-            padding: `${SPACING.lg}`,
-          }}>
-            No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
+            {searchNoResults ? (
+              <div style={{
+                ...T.body,
+                maxWidth: '760px',
+                color: PALETTE_CSS.meta,
+                background: PALETTE.white,
+                border: `1px solid ${PALETTE_CSS.border}`,
+                padding: `${SPACING.lg}`,
+              }}>
+                No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
+              </div>
+            ) : (
+              <div style={{ maxWidth: '760px' }}>
+                <ArchiveVolumePanel
+                  volumes={VOLUMES}
+                  cases={filteredCases}
+                  selectedVolumeNumber={selectedVolumeNumber}
+                  onSelectVolume={setSelectedVolumeNumber}
+                />
+              </div>
+            )}
           </div>
         ) : (
-          <div style={{ maxWidth: '760px' }}>
-            <ArchiveVolumePanel
-              volumes={VOLUMES}
-              cases={filteredCases}
-              selectedVolumeNumber={selectedVolumeNumber}
-              onSelectVolume={setSelectedVolumeNumber}
-            />
+          <div style={{
+            maxWidth: '100%',
+            margin:   '0 auto',
+            padding:  `0 ${SPACING.xl}`,
+            display: 'grid',
+            gridTemplateColumns: '1fr 2fr 1fr',
+            gap: SPACING.lg,
+            alignItems: 'start',
+          }}>
+            {/* Desktop: NewsBox (left) */}
+            <div>
+              <NewsBox />
+            </div>
+
+            {/* Desktop: Archive (center) */}
+            <div>
+              <div style={{ marginBottom: SPACING.lg }}>
+                <SearchInput
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  resultCount={resultCount}
+                  noResults={searchNoResults}
+                />
+              </div>
+
+              {searchNoResults ? (
+                <div style={{
+                  ...T.body,
+                  color: PALETTE_CSS.meta,
+                  background: PALETTE.white,
+                  border: `1px solid ${PALETTE_CSS.border}`,
+                  padding: `${SPACING.lg}`,
+                }}>
+                  No cases matched "{searchQuery.trim()}". Try a docket number, court, or a phrase from the opinion text.
+                </div>
+              ) : (
+                <ArchiveVolumePanel
+                  volumes={VOLUMES}
+                  cases={filteredCases}
+                  selectedVolumeNumber={selectedVolumeNumber}
+                  onSelectVolume={setSelectedVolumeNumber}
+                />
+              )}
+            </div>
+
+            {/* Desktop: FarSideBox (right) */}
+            <div>
+              <FarSideBox />
+            </div>
           </div>
         )}
-
-        </div>
       </main>
     </>
   )
