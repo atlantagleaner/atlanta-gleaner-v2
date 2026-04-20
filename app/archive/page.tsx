@@ -13,6 +13,7 @@ import { OrbitalNavBar } from '@/src/components/OrbitalNavBar'
 import { NewsBox } from '@/src/components/NewsBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
+import { useMobileDetect } from '@/src/hooks'
 import {
   PALETTE, PALETTE_CSS, FONT, T, BOX_SHELL,
   ITEM_RULE, SPACING, SIZE_SM,
