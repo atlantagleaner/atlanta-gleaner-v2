@@ -769,10 +769,10 @@ export default function ArchivePage() {
             node: <NewsBox />,
           }}
           center={{
-            label: 'Case Law Updates',
+            label: 'ARCHIVE',
             node: (
               <>
-                <div style={{ marginBottom: SPACING.lg }}>
+                <div style={{ marginBottom: SPACING.md }}>
                   <SearchInput
                     value={searchQuery}
                     onChange={setSearchQuery}
