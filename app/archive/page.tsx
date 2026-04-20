@@ -688,7 +688,17 @@ function buildSearchableCase(c: CaseLaw): SearchableCase {
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVolumeNumber, setSelectedVolumeNumber] = useState<typeof VOLUMES[number]['number']>(VOLUMES[0].number)
+  const [isMobile, setIsMobile] = useState(false)
   const deferredSearchQuery = useDeferredValue(searchQuery)
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const searchableData = useMemo(() => CASES.map(buildSearchableCase), [])
 
