@@ -118,7 +118,7 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
               style={{ ...navItemStyle, textDecoration: 'none' } as React.CSSProperties}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 600 }}>{dateStr}</span>
+                <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                 <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
               </div>
 
@@ -205,7 +205,7 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                 style={{ ...navItemStyle, textDecoration: 'none' } as React.CSSProperties}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                  <span style={{ fontWeight: 600 }}>{dateStr}</span>
+                  <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                   <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                 </div>
 
