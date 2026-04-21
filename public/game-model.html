@@ -1016,17 +1016,18 @@
     async function setState(name) {
       gameState.currentState = name;
       const handlers = {
-        GREET:         stateGreet,
-        INTENT:        stateIntent,
-        SPREAD_SELECT: stateSpreadSelect,
-        SPREAD_GRID:   stateSpreadGrid,
-        DEAL:          stateDeal,
-        REVEAL:        stateReveal,
-        INTERPRET:     stateInterpret,
-        DEEP_DIVE:     stateDeepDive,
-        ORRERY:        stateOrrery,
-        FINAL_READING: stateFinalReading,
-        END:           stateEnd,
+        GREET:          stateGreet,
+        TAROT_OVERVIEW: stateTarotOverview,
+        INTENT:         stateIntent,
+        SPREAD_SELECT:  stateSpreadSelect,
+        SPREAD_GRID:    stateSpreadGrid,
+        DEAL:           stateDeal,
+        REVEAL:         stateReveal,
+        INTERPRET:      stateInterpret,
+        DEEP_DIVE:      stateDeepDive,
+        ORRERY:         stateOrrery,
+        FINAL_READING:  stateFinalReading,
+        END:            stateEnd,
       };
       if (handlers[name]) await handlers[name]();
     }
@@ -1061,6 +1062,14 @@
         await showOptions([{ label: 'BEGIN', value: 'begin' }]);
       }
 
+      await setState('TAROT_OVERVIEW');
+    }
+
+    async function stateTarotOverview() {
+      showCharacter();
+      const overviewText = `What is the Tarot?\n\nThe Tarot is an ancient system of reflection and wisdom. It speaks not of fate carved in stone, but of currents flowing through your life — forces at work, choices unfolding, lessons waiting to be learned.\n\nWithin these 78 cards live archetypal patterns. The Major Arcana traces the soul's journey through sacred transformation. The Minor Arcana shows the everyday forces — the suits of Fire, Water, Air, and Earth — moving through your choices and circumstances.\n\nEach card has two faces: its Light, showing gifts and possibilities, and its Shadow, revealing challenges and hidden wisdom. Together, they form a complete reflection.\n\nToday, you will choose a planetary sphere that governs your inquiry. Then you will draw cards whose symbols speak directly to your journey.\n\nLet the reading begin.`;
+      typeText(overviewText);
+      const choice = await showOptions([{ label: 'CONTINUE', value: 'continue' }]);
       await setState('INTENT');
     }
 
