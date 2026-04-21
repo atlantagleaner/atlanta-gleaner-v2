@@ -847,7 +847,7 @@ var FINAL_READINGS = [
     planet: 'mercury',
     spreadType: 'mirror',
     cardPatterns: ['the-hierophant'],
-    keywords: ['channeling sacred knowledge', 'priesthood', 'initiate's teachings'],
+    keywords: ['channeling sacred knowledge', 'priesthood', "initiate's teachings"],
     text: "The Hierophant opens the sacred mystery, and the Psychic is initiated. You are being shown something that is not meant for all ears—only for those ready to receive it. This knowledge carries responsibility. Protect it. Share it only with those who hunger for it."
   },
 
@@ -923,7 +923,7 @@ var FINAL_READINGS = [
     planet: 'mars',
     spreadType: 'three',
     cardPatterns: [],
-    keywords: ['warrior's path', 'righteous action', 'sacred battle'],
+    keywords: ["warrior's path", 'righteous action', 'sacred battle'],
     text: "Three cards show your journey into power and purpose. Past shows the struggle that forged you; Present shows you claiming your strength; Future shows you wielding it in service to something sacred. The Psychic reads: this is your calling. Be fierce. Be righteous. Be true."
   },
   {
@@ -1035,7 +1035,7 @@ var FINAL_READINGS = [
     planet: 'saturn',
     spreadType: 'mirror',
     cardPatterns: ['the-emperor'],
-    keywords: ['spiritual authority', 'elder presence', 'elder's teaching'],
+    keywords: ['spiritual authority', 'elder presence', "elder's teaching"],
     text: "The Emperor rules with Saturn's approval, crowned by initiation. The Psychic bows: you are becoming an elder, a keeper of sacred knowledge, a guide for others. This is a high calling. You have been tested and found worthy. Lead with wisdom."
   },
 
