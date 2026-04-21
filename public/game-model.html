@@ -85,8 +85,8 @@
 
     .character-container {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      top: 10%; left: 50%;
+      transform: translateX(-50%);
       z-index: 10;
       transition: opacity 0.5s ease;
     }
@@ -97,6 +97,8 @@
       image-rendering: pixelated;
       image-rendering: -moz-crisp-edges;
       image-rendering: crisp-edges;
+      max-width: 160px;
+      max-height: 240px;
     }
 
     /* Card image zone */
@@ -562,7 +564,7 @@
       <canvas id="starfield" width="333" height="300"></canvas>
 
       <div class="character-container" id="character-container">
-        <canvas id="character-canvas" width="80" height="96"></canvas>
+        <canvas id="character-canvas" width="160" height="240"></canvas>
       </div>
 
       <div class="card-image-zone" id="card-image-zone">
@@ -598,13 +600,16 @@
     // ==================== GLOBAL STATE ====================
     const gameState = {
       currentState: 'BOOT',
-      activeGuide: null,
+      activeGuide: 'psychic', // Always use psychic reader
       drawnCards: [],
       currentCardIndex: 0,
-      planetaryInfluence: null,
+      intent: null, // 'love', 'ambition', or 'mystery'
+      planetaryInfluence: null, // Set by intent mapping
       spreadType: null,
       lightOrShadow: {},
       deepDiveChoice: null,
+      currentExpression: 'neutral-welcome',
+      currentScene: 'cosmic-night',
     };
 
     // ==================== CARD DATA ====================
@@ -1012,363 +1017,186 @@
       document.getElementById('dialogue-options').innerHTML = '';
     }
 
+    // ==================== INTENT MAPPING ====================
+    function mapIntentToPlanet(intent) {
+      const map = {
+        'love': 'venus',
+        'ambition': 'mars',
+        'mystery': 'moon',
+      };
+      return map[intent] || 'moon';
+    }
+
+    function mapIntentToScene(intent) {
+      const map = {
+        'love': 'moonlit-ritual',
+        'ambition': 'astrophysical-lab',
+        'mystery': 'cosmic-night',
+      };
+      return map[intent] || 'cosmic-night';
+    }
+
     // ==================== STATE MACHINE ====================
     async function setState(name) {
       gameState.currentState = name;
       const handlers = {
         GREET:          stateGreet,
-        TAROT_OVERVIEW: stateTarotOverview,
-        INTENT:         stateIntent,
-        SPREAD_SELECT:  stateSpreadSelect,
-        SPREAD_GRID:    stateSpreadGrid,
-        DEAL:           stateDeal,
-        REVEAL:         stateReveal,
-        INTERPRET:      stateInterpret,
-        DEEP_DIVE:      stateDeepDive,
-        ORRERY:         stateOrrery,
-        FINAL_READING:  stateFinalReading,
-        END:            stateEnd,
+        INTENT_SELECT:  stateIntentSelect,
+        SPREAD_CHOICE:  stateSpreadChoice,
+        CARD_DRAW:      stateCardDraw,
+        READING:        stateReading,
+        CLOSING:        stateClosing,
       };
       if (handlers[name]) await handlers[name]();
     }
 
     async function stateGreet() {
-      gameState.activeGuide = getActiveGuide();
+      gameState.activeGuide = 'psychic'; // Always psychic reader
       drawCharacter(gameState.activeGuide);
       showCharacter();
+      ExpressionSystem.setExpression('neutral-welcome', 300);
 
-      const hasSeenIntro = localStorage.getItem('tarot-intro-seen');
+      const greeting = DialogueSystem.getOpening();
+      typeText(greeting.greeting);
 
-      let greeting, intro;
-      if (gameState.activeGuide === 'scribe') {
-        greeting = 'Seeker. The sun has noted your arrival. What brings you to the Saturn Terminal?';
-        intro = 'I am the Scribe — keeper of illuminated truths.\n\nTarot is a mirror. Not prophecy, but reflection. Within these cards live the forces that move through all things. Light shows what gifts flow toward you. Shadow reveals the challenges that call for your wisdom.\n\nYou will choose a planetary sphere — each governs different domains of being. Then you will draw cards whose meanings illuminate your path.\n\nAre you ready to see what the stars reveal about your journey?';
-      } else if (gameState.activeGuide === 'weaver') {
-        greeting = 'The night speaks softly. You have found your way to the threads. Welcome.';
-        intro = 'I am the Weaver — reader of fate\'s patterns.\n\nTarot shows how threads of fate interlace. Each card is a knot in the pattern — a moment where forces meet. Light reveals the pattern\'s gift. Shadow shows where threads are tangled, waiting for your discernment.\n\nYou will attune to a planetary influence — each has its own current in the cosmic loom. Then you will draw cards that show how destiny flows around your question.\n\nWill you let me read the pattern that awaits you?';
-      } else {
-        greeting = 'Seeker. You have entered the Saturn Terminal. The stars have noted your arrival.';
-        intro = 'I am the Psychic — channel of the stars\' wisdom.\n\nTarot speaks in symbols. Within these cards dwell archetypal forces — patterns that move through all human experience. Light shows what your soul seeks to discover. Shadow reveals what blocks your sight.\n\nYou will choose a planetary frequency — each resonates with different aspects of the cosmos. Then you will draw cards whose symbols speak directly to your inner knowing.\n\nAre you prepared to receive what the stars wish to show you?';
-      }
-
-      typeText(greeting);
-
-      if (!hasSeenIntro) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        typeText(intro);
-        await showOptions([{ label: 'BEGIN THE READING', value: 'begin' }]);
-        localStorage.setItem('tarot-intro-seen', 'true');
-      } else {
-        await showOptions([{ label: 'BEGIN', value: 'begin' }]);
-      }
-
-      await setState('TAROT_OVERVIEW');
+      await showOptions([{ label: 'CONTINUE', value: 'continue' }]);
+      await setState('INTENT_SELECT');
     }
 
-    async function stateTarotOverview() {
-      showCharacter();
-      const overviewText = `What is the Tarot?\n\nThe Tarot is an ancient system of reflection and wisdom. It speaks not of fate carved in stone, but of currents flowing through your life — forces at work, choices unfolding, lessons waiting to be learned.\n\nWithin these 78 cards live archetypal patterns. The Major Arcana traces the soul's journey through sacred transformation. The Minor Arcana shows the everyday forces — the suits of Fire, Water, Air, and Earth — moving through your choices and circumstances.\n\nEach card has two faces: its Light, showing gifts and possibilities, and its Shadow, revealing challenges and hidden wisdom. Together, they form a complete reflection.\n\nToday, you will choose a planetary sphere that governs your inquiry. Then you will draw cards whose symbols speak directly to your journey.\n\nLet the reading begin.`;
-      typeText(overviewText);
-      const choice = await showOptions([{ label: 'CONTINUE', value: 'continue' }]);
-      await setState('INTENT');
+    async function stateIntentSelect() {
+      ExpressionSystem.setExpression('focused', 300);
+      typeText('What calls to your heart today?');
+
+      const intentOptions = DialogueSystem.getIntentOptions();
+      gameState.intent = await showOptions(intentOptions);
+      gameState.planetaryInfluence = mapIntentToPlanet(gameState.intent);
+
+      const sceneVibe = mapIntentToScene(gameState.intent);
+      SceneSystem.setScene(sceneVibe, 400);
+
+      const intentDialogue = DialogueSystem.getIntentDialogue(gameState.intent);
+      ExpressionSystem.setExpression(intentDialogue.expressions[0], 300);
+      typeText(intentDialogue.prompt);
+
+      await new Promise(resolve => setTimeout(resolve, 800));
+      await setState('SPREAD_CHOICE');
     }
 
-    async function stateIntent() {
-      hideCharacter();
-      typeText('Before the heavens speak, they must know your frequency.\n\nEach sphere governs different currents of existence. Mars rules action and desire. Venus draws love and beauty. Mercury speaks of thought and communication. The Moon holds intuition and emotion. Jupiter expands possibilities. Saturn teaches through limitation. The Sun illuminates your core self.\n\nWhich sphere calls to you?');
-      gameState.planetaryInfluence = await showOptions([
-        { label: 'MARS — Action & Desire',    value: 'mars' },
-        { label: 'VENUS — Love & Beauty',   value: 'venus' },
-        { label: 'MERCURY — Mind & Speech', value: 'mercury' },
-        { label: 'MOON — Intuition & Dream',    value: 'moon' },
-        { label: 'JUPITER — Expansion & Fortune', value: 'jupiter' },
-        { label: 'SATURN — Limits & Mastery',  value: 'saturn' },
-        { label: 'SUN — Self & Identity',     value: 'sun' },
-      ]);
-      setPlanetPalette(gameState.planetaryInfluence);
-      await setState('SPREAD_SELECT');
-    }
+    async function stateSpreadChoice() {
+      ExpressionSystem.setExpression('focused', 300);
 
-    async function stateSpreadSelect() {
-      const planetLore = {
-        mars: 'Mars demands clarity. One card shows your truth directly.',
-        venus: 'Venus teaches through relationship. Three cards reveal how forces dance around your desire.',
-        mercury: 'Mercury speaks in patterns. Three cards illuminate thought unfolding.',
-        moon: 'The Moon shows what stirs beneath. One card reveals your hidden knowing.',
-        jupiter: 'Jupiter expands understanding. Three cards show fortune\'s many faces.',
-        saturn: 'Saturn teaches economy. One card cuts to what matters most.',
-        sun: 'The Sun illuminates fully. Three cards show self in all its rays.',
-        uranus: 'Uranus shatters expectation. One card reveals shocking truth.',
-      };
+      const spreadDialogue = DialogueSystem.getSpreadDialogue('mirror');
+      typeText(spreadDialogue.prompt);
 
-      const guidanceText = `The ${gameState.planetaryInfluence.toUpperCase()} sphere has been chosen.\n\n${planetLore[gameState.planetaryInfluence]}\n\nHow shall the cards be drawn?`;
+      const spreadOptions = DialogueSystem.getSpreadOptions();
+      gameState.spreadType = await showOptions(spreadOptions);
 
-      typeText(guidanceText);
-      gameState.spreadType = await showOptions([
-        { label: 'CELESTIAL MIRROR — One Truth', value: 'mirror' },
-        { label: 'PATH OF THREE — Past, Present, Future',    value: 'three' },
-      ]);
+      // Draw cards based on spread type
       const sizes = { mirror: 1, three: 3 };
       const deck = new TarotDeck();
       gameState.drawnCards = deck.draw(sizes[gameState.spreadType]);
       gameState.lightOrShadow = {};
       gameState.currentCardIndex = 0;
-      await setState('SPREAD_GRID');
+
+      await setState('CARD_DRAW');
     }
 
-    async function stateSpreadGrid() {
-      hideCardImage();
-      hideNavBar();
-      showDecorativeCards();
+    async function stateCardDraw() {
+      ExpressionSystem.setExpression('focused', 300);
 
-      const allRevealed = gameState.drawnCards.every(c => gameState.lightOrShadow[c.id] !== undefined);
-      if (allRevealed) {
-        await setState('END');
+      const drawPrompt = DialogueSystem.getDrawPrompt();
+      typeText(drawPrompt);
+
+      // Flip first card
+      const card = gameState.drawnCards[0];
+      gameState.lightOrShadow[card.id] = 'upright';
+
+      // Wait a moment, then show card flip dialog
+      await new Promise(resolve => setTimeout(resolve, 1200));
+
+      ExpressionSystem.setExpression('revelation', 400);
+      updateCardDisplay(card);
+      showCardImage();
+
+      await new Promise(resolve => setTimeout(resolve, 600));
+      clearOptions();
+
+      await setState('READING');
+    }
+
+    async function stateReading() {
+      const card = gameState.drawnCards[0];
+
+      // Get the reading for this card/intent combination
+      const reading = getFortune(card, gameState.intent, gameState.planetaryInfluence);
+
+      if (!reading) {
+        // Fallback fortune if not found
+        typeText('The card speaks: ' + card.name);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        await setState('CLOSING');
         return;
       }
 
-      const positionGuidance = {
-        mirror: 'The cards face down before you. Touch one to reveal the mirror\'s reflection.',
-        three: 'Three cards lie before you — one shows what flows behind, one reveals what burns now, one points toward what comes.\n\nChoose a position to see its meaning.'
-      };
+      // Display reading in 3 parts
+      ExpressionSystem.setExpression('revelation', 300);
+      typeText(reading.cardSpeaks);
 
-      const guidance = positionGuidance[gameState.spreadType] || 'The cards have been drawn.\nChoose a position to reveal.';
-      typeText(guidance);
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      const positions = SPREAD_POSITIONS[gameState.spreadType] || ['THE MIRROR'];
-      return new Promise((resolve) => {
-        const el = document.getElementById('dialogue-options');
-        el.innerHTML = '';
-        el.className = positions.length >= 6 ? 'dialogue-options two-col' : 'dialogue-options';
+      ExpressionSystem.setExpression('cosmic-vision', 300);
+      typeText(reading.astrophysical);
 
-        positions.forEach((pos, idx) => {
-          const card = gameState.drawnCards[idx];
-          if (!card) return;
-          const revealed = gameState.lightOrShadow[card.id] !== undefined;
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-          const btn = document.createElement('button');
-          const roman = ['I','II','III','IV','V','VI','VII'][idx];
+      ExpressionSystem.setExpression('playful-mischief', 300);
+      typeText(reading.absurdTruth);
 
-          if (revealed) {
-            btn.className = 'option-btn revealed-pos';
-            btn.textContent = roman + '. ' + pos;
-          } else {
-            btn.className = 'option-btn';
-            btn.textContent = roman + '. ' + pos;
-            btn.onclick = () => {
-              gameState.currentCardIndex = idx;
-              resolve();
-              setState('DEAL');
-            };
-          }
-          el.appendChild(btn);
-        });
-      });
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      await setState('CLOSING');
     }
 
-    async function stateDeal() {
-      hideCardGrid();
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      const positions = SPREAD_POSITIONS[gameState.spreadType] || ['THE MIRROR'];
-      const posName = positions[gameState.currentCardIndex] || 'THE CARD';
-      const cardNum = gameState.currentCardIndex + 1;
-      const totalCards = gameState.drawnCards.length;
+    async function stateClosing() {
+      ExpressionSystem.setExpression('knowing-smile', 300);
+      typeText('Does this resonate with your spirit?');
 
-      const progressText = totalCards > 1 ? `\n(${cardNum} of ${totalCards})` : '';
-      const preReveal = PRE_REVEAL_DESCRIPTIONS[card.id] || `The ${card.name} appears before you.`;
-      const withProgress = `${posName}${progressText}\n\n${preReveal}`;
+      const closingOptions = [
+        { label: 'YES, THANK YOU', value: 'yes' },
+        { label: 'ANOTHER READING', value: 'another' },
+        { label: 'RETURN TO SATURN', value: 'return' },
+      ];
 
-      typeText(withProgress);
-      await showOptions([{ label: 'REVEAL', value: 'done' }]);
-      await setState('REVEAL');
-    }
+      const choice = await showOptions(closingOptions);
 
-    async function stateReveal() {
-      showCardImage();
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      updateCardDisplay(card);
-      showNavBar();
-      const lightShadowGuidance = `The card has been drawn.\n\nLight reveals the gift — what flows toward you, what offers itself. Shadow reveals the lesson — the resistance, the hidden challenge, what asks for your wisdom.\n\nHow shall its force move through you?`;
-      typeText(lightShadowGuidance);
-      gameState.lightOrShadow[card.id] = await showOptions([
-        { label: 'LIGHT — Gift & Flow',  value: 'light' },
-        { label: 'SHADOW — Lesson & Challenge', value: 'shadow' },
-      ]);
-      await setState('INTERPRET');
-    }
-
-    async function stateInterpret() {
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      const isLight = gameState.lightOrShadow[card.id] === 'light';
-
-      // Guide introduces the card
-      const cardName = card.name.startsWith('The ') ? card.name : `The ${card.name}`;
-      const cardIntro = `${cardName} emerges.\n\n${isLight ? 'Its light shines: ' : 'In shadow, it speaks: '}`;
-      typeText(cardIntro + (isLight ? card.upright : card.reversed));
-
-      const opts = [];
-      if (card.id < 22) {
-        opts.push({ label: 'DEEPER MEANING', value: isLight ? 'alchemical' : 'celestial' });
-      }
-      opts.push({ label: 'PLANETARY INFLUENCE', value: 'orrery' });
-
-      const unrevealed = gameState.drawnCards.filter(c => gameState.lightOrShadow[c.id] === undefined);
-      if (unrevealed.length > 0) {
-        opts.push({ label: 'NEXT CARD', value: 'grid' });
-      } else {
-        opts.push({ label: 'COMPLETE', value: 'end' });
-      }
-
-      const choice = await showOptions(opts);
-
-      if (choice === 'grid') {
+      if (choice === 'another') {
         hideCardImage();
-        hideNavBar();
-        await setState('SPREAD_GRID');
-      } else if (choice === 'end') {
-        hideCardImage();
-        hideNavBar();
-        await setState('FINAL_READING');
-      } else if (choice === 'orrery') {
-        await setState('ORRERY');
+        await setState('INTENT_SELECT');
       } else {
-        gameState.deepDiveChoice = choice;
-        await setState('DEEP_DIVE');
+        // Return to Saturn terminal
+        window.parent.postMessage({ action: 'closeGame' }, '*');
       }
     }
 
-    async function stateDeepDive() {
-      const card = gameState.drawnCards[gameState.currentCardIndex];
-      const choice = gameState.deepDiveChoice;
-
-      if (choice === 'alchemical' && card.alchemicalKey) {
-        typeText(card.alchemicalKey);
-      } else if (choice === 'celestial' && card.celestialPath) {
-        typeText(card.celestialPath);
-      } else {
-        typeText(`The ${card.name} holds mysteries beyond the words of any tongue.`);
+    // Helper function to get fortune for a card
+    function getFortune(card, intent, planet) {
+      // Try to get from the comprehensive fortune database
+      if (typeof getSpecificFortune !== 'undefined') {
+        const cardNameFormatted = card.name.toLowerCase().replace(/\s+/g, '-');
+        const fortune = getSpecificFortune(cardNameFormatted, intent, planet);
+        if (fortune) return fortune;
       }
 
-      await showOptions([{ label: '← RETURN TO READING', value: 'back' }]);
-      await setState('INTERPRET');
-    }
-
-    let _orreryResolve = null;
-
-    async function stateOrrery() {
-      hideCardImage();
-      showOrrery();
-      typeText('Touch a planet to learn its celestial influence.');
-      showOrreryReturnBtn();
-      await new Promise((resolve) => { _orreryResolve = resolve; });
-      _orreryResolve = null;
-      hideOrrery();
-      showCardImage();
-      await setState('INTERPRET');
-    }
-
-    function showOrreryReturnBtn() {
-      const el = document.getElementById('dialogue-options');
-      el.innerHTML = '';
-      el.className = 'dialogue-options';
-      const btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.textContent = '← RETURN TO READING';
-      btn.onclick = () => { if (_orreryResolve) _orreryResolve(); };
-      el.appendChild(btn);
-    }
-
-    function selectFinalReading(drawnCards, guide, planet, spreadType) {
-      if (!FINAL_READINGS || FINAL_READINGS.length === 0) return null;
-
-      const cardIds = drawnCards.map(c => {
-        const suffix = c.id < 22 ? c.name.toLowerCase().replace(/\s+/g, '-') : `${c.suit}-${c.rank}`;
-        return suffix;
-      });
-
-      let bestScore = -1;
-      let selectedReading = null;
-
-      for (const reading of FINAL_READINGS) {
-        let score = 0;
-
-        if (reading.guide === guide) score += 10;
-        if (reading.planet === planet) score += 10;
-        if (reading.spreadType === spreadType) score += 5;
-
-        if (reading.cardPatterns && reading.cardPatterns.length > 0) {
-          const matchCount = cardIds.filter(id => reading.cardPatterns.some(pattern =>
-            id.includes(pattern) || pattern.includes(id)
-          )).length;
-          if (matchCount > 0) score += matchCount * 15;
-        }
-
-        if (reading.keywords && reading.keywords.length > 0) {
-          const cardKeywords = drawnCards.flatMap(c => c.keywords || []);
-          const matchCount = reading.keywords.filter(kw =>
-            cardKeywords.some(ck => ck.includes(kw) || kw.includes(ck))
-          ).length;
-          if (matchCount > 0) score += matchCount * 5;
-        }
-
-        if (score > bestScore) {
-          bestScore = score;
-          selectedReading = reading;
-        }
+      // Fall back to fortune database fallbacks
+      if (typeof getFortuneFallbackAdvanced !== 'undefined') {
+        return getFortuneFallbackAdvanced(card, intent, planet);
       }
 
-      if (selectedReading) return selectedReading;
-      if (FINAL_READINGS && FINAL_READINGS.length > 0) {
-        return FINAL_READINGS[Math.floor(Math.random() * FINAL_READINGS.length)];
-      }
-      return null;
-    }
-
-    async function stateFinalReading() {
-      hideCardImage();
-      hideNavBar();
-      hideCardGrid();
-      drawCharacter(gameState.activeGuide);
-      showCharacter();
-
-      const reading = selectFinalReading(
-        gameState.drawnCards,
-        gameState.activeGuide,
-        gameState.planetaryInfluence,
-        gameState.spreadType
-      );
-
-      if (reading) {
-        typeText(reading.text);
-      } else {
-        typeText('The cards have spoken. Their wisdom is written in your heart.');
-      }
-
-      await showOptions([{ label: 'COMPLETE READING', value: 'done' }]);
-      await setState('END');
-    }
-
-    async function stateEnd() {
-      hideCardImage();
-      hideNavBar();
-      hideCardGrid();
-      drawCharacter(gameState.activeGuide);
-      showCharacter();
-
-      const closingMessages = {
-        scribe: 'The reading is complete. The sun has illuminated what you needed to see. Carry this truth forward — it is written in the light of your understanding.\n\nReturn whenever the stars call you back.',
-        weaver: 'The pattern reveals itself. The threads show their purpose. You now see where they lead — toward light or shadow, toward binding or release.\n\nThe loom is always ready when you return.',
-        psychic: 'The stars have spoken through the cards. Their message reaches your deepest knowing. Trust what stirs within you — this wisdom comes from beyond time.\n\nWhen the stars call again, I shall be waiting.'
+      // Ultimate fallback
+      return {
+        cardSpeaks: `The ${card.name} speaks to your current moment.`,
+        astrophysical: `The cosmos moves in mysterious ways, and ${planet}'s influence is felt.`,
+        absurdTruth: `The universe whispers: you are exactly where you need to be.`,
       };
-
-      const closing = closingMessages[gameState.activeGuide] || 'The reading is complete. The stars have spoken.\nMay their wisdom guide your path.';
-      typeText(closing);
-
-      await showOptions([{ label: 'ANOTHER READING', value: 'new' }]);
-      gameState.drawnCards = [];
-      gameState.currentCardIndex = 0;
-      gameState.lightOrShadow = {};
-      await setState('GREET');
     }
 
     // ==================== DECK ENGINE ====================
@@ -1400,7 +1228,9 @@
     function drawCharacter(guide) {
       const canvas = document.getElementById('character-canvas');
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, 80, 96);
+      ctx.clearRect(0, 0, 160, 240);
+      // Scale up by 2x for larger character
+      ctx.scale(2, 2);
 
       if (guide === 'scribe') {
         // Enhanced golden sun-priest
@@ -2032,6 +1862,12 @@
         const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-space').trim() || '#0d0921';
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Render scene background if available
+        if (typeof SceneSystem !== 'undefined') {
+          SceneSystem.renderScene(canvas, ctx);
+        }
+
         stars.forEach(s => {
           s.x -= s.speed;
           if (s.x < 0) s.x = canvas.width;
@@ -2050,34 +1886,27 @@
     document.getElementById('back-btn').addEventListener('click', () => {
       hideCardImage();
       hideNavBar();
-      setState('SPREAD_GRID');
+      setState('INTENT_SELECT');
     });
 
     // ==================== INIT ====================
     initStarfield();
 
-    gameState.activeGuide = getActiveGuide();
-    gameState.currentState = 'GREET';
+    gameState.activeGuide = 'psychic';
     drawCharacter(gameState.activeGuide);
     document.getElementById('character-container').classList.remove('hidden');
 
-    const msgs = {
-      scribe:  'Seeker. The sun has noted your arrival. What brings you to the Saturn Terminal?',
-      weaver:  'The night speaks softly. You have found your way to the threads. Welcome.',
-      psychic: 'Seeker. You have entered the Saturn Terminal. The stars have noted your arrival.',
-    };
-    typeText(msgs[gameState.activeGuide]);
+    // Initialize scene
+    SceneSystem.setScene('cosmic-night', 0);
+    ExpressionSystem.setExpression('neutral-welcome', 0);
 
-    const initEl = document.getElementById('dialogue-options');
-    initEl.innerHTML = '';
-    const initBtn = document.createElement('button');
-    initBtn.className = 'option-btn';
-    initBtn.textContent = 'BEGIN';
-    initBtn.onclick = async () => { await setState('INTENT'); };
-    initEl.appendChild(initBtn);
+    setState('GREET');
 
   </script>
   <script src="./card-generator.js"></script>
   <script src="./tarot-final-readings.js"></script>
+  <script src="./tarot/expression-system.js"></script>
+  <script src="./tarot/dialogue.js"></script>
+  <script src="./tarot/fortune-database.js"></script>
 </body>
 </html>
