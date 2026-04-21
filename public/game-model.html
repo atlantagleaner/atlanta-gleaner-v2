@@ -1016,16 +1016,17 @@
     async function setState(name) {
       gameState.currentState = name;
       const handlers = {
-        GREET:       stateGreet,
-        INTENT:      stateIntent,
+        GREET:         stateGreet,
+        INTENT:        stateIntent,
         SPREAD_SELECT: stateSpreadSelect,
-        SPREAD_GRID: stateSpreadGrid,
-        DEAL:        stateDeal,
-        REVEAL:      stateReveal,
-        INTERPRET:   stateInterpret,
-        DEEP_DIVE:   stateDeepDive,
-        ORRERY:      stateOrrery,
-        END:         stateEnd,
+        SPREAD_GRID:   stateSpreadGrid,
+        DEAL:          stateDeal,
+        REVEAL:        stateReveal,
+        INTERPRET:     stateInterpret,
+        DEEP_DIVE:     stateDeepDive,
+        ORRERY:        stateOrrery,
+        FINAL_READING: stateFinalReading,
+        END:           stateEnd,
       };
       if (handlers[name]) await handlers[name]();
     }
@@ -1217,7 +1218,7 @@
       } else if (choice === 'end') {
         hideCardImage();
         hideNavBar();
-        await setState('END');
+        await setState('FINAL_READING');
       } else if (choice === 'orrery') {
         await setState('ORRERY');
       } else {
@@ -1265,6 +1266,76 @@
       btn.textContent = '← RETURN TO READING';
       btn.onclick = () => { if (_orreryResolve) _orreryResolve(); };
       el.appendChild(btn);
+    }
+
+    function selectFinalReading(drawnCards, guide, planet, spreadType) {
+      if (!FINAL_READINGS || FINAL_READINGS.length === 0) return null;
+
+      const cardIds = drawnCards.map(c => {
+        const suffix = c.id < 22 ? c.name.toLowerCase().replace(/\s+/g, '-') : `${c.suit}-${c.rank}`;
+        return suffix;
+      });
+
+      let bestScore = -1;
+      let selectedReading = null;
+
+      for (const reading of FINAL_READINGS) {
+        let score = 0;
+
+        if (reading.guide === guide) score += 10;
+        if (reading.planet === planet) score += 10;
+        if (reading.spreadType === spreadType) score += 5;
+
+        if (reading.cardPatterns && reading.cardPatterns.length > 0) {
+          const matchCount = cardIds.filter(id => reading.cardPatterns.some(pattern =>
+            id.includes(pattern) || pattern.includes(id)
+          )).length;
+          if (matchCount > 0) score += matchCount * 15;
+        }
+
+        if (reading.keywords && reading.keywords.length > 0) {
+          const cardKeywords = drawnCards.flatMap(c => c.keywords || []);
+          const matchCount = reading.keywords.filter(kw =>
+            cardKeywords.some(ck => ck.includes(kw) || kw.includes(ck))
+          ).length;
+          if (matchCount > 0) score += matchCount * 5;
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          selectedReading = reading;
+        }
+      }
+
+      if (selectedReading) return selectedReading;
+      if (FINAL_READINGS && FINAL_READINGS.length > 0) {
+        return FINAL_READINGS[Math.floor(Math.random() * FINAL_READINGS.length)];
+      }
+      return null;
+    }
+
+    async function stateFinalReading() {
+      hideCardImage();
+      hideNavBar();
+      hideCardGrid();
+      drawCharacter(gameState.activeGuide);
+      showCharacter();
+
+      const reading = selectFinalReading(
+        gameState.drawnCards,
+        gameState.activeGuide,
+        gameState.planetaryInfluence,
+        gameState.spreadType
+      );
+
+      if (reading) {
+        typeText(reading.text);
+      } else {
+        typeText('The cards have spoken. Their wisdom is written in your heart.');
+      }
+
+      await showOptions([{ label: 'COMPLETE READING', value: 'done' }]);
+      await setState('END');
     }
 
     async function stateEnd() {
@@ -1997,5 +2068,6 @@
 
   </script>
   <script src="./card-generator.js"></script>
+  <script src="./tarot-final-readings.js"></script>
 </body>
 </html>
