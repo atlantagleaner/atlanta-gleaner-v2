@@ -12,6 +12,14 @@ const artists = [
     type: 'youtube' as const,
     playlistId: 'PL4-ERQAn4mRL1aXgmMCI7HTABHPmVkTqP',
   },
+  // Spotify stations
+  {
+    id: 'spotify-azealia-madonna',
+    name: 'AZEALIA BANKS MADONNA DEEP CUTS',
+    genre: 'HOUSE / POP',
+    type: 'spotify' as const,
+    playlistId: '04HAAOlwlJaGuSiMeBOFFq' as string | undefined,
+  },
   {
     id: 'the-field',
     name: 'THE FIELD RADIO',
