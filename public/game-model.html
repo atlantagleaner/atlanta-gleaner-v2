@@ -1898,6 +1898,12 @@
   <script>
     // ==================== INIT (after all scripts load) ====================
     function initGame() {
+      // Wait for SceneSystem and ExpressionSystem to be defined
+      if (typeof SceneSystem === 'undefined' || typeof ExpressionSystem === 'undefined') {
+        setTimeout(initGame, 100);
+        return;
+      }
+
       initStarfield();
 
       gameState.activeGuide = 'psychic';
