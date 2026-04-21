@@ -441,6 +441,29 @@
             font-size: 10px;
         }
 
+        /* Start Screen */
+        #start-screen {
+            border: 2px solid #8B4FBF;
+            padding: 12px;
+            background: #1a1a3a;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #starter-dialogue {
+            min-height: 80px;
+        }
+
+        #start-new-game-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 10px;
+        }
+
         /* Result Display */
         #result-display {
             border: 2px solid #00D9FF;
@@ -696,8 +719,14 @@
 
             <!-- Consolidated Control Panel -->
             <div id="control-panel">
+                <!-- Start Screen -->
+                <div id="start-screen" class="control-section visible">
+                    <div id="starter-dialogue" style="font-size: 10px; color: #00D9FF; text-shadow: 0 0 10px rgba(0, 217, 255, 0.8); margin-bottom: 16px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; white-space: pre-wrap; word-wrap: break-word; line-height: 1.4;"></div>
+                    <button id="start-new-game-btn">NEW GAME</button>
+                </div>
+
                 <!-- Betting Controls -->
-                <div id="betting-controls" class="control-section visible">
+                <div id="betting-controls" class="control-section">
                     <div class="bet-label">SELECT BET AMOUNT</div>
                     <div class="chip-selector" id="chip-selector">
                         <button class="chip-btn" data-chip="10">$10</button>
@@ -1037,6 +1066,106 @@
             "I've 'finished' you! It was a pleasure doing business with your wallet."
         ];
 
+        // ============ DEALER STARTER DIALOGUE ============
+        const DEALER_STARTERS = [
+            "Greetings, boils and ghouls! Step up and lose your skin in a game of chance!",
+            "I've been dying to deal you in. Shall we begin?",
+            "Welcome to the table! Don't mind the smell; the last player is still under the felt.",
+            "Care for a hand? I've got a few extra ones in the back!",
+            "Come in, sit down, and make yourself at tomb!",
+            "Hello, kiddies! Ready to see if your luck is dead on arrival?",
+            "Step right up! The cards are cold, but the seats are still warm... from the last victim.",
+            "I hope you've got a good 'poker face'—or at least one that hasn't started rotting yet!",
+            "A fresh deck for a fresh corpse. Let's see what's in the cards!",
+            "Good evening! I'm your dealer, and I'm a real dead-ringer for a winner!",
+            "Beware the 'Bust'—it's not just for tombstones anymore!",
+            "Care to split? I usually use an axe for that, but we'll use the cards instead!",
+            "I'm the only dealer who hopes you go 'bust' in every sense of the word.",
+            "Blackjack pays 3 to 2... souls, that is!",
+            "Don't be a 'card'-iac arrest victim, just place your bets!",
+            "If you hit 21, I'll be 'grave'-ly disappointed!",
+            "Double down or dig your own hole. The choice is yours!",
+            "One wrong move and it's 'Game Over' for good!",
+            "I'm dealing from the bottom of the coffin today!",
+            "A 'push' is better than being pushed into a shallow grave, wouldn't you say?",
+            "Let's see if you're a 'natural'... or just naturally doomed!",
+            "Place your bets! Just remember: you can't take it with you.",
+            "The stakes are high, and the graves are six feet deep!",
+            "Your credit is good here, but I prefer payment in cold, hard... bone.",
+            "Ante up! I haven't got all eternity... oh wait, yes I do!",
+            "Don't worry about the house edge—the house always wins, eventually.",
+            "Winner takes all! Loser takes a dirt nap.",
+            "I've got a 'Full House'... of restless spirits in the basement!",
+            "Inflation is a killer, but my rates are strictly 'post-mortem'.",
+            "Need some 'insurance'? My cousin the Reaper has a very final policy for you!",
+            "You're betting your life? How charmingly... cliché!",
+            "The 'pit boss' is actually a pit. With spikes. Try not to fall in!",
+            "If you run out of chips, I'll accept a pound of flesh!",
+            "I love a high roller... especially when they roll right into my trap!",
+            "Money doesn't grow on trees, but it sure does look good in a casket!",
+            "I'm looking for a player with 'deep pockets'... and a shallow grave!",
+            "Is that your heart beating, or just the ticking of the doom-clock?",
+            "Feeling lucky? Or are you just dying to play?",
+            "I hope you're good at math... and avoiding the Grim Reaper.",
+            "The cards never lie, though they do smell a bit... musty.",
+            "I promise a fair game. On my grave!",
+            "Shuffle up and deal! My joints are getting a bit stiff.",
+            "Click 'New Game' if you dare... I've got a coffin with your name on it!",
+            "The deck is shuffled, and the cemetery is full. Let's begin!",
+            "You look like you've seen a ghost... or maybe just my win rate!",
+            "Let's see if you have the guts to play... literally!",
+            "It's a lovely night for a 'slay'-ride through the deck!",
+            "I've got 'skeleton' keys to the vault, but you'll have to beat me first!",
+            "Don't scream—it distracts the other ghosts.",
+            "Your soul is on the table. Don't let it slip through your fingers!",
+            "I'm not just the dealer; I'm the 'under-taker' of your bankroll!",
+            "Keep your eyes on the deck; I've got a 'cadaver'-ous sleight of hand!",
+            "My favorite card? The Ace of Spades... for digging, of course!",
+            "You have the 'ghost' of a chance of winning this round!",
+            "Don't be shy! My bite is worse than my bark... and I don't have skin to bark with!",
+            "A little 'dead' weight never hurt a card game!",
+            "Go ahead, take another card. I'm 'dying' to see you bust!",
+            "Are you going to play, or just 'decompose' there in your chair?",
+            "You're quite the 'lively' player... for now.",
+            "Don't lose your head—I've already got a collection of those!",
+            "That's a bold move! You've got more 'gall' than a bladder infection!",
+            "I love the way you play. It's so... 'morbidly' fascinating!",
+            "You're playing with fire! Luckily, I've got plenty of that where I come from.",
+            "A 'stiff' drink and a 'stiff' opponent. The perfect evening!",
+            "Is that your final answer? Or are you 'ghosting' me?",
+            "You've got a 'bone' to pick with me? Win the hand first!",
+            "I've seen better moves in a 'crypt'ic crossword!",
+            "Your luck is 'bleeding' out! Should I call a doctor... or a coroner?",
+            "You're on a 'death' streak! How delightful!",
+            "Don't look so 'pale'—it's just a game of life and death!",
+            "I've got 'spirit', yes I do! I've got 'spirit', how about you?",
+            "One for the money, two for the show, three to get ready, and four feet below!",
+            "The 'grim' reality is that you're losing!",
+            "I'm dealing 'death' and taxes... and I'm all out of taxes!",
+            "You're 'killing' it! Literally, the vibe is dead now.",
+            "Let's play for 'keeps'... and I keep everything!",
+            "I've got a 'skeleton' in my closet... and he's a better player than you!",
+            "A 'bloody' good game we're having, wouldn't you say?",
+            "You're 'digging' your own financial grave!",
+            "Don't cry over spilt blood; just play the next hand!",
+            "I'm 'wrapt' with excitement! Or is that just my bandages?",
+            "The night is young, but you look like you're aging by the second!",
+            "I've got 'corpse'-man-like conduct on this table!",
+            "Your 'expiration' date is approaching... and so is the dealer's turn!",
+            "I'm the 'master of ceremonies'... and the master of your fate!",
+            "Don't be 'scared' to bet big. It's only paper... and your soul!",
+            "The 'ghoul' of the game is to get 21!",
+            "I'm 'frightfully' sorry, did I just take all your money?",
+            "You're 'hauntingly' bad at this!",
+            "Let's see if you can 'survive' the next deal!",
+            "I've got a 'bone' to throw you... it's a 2 of clubs!",
+            "You're 'rotten' to the core, and I love it!",
+            "A 'specter'-cular failure! Try again?",
+            "I'm 'dying' for a rematch!",
+            "The cards are 'shriek'-ing your name!",
+            "See you in the 'after'-math of this game!"
+        ];
+
         // ============ GAME STATE ============
         const gameState = {
             balance: 1000,
@@ -1045,12 +1174,13 @@
             wagerTotal: 0,
             playerCards: [],
             dealerCards: [],
-            phase: 'BETTING', // BETTING, DEAL, PLAYER, DEALER, RESULT
+            phase: 'START_SCREEN', // START_SCREEN, BETTING, DEAL, PLAYER, DEALER, RESULT
             deck: new Deck(),
             insuranceTaken: false,
             insuranceAmount: 0,
             handCount: 0,
-            history: []
+            history: [],
+            hasSeenStartScreen: false
         };
 
         const deck = new Deck();
@@ -1078,12 +1208,63 @@
             }
         }
 
+        let isTyping = false;
+        let skipTyping = false;
+        let currentTypingInterval = null;
+        let currentTypingText = '';
+
+        function typeDialogue(text, element, onComplete) {
+            if (isTyping) return;
+            isTyping = true;
+            skipTyping = false;
+            currentTypingText = text;
+            element.textContent = '';
+
+            let index = 0;
+            const typeChar = () => {
+                if (skipTyping) {
+                    element.textContent = text;
+                    isTyping = false;
+                    skipTyping = false;
+                    if (onComplete) onComplete();
+                    return;
+                }
+
+                if (index < text.length) {
+                    element.textContent += text[index];
+                    index++;
+                    currentTypingInterval = setTimeout(typeChar, 50);
+                } else {
+                    isTyping = false;
+                    if (onComplete) onComplete();
+                }
+            };
+
+            typeChar();
+        }
+
+        function showStartScreen() {
+            const randomIndex = Math.floor(Math.random() * DEALER_STARTERS.length);
+            const oneLiner = DEALER_STARTERS[randomIndex];
+            const dialogueEl = document.getElementById('starter-dialogue');
+
+            gameState.phase = 'START_SCREEN';
+            showStartScreenControls();
+            typeDialogue(oneLiner, dialogueEl);
+        }
+
         function showDealerDialogue(outcome) {
             const el = document.getElementById('dealer-dialogue');
+            let dialogue = '';
+
             if (outcome === 'player') {
-                el.textContent = PLAYER_WIN_DIALOGUE[Math.floor(Math.random() * PLAYER_WIN_DIALOGUE.length)];
+                dialogue = PLAYER_WIN_DIALOGUE[Math.floor(Math.random() * PLAYER_WIN_DIALOGUE.length)];
             } else if (outcome === 'dealer') {
-                el.textContent = DEALER_WIN_DIALOGUE[Math.floor(Math.random() * DEALER_WIN_DIALOGUE.length)];
+                dialogue = DEALER_WIN_DIALOGUE[Math.floor(Math.random() * DEALER_WIN_DIALOGUE.length)];
+            }
+
+            if (dialogue) {
+                typeDialogue(dialogue, el);
             } else {
                 el.textContent = '';
             }
@@ -1256,9 +1437,20 @@
         function enablePlayerActions() {
             showActionControls();
 
-            // Always show HIT and STAND
-            document.getElementById('hit-btn').disabled = false;
+            // Show STAND always
             document.getElementById('stand-btn').disabled = false;
+
+            // Show HIT only if player doesn't have 21
+            const playerScore = calculateScore(gameState.playerCards);
+            const hitBtn = document.getElementById('hit-btn');
+            hitBtn.disabled = playerScore === 21;
+            if (playerScore === 21) {
+                hitBtn.style.opacity = '0.5';
+                hitBtn.style.cursor = 'not-allowed';
+            } else {
+                hitBtn.style.opacity = '1';
+                hitBtn.style.cursor = 'pointer';
+            }
 
             // Show DOUBLE if first action and balance sufficient
             const doubleBtn = document.getElementById('double-btn');
@@ -1448,6 +1640,7 @@
             document.getElementById('result-new-hand-btn').disabled = true;
             gameState.selectedChip = 0;
             gameState.wagerTotal = 0;
+            gameState.hasSeenStartScreen = true;
             enableBetting();
             // Reset chip selection
             document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
@@ -1465,6 +1658,7 @@
             gameState.wagerTotal = 0;
             gameState.handCount = 0;
             gameState.deck = new Deck();
+            gameState.hasSeenStartScreen = true;
             deck.reset();
 
             updateBalanceDisplay();
@@ -1475,19 +1669,29 @@
         }
 
         // ============ CONTROL PANEL MANAGEMENT ============
+        function showStartScreenControls() {
+            document.getElementById('start-screen').classList.add('visible');
+            document.getElementById('betting-controls').classList.remove('visible');
+            document.getElementById('action-controls').classList.remove('visible');
+            document.getElementById('result-controls').classList.remove('visible');
+        }
+
         function showBettingControls() {
+            document.getElementById('start-screen').classList.remove('visible');
             document.getElementById('betting-controls').classList.add('visible');
             document.getElementById('action-controls').classList.remove('visible');
             document.getElementById('result-controls').classList.remove('visible');
         }
 
         function showActionControls() {
+            document.getElementById('start-screen').classList.remove('visible');
             document.getElementById('betting-controls').classList.remove('visible');
             document.getElementById('action-controls').classList.add('visible');
             document.getElementById('result-controls').classList.remove('visible');
         }
 
         function showResultControls() {
+            document.getElementById('start-screen').classList.remove('visible');
             document.getElementById('betting-controls').classList.remove('visible');
             document.getElementById('action-controls').classList.remove('visible');
             document.getElementById('result-controls').classList.add('visible');
@@ -1528,19 +1732,62 @@
             });
         });
 
+        document.getElementById('start-new-game-btn').addEventListener('click', () => {
+            if (isTyping) {
+                skipTyping = true;
+                if (currentTypingInterval) {
+                    clearTimeout(currentTypingInterval);
+                }
+                // Set full text immediately
+                document.getElementById('starter-dialogue').textContent = currentTypingText;
+                isTyping = false;
+                // Pause a beat then go to betting
+                setTimeout(() => {
+                    gameState.hasSeenStartScreen = true;
+                    gameState.phase = 'BETTING';
+                    enableBetting();
+                }, 400);
+            } else {
+                gameState.hasSeenStartScreen = true;
+                gameState.phase = 'BETTING';
+                enableBetting();
+            }
+        });
+
         document.getElementById('place-bet-btn').addEventListener('click', placeBet);
         document.getElementById('hit-btn').addEventListener('click', hit);
         document.getElementById('stand-btn').addEventListener('click', stand);
         document.getElementById('double-btn').addEventListener('click', doubleDown);
         document.getElementById('split-btn').addEventListener('click', split);
         document.getElementById('insurance-btn').addEventListener('click', takeInsurance);
-        document.getElementById('result-new-hand-btn').addEventListener('click', newHand);
+
+        document.getElementById('result-new-hand-btn').addEventListener('click', () => {
+            if (isTyping) {
+                skipTyping = true;
+                if (currentTypingInterval) {
+                    clearTimeout(currentTypingInterval);
+                }
+                isTyping = false;
+                // Pause a beat then go to next hand
+                setTimeout(() => {
+                    newHand();
+                }, 400);
+            } else {
+                newHand();
+            }
+        });
+
         document.getElementById('reset-btn').addEventListener('click', resetGame);
 
         // ============ INITIALIZE ============
         updateBalanceDisplay();
         updateBetDisplay();
-        enableBetting();
+
+        if (!gameState.hasSeenStartScreen) {
+            showStartScreen();
+        } else {
+            enableBetting();
+        }
     </script>
 </body>
 </html>
