@@ -107,7 +107,7 @@ export function OrbitalNavBar({
                 >
                   {mounted && dateStr ? (
                     <>
-                      <span style={{ fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', opacity: 0.4 }}>
                         {dateStr}
                       </span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>
@@ -116,7 +116,7 @@ export function OrbitalNavBar({
                     </>
                   ) : (
                     <>
-                      <span style={{ fontWeight: 600 }}>—</span>
+                      <span style={{ fontSize: '9px', opacity: 0.4 }}>—</span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
                     </>
                   )}
@@ -261,7 +261,7 @@ export function OrbitalNavBar({
                   lineHeight: '1.2',
                 }}
               >
-                <span style={{ fontWeight: 600 }}>
+                <span style={{ fontSize: '9px', opacity: 0.4 }}>
                   {dateStr}
                 </span>
                 <span style={{ opacity: 0.4, fontSize: '9px' }}>
@@ -476,7 +476,7 @@ export function OrbitalNavBar({
                 >
                   {mounted && dateStr ? (
                     <>
-                      <span style={{ fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', opacity: 0.4 }}>
                         {dateStr}
                       </span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>
@@ -485,7 +485,7 @@ export function OrbitalNavBar({
                     </>
                   ) : (
                     <>
-                      <span style={{ fontWeight: 600 }}>—</span>
+                      <span style={{ fontSize: '9px', opacity: 0.4 }}>—</span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
                     </>
                   )}
@@ -630,7 +630,7 @@ export function OrbitalNavBar({
                   lineHeight: '1.2',
                 }}
               >
-                <span style={{ fontWeight: 600 }}>
+                <span style={{ fontSize: '9px', opacity: 0.4 }}>
                   {dateStr}
                 </span>
                 <span style={{ opacity: 0.4, fontSize: '9px' }}>

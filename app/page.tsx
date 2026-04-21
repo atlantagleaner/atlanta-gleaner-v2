@@ -246,7 +246,7 @@ export default function OrbitalPage() {
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 {mounted && dateStr ? (
                   <>
-                    <span style={{ fontSize: '8px', opacity: 0.4 }}>{dateStr}</span>
+                    <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                     <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                   </>
                 ) : (
@@ -306,7 +306,7 @@ export default function OrbitalPage() {
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 {mounted && dateStr ? (
                   <>
-                    <span style={{ fontSize: '8px', opacity: 0.4 }}>{dateStr}</span>
+                    <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                     <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                   </>
                 ) : (
