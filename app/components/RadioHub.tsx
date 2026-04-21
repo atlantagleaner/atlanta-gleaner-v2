@@ -150,7 +150,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
       <iframe
         width="0"
         height="0"
-        src={`https://www.youtube.com/embed/videoseries?list=${activeArtist.playlistId}&autoplay=1&modestbranding=1&rel=0&theme=dark&controls=0`}
+        src={`https://www.youtube.com/embed/videoseries?list=${activeArtist.playlistId}&autoplay=1&modestbranding=1&rel=0&theme=dark&controls=0&shuffle=1`}
         title="Background Player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -325,7 +325,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             <iframe
               width="100%"
               height="100%"
-              src={`https://www.youtube.com/embed/videoseries?list=${activeArtist.playlistId}&autoplay=1&modestbranding=1&rel=0&theme=dark&controls=1`}
+              src={`https://www.youtube.com/embed/videoseries?list=${activeArtist.playlistId}&autoplay=1&modestbranding=1&rel=0&theme=dark&controls=1&shuffle=1`}
               title={`${activeArtist.name} Player`}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
