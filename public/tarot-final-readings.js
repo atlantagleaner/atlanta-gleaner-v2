@@ -415,7 +415,7 @@ var FINAL_READINGS = [
     planet: 'moon',
     spreadType: 'three',
     cardPatterns: ['cups-suit'],
-    keywords: ['emotional bonds', 'family', 'love's web'],
+    keywords: ['emotional bonds', 'family', "love's web"],
     text: "Cups pour out their love, and the Weaver shows how these waters connect heart to heart. Past shows love's origin; Present shows its flow; Future shows its deepening. The web of love is the strongest thread of all. Tend to it carefully."
   },
   {
