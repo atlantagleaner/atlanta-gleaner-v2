@@ -4155,5 +4155,222 @@
     "source": "editorial",
     "flags": [],
     "updatedAt": "2026-04-06T22:04:10.534Z"
+  },
+  "arnsdorff_v_state": {
+    "slug": "arnsdorff_v_state",
+    "title": "Arnsdorff v. The State",
+    "docketNumber": "S25A0062",
+    "dateDecided": "June 24, 2025",
+    "citation": "321 Ga. 880; 917 S.E.2d 599; 2025 Ga. LEXIS 139",
+    "court": "Supreme Court of Georgia",
+    "judges": "Pinson, J.",
+    "disposition": "Judgment affirmed",
+    "tags": [
+      "Homicide & Violent Crimes",
+      "Malice Murder",
+      "Felony Murder",
+      "Accomplice Liability",
+      "Joint and Several Liability",
+      "Flight as Consciousness of Guilt",
+      "Sufficiency of Evidence"
+    ],
+    "coreTerms": [
+      "malice murder",
+      "accomplice liability",
+      "joint participation",
+      "evidence sufficiency",
+      "flight instruction"
+    ],
+    "summary": "Tony Arnsdorff and Scott Pinholster were tried separately for the malice murder of Courtney Wells. The evidence showed that Wells, who had a romantic relationship with Pinholster, left his home to stay with Arnsdorff. When Pinholster wanted Wells to return, Arnsdorff hid in the back seat of Pinholster's truck. At a remote location, Arnsdorff revealed himself, punched Wells, and Pinholster retrieved a shotgun from the back seat and fatally shot Wells multiple times. Arnsdorff then helped move the body, did not report the crime, and initially lied to police. Arnsdorff appealed, arguing insufficient evidence of his participation in the murder and objecting to jury instructions on flight and credibility of his statements. The Georgia Supreme Court affirmed his conviction. The court held that the evidence—Arnsdorff's actions before, during, and after the shooting—was constitutionally sufficient to prove he was a party to malice murder and firearm possession during the commission of a felony. The court also found no plain error in the jury instructions challenged on appeal.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "bailey_v_mcintosh_cnty": {
+    "slug": "bailey_v_mcintosh_cnty",
+    "title": "Bailey v. McIntosh County",
+    "docketNumber": "S25A0446, S25A0447, S25A0448",
+    "dateDecided": "September 30, 2025",
+    "citation": "322 Ga. 602; 921 S.E.2d 382; 2025 Ga. LEXIS 222",
+    "court": "Supreme Court of Georgia",
+    "judges": "Ellington, J.",
+    "disposition": "Judgment affirmed in part, reversed in part",
+    "tags": [
+      "Government & Administrative Law",
+      "Zoning and Land Use",
+      "Home Rule Powers",
+      "Constitutional Rights",
+      "Voter Referendum",
+      "County Ordinances",
+      "Zoning Ordinance Validity"
+    ],
+    "coreTerms": [
+      "home rule provision",
+      "zoning ordinance",
+      "referendum rights",
+      "constitutional delegation",
+      "dwelling size restrictions"
+    ],
+    "summary": "McIntosh County residents—Barbara Bailey, Christopher Bailey, and Stanley Walker—petitioned for a referendum to repeal a county zoning ordinance that increased the maximum allowable dwelling size in a historic district on Sapelo Island. The probate court granted their petition and scheduled the referendum. However, McIntosh County sought a writ of prohibition in superior court to prevent the referendum, arguing the ordinance was a zoning matter outside the home rule referendum process. The superior court granted the county's request and enjoined the referendum but also temporarily enjoined enforcement of the ordinance pending appeal. The Georgia Supreme Court reversed the prohibition and allowed the referendum to proceed. The court held that home rule authority permits county residents to petition for referendums on matters the governing body could address under home rule powers, including zoning decisions. The court also affirmed the temporary injunction against enforcement of the ordinance as a reasonable protective measure.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "barker_v_muschett": {
+    "slug": "barker_v_muschett",
+    "title": "Barker v. Muschett",
+    "docketNumber": "A25A0583",
+    "dateDecided": "June 2, 2025",
+    "citation": "375 Ga. App. 585; 916 S.E.2d 796; 2025 Ga. App. LEXIS 226",
+    "court": "Court of Appeals of Georgia",
+    "judges": "McFadden, P.J.",
+    "disposition": "Judgment affirmed",
+    "tags": [
+      "Insurance Law",
+      "Uninsured Motorist Coverage",
+      "Motor Vehicle Insurance",
+      "Insurance Policy Coverage",
+      "Summary Judgment",
+      "Subrogation Rights",
+      "Settlement Releases"
+    ],
+    "coreTerms": [
+      "uninsured motorist benefits",
+      "UM coverage",
+      "settlement release",
+      "subrogation",
+      "liability insurance limits"
+    ],
+    "summary": "Katherine Barker was injured in a motor vehicle accident with Marlon Muschett. She settled with Muschett for his liability insurance policy limits but then sued to recover uninsured or underinsured motorist (UM) benefits under her own insurance policy. Barker relied on what she described as a common-law procedure to pursue UM benefits after settling with the at-fault driver. Muschett moved for summary judgment, and the trial court granted it. The Court of Appeals of Georgia affirmed. The court held that when an injured party settles with an at-fault driver for the limits of his liability insurance, the settlement agreement typically bars subsequent UM claims against the injured party's own insurer. The legal framework and policy considerations underlying UM coverage do not support a common-law exception allowing an injured party to recover both the liability settlement and UM benefits, as that would result in double recovery.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "fuller_v_state": {
+    "slug": "fuller_v_state",
+    "title": "Fuller v. The State",
+    "docketNumber": "S25A0019",
+    "dateDecided": "June 24, 2025",
+    "citation": "322 Ga. 188; 917 S.E.2d 623; 2025 Ga. LEXIS 140",
+    "court": "Supreme Court of Georgia",
+    "judges": "LaGrua, J.",
+    "disposition": "Judgment affirmed",
+    "tags": [
+      "Homicide & Violent Crimes",
+      "Felony Murder",
+      "Aggravated Assault as Predicate",
+      "Malice Murder",
+      "Trial Evidence",
+      "Appellate Review",
+      "Dissent and Concurrence"
+    ],
+    "coreTerms": [
+      "felony murder",
+      "aggravated assault",
+      "predicate felony",
+      "fatal shooting",
+      "evidence sufficiency"
+    ],
+    "summary": "Sonya Fuller was convicted of felony murder predicated on aggravated assault for the fatal shooting of Anthony Reid. On appeal to the Georgia Supreme Court, Fuller challenged her conviction and raised issues concerning the legal sufficiency of the evidence and other trial matters. The court affirmed her conviction. The majority opinion, written by Justice LaGrua, upheld the conviction as supported by sufficient evidence under both federal constitutional due-process standards and Georgia law. The court found that the predicate aggravated assault—the non-fatal beating or attack that led to the fatal shooting—was properly presented to the jury and that the evidence supported the jury's guilty verdict on the felony murder charge. The decision generated a dissent from three justices, but the majority prevailed, confirming Fuller's convictions and the underlying trial proceedings.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "richardson_v_state": {
+    "slug": "richardson_v_state",
+    "title": "Richardson v. The State",
+    "docketNumber": "S25A0457",
+    "dateDecided": "August 26, 2025",
+    "citation": "322 Ga. 360; 920 S.E.2d 84; 2025 Ga. LEXIS 185",
+    "court": "Supreme Court of Georgia",
+    "judges": "Pinson, J.",
+    "disposition": "Judgment affirmed",
+    "tags": [
+      "Homicide & Violent Crimes",
+      "Malice Murder",
+      "Evidence Sufficiency",
+      "Prior Inconsistent Statements",
+      "Hearsay Exceptions",
+      "Trial Court Discretion",
+      "Appellate Standards of Review"
+    ],
+    "coreTerms": [
+      "malice murder",
+      "fatal shooting",
+      "prior inconsistent statement",
+      "audio recording",
+      "witness credibility"
+    ],
+    "summary": "Dominique Richardson was convicted of malice murder for the shooting death of Taylor Holcombe. On appeal to the Georgia Supreme Court, Richardson contended that the evidence was insufficient to support his conviction and that the trial court abused its discretion by admitting an audio recording of a witness's statement to police as a prior inconsistent statement. The court unanimously affirmed his conviction, finding no merit to either claim. The court held that the evidence, when viewed in the light most favorable to the verdict, was constitutionally sufficient under federal due-process standards and Georgia law to support the malice murder conviction. The court also found that the trial court did not abuse its discretion in admitting the prior inconsistent statement, as the recording had proper foundation and was admissible under Georgia's hearsay exceptions for impeaching witness credibility.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "state_v_phillips": {
+    "slug": "state_v_phillips",
+    "title": "The State v. Phillips",
+    "docketNumber": "S25A1032",
+    "dateDecided": "December 9, 2025",
+    "citation": "323 Ga. 125; 924 S.E.2d 265; 2025 Ga. LEXIS 264",
+    "court": "Supreme Court of Georgia",
+    "judges": "McMillian, J.",
+    "disposition": "Judgment vacated and remanded",
+    "tags": [
+      "Homicide & Violent Crimes",
+      "Police Use of Force",
+      "Malice Murder of Police Officers",
+      "Felony Murder",
+      "In-Custody Death",
+      "Grand Jury Indictment",
+      "Appellate Review"
+    ],
+    "coreTerms": [
+      "police officers indicted",
+      "death in custody",
+      "malice murder",
+      "law enforcement",
+      "felony murder predicate"
+    ],
+    "summary": "Following the death of Fernando Rodriguez during an encounter with law enforcement officers, a Henry County grand jury jointly indicted multiple police officers for malice murder and felony murder in connection with Rodriguez's death while being subdued by officers. The State appealed as the defendant in this case, raising issues about the indictment and the charges brought against the officers. The Georgia Supreme Court reversed the trial court's decision and remanded the case. The majority opinion, written by Justice McMillian, addressed the fundamental questions raised by prosecuting law enforcement officers for homicide crimes arising from an in-custody death. The court found that certain issues required further proceedings and vacated the judgment with directions to the trial court on remand. The decision garnered a concurrence from Chief Justice Peterson, with all justices concurring in the judgment, indicating substantial agreement on the disposition.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
+  },
+  "woods_v_state": {
+    "slug": "woods_v_state",
+    "title": "Woods v. The State",
+    "docketNumber": "A21A0723",
+    "dateDecided": "October 25, 2021",
+    "citation": "361 Ga. App. 844; 864 S.E.2d 194; 2021 Ga. App. LEXIS 521",
+    "court": "Court of Appeals of Georgia",
+    "judges": "Reese, J.",
+    "disposition": "Judgment affirmed in part, reversed in part",
+    "tags": [
+      "DUI and Traffic Offenses",
+      "Driving Under the Influence",
+      "Less Safe Driving",
+      "Evidence Sufficiency",
+      "Equal Protection Clause",
+      "Appellate Review of Jury Verdict",
+      "Prior Appeal and Transfer"
+    ],
+    "coreTerms": [
+      "DUI less safe",
+      "failure to maintain lane",
+      "speeding",
+      "equal protection",
+      "jury verdict"
+    ],
+    "summary": "John Woods was convicted by jury of driving under the influence (less safe), failure to maintain lane, and driving too fast for conditions. On appeal to the Court of Appeals of Georgia, the appellate court initially transferred the case to the Georgia Supreme Court, which then transferred it back to the Court of Appeals after determining it had previously rejected an equal-protection argument similar to Woods's claim. The Court of Appeals affirmed the DUI and other traffic-related convictions in part but reversed as to the equal-protection challenge. The court held that the evidence supported the jury's guilty verdicts on the DUI and traffic violations, but that Woods's constitutional equal-protection argument, while previously rejected by the Supreme Court in analogous circumstances, required the Court of Appeals to follow that precedent. The mixed disposition upheld the practical convictions while addressing the constitutional framing.",
+    "status": "reviewed",
+    "source": "editorial",
+    "flags": [],
+    "updatedAt": "2026-04-21T00:00:00Z"
   }
 }

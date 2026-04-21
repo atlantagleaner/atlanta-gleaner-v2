@@ -974,10 +974,42 @@
     }
 
     // ==================== DIALOGUE SYSTEM ====================
-    function typeText(text) {
+    async function typeText(text, speed = 40) {
       const el = document.getElementById('dialogue-text');
-      el.textContent = text;
+      el.textContent = '';
+
+      // Animate text character by character
+      for (let i = 0; i < text.length; i++) {
+        el.textContent += text[i];
+        updateScrollIndicators(el);
+        await new Promise(resolve => setTimeout(resolve, speed));
+      }
       updateScrollIndicators(el);
+    }
+
+    async function appendTypeText(text, speed = 40) {
+      const el = document.getElementById('dialogue-text');
+
+      // Animate appended text character by character
+      for (let i = 0; i < text.length; i++) {
+        el.textContent += text[i];
+        updateScrollIndicators(el);
+        await new Promise(resolve => setTimeout(resolve, speed));
+      }
+      updateScrollIndicators(el);
+    }
+
+    function showNextButton() {
+      return new Promise((resolve) => {
+        const el = document.getElementById('dialogue-options');
+        el.innerHTML = '';
+        el.className = 'dialogue-options';
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = 'NEXT ▶';
+        btn.onclick = () => resolve('next');
+        el.appendChild(btn);
+      });
     }
 
     function updateScrollIndicators(el) {
@@ -1057,15 +1089,7 @@
       ExpressionSystem.setExpression('neutral-welcome', 300);
 
       const greeting = DialogueSystem.getOpening();
-      typeText(greeting.greeting);
-
-      await showOptions([{ label: 'CONTINUE', value: 'continue' }]);
-      await setState('INTENT_SELECT');
-    }
-
-    async function stateIntentSelect() {
-      ExpressionSystem.setExpression('focused', 300);
-      typeText('What calls to your heart today?');
+      await typeText(greeting.greeting);
 
       const intentOptions = DialogueSystem.getIntentOptions();
       gameState.intent = await showOptions(intentOptions);
@@ -1076,9 +1100,28 @@
 
       const intentDialogue = DialogueSystem.getIntentDialogue(gameState.intent);
       ExpressionSystem.setExpression(intentDialogue.expressions[0], 300);
-      typeText(intentDialogue.prompt);
+      await typeText(intentDialogue.prompt);
 
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await showNextButton();
+      await setState('SPREAD_CHOICE');
+    }
+
+    async function stateIntentSelect() {
+      ExpressionSystem.setExpression('focused', 300);
+      await typeText('What calls to your heart today?');
+
+      const intentOptions = DialogueSystem.getIntentOptions();
+      gameState.intent = await showOptions(intentOptions);
+      gameState.planetaryInfluence = mapIntentToPlanet(gameState.intent);
+
+      const sceneVibe = mapIntentToScene(gameState.intent);
+      SceneSystem.setScene(sceneVibe, 400);
+
+      const intentDialogue = DialogueSystem.getIntentDialogue(gameState.intent);
+      ExpressionSystem.setExpression(intentDialogue.expressions[0], 300);
+      await typeText(intentDialogue.prompt);
+
+      await showNextButton();
       await setState('SPREAD_CHOICE');
     }
 
@@ -1086,7 +1129,7 @@
       ExpressionSystem.setExpression('focused', 300);
 
       const spreadDialogue = DialogueSystem.getSpreadDialogue('mirror');
-      typeText(spreadDialogue.prompt);
+      await typeText(spreadDialogue.prompt);
 
       const spreadOptions = DialogueSystem.getSpreadOptions();
       gameState.spreadType = await showOptions(spreadOptions);
@@ -1105,7 +1148,7 @@
       ExpressionSystem.setExpression('focused', 300);
 
       const drawPrompt = DialogueSystem.getDrawPrompt();
-      typeText(drawPrompt);
+      await typeText(drawPrompt);
 
       // Flip first card
       const card = gameState.drawnCards[0];
@@ -1115,12 +1158,13 @@
       await new Promise(resolve => setTimeout(resolve, 1200));
 
       ExpressionSystem.setExpression('revelation', 400);
+      hideCharacter();
       updateCardDisplay(card);
       showCardImage();
 
       await new Promise(resolve => setTimeout(resolve, 600));
-      clearOptions();
 
+      await showNextButton();
       await setState('READING');
     }
 
@@ -1132,36 +1176,37 @@
 
       if (!reading) {
         // Fallback fortune if not found
-        typeText('The card speaks: ' + card.name);
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await typeText('The card speaks: ' + card.name);
+        await showNextButton();
         await setState('CLOSING');
         return;
       }
 
       // Display reading in 3 parts
       ExpressionSystem.setExpression('revelation', 300);
-      typeText(reading.cardSpeaks);
+      await typeText(reading.cardSpeaks);
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       ExpressionSystem.setExpression('cosmic-vision', 300);
-      typeText(reading.astrophysical);
+      await appendTypeText('\n\n' + reading.astrophysical);
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       ExpressionSystem.setExpression('playful-mischief', 300);
-      typeText(reading.absurdTruth);
+      await appendTypeText('\n\n' + reading.absurdTruth);
 
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 600));
+      await showNextButton();
       await setState('CLOSING');
     }
 
     async function stateClosing() {
+      showCharacter();
       ExpressionSystem.setExpression('knowing-smile', 300);
-      typeText('Does this resonate with your spirit?');
+      await typeText('Does this resonate with your spirit?');
 
       const closingOptions = [
-        { label: 'YES, THANK YOU', value: 'yes' },
         { label: 'ANOTHER READING', value: 'another' },
         { label: 'RETURN TO SATURN', value: 'return' },
       ];
@@ -1170,10 +1215,10 @@
 
       if (choice === 'another') {
         hideCardImage();
-        await setState('INTENT_SELECT');
+        await setState('GREET');
       } else {
-        // Return to Saturn terminal
-        window.parent.postMessage({ action: 'closeGame' }, '*');
+        // Return to Saturn terminal and activate orbit mode
+        window.parent.postMessage({ action: 'closeGame', orbitMode: true }, '*');
       }
     }
 
@@ -1229,30 +1274,28 @@
       const canvas = document.getElementById('character-canvas');
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, 160, 240);
-      // Scale up by 2x for larger character
-      ctx.scale(2, 2);
 
       if (guide === 'scribe') {
         // Enhanced golden sun-priest
-        const cx = 40, cy = 22, r = 13;
+        const cx = 80, cy = 44, r = 26;
 
         // Radiant aura
-        const auraGrad = ctx.createRadialGradient(cx, cy, r, cx, cy, r + 8);
+        const auraGrad = ctx.createRadialGradient(cx, cy, r, cx, cy, r + 16);
         auraGrad.addColorStop(0, 'rgba(249,202,36,0.3)');
         auraGrad.addColorStop(1, 'rgba(249,202,36,0)');
         ctx.fillStyle = auraGrad;
         ctx.beginPath();
-        ctx.arc(cx, cy, r + 8, 0, Math.PI * 2);
+        ctx.arc(cx, cy, r + 16, 0, Math.PI * 2);
         ctx.fill();
 
         // Rays (enhanced with gradient)
         ctx.strokeStyle = '#c8a000';
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 5;
         for (let i = 0; i < 8; i++) {
           const a = (i / 8) * Math.PI * 2;
           ctx.beginPath();
           ctx.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-          ctx.lineTo(cx + Math.cos(a) * 21, cy + Math.sin(a) * 21);
+          ctx.lineTo(cx + Math.cos(a) * 42, cy + Math.sin(a) * 42);
           ctx.stroke();
         }
 
@@ -1265,69 +1308,69 @@
         // Head shading
         ctx.fillStyle = 'rgba(200,160,0,0.4)';
         ctx.beginPath();
-        ctx.arc(cx + 3, cy + 2, r, 0, Math.PI * 2);
+        ctx.arc(cx + 6, cy + 4, r, 0, Math.PI * 2);
         ctx.fill();
 
         // Face details (eyes with depth)
         ctx.fillStyle = '#3a2a00';
-        ctx.fillRect(34, 17, 5, 5);
-        ctx.fillRect(42, 17, 5, 5);
+        ctx.fillRect(68, 34, 10, 10);
+        ctx.fillRect(84, 34, 10, 10);
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(35, 18, 2, 2);
-        ctx.fillRect(43, 18, 2, 2);
+        ctx.fillRect(70, 36, 4, 4);
+        ctx.fillRect(86, 36, 4, 4);
 
         // Mouth (smile)
         ctx.strokeStyle = '#3a2a00';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(40, 26, 3, 0, Math.PI);
+        ctx.arc(80, 52, 6, 0, Math.PI);
         ctx.stroke();
 
         // Body robe
         ctx.fillStyle = '#e8b800';
-        ctx.fillRect(18, 35, 44, 35);
+        ctx.fillRect(36, 70, 88, 70);
 
         // Robe shadow
         ctx.fillStyle = '#9a7000';
-        ctx.fillRect(18, 56, 44, 14);
+        ctx.fillRect(36, 112, 88, 28);
 
         // Collar/Breastplate
         ctx.fillStyle = '#ffd700';
-        ctx.fillRect(26, 35, 28, 10);
+        ctx.fillRect(52, 70, 56, 20);
         ctx.fillStyle = '#c8a000';
-        ctx.fillRect(28, 36, 24, 3);
+        ctx.fillRect(56, 72, 48, 6);
 
         // Staff prop
         ctx.strokeStyle = '#8b6f47';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.moveTo(60, 36);
-        ctx.lineTo(70, 15);
+        ctx.moveTo(120, 72);
+        ctx.lineTo(140, 30);
         ctx.stroke();
 
         // Staff orb
         ctx.fillStyle = '#f9ca24';
         ctx.beginPath();
-        ctx.arc(70, 13, 3, 0, Math.PI * 2);
+        ctx.arc(140, 26, 6, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = '#c8a000';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         // Arms
         ctx.fillStyle = '#e8b800';
-        ctx.fillRect(6, 37, 14, 12);
-        ctx.fillRect(60, 37, 14, 12);
+        ctx.fillRect(12, 74, 28, 24);
+        ctx.fillRect(120, 74, 28, 24);
 
       } else if (guide === 'weaver') {
         // Enhanced purple-robed weaver
         ctx.fillStyle = '#7050b0';
         ctx.globalAlpha = 0.9;
         ctx.beginPath();
-        ctx.moveTo(13, 16);
-        ctx.lineTo(67, 16);
-        ctx.lineTo(62, 72);
-        ctx.lineTo(18, 72);
+        ctx.moveTo(26, 32);
+        ctx.lineTo(134, 32);
+        ctx.lineTo(124, 144);
+        ctx.lineTo(36, 144);
         ctx.closePath();
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -1336,10 +1379,10 @@
         ctx.fillStyle = '#3a2060';
         ctx.globalAlpha = 0.6;
         ctx.beginPath();
-        ctx.moveTo(40, 16);
-        ctx.lineTo(67, 16);
-        ctx.lineTo(62, 72);
-        ctx.lineTo(40, 72);
+        ctx.moveTo(80, 32);
+        ctx.lineTo(134, 32);
+        ctx.lineTo(124, 144);
+        ctx.lineTo(80, 144);
         ctx.closePath();
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -1347,55 +1390,55 @@
         // Hood top (enhanced)
         ctx.fillStyle = '#9070d0';
         ctx.beginPath();
-        ctx.arc(40, 16, 15, Math.PI, 0);
+        ctx.arc(80, 32, 30, Math.PI, 0);
         ctx.fill();
 
         // Face glow
         ctx.fillStyle = '#c8aaff';
         ctx.globalAlpha = 0.4;
-        ctx.fillRect(30, 16, 20, 12);
+        ctx.fillRect(60, 32, 40, 24);
         ctx.globalAlpha = 1;
 
         // Eyes with glow
         ctx.fillStyle = '#e0d0ff';
-        ctx.fillRect(32, 18, 5, 4);
-        ctx.fillRect(43, 18, 5, 4);
+        ctx.fillRect(64, 36, 10, 8);
+        ctx.fillRect(86, 36, 10, 8);
 
         // Loom threads (vertical warp)
         ctx.strokeStyle = '#a0c8ff';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 3;
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
-          ctx.moveTo(14 + i * 8, 24);
-          ctx.lineTo(15 + i * 8, 68);
+          ctx.moveTo(28 + i * 16, 48);
+          ctx.lineTo(30 + i * 16, 136);
           ctx.stroke();
         }
 
         // Horizontal weaving (weft)
         ctx.strokeStyle = '#8aa8ff';
-        ctx.lineWidth = 0.8;
+        ctx.lineWidth = 1.6;
         ctx.globalAlpha = 0.6;
         for (let i = 0; i < 5; i++) {
           ctx.beginPath();
-          ctx.moveTo(14, 32 + i * 9);
-          ctx.lineTo(66, 32 + i * 9);
+          ctx.moveTo(28, 64 + i * 18);
+          ctx.lineTo(132, 64 + i * 18);
           ctx.stroke();
         }
         ctx.globalAlpha = 1;
 
         // Arms with hands
         ctx.fillStyle = '#7050b0';
-        ctx.fillRect(5, 40, 10, 14);
-        ctx.fillRect(65, 40, 10, 14);
+        ctx.fillRect(10, 80, 20, 28);
+        ctx.fillRect(130, 80, 20, 28);
 
         // Hands (at loom)
         ctx.fillStyle = '#c8aaff';
-        ctx.fillRect(6, 52, 8, 4);
-        ctx.fillRect(66, 52, 8, 4);
+        ctx.fillRect(12, 104, 16, 8);
+        ctx.fillRect(132, 104, 16, 8);
 
       } else {
         // Enhanced psychic with star crown and third eye
-        const sx = 40, sy = 12, outerR = 14, innerR = 8;
+        const sx = 80, sy = 24, outerR = 28, innerR = 16;
 
         // Star crown
         ctx.fillStyle = '#ff88cc';
@@ -1412,70 +1455,70 @@
 
         // Star glow
         ctx.strokeStyle = '#ffaadd';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.stroke();
 
         // Star shimmer (outer glow)
         ctx.strokeStyle = 'rgba(255,170,221,0.3)';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         for (let i = 0; i < 10; i++) {
-          const r = (i % 2 === 0 ? outerR : innerR) + 3;
+          const r = (i % 2 === 0 ? outerR : innerR) + 6;
           const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
           const x = sx + Math.cos(a) * r;
           const y = sy + Math.sin(a) * r;
           ctx.beginPath();
-          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+          ctx.arc(x, y, 3, 0, Math.PI * 2);
           ctx.stroke();
         }
 
         // Face (below crown)
         ctx.fillStyle = '#ff99dd';
-        ctx.fillRect(33, 26, 14, 10);
+        ctx.fillRect(66, 52, 28, 20);
 
         // Third eye (forehead)
         ctx.fillStyle = '#ff44bb';
         ctx.beginPath();
-        ctx.arc(40, 22, 2, 0, Math.PI * 2);
+        ctx.arc(80, 44, 4, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = '#ffaadd';
-        ctx.lineWidth = 0.5;
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         // Eyes
         ctx.fillStyle = '#2a0a1a';
-        ctx.fillRect(35, 29, 3, 3);
-        ctx.fillRect(42, 29, 3, 3);
+        ctx.fillRect(70, 58, 6, 6);
+        ctx.fillRect(84, 58, 6, 6);
 
         // Body robe
         ctx.fillStyle = '#e060a0';
-        ctx.fillRect(16, 40, 48, 32);
+        ctx.fillRect(32, 80, 96, 64);
 
         // Body shading
         ctx.fillStyle = '#b04080';
-        ctx.fillRect(40, 40, 24, 32);
+        ctx.fillRect(80, 80, 48, 64);
 
         // Collar gem
         ctx.fillStyle = '#ff44bb';
-        ctx.fillRect(33, 40, 14, 7);
+        ctx.fillRect(66, 80, 28, 14);
         ctx.strokeStyle = '#ffaadd';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         // Meditation hands (center)
         ctx.fillStyle = '#ff99dd';
         ctx.beginPath();
-        ctx.arc(40, 58, 5, 0, Math.PI * 2);
+        ctx.arc(80, 116, 10, 0, Math.PI * 2);
         ctx.fill();
 
         // Arms flowing down
         ctx.fillStyle = '#e060a0';
-        ctx.fillRect(5, 42, 12, 12);
-        ctx.fillRect(63, 42, 12, 12);
+        ctx.fillRect(10, 84, 24, 24);
+        ctx.fillRect(126, 84, 24, 24);
 
         // Hand glow
         ctx.fillStyle = 'rgba(255,170,221,0.3)';
         ctx.beginPath();
-        ctx.arc(40, 58, 7, 0, Math.PI * 2);
+        ctx.arc(80, 116, 14, 0, Math.PI * 2);
         ctx.fill();
       }
     }
