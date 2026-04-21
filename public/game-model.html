@@ -1889,24 +1889,34 @@
       setState('INTENT_SELECT');
     });
 
-    // ==================== INIT ====================
-    initStarfield();
-
-    gameState.activeGuide = 'psychic';
-    drawCharacter(gameState.activeGuide);
-    document.getElementById('character-container').classList.remove('hidden');
-
-    // Initialize scene
-    SceneSystem.setScene('cosmic-night', 0);
-    ExpressionSystem.setExpression('neutral-welcome', 0);
-
-    setState('GREET');
-
   </script>
   <script src="./card-generator.js"></script>
   <script src="./tarot-final-readings.js"></script>
   <script src="./tarot/expression-system.js"></script>
   <script src="./tarot/dialogue.js"></script>
   <script src="./tarot/fortune-database.js"></script>
+  <script>
+    // ==================== INIT (after all scripts load) ====================
+    function initGame() {
+      initStarfield();
+
+      gameState.activeGuide = 'psychic';
+      drawCharacter(gameState.activeGuide);
+      document.getElementById('character-container').classList.remove('hidden');
+
+      // Initialize scene
+      SceneSystem.setScene('cosmic-night', 0);
+      ExpressionSystem.setExpression('neutral-welcome', 0);
+
+      setState('GREET');
+    }
+
+    // Run after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGame);
+    } else {
+      initGame();
+    }
+  </script>
 </body>
 </html>
