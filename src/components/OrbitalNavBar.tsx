@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useDateTime } from '@/src/hooks'
 
 interface OrbitalNavBarProps {
   showRunway?: boolean
@@ -19,17 +20,9 @@ export function OrbitalNavBar({
   onResetOrbit,
   layout = 'archive',
 }: OrbitalNavBarProps) {
-  const [time, setTime] = useState<Date | null>(null)
-  const [mounted, setMounted] = useState(false)
+  const { dateStr, timeStr, now: time, mounted } = useDateTime()
   const [isMobile, setIsMobile] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    setTime(new Date())
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
@@ -112,20 +105,13 @@ export function OrbitalNavBar({
                     lineHeight: '1.2',
                   }}
                 >
-                  {mounted && time ? (
+                  {mounted && dateStr ? (
                     <>
                       <span style={{ fontWeight: 600 }}>
-                        {time
-                          .toLocaleString('en-US', { month: 'short' })
-                          .toUpperCase()}{' '}
-                        {time.getDate()}
+                        {dateStr}
                       </span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                        {time.toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                        })}
+                        {timeStr}
                       </span>
                     </>
                   ) : (
@@ -276,17 +262,10 @@ export function OrbitalNavBar({
                 }}
               >
                 <span style={{ fontWeight: 600 }}>
-                  {time
-                    .toLocaleString('en-US', { month: 'short' })
-                    .toUpperCase()}{' '}
-                  {time.getDate()}
+                  {dateStr}
                 </span>
                 <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                  {time.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                  })}
+                  {timeStr}
                 </span>
               </div>
 
@@ -495,20 +474,13 @@ export function OrbitalNavBar({
                     lineHeight: '1.2',
                   }}
                 >
-                  {mounted && time ? (
+                  {mounted && dateStr ? (
                     <>
                       <span style={{ fontWeight: 600 }}>
-                        {time
-                          .toLocaleString('en-US', { month: 'short' })
-                          .toUpperCase()}{' '}
-                        {time.getDate()}
+                        {dateStr}
                       </span>
                       <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                        {time.toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                        })}
+                        {timeStr}
                       </span>
                     </>
                   ) : (
@@ -659,17 +631,10 @@ export function OrbitalNavBar({
                 }}
               >
                 <span style={{ fontWeight: 600 }}>
-                  {time
-                    .toLocaleString('en-US', { month: 'short' })
-                    .toUpperCase()}{' '}
-                  {time.getDate()}
+                  {dateStr}
                 </span>
                 <span style={{ opacity: 0.4, fontSize: '9px' }}>
-                  {time.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                  })}
+                  {timeStr}
                 </span>
               </div>
 

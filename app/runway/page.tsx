@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RadioHub } from '../components/RadioHub'
+import { useDateTime } from '@/src/hooks'
 
 // --- Video Data ---
 const ORBITAL_VIDEOS = [
@@ -200,7 +201,7 @@ const artists = [
 ];
 
 export default function OrbitalPage() {
-  const [time, setTime] = useState(new Date())
+  const { dateStr, timeStr, mounted } = useDateTime()
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -209,11 +210,6 @@ export default function OrbitalPage() {
   const [isRadioHubPlaying, setIsRadioHubPlaying] = useState(false)
   const [activeArtist, setActiveArtist] = useState(artists[0])
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -299,8 +295,17 @@ export default function OrbitalPage() {
               style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
-                <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                {mounted && dateStr ? (
+                  <>
+                    <span style={{ fontWeight: 600 }}>TEST-{dateStr}</span>
+                    <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
+                  </>
+                ) : (
+                  <>
+                    <span style={{ fontWeight: 600 }}>—</span>
+                    <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
+                  </>
+                )}
               </div>
 
               <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
@@ -346,8 +351,17 @@ export default function OrbitalPage() {
               style={{ ...navItemStyle, textDecoration: 'none', border: 'none' }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
-                <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                {mounted && dateStr ? (
+                  <>
+                    <span style={{ fontWeight: 600 }}>TEST-{dateStr}</span>
+                    <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
+                  </>
+                ) : (
+                  <>
+                    <span style={{ fontWeight: 600 }}>—</span>
+                    <span style={{ opacity: 0.4, fontSize: '9px' }}>—:—:—</span>
+                  </>
+                )}
               </div>
 
               <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />

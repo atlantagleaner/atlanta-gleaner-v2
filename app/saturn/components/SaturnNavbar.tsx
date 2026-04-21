@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { useDateTime } from '@/src/hooks'
 
 interface SaturnNavbarProps {
   onResetOrbit?: () => void
@@ -8,15 +9,10 @@ interface SaturnNavbarProps {
 }
 
 export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps) {
-  const [time, setTime] = useState(new Date())
+  const { dateStr, timeStr } = useDateTime()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isGameMenuOpen, setIsGameMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -122,8 +118,8 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
               style={{ ...navItemStyle, textDecoration: 'none' } as React.CSSProperties}
             >
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
-                <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                <span style={{ fontWeight: 600 }}>{dateStr}</span>
+                <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
               </div>
 
               <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
@@ -209,8 +205,8 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                 style={{ ...navItemStyle, textDecoration: 'none' } as React.CSSProperties}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
-                  <span style={{ fontWeight: 600 }}>{time.toLocaleString('en-US', { month: 'short' }).toUpperCase()} {time.getDate()}</span>
-                  <span style={{ opacity: 0.4, fontSize: '9px' }}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                  <span style={{ fontWeight: 600 }}>{dateStr}</span>
+                  <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                 </div>
 
                 <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.2)' }} />
