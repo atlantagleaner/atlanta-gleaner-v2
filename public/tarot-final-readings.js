@@ -4,7 +4,7 @@
  * Used for synthesized final reading at the end of each tarot game session
  */
 
-const FINAL_READINGS = [
+var FINAL_READINGS = [
   // SCRIBE READINGS - Moon Planet
   {
     id: 'scribe-moon-1',
@@ -1137,4 +1137,9 @@ const FINAL_READINGS = [
 // Export for use in game-model.html
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = FINAL_READINGS;
+}
+
+// Ensure global availability in browser
+if (typeof window !== 'undefined') {
+  window.FINAL_READINGS = FINAL_READINGS;
 }
