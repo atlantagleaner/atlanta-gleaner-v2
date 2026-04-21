@@ -791,7 +791,7 @@ var FINAL_READINGS = [
     planet: 'moon',
     spreadType: 'three',
     cardPatterns: ['cups-suit'],
-    keywords: ['emotional psychism', 'empathic gift', 'feeling others' truths'],
+    keywords: ['emotional psychism', 'empathic gift', "feeling others' truths"],
     text: "Three Cups show how deeply you feel—not just your own emotions but the emotions of all around you. The Psychic sees your gift: you are an empath, a feeler of collective energy. This gift is both blessing and burden. Learn to hold it wisely."
   },
   {
