@@ -279,14 +279,10 @@ export default function OrbitalPage() {
             )}
           </div>
 
-          {/* Row 2: Runway, Orbit */}
+          {/* Row 2: Runway */}
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             <button onClick={() => setIsRadioHubOpen(!isRadioHubOpen)} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>
               RUNWAY
-            </button>
-
-            <button onClick={resetOrbitalView} style={{ ...navItemStyle }}>
-              ORBIT
             </button>
           </div>
         </nav>
