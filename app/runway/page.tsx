@@ -153,83 +153,17 @@ function EventHorizonScene({ onSceneReady, isRadioHubOpen = false }: EventHorizo
 }
 
 // --- Main Application UI ---
-const artists = [
-  {
-    id: 'spotify-zenzealia',
-    name: 'ZENZEALIA - AZEALIA BANKS',
-    genre: 'HOUSE / POP',
-    type: 'spotify' as const,
-    playlistId: '2lCEfPzRDqB686AUyIRFXZ' as string | undefined,
-  },
-  // YouTube stations
-  {
-    id: 'azealia-banks',
-    name: 'AZEALIA BANKS RADIO',
-    genre: 'HOUSE / BALLROOM',
-    type: 'youtube' as const,
-    playlistId: 'PL4-ERQAn4mRL1aXgmMCI7HTABHPmVkTqP',
-  },
-  // Spotify stations
-  {
-    id: 'spotify-azealia-madonna',
-    name: 'AZEALIA BANKS MADONNA DEEP CUTS',
-    genre: 'HOUSE / POP',
-    type: 'spotify' as const,
-    playlistId: '04HAAOlwlJaGuSiMeBOFFq' as string | undefined,
-  },
-  {
-    id: 'the-field',
-    name: 'THE FIELD RADIO',
-    genre: 'MINIMAL TECHNO',
-    type: 'youtube' as const,
-    playlistId: 'PL4-ERQAn4mRJcxMG33aQScuQmYIwEuFvS',
-  },
-  {
-    id: 'minimal-techno',
-    name: 'MINIMAL TECHNO',
-    genre: 'BLUES',
-    type: 'youtube' as const,
-    playlistId: 'PL7uGNWx-iG9YZuPa0pfuF1uSrVLCpdoKN',
-  },
-  {
-    id: 'blues-remedy',
-    name: 'BLUES REMEDY',
-    genre: 'BLUES',
-    type: 'youtube' as const,
-    playlistId: 'PL4-ERQAn4mRJEE6DTaigv_JWQ7Anbx9Cu',
-  },
-  // Spotify stations
-  {
-    id: 'spotify-postpunk',
-    name: 'POST-PUNK ESSENTIALS VOL. 1',
-    genre: 'POST-PUNK',
-    type: 'spotify' as const,
-    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
-  },
-  {
-    id: 'spotify-srv',
-    name: 'STEVIE RAY VAUGHAN RADIO',
-    genre: 'BLUES',
-    type: 'spotify' as const,
-    playlistId: '37i9dQZF1E4qdaF453XK0y' as string | undefined,
-  },
-];
-
 export default function OrbitalPage() {
   const { dateStr, timeStr, mounted } = useDateTime()
   const [isTracksOpen, setIsTracksOpen] = useState(false)
   const [isPlusOpen, setIsPlusOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [isLandscape, setIsLandscape] = useState(false)
   const [isRadioHubOpen, setIsRadioHubOpen] = useState(true)
-  const [isRadioHubPlaying, setIsRadioHubPlaying] = useState(false)
-  const [activeArtist, setActiveArtist] = useState(artists[0])
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
-      setIsLandscape(window.innerWidth > window.innerHeight)
     }
     handleResize()
     window.addEventListener('resize', handleResize)
@@ -295,7 +229,7 @@ export default function OrbitalPage() {
   }
 
   return (
-    <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'auto', position: 'relative' }}>
+    <div style={{ height: '100vh', width: '100vw', background: '#020101', overflow: 'hidden', position: 'relative' }}>
       {/* Translucent Saturn-Style Navbar */}
       {isMobile ? (
         // Mobile navbar - two rows
@@ -312,7 +246,7 @@ export default function OrbitalPage() {
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 {mounted && dateStr ? (
                   <>
-                    <span style={{ fontSize: '9px', opacity: 0.4 }}>TEST-{dateStr}</span>
+                    <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                     <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                   </>
                 ) : (
@@ -368,7 +302,7 @@ export default function OrbitalPage() {
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
                 {mounted && dateStr ? (
                   <>
-                    <span style={{ fontSize: '9px', opacity: 0.4 }}>TEST-{dateStr}</span>
+                    <span style={{ fontSize: '9px', opacity: 0.4 }}>{dateStr}</span>
                     <span style={{ opacity: 0.4, fontSize: '9px' }}>{timeStr}</span>
                   </>
                 ) : (
@@ -413,7 +347,7 @@ export default function OrbitalPage() {
         <EventHorizonScene onSceneReady={handleSceneReady} isRadioHubOpen={isRadioHubOpen} />
       </div>
 
-      {/* Radio Hub - Always mounted for persistent playback */}
+      {/* Radio Hub Overlay */}
       {isRadioHubOpen && (
         <div
           style={{
@@ -423,9 +357,8 @@ export default function OrbitalPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isMobile ? (isLandscape ? '170px' : '130px') : '0',
-            animation: 'fadeIn 0.3s ease-out',
-            pointerEvents: 'none'
+            paddingTop: isMobile ? '80px' : '0',
+            animation: 'fadeIn 0.3s ease-out'
           }}
         >
           <style>{`
@@ -444,36 +377,14 @@ export default function OrbitalPage() {
             style={{
               maxWidth: isMobile ? '90vw' : '900px',
               width: '100%',
-              maxHeight: isMobile ? 'calc(100vh - 140px)' : '80vh',
+              maxHeight: isMobile ? 'auto' : '80vh',
               borderRadius: '32px',
               overflow: 'hidden',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
-              pointerEvents: 'auto'
+              boxShadow: '0 25px 50px rgba(0,0,0,0.8)'
             }}
           >
-            <RadioHub
-              isMobile={isMobile}
-              isUIVisible={true}
-              isPlaying={isRadioHubPlaying}
-              activeArtist={activeArtist}
-              onPlayToggle={() => setIsRadioHubPlaying(!isRadioHubPlaying)}
-              onArtistChange={setActiveArtist}
-            />
+            <RadioHub isMobile={isMobile} />
           </div>
-        </div>
-      )}
-
-      {/* Hidden RadioHub instance for background playback when UI is closed */}
-      {!isRadioHubOpen && (
-        <div style={{ display: 'none' }}>
-          <RadioHub
-            isMobile={isMobile}
-            isUIVisible={false}
-            isPlaying={isRadioHubPlaying}
-            activeArtist={activeArtist}
-            onPlayToggle={() => setIsRadioHubPlaying(!isRadioHubPlaying)}
-            onArtistChange={setActiveArtist}
-          />
         </div>
       )}
 
