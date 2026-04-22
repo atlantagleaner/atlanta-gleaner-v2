@@ -215,9 +215,11 @@ export const RadioHub: React.FC<RadioHubProps> = ({
               border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '8px',
               zIndex: 1100,
-              maxHeight: '280px',
-              overflowY: 'auto',
+              maxHeight: '187px',
+              overflowY: 'scroll',
               overflowX: 'hidden',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(255, 179, 71, 0.8) rgba(2, 1, 1, 0.8)',
             }}>
               {artists.map((artist) => (
                 <button
@@ -402,7 +404,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             padding-right: 4px;
           }
           div::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(2, 1, 1, 0.8);
           }
           div::-webkit-scrollbar-thumb {
             background: rgba(255, 179, 71, 0.8);
@@ -459,9 +461,11 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             borderRadius: '8px',
             zIndex: 1100,
             minWidth: '300px',
-            maxHeight: '300px',
-            overflowY: 'auto',
+            maxHeight: '200px',
+            overflowY: 'scroll',
             overflowX: 'hidden',
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(255, 179, 71, 0.8) rgba(2, 1, 1, 0.8)',
           }}>
             {artists.map((artist) => (
               <button
@@ -648,7 +652,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
           padding-right: 4px;
         }
         div::-webkit-scrollbar-track {
-          background: transparent;
+          background: rgba(2, 1, 1, 0.8);
         }
         div::-webkit-scrollbar-thumb {
           background: rgba(255, 179, 71, 0.8);
