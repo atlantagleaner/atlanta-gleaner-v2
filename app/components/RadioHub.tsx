@@ -9,7 +9,7 @@ const artists = [
     name: 'ZENZEALIA - AZEALIA BANKS',
     genre: 'HOUSE / POP',
     type: 'spotify' as const,
-    playlistId: '2lCEfPzRDqB686AUyIRFXZ' as string | undefined,
+    playlistId: '2lCEfPzRDqB686AUyIRFXZ',
   },
   // YouTube stations
   {
@@ -69,7 +69,7 @@ interface RadioHubProps {
   isMobile?: boolean;
   isUIVisible?: boolean;
   isPlaying?: boolean;
-  activeArtist?: typeof artists[0];
+  activeArtist?: typeof artists[0] & { embedType?: 'album' | 'playlist' };
   onPlayToggle?: () => void;
   onArtistChange?: (artist: typeof artists[0]) => void;
 }
@@ -319,7 +319,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             </div>
           ) : activeArtist.type === 'spotify' && activeArtist.playlistId ? (
             <iframe
-              src={`https://open.spotify.com/embed/playlist/${activeArtist.playlistId}?utm_source=generator&theme=0`}
+              src={`https://open.spotify.com/embed/${activeArtist.embedType || 'playlist'}/${activeArtist.playlistId}?utm_source=generator&theme=0`}
               width="100%"
               height="100%"
               frameBorder="0"
@@ -539,7 +539,7 @@ export const RadioHub: React.FC<RadioHubProps> = ({
           </div>
         ) : activeArtist.type === 'spotify' && activeArtist.playlistId ? (
           <iframe
-            src={`https://open.spotify.com/embed/playlist/${activeArtist.playlistId}?utm_source=generator&theme=0`}
+            src={`https://open.spotify.com/embed/${activeArtist.embedType || 'playlist'}/${activeArtist.playlistId}?utm_source=generator&theme=0`}
             width="100%"
             height="100%"
             frameBorder="0"
