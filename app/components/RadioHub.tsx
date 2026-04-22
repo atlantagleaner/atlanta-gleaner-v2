@@ -4,6 +4,13 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Play, Music, ChevronRight, Volume2, ChevronDown } from 'lucide-react';
 
 const artists = [
+  {
+    id: 'spotify-zenzealia',
+    name: 'ZENZEALIA - AZEALIA BANKS',
+    genre: 'HOUSE / POP',
+    type: 'spotify' as const,
+    playlistId: '2lCEfPzRDqB686AUyIRFXZ' as string | undefined,
+  },
   // YouTube stations
   {
     id: 'azealia-banks',
