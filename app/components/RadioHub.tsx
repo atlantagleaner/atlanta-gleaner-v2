@@ -240,6 +240,10 @@ export const RadioHub: React.FC<RadioHubProps> = ({
                     letterSpacing: '0.15em',
                     textAlign: 'left',
                     textTransform: 'uppercase',
+                    height: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    boxSizing: 'border-box',
                   }}
                   onMouseEnter={(e) => {
                     if (activeArtist.id !== artist.id) {
@@ -392,21 +396,25 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
           }
-          /* Custom scrollbar styling for dropdown menu */
+          /* Custom floating pill scrollbar styling for dropdown menu */
           div::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
+            padding-right: 4px;
           }
           div::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+            background: transparent;
           }
           div::-webkit-scrollbar-thumb {
-            background: #FFB347;
-            border-radius: 4px;
-            backdrop-filter: blur(8px);
+            background: rgba(255, 179, 71, 0.8);
+            border-radius: 100px;
+            border: 3px solid rgba(2, 1, 1, 0.8);
+            background-clip: padding-box;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 8px rgba(255, 179, 71, 0.4);
           }
           div::-webkit-scrollbar-thumb:hover {
-            background: #FFC665;
+            background: rgba(255, 198, 101, 0.9);
+            box-shadow: 0 0 12px rgba(255, 179, 71, 0.6);
           }
         `}</style>
       </div>
@@ -476,6 +484,10 @@ export const RadioHub: React.FC<RadioHubProps> = ({
                   letterSpacing: '0.15em',
                   textAlign: 'left',
                   textTransform: 'uppercase',
+                  height: '52px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  boxSizing: 'border-box',
                 }}
                 onMouseEnter={(e) => {
                   if (activeArtist.id !== artist.id) {
@@ -630,21 +642,25 @@ export const RadioHub: React.FC<RadioHubProps> = ({
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
         }
-        /* Custom scrollbar styling for dropdown menu */
+        /* Custom floating pill scrollbar styling for dropdown menu */
         div::-webkit-scrollbar {
-          width: 8px;
+          width: 12px;
+          padding-right: 4px;
         }
         div::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
+          background: transparent;
         }
         div::-webkit-scrollbar-thumb {
-          background: #FFB347;
-          border-radius: 4px;
-          backdrop-filter: blur(8px);
+          background: rgba(255, 179, 71, 0.8);
+          border-radius: 100px;
+          border: 3px solid rgba(2, 1, 1, 0.8);
+          background-clip: padding-box;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 0 8px rgba(255, 179, 71, 0.4);
         }
         div::-webkit-scrollbar-thumb:hover {
-          background: #FFC665;
+          background: rgba(255, 198, 101, 0.9);
+          box-shadow: 0 0 12px rgba(255, 179, 71, 0.6);
         }
       `}</style>
       </div>
