@@ -10,6 +10,7 @@ const artists = [
     genre: 'HOUSE / POP',
     type: 'spotify' as const,
     playlistId: '2lCEfPzRDqB686AUyIRFXZ',
+    embedType: 'playlist' as const,
   },
   // YouTube stations
   {
@@ -25,7 +26,8 @@ const artists = [
     name: 'AZEALIA BANKS MADONNA DEEP CUTS',
     genre: 'HOUSE / POP',
     type: 'spotify' as const,
-    playlistId: '04HAAOlwlJaGuSiMeBOFFq' as string | undefined,
+    playlistId: '04HAAOlwlJaGuSiMeBOFFq',
+    embedType: 'playlist' as const,
   },
   {
     id: 'the-field',
@@ -54,14 +56,16 @@ const artists = [
     name: 'POST-PUNK ESSENTIALS VOL. 1',
     genre: 'POST-PUNK',
     type: 'spotify' as const,
-    playlistId: '01tvqPxen74Nz7TRz7kpSd' as string | undefined,
+    playlistId: '01tvqPxen74Nz7TRz7kpSd',
+    embedType: 'playlist' as const,
   },
   {
     id: 'spotify-srv',
     name: 'STEVIE RAY VAUGHAN RADIO',
     genre: 'BLUES',
     type: 'spotify' as const,
-    playlistId: '37i9dQZF1E4qdaF453XK0y' as string | undefined,
+    playlistId: '37i9dQZF1E4qdaF453XK0y',
+    embedType: 'playlist' as const,
   },
 ];
 
