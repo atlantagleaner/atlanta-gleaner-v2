@@ -67,6 +67,14 @@ const artists = [
     playlistId: '37i9dQZF1E4qdaF453XK0y',
     embedType: 'playlist' as const,
   },
+  {
+    id: 'spotify-late-night-jazz',
+    name: 'LATE NIGHT JAZZ LOUNGE',
+    genre: 'JAZZ / LOUNGE',
+    type: 'spotify' as const,
+    playlistId: '0QZxbnL7WrCn1TIasuDM58',
+    embedType: 'playlist' as const,
+  },
 ];
 
 interface RadioHubProps {
