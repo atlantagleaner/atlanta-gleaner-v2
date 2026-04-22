@@ -215,6 +215,9 @@ export const RadioHub: React.FC<RadioHubProps> = ({
               border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '8px',
               zIndex: 1100,
+              maxHeight: '280px',
+              overflowY: 'auto',
+              overflowX: 'hidden',
             }}>
               {artists.map((artist) => (
                 <button
@@ -389,9 +392,21 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
           }
-          /* Hide scrollbar while maintaining scrollability */
+          /* Custom scrollbar styling for dropdown menu */
           div::-webkit-scrollbar {
-            display: none;
+            width: 8px;
+          }
+          div::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+          }
+          div::-webkit-scrollbar-thumb {
+            background: #FFB347;
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background: #FFC665;
           }
         `}</style>
       </div>
@@ -436,6 +451,9 @@ export const RadioHub: React.FC<RadioHubProps> = ({
             borderRadius: '8px',
             zIndex: 1100,
             minWidth: '300px',
+            maxHeight: '300px',
+            overflowY: 'auto',
+            overflowX: 'hidden',
           }}>
             {artists.map((artist) => (
               <button
@@ -611,6 +629,22 @@ export const RadioHub: React.FC<RadioHubProps> = ({
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        /* Custom scrollbar styling for dropdown menu */
+        div::-webkit-scrollbar {
+          width: 8px;
+        }
+        div::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
+        div::-webkit-scrollbar-thumb {
+          background: #FFB347;
+          border-radius: 4px;
+          backdrop-filter: blur(8px);
+        }
+        div::-webkit-scrollbar-thumb:hover {
+          background: #FFC665;
         }
       `}</style>
       </div>
