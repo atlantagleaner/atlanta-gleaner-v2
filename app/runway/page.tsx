@@ -154,6 +154,13 @@ function EventHorizonScene({ onSceneReady, isRadioHubOpen = false }: EventHorizo
 
 // --- Main Application UI ---
 const artists = [
+  {
+    id: 'spotify-zenzealia',
+    name: 'ZENZEALIA - AZEALIA BANKS',
+    genre: 'HOUSE / POP',
+    type: 'spotify' as const,
+    playlistId: '2lCEfPzRDqB686AUyIRFXZ' as string | undefined,
+  },
   // YouTube stations
   {
     id: 'azealia-banks',
