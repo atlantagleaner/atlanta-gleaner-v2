@@ -10,7 +10,7 @@ const artists = [
     genre: 'HOUSE / POP',
     type: 'spotify' as const,
     playlistId: '2lCEfPzRDqB686AUyIRFXZ',
-    embedType: 'playlist' as const,
+    embedType: 'album' as const,
   },
   // YouTube stations
   {
