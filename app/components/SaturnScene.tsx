@@ -238,21 +238,17 @@ export default function SaturnScene({ onSceneReady, isInteractive = true, isMobi
     planetGroup.rotation.z = (26.73 * Math.PI) / 180
     scene.add(planetGroup)
 
-    // 7. Starfield (JWST views often show distant galaxies) - optimized for mobile
-    const count = isMobile ? 500 : 1500
+    // 7. Starfield (JWST views often show distant galaxies)
     const starGeo = new THREE.BufferGeometry()
-    const starPos = new Float32Array(count * 3)
-    for (let i = 0; i < count * 3; i++) {
-      starPos[i] = (Math.random() - 0.5) * 600
+    const starPos = new Float32Array(3000 * 3)
+    for (let i = 0; i < 3000; i++) {
+      const r = 400 + Math.random() * 400, t = Math.random() * 2 * Math.PI, p = Math.acos(2 * Math.random() - 1)
+      starPos[i*3] = r * Math.sin(p) * Math.cos(t)
+      starPos[i*3+1] = r * Math.sin(p) * Math.sin(t)
+      starPos[i*3+2] = r * Math.cos(p)
     }
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3))
-    const starMat = new THREE.PointsMaterial({
-      size: 0.5,
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.3
-    })
-    scene.add(new THREE.Points(starGeo, starMat))
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1.0, color: 0xffffff, transparent: true, opacity: 0.4 })))
 
     if (sceneRef.current) {
       sceneRef.current.planetMesh = planetMesh
