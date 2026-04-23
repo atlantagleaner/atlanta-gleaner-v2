@@ -1297,7 +1297,7 @@
 
     async function stateIntentSelect() {
       ExpressionSystem.setExpression('focused', 300);
-      await typeText('What calls to your heart today?');
+        await typeText(DialogueSystem.getIntentBridge());
 
       const intentOptions = DialogueSystem.getIntentOptions();
       gameState.intent = await showOptions(intentOptions);
@@ -1317,7 +1317,7 @@
     async function stateSpreadChoice() {
       ExpressionSystem.setExpression('focused', 300);
 
-      await typeText('Choose a 1-card draw or a 3-card draw.');
+        await typeText(DialogueSystem.getSpreadBridge());
 
       const spreadOptions = DialogueSystem.getSpreadOptions();
       gameState.spreadType = await showOptions(spreadOptions);
@@ -1379,6 +1379,7 @@
 
           await typeText(`${label}`);
           await appendTypeText(`\n${card.name}`);
+          await appendTypeText(`\n\n${DialogueSystem.getReadingLead()}`);
           await appendTypeText(`\n\n${reading.cardSpeaks}`);
           await appendTypeText(`\n\n${reading.astrophysical}`);
           await appendTypeText(`\n\n${reading.absurdTruth}`);
@@ -1396,6 +1397,7 @@
 
       if (!reading) {
         // Fallback fortune if not found
+        await typeText(DialogueSystem.getReadingLead());
         await typeText('The card speaks: ' + card.name);
         await showNextButton();
         await setState('CLOSING');
@@ -1404,6 +1406,7 @@
 
       // Display reading in 3 parts
       ExpressionSystem.setExpression('revelation', 300);
+      await typeText(DialogueSystem.getReadingLead());
       await typeText(reading.cardSpeaks);
 
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -1424,7 +1427,7 @@
 async function stateClosing() {
   showCharacter();
   ExpressionSystem.setExpression('knowing-smile', 300);
-  await typeText('Would you like another reading?');
+    await typeText(DialogueSystem.getClosingBridge());
 
   const closingOptions = [
     { label: 'DRAW AGAIN', value: 'another' },
@@ -1660,6 +1663,16 @@ async function stateClosing() {
         // Enhanced psychic with star crown and third eye
         const sx = 80, sy = 26, outerR = 25, innerR = 14;
 
+        // Centered aura behind the sprite
+        const auraGrad = ctx.createRadialGradient(80, 92, 10, 80, 92, 72);
+        auraGrad.addColorStop(0, 'rgba(255,170,221,0.22)');
+        auraGrad.addColorStop(0.55, 'rgba(224,96,160,0.12)');
+        auraGrad.addColorStop(1, 'rgba(255,170,221,0)');
+        ctx.fillStyle = auraGrad;
+        ctx.beginPath();
+        ctx.arc(80, 92, 72, 0, Math.PI * 2);
+        ctx.fill();
+
         // Star crown
         ctx.fillStyle = '#ff88cc';
         ctx.beginPath();
@@ -1736,9 +1749,9 @@ async function stateClosing() {
 
         // Small tarot cards at the base of the robe
         const miniCards = [
-          { x: 46, color: '#00cec9' },
-          { x: 66, color: '#f9ca24' },
-          { x: 86, color: '#e056fd' },
+          { x: 54, color: '#00cec9' },
+          { x: 74, color: '#f9ca24' },
+          { x: 94, color: '#e056fd' },
         ];
         miniCards.forEach((mini, index) => {
           ctx.fillStyle = mini.color;
