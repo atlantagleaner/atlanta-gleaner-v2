@@ -189,20 +189,6 @@ const SceneSystem = (() => {
         ctx.fillStyle = this.colors.primary;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Distant nebula
-        const nebulaGrad = ctx.createRadialGradient(
-          canvas.width * 0.3,
-          canvas.height * 0.3,
-          20,
-          canvas.width * 0.3,
-          canvas.height * 0.3,
-          120
-        );
-        nebulaGrad.addColorStop(0, 'rgba(249,202,36,0.15)');
-        nebulaGrad.addColorStop(1, 'rgba(249,202,36,0)');
-        ctx.fillStyle = nebulaGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         // Random stars
         ctx.fillStyle = '#f9ca24';
         for (let i = 0; i < 30; i++) {
