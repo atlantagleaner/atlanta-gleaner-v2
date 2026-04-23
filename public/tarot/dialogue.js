@@ -25,11 +25,11 @@ const DialogueSystem = (() => {
     },
     spread: {
       mirror: {
-        prompt: 'One card shall speak your truth directly. A single lens through which to view your journey.',
+        prompt: 'A 1-card draw will speak your truth directly. One lens through which to view your journey.',
         expressions: ['focused'],
       },
       three: {
-        prompt: 'Three cards shall unfold your story: where you\'ve been, where you stand now, and where you\'re headed.',
+        prompt: 'A 3-card draw will unfold your story: where you\'ve been, where you stand now, and where you\'re headed.',
         expressions: ['focused', 'knowing-smile'],
       },
     },
@@ -65,9 +65,7 @@ const DialogueSystem = (() => {
     },
     closing: {
       nextOptions: [
-        'Another reading?',
-        'Tell me more',
-        'Return to Saturn',
+        'Draw again',
       ],
       expressions: ['knowing-smile', 'playful-mischief'],
     },
@@ -145,8 +143,8 @@ const DialogueSystem = (() => {
      */
     getSpreadOptions() {
       return [
-        { label: 'SINGLE INSIGHT', value: 'mirror' },
-        { label: 'BIGGER PICTURE', value: 'three' },
+        { label: '1-CARD DRAW', value: 'mirror' },
+        { label: '3-CARD DRAW', value: 'three' },
       ];
     },
   };

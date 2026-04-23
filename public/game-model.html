@@ -117,12 +117,146 @@
     }
     .card-image-zone.visible { opacity: 1; }
 
+    #card-image-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 6px 0;
+      gap: 0;
+    }
+
     .card-image {
       max-width: 160px;
       max-height: 235px;
       object-fit: contain;
       image-rendering: auto;
       border: 3px solid var(--accent-gold);
+    }
+
+    .card-image-zone.single #card-image-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-image-zone.three #card-image-container {
+      position: relative;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: nowrap;
+    }
+
+    .card-image-zone.three.intro #card-image-container {
+      position: static;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .card-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 2px;
+      min-width: 0;
+      text-align: center;
+    }
+
+    .card-slot-label {
+      font-size: 9px;
+      line-height: 1.1;
+      color: var(--accent-gold);
+      opacity: 0.92;
+      min-height: 8px;
+      max-width: 110px;
+      white-space: nowrap;
+      letter-spacing: 0.08em;
+    }
+
+    .card-slot .generated-card {
+      transform-origin: top center;
+      display: block;
+    }
+
+    .card-image-zone.single .card-slot .generated-card {
+      transform: scale(1);
+    }
+
+    .card-image-zone.three .card-slot {
+      position: absolute;
+      top: 18px;
+      width: 110px;
+      transition: opacity 0.35s ease, left 0.35s ease, right 0.35s ease, transform 0.35s ease;
+    }
+
+    .card-image-zone.three.intro .card-slot {
+      position: static;
+      width: 84px;
+      opacity: 1;
+      transform: none;
+    }
+
+    .card-image-zone.three .card-slot .generated-card {
+      transform-origin: top center;
+      transform: scale(0.65);
+    }
+
+    .card-image-zone.three.intro .card-slot .generated-card {
+      transform: scale(0.66);
+    }
+
+    .card-image-zone.three .card-slot .card-back {
+      width: 72px !important;
+      height: 108px !important;
+      transform-origin: top center;
+      transform: scale(0.65);
+    }
+
+    .card-image-zone.three.intro .card-slot .card-back {
+      width: 72px !important;
+      height: 108px !important;
+      transform: scale(0.66);
+    }
+
+    .card-image-zone.three .card-slot .card-slot-label {
+      max-width: 120px;
+      font-size: 12px;
+    }
+
+    .card-image-zone.three.intro .card-slot .card-slot-label {
+      max-width: 96px;
+      font-size: 12px;
+    }
+
+    .card-image-zone.three .card-slot.is-left {
+      left: 18px;
+      opacity: 0.45;
+      transform: translateY(24px);
+      z-index: 1;
+    }
+
+    .card-image-zone.three .card-slot.is-center {
+      left: 50%;
+      opacity: 1;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    .card-image-zone.three .card-slot.is-right {
+      right: 18px;
+      opacity: 0.45;
+      transform: translateY(24px);
+      z-index: 1;
+    }
+
+    .card-image-zone.three .card-slot.is-center .generated-card,
+    .card-image-zone.three .card-slot.is-center .card-back {
+      transform: scale(1);
     }
 
     /* SNES-style Minor Arcana fallback card */
@@ -318,7 +452,7 @@
       height: 140px;
       overflow-y: auto;
       overflow-x: hidden;
-      font-size: 9px;
+      font-size: 10px;
       line-height: 1.8;
       color: var(--silver);
       margin-bottom: 6px;
@@ -390,8 +524,8 @@
       border: none;
       color: var(--silver);
       font-family: 'Press Start 2P', monospace;
-      font-size: 6px;
-      padding: 4px 6px 4px 14px;
+      font-size: 10px;
+      padding: 5px 6px 5px 18px;
       cursor: pointer;
       text-align: left;
       white-space: normal;
@@ -406,11 +540,11 @@
     .option-btn::before {
       content: ' ';
       position: absolute;
-      left: 4px;
+      left: 5px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--accent-gold);
-      font-size: 6px;
+      font-size: 10px;
     }
     .option-btn:hover, .option-btn:focus {
       color: var(--accent-gold);
@@ -880,7 +1014,7 @@
     // Spread position names
     const SPREAD_POSITIONS = {
       mirror: ['THE MIRROR'],
-      three:  ['THE SHADOW BEHIND', 'THE FLAME NOW', 'THE HORIZON AHEAD'],
+      three:  ['PAST', 'PRESENT', 'FUTURE'],
     };
 
     // Planet lore for orrery interaction
@@ -1007,7 +1141,10 @@
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.textContent = 'NEXT ▶';
-        btn.onclick = () => resolve('next');
+        btn.onclick = () => {
+          el.innerHTML = '';
+          resolve('next');
+        };
         el.appendChild(btn);
       });
     }
@@ -1066,6 +1203,58 @@
         'mystery': 'cosmic-night',
       };
       return map[intent] || 'cosmic-night';
+    }
+
+    function getSpreadLabels(spreadType) {
+      return SPREAD_POSITIONS[spreadType] || SPREAD_POSITIONS.mirror;
+    }
+
+    function setCardImageMode(spreadType, mode = 'focus') {
+      const zone = document.getElementById('card-image-zone');
+      zone.classList.toggle('three', spreadType === 'three');
+      zone.classList.toggle('single', spreadType !== 'three');
+      zone.classList.toggle('intro', spreadType === 'three' && mode === 'intro');
+    }
+
+    function createCardFaceElement(card) {
+      if (card.suit) {
+        const isReversed = gameState.lightOrShadow[card.id] === 'reversed';
+        return CardGenerator.generateMinorCard(card.suit, card.rank, isReversed);
+      }
+
+      return generateMajorArcanaCard(card);
+    }
+
+    function createCardSlot(card, label, isRevealed, spreadType) {
+      const slot = document.createElement('div');
+      slot.className = 'card-slot';
+
+      const slotLabel = document.createElement('div');
+      slotLabel.className = 'card-slot-label';
+      slotLabel.textContent = label;
+      slot.appendChild(slotLabel);
+
+      if (isRevealed) {
+        slot.appendChild(createCardFaceElement(card));
+      } else {
+        const back = document.createElement('div');
+        back.className = 'card-back';
+        back.style.width = spreadType === 'three' ? '78px' : '110px';
+        back.style.height = spreadType === 'three' ? '117px' : '160px';
+        slot.appendChild(back);
+      }
+
+      return slot;
+    }
+
+    function getThreeCardSlotPosition(index, activeIndex) {
+      const layouts = {
+        0: ['is-center', 'is-right', 'is-left'],
+        1: ['is-left', 'is-center', 'is-right'],
+        2: ['is-left', 'is-right', 'is-center'],
+      };
+
+      return (layouts[activeIndex] && layouts[activeIndex][index]) || (index === activeIndex ? 'is-center' : 'is-right');
     }
 
     // ==================== STATE MACHINE ====================
@@ -1128,11 +1317,13 @@
     async function stateSpreadChoice() {
       ExpressionSystem.setExpression('focused', 300);
 
-      const spreadDialogue = DialogueSystem.getSpreadDialogue('mirror');
-      await typeText(spreadDialogue.prompt);
+      await typeText('Choose a 1-card draw or a 3-card draw.');
 
       const spreadOptions = DialogueSystem.getSpreadOptions();
       gameState.spreadType = await showOptions(spreadOptions);
+
+      const spreadDialogue = DialogueSystem.getSpreadDialogue(gameState.spreadType);
+      await typeText(spreadDialogue.prompt);
 
       // Draw cards based on spread type
       const sizes = { mirror: 1, three: 3 };
@@ -1150,25 +1341,54 @@
       const drawPrompt = DialogueSystem.getDrawPrompt();
       await typeText(drawPrompt);
 
-      // Flip first card
-      const card = gameState.drawnCards[0];
-      gameState.lightOrShadow[card.id] = 'upright';
-
-      // Wait a moment, then show card flip dialog
-      await new Promise(resolve => setTimeout(resolve, 1200));
-
-      ExpressionSystem.setExpression('revelation', 400);
       hideCharacter();
-      updateCardDisplay(card);
       showCardImage();
 
-      await new Promise(resolve => setTimeout(resolve, 600));
+      if (gameState.spreadType === 'three') {
+        updateCardDisplay(null, { spreadType: 'three', revealedCount: 3, mode: 'intro' });
+        await new Promise(resolve => setTimeout(resolve, 700));
+      } else {
+        // Flip first card
+        const card = gameState.drawnCards[0];
+        gameState.currentCardIndex = 0;
+        gameState.lightOrShadow[card.id] = 'upright';
+
+        // Wait a moment, then show card flip dialog
+        await new Promise(resolve => setTimeout(resolve, 1200));
+
+        ExpressionSystem.setExpression('revelation', 400);
+        updateCardDisplay(card, { spreadType: 'mirror', revealedCount: 1 });
+      }
 
       await showNextButton();
       await setState('READING');
     }
 
     async function stateReading() {
+      if (gameState.spreadType === 'three') {
+        const labels = getSpreadLabels('three');
+
+        for (let i = 0; i < gameState.drawnCards.length; i++) {
+          const card = gameState.drawnCards[i];
+          const label = labels[i] || `CARD ${i + 1}`;
+          const reading = getFortune(card, gameState.intent, gameState.planetaryInfluence);
+
+          gameState.currentCardIndex = i;
+          ExpressionSystem.setExpression(i === 0 ? 'revelation' : i === 1 ? 'cosmic-vision' : 'playful-mischief', 300);
+          updateCardDisplay(card, { spreadType: 'three', revealedCount: gameState.drawnCards.length, activeIndex: i, mode: 'focus' });
+
+          await typeText(`${label}`);
+          await appendTypeText(`\n${card.name}`);
+          await appendTypeText(`\n\n${reading.cardSpeaks}`);
+          await appendTypeText(`\n\n${reading.astrophysical}`);
+          await appendTypeText(`\n\n${reading.absurdTruth}`);
+
+          await showNextButton();
+        }
+        await setState('CLOSING');
+        return;
+      }
+
       const card = gameState.drawnCards[0];
 
       // Get the reading for this card/intent combination
@@ -1201,26 +1421,19 @@
       await setState('CLOSING');
     }
 
-    async function stateClosing() {
-      showCharacter();
-      ExpressionSystem.setExpression('knowing-smile', 300);
-      await typeText('Does this resonate with your spirit?');
+async function stateClosing() {
+  showCharacter();
+  ExpressionSystem.setExpression('knowing-smile', 300);
+  await typeText('Would you like another reading?');
 
-      const closingOptions = [
-        { label: 'ANOTHER READING', value: 'another' },
-        { label: 'RETURN TO SATURN', value: 'return' },
-      ];
+  const closingOptions = [
+    { label: 'DRAW AGAIN', value: 'another' },
+  ];
 
-      const choice = await showOptions(closingOptions);
-
-      if (choice === 'another') {
-        hideCardImage();
-        await setState('GREET');
-      } else {
-        // Return to Saturn terminal and activate orbit mode
-        window.parent.postMessage({ action: 'closeGame', orbitMode: true }, '*');
-      }
-    }
+  await showOptions(closingOptions);
+  hideCardImage();
+  await setState('GREET');
+}
 
     // Helper function to get fortune for a card
     function getFortune(card, intent, planet) {
@@ -1437,8 +1650,15 @@
         ctx.fillRect(132, 104, 16, 8);
 
       } else {
+        // Psychic fits better when slightly scaled down inside the fixed canvas.
+        ctx.save();
+        const scale = 0.82;
+        ctx.translate(80, 120);
+        ctx.scale(scale, scale);
+        ctx.translate(-80, -120);
+
         // Enhanced psychic with star crown and third eye
-        const sx = 80, sy = 24, outerR = 28, innerR = 16;
+        const sx = 80, sy = 26, outerR = 25, innerR = 14;
 
         // Star crown
         ctx.fillStyle = '#ff88cc';
@@ -1473,7 +1693,7 @@
 
         // Face (below crown)
         ctx.fillStyle = '#ff99dd';
-        ctx.fillRect(66, 52, 28, 20);
+        ctx.fillRect(67, 53, 26, 18);
 
         // Third eye (forehead)
         ctx.fillStyle = '#ff44bb';
@@ -1486,28 +1706,54 @@
 
         // Eyes
         ctx.fillStyle = '#2a0a1a';
-        ctx.fillRect(70, 58, 6, 6);
-        ctx.fillRect(84, 58, 6, 6);
+        ctx.fillRect(70, 58, 5, 5);
+        ctx.fillRect(85, 58, 5, 5);
 
         // Body robe
         ctx.fillStyle = '#e060a0';
-        ctx.fillRect(32, 80, 96, 64);
+        ctx.fillRect(36, 82, 88, 60);
 
         // Body shading
         ctx.fillStyle = '#b04080';
-        ctx.fillRect(80, 80, 48, 64);
+        ctx.fillRect(80, 82, 44, 60);
 
         // Collar gem
         ctx.fillStyle = '#ff44bb';
-        ctx.fillRect(66, 80, 28, 14);
+        ctx.fillRect(68, 82, 24, 12);
         ctx.strokeStyle = '#ffaadd';
         ctx.lineWidth = 2;
         ctx.stroke();
 
+        // Mystic veil / tarot mantle
+        ctx.fillStyle = 'rgba(10,1,21,0.38)';
+        ctx.beginPath();
+        ctx.moveTo(50, 74);
+        ctx.lineTo(110, 74);
+        ctx.lineTo(122, 142);
+        ctx.lineTo(38, 142);
+        ctx.closePath();
+        ctx.fill();
+
+        // Small tarot cards at the base of the robe
+        const miniCards = [
+          { x: 46, color: '#00cec9' },
+          { x: 66, color: '#f9ca24' },
+          { x: 86, color: '#e056fd' },
+        ];
+        miniCards.forEach((mini, index) => {
+          ctx.fillStyle = mini.color;
+          ctx.fillRect(mini.x, 124 + (index % 2) * 2, 12, 16);
+          ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.fillRect(mini.x + 2, 126 + (index % 2) * 2, 3, 3);
+          ctx.strokeStyle = '#240c3d';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(mini.x, 124 + (index % 2) * 2, 12, 16);
+        });
+
         // Meditation hands (center)
         ctx.fillStyle = '#ff99dd';
         ctx.beginPath();
-        ctx.arc(80, 116, 10, 0, Math.PI * 2);
+        ctx.arc(80, 114, 9, 0, Math.PI * 2);
         ctx.fill();
 
         // Arms flowing down
@@ -1520,22 +1766,51 @@
         ctx.beginPath();
         ctx.arc(80, 116, 14, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.restore();
       }
     }
 
-    function updateCardDisplay(card) {
+    function updateCardDisplay(card, options = {}) {
+      const spreadType = options.spreadType || gameState.spreadType || 'mirror';
+      const revealedCount = options.revealedCount ?? 1;
+      const activeIndex = options.activeIndex ?? Math.max(0, revealedCount - 1);
+      const mode = options.mode || (spreadType === 'three' ? 'focus' : 'single');
       const container = document.getElementById('card-image-container');
+      const metadata = document.getElementById('card-metadata');
       container.innerHTML = '';
+
+      setCardImageMode(spreadType, mode);
+
+      if (spreadType === 'three') {
+        metadata.style.display = 'none';
+        const labels = getSpreadLabels('three');
+        const isIntro = mode === 'intro';
+        gameState.drawnCards.forEach((drawnCard, index) => {
+          const label = labels[index] || `CARD ${index + 1}`;
+          const slot = createCardSlot(drawnCard, label, index < revealedCount, 'three');
+          if (!isIntro) {
+            slot.classList.add(getThreeCardSlotPosition(index, activeIndex));
+          }
+          container.appendChild(slot);
+        });
+        return;
+      }
+
+      metadata.style.display = 'block';
+
+      const slot = document.createElement('div');
+      slot.className = 'card-slot';
 
       // Use celestial SVG cards for Minor Arcana
       if (card.suit) {
-        const lightOrShadow = gameState.lightOrShadow[card.id] || 'light';
-        const cardElement = CardGenerator.generateMinorCard(card.suit, card.rank, lightOrShadow);
-        container.appendChild(cardElement);
+        slot.appendChild(createCardFaceElement(card));
       } else {
         // Major Arcana: generate celestial-themed card
-        container.appendChild(generateMajorArcanaCard(card));
+        slot.appendChild(generateMajorArcanaCard(card));
       }
+
+      container.appendChild(slot);
 
       // Metadata display (below card, not overlaid)
       document.getElementById('card-name').textContent = card.name;
