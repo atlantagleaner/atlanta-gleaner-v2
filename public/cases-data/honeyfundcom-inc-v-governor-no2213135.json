@@ -1,0 +1,315 @@
+{
+  "case_id": "honeyfundcom-inc-v-governor-no2213135",
+  "metadata": {
+    "title": "Honeyfund.com Inc. v. Governor",
+    "court": "United States Court of Appeals for the Eleventh Circuit",
+    "date": "March 4, 2024",
+    "docket": "No. 22-13135",
+    "notice": null,
+    "judges": "Before WILSON, GRANT, and BRASHER, Circuit Judges.",
+    "opinion_by": "GRANT",
+    "appellant_counsel": [
+      "Douglas Hallward-Driemeier, Ropes & Gray, LLP, WASHINGTON, DC",
+      "Rachel Goodman, Protect Democracy, NEW YORK, NY",
+      "John Langford, Protect Democracy, LOS ANGELES, CA",
+      "Amy Jane Longo, Ropes & Gray, LLP, LOS ANGELES, CA.",
+      "Rachel Goodman, Protect Democracy, NEW YORK, NY.",
+      "GOVERNOR, STATE OF FLORIDA, ATTORNEY GENERAL, STATE OF FLORIDA, Defendants - Appellants: Charles J. Cooper, John David Ohlendorf, John Ramer, Megan M. Wold, Cooper & Kirk, PLLC, WASHINGTON, DC",
+      "Florida Attorney General Service, Timothy L. Newhall, Henry Charles Whitaker, Office of the Attorney General, PL-01 THE CAPITOL, TALLAHASSEE, FL.",
+      "SENIOR CHAIR OF THE FLORIDA COMMISSION ON HUMAN RELATIONS, VICE CHAIR AND COMMISSIONER OF THE COMMISSION, MARIO GARZA, LIBBY FARMER, JAY PICHARD, LARRY HART, MONICA CEPERO, VIVIAN MYRTETUS, DAWN HANSON, KENYATTA MOYE, [**2]  PAMELA PAYNE, Defendants - Appellants: Charles J. Cooper, John David Ohlendorf, John Ramer, Megan M. Wold, Cooper & Kirk, PLLC, WASHINGTON, DC.",
+      "BEN & JERRYS HOMEMADE HOLDINGS INC., CHAMBER OF PROGRESS, FAHERTY BRAND, GLOSSIER, INC., H&M HENNES & MAURITZ L.P., LUSH LICENSING, MARA HOFFMAN, FLORIDA FOR GOOD, LLC, THE FOR GOOD MOVEMENT, INC, LEGACY HOSPITALITY HOLDINGS, INC., LEGACY CLUB HOLDINGS, LLC, LEGACY VACATION CLUB SERVICES, LLC, ALOHA BAY CONDOMINIUM ASSOCIATION, INC, RESORT WORLD OF ORLANDO CONDOMINIUM SECTION II ASSOCIATION, INC, HARBOR CLUB OWNER ASSOCIATION, INC., THE OAKS AT RESORT WORLD CONDOMINIUM ASSOCIATION, INC., THE SPAS AT RESORT WORLD CONDOMINIUM ASSOCIATION, INC, VILLAS AT RESORT WORLD CONDOMINIUM ASSOCIATION, INC., SALT PALM DEVELOPMENT, INC., Amicus Curiaes: Wesley Todd Lee Burrell, Munger Tolles & Olson, LLP, LOS ANGELES, CA",
+      "Brendan B. Gants, U.S. Department of Justice, WASHINGTON, DC.",
+      "PEN AMERICAN CENTER, Amicus Curiae: Joel S. Perwin, Joel S. Perwin, PA, MIAMI BEACH, FL."
+    ],
+    "appellee_counsel": [
+      "HONEYFUND.COM INC, CHEVARA ORRIN, Plaintiffs - Appellees: Shalini Goel Agarwal, Sara Chimene-Weiss, Protect Democracy, WASHINGTON, DC",
+      "PRIMO TAMPA LLC, Plaintiff - Appellee: Shalini Goel Agarwal, Sara Chimene-Weiss, Protect Democracy, WASHINGTON, DC"
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1275]</span>  Grant, Circuit Judge:"
+    },
+    {
+      "type": "paragraph",
+      "content": "This is not the first era in which Americans have held widely divergent views on important areas of morality, <span class=\"pagination-marker\">[**3]</span>  ethics, law, and public policy. And it is not the first time that these disagreements have seemed so important, and their airing so dangerous, that something had to be done. But now, as before, the First Amendment keeps the government from putting its thumb on the scale."
+    },
+    {
+      "type": "paragraph",
+      "content": "The State of Florida seeks to bar employers from holding mandatory meetings for their employees if those meetings endorse viewpoints the state finds offensive. But meetings on those same topics <em>are</em> allowed if speakers endorse viewpoints the state agrees with, or at least does not object to. This law, as Florida concedes, draws its distinctions based on viewpoint—the most pernicious of dividing lines under the First Amendment. But the state insists that ordinary First Amendment review does not apply because the law restricts conduct, not speech."
+    },
+    {
+      "type": "paragraph",
+      "content": "We cannot agree, and we reject this latest attempt to control speech by recharacterizing it as conduct. Florida may be exactly right about the nature of the ideas it targets. Or it may not. Either way, the merits of these views will be decided in the clanging marketplace of ideas rather than a codebook or a courtroom."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>I</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>A</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida's law, the Individual Freedom Act, bans certain mandatory workplace trainings.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> Fla. Stat. § 760.10(8)(a). The Act says <span class=\"pagination-marker\">[**4]</span>  employers cannot subject \"any individual, as a condition of employment,\" to \"training, instruction, or any other required activity that espouses, promotes, advances, inculcates, or compels\" a certain set of beliefs. <em>Id.</em> It goes on to list the rejected ideas, all of which relate to race, color, sex, or national origin:"
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Members of one race, color, sex, or national origin are morally superior to members of another race, color, sex, or national origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "2. An individual, by virtue of his or her race, color, sex, or national origin, is inherently racist, sexist, or oppressive, whether consciously or unconsciously."
+    },
+    {
+      "type": "paragraph",
+      "content": "3. An individual's moral character or status as either privileged or oppressed is necessarily determined by his or her race, color, sex, or national origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "4. Members of one race, color, sex, or national origin cannot and should not attempt to treat others without respect to race, color, sex, or national origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "5. An individual, by virtue of his or her race, color, sex, or national origin, bears responsibility for, or should be discriminated against or receive adverse treatment  <span class=\"pagination-marker\">[*1276]</span>  because of, actions committed in the past by other members of the same race, color, sex, or national <span class=\"pagination-marker\">[**5]</span>  origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "6. An individual, by virtue of his or her race, color, sex, or national origin, should be discriminated against or receive adverse treatment to achieve diversity, equity, or inclusion."
+    },
+    {
+      "type": "paragraph",
+      "content": "7. An individual, by virtue of his or her race, color, sex, or national origin, bears personal responsibility for and must feel guilt, anguish, or other forms of psychological distress because of actions, in which the individual played no part, committed in the past by other members of the same race, color, sex, or national origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "8. Such virtues as merit, excellence, hard work, fairness, neutrality, objectivity, and racial colorblindness are racist or sexist, or were created by members of a particular race, color, sex, or national origin to oppress members of another race, color, sex, or national origin."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Discussion of these topics, however, is not completely barred—the law prohibits requiring attendance only for sessions <em>endorsing</em> them. <em>Id.</em> § 760.10(8)(b). Employers can still require employees to attend sessions that reject these ideas or present them in an \"objective manner without <span class=\"pagination-marker\">[**6]</span>  endorsement of the concepts.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida justifies its Act as an antidiscrimination law. According to the state's briefs, affirming these prohibited concepts constitutes \"hostile speech,\" and forcing it on employees amounts to \"invidious discrimination\" that the state can prohibit. By limiting the range of views that employees can be required to hear, the Act (its proponents say) will protect Floridians from this dangerous and offensive speech—whether they wish to hear it or not. News Release, Florida Off. of the Governor, <em>Governor Ron DeSantis Signs Legislation to Protect Floridians from Discrimination and Woke Indoctrination</em> (Apr. 22, 2022), https://perma.cc/33TM-2B3M."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Act can be enforced through citizen-initiated suits or through regulatory action. Either way, the price of failure is steep. Employers who require their employees to hear these disfavored ideas can face serious financial penalties—back pay, compensatory damages, and up to $100,000 in punitive damages, plus attorney's fees—on top of injunctive relief. Fla. Stat. §§ 760.11(5), (6), 760.021(1), (4)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>B</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Honeyfund and Primo Tampa are companies that want to host mandatory training sessions they characterize as highlighting \"diversity, equity, and inclusion\" <span class=\"pagination-marker\">[**7]</span>  issues. And Chevara Orrin is the founder of Whitespace Consulting, a firm that contracts with employers like Honeyfund and Primo Tampa to host such meetings, which all four plaintiffs say bring \"substantial benefits\" to businesses. The plaintiffs also say the Act prohibits them from sharing their viewpoints. In a lawsuit naming Florida Governor Ron DeSantis, Florida Attorney General Ashley Moody, and several members of the Florida Commission on Human Relations, the plaintiffs challenged the mandatory-meeting provision of the Individual Freedom Act, Fla. Stat. § 760.10(8). They said the Act violates their rights to free speech, and is both vague and overbroad."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court granted a preliminary injunction, reasoning that the mandatory-meeting provision is both unconstitutionally vague and an unlawful content- and viewpoint-based speech restriction.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> Florida now appeals."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/> <span class=\"pagination-marker\">[*1277]</span>  <strong>II</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court's order granting a preliminary injunction is reviewed for abuse of discretion. <em>See </em><em>Otto v. City of Boca Raton</em>, 981 F.3d 854, 860 (11th Cir. 2020). A preliminary injunction is appropriate only when the moving party can show that: (1) \"it has a substantial likelihood of success on the merits\"; (2) it will suffer \"irreparable injury\" unless an \"injunction issues\"; (3) this \"threatened injury to the <span class=\"pagination-marker\">[**8]</span>  movant outweighs whatever damage the proposed injunction may cause the opposing party\"; and (4) \"the injunction would not be adverse to the public interest.\" <em>Id.</em> (quotation omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>III</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "The ideas targeted in Florida's Individual Freedom Act are embraced in some communities, and despised in others. But no matter what these ideas are really worth, they define the contours of the Act. By limiting its restrictions to a list of ideas designated as offensive, the Act targets speech based on its content. And by barring only speech that endorses any of those ideas, it penalizes certain viewpoints—the greatest First Amendment sin. Florida concedes as much, even admitting that the Act rejects certain viewpoints. But the state insists that what looks like a ban on speech is really a ban on conduct because only the meetings are being restricted, not the speech."
+    },
+    {
+      "type": "paragraph",
+      "content": "We have rejected similar conduct-not-speech claims before. <em>See, e.g., </em><em>Otto</em>, 981 F.3d at 861, 865-66; <em>Wollschlaeger v. Governor, Florida</em>, 848 F.3d 1293, 1308 (11th Cir. 2017) (en banc). So too here. The only way to discern which mandatory trainings are prohibited is to find out whether the speaker disagrees with Florida. That is a classic—and disallowed—regulation of speech."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>A</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Speech doctrine is famously complicated, but some points are beyond dispute. <span class=\"pagination-marker\">[**9]</span>  A few limited categories of speech are traditionally unprotected—obscenity, fighting words, incitement, and the like. <em>Brown v. Ent. Merchs. Ass'n</em>, 564 U.S. 786, 791, 131 S. Ct. 2729, 180 L. Ed. 2d 708 (2011). But what counts as unprotected speech starts and ends with tradition—\"new categories of unprotected speech may not be added to the list by a legislature that concludes certain speech is too harmful to be tolerated.\" <em>Id.</em>; <em>see also </em><em>Nat'l Inst. of Fam. &amp; Life Advocs. v. Becerra</em>, 585 U.S. 755, 767, 138 S. Ct. 2361, 201 L. Ed. 2d 835 (2018)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Outside of these narrow categories, then, content-based restrictions of speech are \"presumptively invalid.\" <em>Wollschlaeger</em>, 848 F.3d at 1300 (quotation omitted). A restriction is content based if it \"applies to particular speech because of the topic discussed or the idea or message expressed.\" <em>Reed v. Town of Gilbert</em>, 576 U.S. 155, 163, 135 S. Ct. 2218, 192 L. Ed. 2d 236 (2015). The First Amendment's protections against content-based restrictions are not absolute, however—such laws can be upheld if they are \"narrowly tailored to serve compelling state interests.\" <em>Id.</em> But this standard, known as strict scrutiny, is a notoriously difficult test, one that few laws survive. <em>Otto</em>, 981 F.3d at 861-62. Its bar is high for a reason: \"the alternative would lead to standardization of ideas either by legislatures, courts, or dominant political or community groups.\" <em>Terminiello v. Chicago</em>, 337 U.S. 1, 4-5, 69 S. Ct. 894, 93 L. Ed. 1131 (1949);  <span class=\"pagination-marker\">[*1278]</span>  <em>see </em><em>Otto</em>, 981 F.3d at 861-62."
+    },
+    {
+      "type": "paragraph",
+      "content": "For viewpoint-based speech restrictions—when the government targets not just a subject matter, but \"particular views taken by speakers\" <span class=\"pagination-marker\">[**10]</span>  on that subject matter—the First Amendment provides even tighter limits. <em>Rosenberger v. Rector &amp; Visitors of Univ. of Virginia</em>, 515 U.S. 819, 829, 115 S. Ct. 2510, 132 L. Ed. 2d 700 (1995). Such restrictions are \"an egregious form of content discrimination\" and likely even invalid per se. <em>Otto</em>, 981 F.3d at 864 (quoting <em>Rosenberger</em>, 515 U.S. at 829)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Conduct, of course, is a different matter because the government <em>does</em> have broad authority to regulate in that arena—just not as a smokescreen for regulating speech. <em>See </em><em>R.A.V. v. City of St. Paul</em>, 505 U.S. 377, 385, 112 S. Ct. 2538, 120 L. Ed. 2d 305 (1992). To be sure, regulations of conduct may incidentally affect speech; the classic example is that a law against setting fires can prohibit flag burning. <em>Id.</em> The comparative freedom to regulate conduct sometimes tempts political bodies to try to recharacterize speech as conduct. But hiding speech restrictions in conduct rules is not only a \"dubious constitutional enterprise\"—it is also a losing constitutional strategy. <em>Wollschlaeger</em>, 848 F.3d at 1309; <em>see also </em><em>Otto</em>, 981 F.3d at 865-66."
+    },
+    {
+      "type": "paragraph",
+      "content": "When the conduct-not-speech defense is raised, courts need tools to distinguish between the two. One \"reliable way\" to sort them out is to \"ask whether enforcement authorities must examine the content of the message that is conveyed to know whether the law has been violated.\" <em>Otto</em>, 981 F.3d at 862 (quoting <em>McCullen v. Coakley</em>, 573 U.S. 464, 479, 134 S. Ct. 2518, 189 L. Ed. 2d 502 (2014)). In other words, we ask whether the message matters, or just the action. When the conduct regulated depends on—and cannot be separated from—the <span class=\"pagination-marker\">[**11]</span>  ideas communicated, a law is functionally a regulation of speech. <em>See </em><em>id.</em> at 865-66. And that means we treat it just like any other content-based speech restriction under the First Amendment. <em>Id.</em>; <em>see also </em><em>Cohen v. California</em>, 403 U.S. 15, 18, 91 S. Ct. 1780, 29 L. Ed. 2d 284 (1971)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>B</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Individual Freedom Act prohibits mandatory employee meetings—but only when those meetings include speech endorsing certain ideas. Florida does not attempt to defend the Act as a regulation of traditionally unprotected speech like fighting words or true threats. Indeed, it acknowledges that the law enforces viewpoint-based restrictions, conceding that authorities would need to evaluate \"the content of speech\" and \"the viewpoint expressed in a mandatory training seminar to determine whether the Act applies.\" But the result, Florida says, is a \"restriction on the <em>conduct</em>\" of holding the mandatory meeting, \"<em>not</em> a <em>restriction on the speech</em>\" that takes place at that meeting."
+    },
+    {
+      "type": "paragraph",
+      "content": "That characterization reflects a clever framing rather than a lawful restriction. True enough—the Act facially regulates the mandatory nature of banned meetings rather than the speech itself. But the fact that only mandatory meetings <em>that convey a particular message and viewpoint</em> are prohibited makes quick work of Florida's conduct-not-speech <span class=\"pagination-marker\">[**12]</span>  defense. To know whether the law bans a meeting, \"enforcement authorities must examine the content of the message that is conveyed.\" <em>See </em><em>Otto</em>, 981 F.3d at 862 (quotation omitted). If Florida disapproves of the message, the meeting cannot be required. This is a direct penalty on certain viewpoints—because the conduct and the speech are so intertwined, regulating the former means restricting the latter. In short, the disfavored \"conduct\" cannot be identified apart from the disfavored speech. That duality  <span class=\"pagination-marker\">[*1279]</span>  makes the Act a textbook regulation of core speech protected by the First Amendment."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>C</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida proposes an alternative approach. It says that even if speech defines the contours of the prohibition, so long as the resulting burden is on the conduct, that conduct is all the state is regulating. That, in turn, means the law does not regulate speech. Remarkable. Under Florida's proposed standard, a government could ban riding on a parade float if it did not agree with the message on the banner. The government could ban pulling chairs into a circle for book clubs discussing disfavored books. And so on. The First Amendment is not so easily neutered."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Supreme Court rejected a similar argument decades ago, when California convicted a man for <span class=\"pagination-marker\">[**13]</span>  wearing a jacket displaying vulgar, anti-draft language. <em>Cohen</em>, 403 U.S. at 16-19. The conviction was not, as California claimed, based on \"offensive conduct\" rather than speech; the \"only 'conduct' which the State sought to punish\" was \"the fact of communication.\" <em>Id.</em> at 17-18. The Court emphasized that the \"constitutional right of free expression is powerful medicine in a society,\" one that is \"designed and intended to remove governmental restraints from the arena of public discussion.\" <em>Id.</em> at 24. California could not circumvent that principle, and neither can Florida."
+    },
+    {
+      "type": "paragraph",
+      "content": "Perhaps even closer was the attempt by Illinois to allow only protests on a single topic—labor policies—in residential areas. <em>Carey v. Brown</em>, 447 U.S. 455, 457, 461, 100 S. Ct. 2286, 65 L. Ed. 2d 263 (1980). That law, on its face, gave \"preferential treatment to the expression of views on one particular subject.\" <em>Id.</em> at 460-61. Because the statute's reach depended \"solely on the nature of the message being conveyed,\" the Court concluded that the law was a content-based speech restriction. <em>Id.</em> at 461, 462 & n.6. Here too—Florida's law facially prefers certain viewpoints, and its application to meetings turns on the speech conveyed at those meetings. That favoritism violates the First Amendment, which demands an \"equality of status in the field of ideas.\" <em>Id.</em> at 463 (quotation omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Nor can we forget <span class=\"pagination-marker\">[**14]</span>  <em>Wollschlaeger</em>, in which this Court rejected limits on physician speech relating to firearms, or <em>Otto</em>, in which we invalidated ordinances that banned counseling practices \"grounded in a particular viewpoint about sex, gender, and sexual ethics.\" <em>Wollschlaeger</em>, 848 F.3d at 1300-01; <em>Otto</em>, 981 F.3d at 864, 872. In both cases, the government raised conduct-related defenses. <em>Wollschlaeger</em>, 848 F.3d at 1308-11; <em>Otto</em>, 981 F.3d at 864-66. And both times, we rejected them—\"'characterizing speech as conduct is a dubious constitutional enterprise,' and 'labeling certain verbal or written communications \"speech\" and others \"conduct\" is unprincipled and susceptible to manipulation.'\" <em>Otto</em>, 981 F.3d at 865 (quoting <em>Wollschlaeger</em>, 848 F.3d at 1308-09)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida asks that we ignore <em>Cohen</em> and <em>Carey</em> (and <em>Otto</em> and <em>Wollschlaeger</em>) and instead look to <em>Hill v. Colorado</em>, which concluded that a sidewalk-counseling prohibition (put in place to deter abortion opponents from approaching women outside clinics) was content neutral because the restriction applied to all activists, regardless of the subject matter addressed or the viewpoint expressed.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> 530 U.S. 703, 708-09, 723, 725, 120 S. Ct. 2480, 147 L. Ed. 2d 597 (2000).  <span class=\"pagination-marker\">[*1280]</span>  Colorado's law, in other words, was facially content- and viewpoint-neutral. <em>Id.</em> at 723. Florida's law is meaningfully different, specifically targeting certain content and viewpoints."
+    },
+    {
+      "type": "paragraph",
+      "content": "Still, Florida argues that a single aside from <em>Hill</em> shows that its own Act regulates conduct: \"We have <span class=\"pagination-marker\">[**15]</span>  never held, or suggested, that it is improper to look at the content of an oral or written statement in order to determine whether a rule of law applies to a course of conduct.\" <em>Id.</em> at 721. This line, Florida says, means that laws regulating conduct are not regulations of speech—even when the conduct regulated depends entirely on speech."
+    },
+    {
+      "type": "paragraph",
+      "content": "That argument proves too much, and the sentence buckles under the weight Florida asks it to bear. If <em>Hill</em> endorsed the position Florida argues for today, it would flout decades of First Amendment jurisprudence, both before it and since. <em>Hill</em> does not go so far. Indeed, it makes clear that laws discriminating between \"lawful and unlawful conduct based on the content\" of the messages expressed are content-based restrictions and \"constitutionally repugnant.\" <em>Id.</em> at 722-23. Florida cannot pluck one line out of context—from a case about a content-neutral restriction, no less—and use it as a wholesale endorsement of content- and viewpoint-based restrictions.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "To be sure, the Court's vigorous defense of the content-neutral status of the anti-counseling statute was not without dissent. Several justices questioned the viewpoint-neutral intent and effect of the law. <em>See generally </em><em>id.</em> at 741 (Scalia, J., <span class=\"pagination-marker\">[**16]</span>  dissenting); <em>id.</em> at 765 (Kennedy, J., dissenting). And a majority of the Court has recently reinforced those concerns, labeling <em>Hill</em> as one of several cases that \"distorted First Amendment doctrines.\" <em>Dobbs v. Jackson Women's Health Org.</em>, 597 U.S. 215, 287, 142 S. Ct. 2228, 213 L. Ed. 2d 545 & n.65 (2022). But the point is not whether the Court's majority was right or wrong about the law in <em>Hill</em>; the point is that the fulcrum of that decision was the majority's conclusion that the law was not content based. Here, there is no such question—the law's restrictions are obviously and admittedly content based."
+    },
+    {
+      "type": "paragraph",
+      "content": "In sum, Florida's attempts to repackage its Act as a regulation of conduct rather than speech do not work. Laws that \"cannot be justified without reference to the content of the regulated speech, or that were adopted by the government because of disagreement with the message\" conveyed, are still \"distinctions drawn based on the message a speaker conveys.\" <em>Reed</em>, 576 U.S. at 163-64 (quotation omitted); <em>see also </em><em>Sorrell v. IMS Health Inc.</em>, 564 U.S. 552, 566, 131 S. Ct. 2653, 180 L. Ed. 2d 544 (2011). Whether Florida is correct that the ideas it targets are odious is irrelevant—the government cannot favor some viewpoints over others without inviting First Amendment scrutiny."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>IV</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Because the Act is a content- and viewpoint-based speech regulation, we apply strict scrutiny—an \"exacting standard,\"  <span class=\"pagination-marker\">[*1281]</span>  and one that reflects our Constitution's fundamental <span class=\"pagination-marker\">[**17]</span>  commitment to the free exchange of ideas. <em>McCullen</em>, 573 U.S. at 478; <em>see also </em><em>Reed</em>, 576 U.S. at 163-64. \"It is rare that a regulation restricting speech because of its content will ever be permissible.\" <em>Brown</em>, 564 U.S. at 799 (quotation omitted). And again, for the law to survive, the government bears the burden of showing that it is narrowly tailored to serve a compelling state interest. <em>Reed</em>, 576 U.S. at 163. In other words, Florida must show that the Act's prohibitions are the least restrictive way to achieve a stated—and crucial—purpose. <em>United States v. Playboy Ent. Grp., Inc.</em>, 529 U.S. 803, 813, 120 S. Ct. 1878, 146 L. Ed. 2d 865 (2000)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida claims that it has a compelling interest in protecting individuals from being forced, under the threat of losing their jobs, to listen to speech \"espousing the moral superiority of one race over another,\" \"proclaiming that an individual, by virtue of his or her race, is inherently racist,\" or \"endorsing the racially discriminatory treatment of individuals because of past racist acts in which they played no part.\" These categories of speech, Florida now says, qualify as \"invidious discrimination\" that the state can regulate."
+    },
+    {
+      "type": "paragraph",
+      "content": "That many people find these views deeply troubling does not mean that by banning them Florida is targeting discrimination. \"To discriminate generally means to treat differently.\" <em>Wollschlaeger</em>, 848 F.3d at 1317. But the Act does not regulate <span class=\"pagination-marker\">[**18]</span>  differential treatment: the employer's speech, offensive or not, is directed at all employees, whether they agree with it or not. Florida has no compelling interest in creating a per se rule that some speech, regardless of its context or the effect it has on the listener, is offensive and discriminatory. \"It is firmly settled that under our Constitution the public expression of ideas may not be prohibited merely because the ideas are themselves offensive to some of their hearers.\" <em>Street v. New York</em>, 394 U.S. 576, 592, 89 S. Ct. 1354, 22 L. Ed. 2d 572 (1969)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Still, even if we presumed that the Act served the interest of combating discrimination in some way, its breadth and scope would doom it. Banning speech on a wide variety of political topics is bad; banning speech on a wide variety of political viewpoints is worse. A government's desire to protect the ears of its residents \"is not enough to overcome the right to freedom of expression.\" <em>See </em><em>Cohen</em>, 403 U.S. at 22-23 (quotation omitted). That is why, even in the face of compelling interests, \"[b]road prophylactic rules\" are generally disfavored and cannot survive. <em>See </em><em>NAACP v. Button</em>, 371 U.S. 415, 438, 83 S. Ct. 328, 9 L. Ed. 2d 405 (1963)."
+    },
+    {
+      "type": "paragraph",
+      "content": "This law is no different. Florida insists that its Act is narrowly tailored—indeed that it \"focuses with surgical precision\" because it covers only mandatory instruction. <span class=\"pagination-marker\">[**19]</span>  That means, Florida says, discussions forced on unwilling employees.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> But another  <span class=\"pagination-marker\">[*1282]</span>  way of putting it would be that the Act's prohibitions apply only when an employer wants to communicate a message badly enough to make meeting attendance mandatory. Stripping this argument down to the essentials thus reveals its infirmity."
+    },
+    {
+      "type": "paragraph",
+      "content": "But even accepting Florida's argument on its own terms would require us to ignore that the law bans speech even when no one listening finds it offensive. That is to say, it keeps both willing and unwilling listeners from hearing certain perspectives—for every one person who finds these viewpoints offensive, there may be another who welcomes them. Florida acknowledged as much in oral argument, and recognized that the Act fails to account for that problem with its narrow tailoring argument. But make no mistake—even if every employee <em>did</em> disagree with the banned viewpoints, it would not save the Act. No government can \"shut off discourse solely to protect others from hearing it.\" <em>Cohen</em>, 403 U.S. at 21. Instead, \"in public debate we must tolerate insulting, and even outrageous, speech in order to provide adequate breathing space to the freedoms protected by the First Amendment.\" <em>See </em><em>Snyder v. Phelps</em>, 562 U.S. 443, 458, 131 S. Ct. 1207, 179 L. Ed. 2d 172 (2011) (alteration <span class=\"pagination-marker\">[**20]</span>  adopted) (quotation omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida also suggests that the Act's restrictions are minor in the grand scheme of things, having only an incidental effect on speech because they limit just one way in which employers can convey their desired message. That assertion is no answer to the Act's constitutional flaws. The First Amendment \"protects speech itself,\" and lawmakers \"may no more silence unwanted speech by burdening its utterance than by censoring its content.\" <em>Otto</em>, 981 F.3d at 863; <em>Sorrell</em>, 564 U.S. at 566. The fact that other avenues of expression exist does not excuse the \"constitutional problem posed by speech bans.\" <em>Otto</em>, 981 F.3d at 863."
+    },
+    {
+      "type": "paragraph",
+      "content": "In a last-ditch effort, Florida ties its Act to Title VII. According to Florida, because the Individual Freedom Act, like Title VII, seeks to regulate discrimination, the two statutes rise and fall together—if one is unconstitutional, the other must be too. We disagree. Having similar asserted purposes does not make the two laws the same."
+    },
+    {
+      "type": "paragraph",
+      "content": "Title VII makes it unlawful for an employer to \"discriminate against any individual with respect to his compensation, terms, conditions, or privileges of employment, because of such individual's race, color, religion, sex, or national origin\"; it never mentions speech or content to define <span class=\"pagination-marker\">[**21]</span>  discrimination. 42 U.S.C. § 2000e-2(a)(1). While that law may have an incidental effect on speech, it is not directed at it. <em>See </em><em>R.A.V.</em>, 505 U.S. at 389; <em>Reeves v. C.H. Robinson Worldwide, Inc.</em>, 594 F.3d 798, 808-09 (11th Cir. 2010) (en banc). To be sure, there are valid concerns about how Title VII and the First Amendment could collide. <em>See </em><em>Saxe v. State Coll. Area Sch. Dist.</em>, 240 F.3d 200, 209 (3d Cir. 2001) (Alito, J.); <em>DeAngelis v. El Paso Mun. Police Officers Ass'n</em>, 51 F.3d 591, 596-97 (5th Cir. 1995); Eugene Volokh, Comment, <em>Freedom of Speech and Workplace Harassment</em>, 39 UCLA L. Rev. 1791, 1793-98 (1992). For that reason, we exercise special caution when applying Title VII to matters involving traditionally protected areas of speech. <em>See </em><em>Yelling v. St. Vincent's Health Sys.</em>,  <span class=\"pagination-marker\">[*1283]</span>  82 F.4th 1329, 1345 (11th Cir. 2023) (Brasher, J., concurring)."
+    },
+    {
+      "type": "paragraph",
+      "content": "None of this threatens our conclusion that Florida's law contains an illegal per se ban on speech the state disagrees with. Here, speech is not regulated incidentally as a means of restricting discriminatory conduct—restricting speech is the point of the law. That important distinction sets this Act apart from Title VII as an outright violation of the First Amendment."
+    },
+    {
+      "type": "paragraph",
+      "content": "No matter how hard Florida tries to get around it, \"viewpoint discrimination is inherent in the design and structure of this Act.\" <em>NIFLA</em>, 585 U.S. at 779 (Kennedy, J., concurring). Given our \"profound national commitment to the principle that debate on public issues should be uninhibited, robust, and wide-open,\" the answer is clear: Florida's law exceeds the bounds of the First Amendment. <em>New York Times Co. v. Sullivan</em>, 376 U.S. 254, 270, 84 S. Ct. 710, 11 L. Ed. 2d 686 (1964). No matter how controversial the ideas, <span class=\"pagination-marker\">[**22]</span>  allowing the government to set the terms of the debate is poison, not antidote.<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>V</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Because the plaintiffs have shown a likelihood of success on the merits, the remaining requirements necessarily follow. <em>See </em><em>Otto</em>, 981 F.3d at 870. Plaintiffs suffer an irreparable injury because there is an \"ongoing violation of the First Amendment.\" <em>FF Cosms. FL, Inc. v. City of Miami Beach</em>, 866 F.3d 1290, 1298 (11th Cir. 2017). Such a violation, even for a minimal period of time, constitutes irreparable injury. <em>KH Outdoor, LLC v. City of Trussville</em>, 458 F.3d 1261, 1271-72 (11th Cir. 2006). And because the injury here is direct rather than incidental, the remedy required is an injunction. <em>See </em><em>id.</em> at 1272. Finally, this injury is not outweighed by any threatened harm to Florida because the government has \"no legitimate interest\" in enforcing an unconstitutional law. <em>See id.</em> Similarly, a preliminary injunction is not contrary to the public interest because it is in the public interest to protect First Amendment rights. <em>See id.</em> The plaintiffs thus satisfy all the requirements for a preliminary injunction."
+    },
+    {
+      "type": "paragraph",
+      "content": "* * *"
+    },
+    {
+      "type": "paragraph",
+      "content": "Three years ago, we blocked local ordinances that attempted to circumvent the First Amendment's protections by characterizing a ban on disfavored speech as a regulation of conduct. <em>See </em><em>Otto</em>, 981 F.3d at 865-66, 872. As we cautioned there, \"if the plaintiffs' perspective is not allowed here, then the defendants' perspective can be banned elsewhere.\" <em>Id.</em> at 871. Our tradition, <span class=\"pagination-marker\">[**23]</span>  and our law, demand a different answer—even for the most controversial topics. The First Amendment \"presupposes that right conclusions are more likely to be gathered out of a multitude of tongues, than through any kind of authoritative selection. To many this is, and always will be, folly; but we have staked upon it our all.\" <em>Sullivan</em>, 376 U.S. at 270 (quotation omitted). Intellectual and cultural tumult do not last forever, and our Constitution is unique in its commitment to letting the people, rather than the government, find the right equilibrium. Because the Individual Freedom Act's mandatory-meeting provision, Fla. Stat. § 760.10(8), undermines that basic principle, it must be enjoined. We therefore <strong>AFFIRM</strong> the district court's order preliminarily enjoining the operation of that provision."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>The Act is also known as the \"Stop W.O.K.E. Act,\" which stands for \"Stop the Wrongs to our Kids and Employees.\" News Release, Florida Off. of the Governor, <em>Governor DeSantis Announces Legislative Proposal to Stop W.O.K.E. Activism and Critical Race Theory in Schools and Corporations</em> (Dec. 15, 2021), https://perma.cc/MS3H-8Z9N. Along with banning mandatory workplace trainings, the Act prohibits public-school instruction that aims to \"indoctrinate or persuade students to a particular point of view inconsistent with\" certain principles. Fla. Stat. § 1003.42(3). That provision is not the subject of this appeal, and nothing in this opinion should be construed as addressing it. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>All defendants were sued in their official capacities. The district court declined to preliminarily enjoin Governor DeSantis because the Act does not provide the Governor enforcement authority, and because any remedy against the Governor would be functionally equivalent to a remedy against the other defendants. Plaintiffs do not address this issue on appeal, so neither do we. <em>See </em><em>Sapuppo v. Allstate Floridian Ins.</em>, 739 F.3d 678, 680 (11th Cir. 2014). We will refer to the remaining defendants as \"Florida\" for the sake of simplicity. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>The <em>Hill</em> majority leaned in on this point: \"Instead of drawing distinctions based on the subject that the approaching speaker may wish to address, the statute applies equally to used car salesmen, animal rights activists, fundraisers, environmentalists, and missionaries.\" 530 U.S. at 723. </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>For the interested reader, more details about the context follow. The Supreme Court, defending its view that the Colorado law was content neutral, noted that it would be easy enough to distinguish a casual greeting from the more vigorous forms of conversation that were disallowed without really looking at content. <em>Hill</em>, 530 U.S.at 721-23. Whether or not that distinction held up, it was part of the majority's attempt to show that the law was content neutral, not that it was acceptable to look at the content of speech to decide whether that speech was really conduct. <em>See </em><em>id.</em> at 722-25. </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>Florida also defends its law based on a \"captive audience\" theory, arguing that a government is allowed to prevent discriminatory speech thrust upon an unwilling viewer or listener. This too misses the mark. The captive audience argument has historically been entertained \"only when the speaker intrudes on the privacy of the home or the degree of captivity makes it impractical for the unwilling viewer or auditor to avoid exposure.\" <em>Erznoznik v. City of Jacksonville</em>, 422 U.S. 205, 209, 95 S. Ct. 2268, 45 L. Ed. 2d 125 (1975) (citation omitted); <em>see also </em><em>Snyder v. Phelps</em>, 562 U.S. 443, 459-60, 131 S. Ct. 1207, 179 L. Ed. 2d 172 (2011). Outside of that context, the government cannot decide to ban speech that it dislikes because this would \"effectively empower a majority to silence dissidents simply as a matter of personal predilections.\" <em>Cohen</em>, 403 U.S. at 21. It is no surprise that \"the Supreme Court has never used a vulnerable listener/captive audience rationale to uphold speaker-focused and content-based restrictions on speech.\" <em>Wollschlaeger</em>, 848 F.3d at 1315. Instead, it has recognized that \"we are often captives outside the sanctuary of the home and subject to objectionable speech.\" <em>Cohen</em>, 403 U.S. at 21 (quotation omitted). Enduring speech we dislike is a necessary price. <em>See </em><em>Sorrell</em>, 564 U.S. at 575; <em>Wollschlaeger</em>, 848 F.3d at 1315-16. </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup>Because we conclude that the Act's speech restrictions fail strict scrutiny, we need not address the plaintiffs' vagueness and overbreadth arguments. </p>"
+    }
+  ]
+}

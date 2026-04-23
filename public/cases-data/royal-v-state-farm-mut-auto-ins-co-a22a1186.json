@@ -1,0 +1,145 @@
+{
+  "case_id": "royal-v-state-farm-mut-auto-ins-co-a22a1186",
+  "metadata": {
+    "title": "Royal v. State Farm Mut. Auto. Ins. Co.",
+    "court": "Court of Appeals of Georgia",
+    "date": "December 13, 2022",
+    "docket": "A22A1186.",
+    "notice": null,
+    "judges": "[***1] McFADDEN, Presiding Judge. Gobeil and Land, JJ., concur.",
+    "opinion_by": "McFADDEN",
+    "appellant_counsel": [
+      "Callaway Neville & Brinson, William J. Neville, Jr., for appellant."
+    ],
+    "appellee_counsel": [
+      "Hall Booth Smith, Bryan G. Forsyth, Mark D. Maholick, Timothy A. Bishop, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*313]</span>  <span class=\"pagination-marker\">[**60]</span>   McFadden, Presiding Judge."
+    },
+    {
+      "type": "paragraph",
+      "content": "Lance Royal appeals the order granting partial summary judgment to State Farm Mutual Automobile Insurance Company in this personal injury action in which Royal sought uninsured motorist (“UM”) benefits under more than 20 State Farm policies issued to his father. The trial court ruled that Royal is entitled to UM coverage from only one policy, the policy issued for the vehicle he was occupying at the time of the collision in which he was injured. We hold that the trial court ruled correctly. So we affirm."
+    },
+    {
+      "type": "paragraph",
+      "content": "1. <em>Factual background</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Summary judgment is proper when there is no genuine issue of material fact and the movant is entitled to judgment as a matter of law. OCGA § 9-11-56 (c). We review the grant or denial of a motion for summary judgment de novo, “and we view the evidence, and all reasonable conclusions and inferences drawn from it, in the light most favorable to the nonmovant.” <em>Matjoulis v. Integon Gen. Ins. Corp.</em>, 226 Ga. App. 459 (1) (486 SE2d 684) (1997)."
+    },
+    {
+      "type": "paragraph",
+      "content": "So viewed, the record shows that Royal was involved in a collision while he was driving a van owned by his employer, Royal Commercial Refrigeration. Royal's father owns the company."
+    },
+    {
+      "type": "paragraph",
+      "content": "Royal filed a personal injury action against the other <span class=\"pagination-marker\">[***2]</span>  driver and the owner of the other car. He served State Farm with the complaint as the UM carrier. Royal sought UM benefits under the State Farm policy issued to cover the van he was driving at the time of the collision as well as from 21 other policies State Farm had issued to his father for other vehicles."
+    },
+    {
+      "type": "paragraph",
+      "content": "State Farm moved for partial summary judgment. The trial court granted the motion, holding that the only UM  policy covering Royal is the policy issued for the van that he was driving at the time of the collision. Royal filed this appeal."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*314]</span> 2. <em>Stacking</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Royal argues that the trial court erred in holding that he is not entitled to stack the other State Farm insurance policies issued to his father. The trial court ruled correctly."
+    },
+    {
+      "type": "paragraph",
+      "content": "“Under Georgia law, uninsured motorist benefits are calculated by stacking the limits of all of the available uninsured motorist coverage and setting off the limits of the available liability coverage.” <em>Crafter v. State Farm Ins. Co.</em>, 251 Ga. App. 642, 643 (554 SE2d 571) (2001) (citation and punctuation omitted). Whether UM coverage is available depends upon whether the person seeking benefits is an insured person under the policies."
+    },
+    {
+      "type": "paragraph",
+      "content": "The basis for stacking is statutory. OCGA § 33-7-11 (a) (1) requires"
+    },
+    {
+      "type": "paragraph",
+      "content": "insurance companies to have a provision in their contracts <span class=\"pagination-marker\">[***3]</span>  to pay the insured sums he shall be entitled to recover as damages from the owner or operator of an uninsured motor vehicle. The statute further creates two categories of insured persons. The first category consists of “the named insured and, while resident of the same household, the spouse of any such named insured and relatives of either, while in a motor vehicle or otherwise.” [OCGA § 33-7-11 (b) (1) (B).] …"
+    },
+    {
+      "type": "paragraph",
+      "content": "The second category consists of “any person who uses, with the expressed or implied consent of the named insured, the motor vehicle to which the policy applies.” [OCGA § 33-7-11 (b) (1) (B).] It is important to note that, unlike the first provision, this one contains language that conditions status as an insured on the involvement of the motor vehicles to which the policy applies."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Dunn-Craft v. State Farm Mut. Ins. Co.</em>, 314 Ga. App. 620, 621-622 (1) (724 SE2d 903) (2012) (citations and punctuation omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "In accordance with the statute, the State Farm policies at issue provide that State Farm “will pay compensatory damages for bodily injury and property damage an insured is legally entitled to recover from the owner or driver of an uninsured motor vehicle.”  <span class=\"pagination-marker\">[**61]</span>  (Emphasis omitted.) In the context of UM coverage, the policies define “insured” to mean:"
+    },
+    {
+      "type": "paragraph",
+      "content": "any other person while occupying:"
+    },
+    {
+      "type": "paragraph",
+      "content": "a. your car [which is defined elsewhere in the policies as “the vehicle shown under ‘YOUR CAR’ on the Declarations Page”];"
+    },
+    {
+      "type": "paragraph",
+      "content": "b. a newly acquired car; or"
+    },
+    {
+      "type": "paragraph",
+      "content": "c. a temporary substitute car."
+    },
+    {
+      "type": "paragraph",
+      "content": "Such vehicle must be used with the express or implied consent of you.[<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>] Such other person occupying a vehicle used to carry persons for a charge is not an insured; and"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) Royal is not listed as the named insured on the declarations pages of any of the policies. He did not reside in the household of the named insured, his father. So he does not fall into either category 1. or category 2. of the policy definition of insured. But he is an insured (and entitled to UM benefits) under category 3.a. of the policy issued on the van he was driving because he occupied the van with his father's consent."
+    },
+    {
+      "type": "paragraph",
+      "content": "Royal argues that he is entitled to UM benefits under the other 21 policies, although he is not an insured under the policy definitions, because the renewal notices for those policies all <span class=\"pagination-marker\">[***5]</span>  list him as an “other household driver,” and most of them list the van he was driving as an “other household vehicle.” We disagree."
+    },
+    {
+      "type": "paragraph",
+      "content": "The “argument that because [Royal] is a listed driver on [his father's] renewal … notices, [he] is a named insured entitled to stack UM coverage on the additional State Farm policies, is misguided. Georgia law is clear that listed drivers are not named insureds.” <em>Dunn-Craft</em>, 314 Ga. App. at 621 (1); accord <em>Stanley v. Govt. Employees Ins. Co.</em>, 344 Ga. App. 342, 345 (1) (810 SE2d 179) (2018). The same rationale applies to the listing of the van as an “other household vehicle” on the renewal notices for the 21 other policies. Those policies show the 21 other vehicles as the insured vehicle on the declarations pages, and Royal was not occupying any of them so as to be an insured as defined in category 3.a."
+    },
+    {
+      "type": "paragraph",
+      "content": "Royal argues that, at a minimum, the renewal notices, when read together with the policies, create an ambiguity about who is a <span class=\"pagination-marker\">[*316]</span>  named insured. We disagree with this argument as well."
+    },
+    {
+      "type": "paragraph",
+      "content": "[T]he simple fact that [Royal's name is in the] list of drivers … on [the renewal notices] does not render ambiguous the otherwise clear reference [in the policies] to [his father] as the named insured. Although [Royal] may be insured [under the policy issued for the van] because he is <span class=\"pagination-marker\">[***6]</span>  an authorized driver of the insured vehicle, he is not the named insured. There is no ambiguity."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Ga. Farm Bureau Mut. Ins. Co. v. Wilkerson</em>, 250 Ga. App. 100, 101 (549 SE2d 740) (2001)."
+    },
+    {
+      "type": "paragraph",
+      "content": "3. <em>Affidavit</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Royal argues that the trial court erred by failing to consider his father's affidavit, which he submitted in opposition to State Farm's motion for partial summary judgment. In his order, however, the trial court recited that he granted the motion for partial summary judgment “[a]fter considering the evidence submitted and applicable law[.]” “We are bound by the statement in the order that the trial judge did consider the [evidence, which included the affidavit].” <em>Commercial Credit Corp. v. Wilkes</em>, 229 Ga. 665, 668 (2) (193 SE2d 811) (1972). See also  <span class=\"pagination-marker\">[**62]</span>  <em>Gen. Motors Corp. v. Walker</em>, 244 Ga. 191, 193 (259 SE2d 449) (1979) (“If a trial court indicates in his order granting a motion for summary judgment that the motion is being granted after a review of the record, this court will not hold that he failed to review the relevant portions[.]”). We note as well that the trial court expressly acknowledged the affidavit at the hearing on the motion for partial summary judgment."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment affirmed. Gobeil and Land, JJ., concur</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>1 </sup>One policy, covering a 1984 Harley Davidson, provides that “[s]uch vehicle must be used within the scope of your consent.” <a href=\"#fn-2\" id=\"ref-2\">2</a>"
+    }
+  ],
+  "footnotes": []
+}

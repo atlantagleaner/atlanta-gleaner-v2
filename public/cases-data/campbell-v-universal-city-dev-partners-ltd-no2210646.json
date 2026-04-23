@@ -1,0 +1,416 @@
+{
+  "case_id": "campbell-v-universal-city-dev-partners-ltd-no2210646",
+  "metadata": {
+    "title": "Campbell v. Universal City Dev. Partners, LTD",
+    "court": "United States Court of Appeals for the Eleventh Circuit",
+    "date": "July 7, 2023",
+    "docket": "No. 22-10646",
+    "notice": null,
+    "judges": "Before ROSENBAUM, [**2]  BRANCH, and BRASHER, Circuit Judges.",
+    "opinion_by": "ROSENBAUM",
+    "appellant_counsel": [
+      "DYLAN CAMPBELL, Plaintiff - Appellant: Matthew W. Dietz, Leigh Cremer Markowitz, Shepard Broad College of Law, FORT LAUDERDALE, FL",
+      "Claudia DeSalvo, Nova Southeastern University, FORT LAUDERDALE, FL.",
+      "David Raizman, Ogletree Deakins Nash, Smoak & Stewart, PC, LOS ANGELES, CA.",
+      "UNITED STATES OF AMERICA, Amicus Curiae: Brant S. Levine, Nicolas Riley, U.S. Department of Justice, WASHINGTON, DC.",
+      "WORLD WATERPARK ASSOCIATION, Amicus Curiae: Alvin Bertram Dunn, Pillsbury Winthrop Shaw Pittman, LLP, WASHINGTON, DC.",
+      "INTERNATIONAL AMUSEMENT AND LEISURE DEFENSE ASSOCIATION, INC., Amicus Curiae: Jerry Austin Landers Jr., Law Office of Jerry A. Landers, Jr., MARIETTA, GA",
+      "Paul F. Cavanaugh, David J. Daly, Clodagh Lane, Daly Cavanaugh, LLP, WELLESLEY, MA.",
+      "INTERNATIONAL ASSOCIATION OF AMUSEMENT PARKS AND ATTRACTIONS, Amicus Curiae: Alvin Bertram Dunn, Pillsbury Winthrop Shaw Pittman, LLP, WASHINGTON, DC."
+    ],
+    "appellee_counsel": [
+      "UNIVERSAL CITY DEVELOPMENT PARTNERS, LTD., d.b.a.: Volcano Bay, Defendant - Appellee: Michael Beaudine, Christina Y. Taylor, Latham Luna Eden & Beaudine, LLP, ORLANDO, FL"
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1248]</span>  Rosenbaum, Circuit Judge:"
+    },
+    {
+      "type": "paragraph",
+      "content": "On a hot day, there's nothing better than a cool, refreshing waterslide ride (except maybe following that up with some ice cream). Dylan Campbell wanted to enjoy that terrific feeling of carefreely careening down a waterslide with his son to celebrate his son's seventh birthday. So he took his son to Universal's Volcano Bay waterpark and got in line to ride its Krakatau Aqua Coaster—a waterslide version of a roller coaster. But as Campbell approached the front of the line, Universal pulled him aside and told him he was \"unfit\" to ride the Aqua Coaster. Campbell was born with only one hand. And Universal doesn't allow people without two natural hands to ride. So Campbell sued Universal for imposing an allegedly discriminatory eligibility criterion in violation of the Americans with Disabilities Act (the \"ADA\")."
+    },
+    {
+      "type": "paragraph",
+      "content": "During the litigation, Universal stipulated that the Aqua Coaster's manufacturer had identified \"no specific risks\" of riding to anyone like Campbell. But Universal declined to allow Campbell to ride, anyway, citing a cascading series of Florida laws, regulations, rules, and industry practices. In sum, this collection of commands required Universal to <span class=\"pagination-marker\">[**3]</span>  impose whatever rider-eligibility requirements that the ride's manufacturer chose, regardless of whether the manufacturer based those requirements on actual risks, on speculation, or even on discrimination."
+    },
+    {
+      "type": "paragraph",
+      "content": "In its motion for summary judgment, Universal argued that complying with this morass of mandates was \"necessary,\" as the ADA uses the term, so the ADA authorized Universal to refuse Campbell a ride. The district court agreed and also concluded that the ADA did not preempt Florida law. It therefore entered summary judgment for Universal."
+    },
+    {
+      "type": "paragraph",
+      "content": "After a thorough review of the record, and with the benefit of oral argument, we vacate and remand for further proceedings."
+    },
+    {
+      "type": "paragraph",
+      "content": "The ADA prohibits imposing a discriminatory eligibility criterion unless the criterion is \"necessary.\" Universal argues that \"compliance with state law\" necessitates Universal's discriminatory eligibility requirement. But to the extent that state law conflicts with the ADA and requires disability discrimination, we hold that \"compliance with state law,\" in and of itself, cannot qualify as \"necessary\" under the ADA, or it would impermissibly preempt and effectively eviscerate the ADA. So \"compliance with state law\" does not relieve <span class=\"pagination-marker\">[**4]</span>  Universal of its obligation to follow the ADA. We therefore vacate the order granting summary judgment and remand for further proceedings. Universal must either show that refusing to permit Campbell to ride the Aqua Coaster is otherwise \"necessary,\" as the ADA contemplates, or it must allow him to ride."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>I. BACKGROUND</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>A. Factual Background</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal City Development Partners, Ltd. (\"Universal\") operates Volcano Bay water park in Orlando, Florida.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1249]</span>  On May 10, 2019, plaintiff Dylan Campbell visited Volcano Bay with his family. Campbell does not have a right forearm or right hand, nor does he use a prosthetic hand. When Campbell was visiting Volcano Bay, the park didn't allow him to ride the Krakatau Aqua Coaster because he did not have two, natural, grasping hands. The Aqua Coaster is a waterslide version of a roller coaster. Riders sit back, one in front of the other, with their bodies inside a four-person raft vehicle that has handles on the sides of each seat, and they ride together through channels and tunnels. The Aqua Coaster's \"track\" uses magnetic propulsion forces on the upward portions and gravity and moving water on the downward parts to move riders."
+    },
+    {
+      "type": "paragraph",
+      "content": "Volcano Bay refused Campbell <span class=\"pagination-marker\">[**5]</span>  admission to the Aqua Coaster based on rider-eligibility requirements that the Aqua Coaster's manufacturer, ProSlide, created. To determine the rider-eligibility requirements for the Aqua Coaster, ProSlide performed an \"initial, internal hazard analysis\" and also hired RAMS Consultants, Inc., which specializes in \"developing and documenting hazard analyses for amusement rides and attractions.\" A hazard analysis \"describes all reasonably expected risks contemplated for the ride, excluding outlandish examples that are extremely unlikely, like a meteor hitting the ride. It assesses both the likelihood and severity of a particular risk . . . and different ways to mitigate a risk.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal stipulated that \"[a]side from identifying one risk that involves a potential hazard for a visually impaired patron . . . the hazard analyses performed by ProSlide and RAMS identified no specific risks for anyone with a limb difference or other physical disability.\" In accordance with its analysis, ProSlide created a draft Operations Manual for the ride."
+    },
+    {
+      "type": "paragraph",
+      "content": "When Universal received the draft Operations Manual, it created a \"Rider Eligibility Chart\" that allowed people with many combinations of limb differences—including <span class=\"pagination-marker\">[**6]</span>  individuals with no right forearm or right hand like Campbell—to ride. ProSlide pushed back on allowing people with prosthetic limbs to ride because it was worried about safety, namely, the prosthetic limbs coming off on the ride and striking someone or the ride itself. It did not mention any concern about the ability of people without prosthetics—like Campbell—to ride safely. Rather, it said, simply and conclusorily, that it was \"uncertain in the ability to use one arm or prosthetic can be achieved in all cases.\" Ultimately, ProSlide \"decided to maintain [its] position on the original Limb Chart markup after further Executive consultation internally.... [It felt] at this time [that it wasn't] prepared to take on these risks but [would] work to change the restrictions over time.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "As a result, when Volcano Bay opened to the public, those like Campbell—without two hands—could not ride the Aqua Coaster (or certain other rides). Universal created a \"rider eligibility chart\" for all its rides. Here is a snippet of what the final eligibility chart looked like:"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1250]</span>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each row represents a ride. Each column in blue indicates a permutation of limbs. The chart continues down (listing more rides) and <span class=\"pagination-marker\">[**7]</span>  also across (listing other limb permutations)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>B. Procedural History</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Campbell sued Universal for imposing discriminatory eligibility criteria that weren't \"necessary\" under Title III of the Americans with Disabilities Act, 42 U.S.C. § 12182(b)(2)(A)(i) and the Florida Civil Rights Act, § 760.01, <em>et seq.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Both sides moved for summary judgment. Campbell argued that Universal's eligibility criterion—having two, natural grasping hands—wasn't \"necessary\" for the ride's safety. For its part, Universal did not respond directly to this argument. Rather, it contended that its eligibility criteria were \"necessary\" because it had to comply with Florida law, and Florida law (through an interlocking series of provisions) required Universal to refuse Campbell service. Universal said that, under Florida law, Universal had to comply with industry standards (the \"ASTM Standards\") and these standards required Universal to comply with manufacturer recommendations, and manufacturer recommendations—here, ProSlide's recommendations—forbade Campbell from riding. Put simply, Universal con-tended that it was \"necessary,\" as the ADA uses that term, for Universal to comply with Florida law, so Universal's refusal to allow Campbell to ride the Aqua Coaster comported with the ADA. Universal also argued that it was impossible (or at least, <span class=\"pagination-marker\">[**8]</span>  impractical) for Universal to individually assess each guest's ability to safely enjoy each attraction. In support of its position, Universal included a sworn expert report stating that compliance with ASTM required compliance with the manufacturer's requirements."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court granted Universal's motion and denied Campbell's. In so doing, the district court noted that the ADA's prohibition on discriminatory eligibility criteria contains an exception for \"necessary\" requirements. Essentially, the district court determined that compliance with Florida law requiring amusement parks to follow ASTM recommendations (which, in turn, requires compliance with manufacturer recommendations) was \"necessary\" under the ADA. Campbell now appeals."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>II. STANDARD OF REVIEW</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We review de novo the grant or denial of summary judgment. <em>St. Charles Foods, Inc. v. Am.'s Favorite Chicken Co.</em>, 198 F.3d 815, 819 (11th Cir. 1999).  <span class=\"pagination-marker\">[*1251]</span>  In conducting our review, we view all evidence in the light most favorable to the nonmoving party. <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>III. DISCUSSION</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Our analysis proceeds in four steps. First, we briefly outline the governing law. Second, we recognize that the section of the ADA that we're applying requires a burden-shifting analysis. Third, we find that Campbell has satisfied his burden. And fourth, <span class=\"pagination-marker\">[**9]</span>  we consider whether Universal's proffered rationales meet its burden."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>A. Background Law</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Title III of the ADA prohibits public accommodations from engaging in \"discrimination.\" 42 U.S.C. §§ 12181-89. As the ADA defines the term, \"discrimination\" includes \"the imposition or application of eligibility criteria that screen out or tend to screen out an individual with a disability or any class of individuals with disabilities from fully and equally enjoying any goods, services, facilities, privileges, advantages, or accommodations.\" <em>Id.</em> § 12182(b)(2)(A)(i). So the general rule prohibits public accommodations from imposing eligibility criteria that tend to preclude those with a disability from enjoying the public accommodation's good or service."
+    },
+    {
+      "type": "paragraph",
+      "content": "But nearly every rule has its exception, and the ADA is no exception to that rule. A public accommodation may impose discriminatory eligibility criteria if \"such criteria can be shown to be <em>necessary</em> for the provision of the goods, services, facilities, privileges, advantages, or accommodations being offered.\" <em>Id.</em> (emphasis added). We refer to this as the \"necessity\" exception."
+    },
+    {
+      "type": "paragraph",
+      "content": "Putting the clauses together then, we observe that the ADA prohibits public accommodations from implementing discriminatory <span class=\"pagination-marker\">[**10]</span>  eligibility criteria unless the criteria are \"necessary\" for provision of the good or service. Less helpfully, the ADA does not define what it means by \"necessary.\" <em>See id.</em> § 12181 (Definitions). We'll return to what the \"necessity\" exception entails in Section III.D. <em>See infra</em> at 15."
+    },
+    {
+      "type": "paragraph",
+      "content": "The ADA also precludes public accommodations from avoiding liability under the ADA through contractual delegation. It expressly states that public accommodations cannot \"directly or through contractual or other arrangements, utilize standards or criteria or methods of administration\" that have the effect of discriminating on the basis of disability. <em>Id.</em> § 12182(b)(1)(D)(i). So for instance, if a vendor sets forth eligibility criteria for a product that are discriminatory and would not be permissible under the ADA if the public accommodation employed them, the public accommodation cannot avoid its responsibilities under the ADA not to discriminate by contracting with that vendor."
+    },
+    {
+      "type": "paragraph",
+      "content": "Finally, the ADA has a \"[r]elationship to other laws\" provision. <em>Id.</em> § 12201(b). In that section, the ADA provides that nothing in it should be construed to invalidate the \"remedies, rights, and procedures of any Federal law or law of any State\" that \"provides greater <span class=\"pagination-marker\">[**11]</span>  or equal protection for the rights of individuals with disabilities.\" <em>Id.</em> In other words, the ADA raises the floor for disabled rights, but it does not limit the ceiling."
+    },
+    {
+      "type": "paragraph",
+      "content": "Having outlined how this portion of the ADA generally functions, we next turn to what an ADA claimant must prove to establish liability."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>B. The Burden</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We begin with determining where the burden lies in a \"discriminatory eligibility criteria\" case like one. We hold that, in this kind of case, the plaintiff bears the initial burden of proof to show that (1) he  <span class=\"pagination-marker\">[*1252]</span>  or she has a \"disability\"; (2) the defendant is a place of public accommodation; and (3) the defendant imposed an eligibility criterion that \"that screen[ed] out or tend[ed] to screen out an individual with a disability,\" <em>id.</em> § 12182(b)(2)(A)(i)—the prima facie case. Once the plaintiff makes or establishes a prima facie case, the burden shifts to the defendant to show that the eligibility criterion is \"necessary for the provision of the goods, services, facilities, privileges, advantages, or accommodations being offered.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "This burden-shifting standard comports both with the text of the statute and with how courts have interpreted parallel clauses of section 12182(b)(2)(A). The plaintiff's burden, of <span class=\"pagination-marker\">[**12]</span>  course, follows the text of subsection 12182(b)(2)(A)(i). And the burden-shifting portion mirrors how courts have interpreted other clauses of the same section."
+    },
+    {
+      "type": "paragraph",
+      "content": "For instance, in subsection 12182(b)(2)(A)(ii)—one clause down from the one we're construing—the ADA prohibits failure to modify policies, practices, or procedures to allow those with a disability to enjoy the public accommodation \"unless such modifications would fundamentally alter the nature of such . . . facilities ....\" <em>Id.</em> § 12182(b)(2)(A)(ii). Like subsection 12182(b)(2)(A)(i), subsection (ii) imposes a general prohibition followed by an exception. We have explained that in subsection (ii) cases, \"[t]he defendant private entity bears the burden of proof on the fundamental alteration inquiry.\" <em>A.L. by &amp; through D.L. v. Walt Disney Parks &amp; Resorts US, Inc.</em>, 900 F.3d 1270, 1292 (11th Cir. 2018)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Similarly, subsection 12182(b)(2)(A)(iii) requires provision of auxiliary aids and services unless the public accommodation can demonstrate that taking such steps would \"fundamentally alter\" the nature of the facilities being offered or would result in an \"undue burden.\" It shares the same structure of a general prohibition followed by an exception. While we haven't interpreted this section, some of our sister circuits have. And without exception, they have held that the public accommodation bears the burden of proving either a fundamental alteration or an undue burden. <em>McGann v. Cinemark USA, Inc.</em>, 873 F.3d 218, 230-31 (3d Cir. 2017); <em>Argenyi v. Creighton Univ.</em>, 703 F.3d 441, 451 n.3 (8th Cir. 2013); <em>Ariz. ex rel. Goddard v. Harkins Amusement Enters., Inc.</em>, 603 F.3d 666, 673 n.2 (9th Cir. 2010)."
+    },
+    {
+      "type": "paragraph",
+      "content": "We've also noted <span class=\"pagination-marker\">[**13]</span>  this same type of burden-shifting analysis applies in ADA Title II cases. In <em>Sailboat Bend Sober Living, LLC v. City of Fort Lauderadale</em>, 46 F.4th 1268, 1277 (11th Cir. 2022), we said that \"[i]f a plaintiff has made a <em>prima facie</em> showing of disparate treatment under the FHA or ADA, the burden of going forward shifts to the defendant to establish that the differential treatment is justified.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "This makes sense, of course, because the public accommodation or public entity is in a unique (and far better) position than the plaintiff to know why compliance would \"fundamentally alter\" the nature of the facility it offers (42 U.S.C. § 12182(b)(2)(A)(ii)-(iii)), or why differential treatment would be justified (ADA Title II cases), or as in this case, would be \"necessary.\" Indeed, whether (1) a certain requirement is \"necessary\" to the facility, or (2) changing that requirement would \"fundamentally alter\" the defendant's facility, or (3) the differential treatment is \"justified\" turns on facts uniquely in the defendant's possession. That is, all these determinations go to the core of the facility the defendant offers. Not only that, but the public accommodation or public entity—not the plaintiff—is the party with the incentive to show why noncompliance would be \"necessary,\" 42 U.S.C. § 12182(b)(2)(A)(i),  <span class=\"pagination-marker\">[*1253]</span>  why compliance would \"fundamentally alter the <span class=\"pagination-marker\">[**14]</span>  nature of\" what is being offered, <em>id.</em> § 12182(b)(2)(A)(ii), or why compliance \"would result in an undue burden,\" <em>id.</em> § 12182(b)(2)(A)(iii)."
+    },
+    {
+      "type": "paragraph",
+      "content": "To be sure, we've construed subsection 12182(b)(2)(A)(iv) somewhat differently, understanding it to place the burden on the plaintiff to show the public accommodation is able to comply with the general antidiscrimination rule, as opposed to requiring the public accommodation to show that it cannot (as subsections (i), (ii), and (iii) demand). <em>Garthright-Dietrich v. Atlanta Landmarks, Inc.</em>, 452 F.3d 1269, 1273-74 (11th Cir. 2006). That is, subsection (iv) is the exception to the general rule we've just laid out. But as we've noted, just about every rule has its exception (and this rule is no exception, either). That exception does not govern here, though, because subsection (iv)'s unique text requires its unique construction. And subsections (i) through (iii) do not share those same textual characteristics."
+    },
+    {
+      "type": "paragraph",
+      "content": "For starters, we must read subsection (iv) in conjunction with subsection (v), which expressly references subsection (iv). Subsection (iv) requires the removal of architectural barriers when removal is \"readily achievable\" <em>unless</em> (v) \"an entity can demonstrate that the removal of a barrier under clause (iv) is not readily achievable.\" <em>Id.</em> § 12182(b)(2)(A)(iv)-(v). But in that case, subsection (v) prohibits the failure to make goods, services, and accommodations \"available through alternative methods if such methods are readily achievable.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Both subsections (iv) and (v) concern removal <span class=\"pagination-marker\">[**15]</span>  of barriers and provision of facilities through alternative methods that are \"readily achievable.\" That phrase requires a positive showing—that a public accommodation <em>is able</em> to avoid discrimination because it is able to remove a barrier. In contrast, subsections (i) through (iii) require a negative showing—that a public accommodation <em>is not able</em> to avoid discrimination because discrimination is \"necessary,\" \"would fundamentally alter the nature\" of the accommodation, or \"would result in an undue burden.\" So the interest and incentive to show that removal of a barrier in subsection (iv) is \"readily achievable\" aligns naturally with the plaintiff's interest—unlike the interests to show that discrimination is \"necessary,\" \"would fundamentally alter the nature\" of the accommodation, or \"would result in an undue burden.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Also unlike with the required showings in subsections (i) through (iii), the facts necessary to establish that removal of a barrier is \"readily achievable\" are not peculiarly within the public accommodation's knowledge. Architectural experts on whether removal of a barrier is \"readily achievable\" are equally available to both plaintiffs and accommodations."
+    },
+    {
+      "type": "paragraph",
+      "content": "And one last feature of subsections (iv) and (v) requires a different burden placement than under subsections (i) through (iii). Once a <span class=\"pagination-marker\">[**16]</span>  plaintiff shows that removal of a barrier is \"readily achievable,\" subsection (v) provides the public accommodation with the opportunity to show that it is not. <em>Id.</em> § 12182(b)(2)(A)(v) (\"where an entity can demonstrate that the removal of a barrier under clause (iv) is not readily achievable . . .\"). In other words, subsection (v)'s text expressly anticipates two burdens: the plaintiff's in subsection (iv) to show removal is \"readily achievable,\" and the public accommodation's in subsection (v) to show removal is \"not readily achievable.\" <em>Id.</em> It would make no sense for a single party to bear the burden to show both that the removal was \"readily achievable\" and that it was \"not readily achievable.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1254]</span>  In short, we must read subsection 12182(b)(2)(A)(i) to place the burden on the public accommodation to show that discrimination is \"necessary.\" So if the plaintiff shows that (1) he or she has a disability, (2) the defendant is a public accommodation, and (3) the defendant uses eligibility criteria that screen or (or tend to screen out) people with disabilities, then the burden shifts to the defendant to show that the eligibility criteria is \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>C. The Plaintiff's Burden</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Applying the burden-shifting analysis to this case, we easily conclude that Campbell has satisfied his burden. The <span class=\"pagination-marker\">[**17]</span>  parties stipulated that Campbell has a disability and that Universal's park, Volcano Bay, is a public accommodation. Universal hasn't contested that its two-hands-to-ride eligibility criterion screens out or tends to screen out those with disabilities. Universal has therefore forfeited any argument to the contrary. <em>United States v. Campbell</em>, 26 F.4th 860, 872 (11th Cir. 2022) (en banc)."
+    },
+    {
+      "type": "paragraph",
+      "content": "We turn, then, to what it means for an eligibility criterion to be \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>D. The Defendant's Burden: Necessity</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "As we've mentioned, the ADA's prohibition on discriminatory eligibility criteria carves out an exception for those criteria that are \"necessary.\" 42 U.S.C. § 12182(b)(2)(A)(i). But the parties disagree about what that term means. Universal says that \"necessary\" includes compliance with state law, reliance on manufacturers' recommendations because of their comparative advantage in dealing with equipment they sell, and avoiding undue administrative costs. For his part, Campbell insists that discrimination qualifies as \"necessary\" only if it is required for safety. We think that Campbell's definition is too narrow and that Universal's is too broad."
+    },
+    {
+      "type": "paragraph",
+      "content": "We will start where the parties agree—answering whether \"necessary\" includes safety-related reasons—and then address Universal's reasons <span class=\"pagination-marker\">[**18]</span>  why its criteria qualify as \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "1. \"Necessary\" Includes Legitimate Safety-Related Reasons"
+    },
+    {
+      "type": "paragraph",
+      "content": "Because this is a case about statutory interpretation, in determining whether what's \"necessary\" under subsection 12182(b)(2)(A)(i) includes anything more than what is required for safety reasons, we begin \"with the text.\" <em>Ross v. Blake</em>, 578 U.S. 632, 638, 136 S. Ct. 1850, 195 L. Ed. 2d 117 (2016). But first we pause to explain why our analysis starts from the proposition that \"necessary,\" at a minimum, includes discriminatory eligibility criteria imposed to ensure safety."
+    },
+    {
+      "type": "paragraph",
+      "content": "To be sure, no party has argued that prohibiting riders without two natural hands on the Aqua Coaster is either \"necessary\" or unnecessary for safety reasons. That said, the parties agree that safety falls within the meaning of what is \"necessary.\" And as it turns out, our later discussion of Universal's assertion—that it is \"necessary\" to rely on manufacturers' recommendations because of their comparative advantage in dealing with equipment they sell—implicates safety. Plus, on remand, the district court may need to consider whether Universal's requirements are \"necessary\" for safety. So we take a moment to explain why, under subsection 12182(b)(2)(A)(i), a prohibition is \"necessary\" if it is required for legitimate safety reasons."
+    },
+    {
+      "type": "paragraph",
+      "content": "The ADA does not <span class=\"pagination-marker\">[**19]</span>  define \"necessary.\" <em>See</em> 42 U.S.C. § 12181 (Definitions). Without a statutory definition, we fall back to the baseline rule that \"statutory terms are generally interpreted in accordance  <span class=\"pagination-marker\">[*1255]</span>  with their ordinary meaning.\" <em>Sebelius v. Cloer</em>, 569 U.S. 369, 376, 133 S. Ct. 1886, 185 L. Ed. 2d 1003 (2013) (quotation omitted). But the ordinary meaning of \"necessary\" doesn't provide much guidance, either, on our specific question—whether \"necessary\" includes what is required for safety reasons. <em>Black's Law Dictionary</em> defines \"necessary\" as something \"[t]hat is needed for some purpose or reason; essential\" and something \"[t]hat must exist or happen and cannot be avoided; inevitable.\" <em>Necessary</em>, Black's Law Dictionary (11th ed. 2019). The ADA exempts only discriminatory eligibility criteria that are \"necessary for the provision of the goods, services, facilities, privileges, advantages, or accommodations being offered.\" 42 U.S.C. § 12182(b)(2)(A)(i). At best, we can say that the eligibility criteria must be in some way \"essential\" or they \"cannot be avoided\" in offering a facility."
+    },
+    {
+      "type": "paragraph",
+      "content": "And to a certain extent, we can say that criteria to provide a safe user experience is \"essential\" in offering a facility for public use because a public accommodation would go out of business quickly if the facilities it offered to the public <span class=\"pagination-marker\">[**20]</span>  were dangerous."
+    },
+    {
+      "type": "paragraph",
+      "content": "But we can do better than that. When we construe statutes, \"we look to the entire statutory context.\" <em>United States v. DBB, Inc.</em>, 180 F.3d 1277, 1281 (11th Cir. 1999). And here, another subsection of § 12182 comes close to requiring the conclusion that \"necessary\" includes what is required for safety reasons. In particular, subsection (b)(3) specifies that \"[n]othing in this subchapter shall require an entity to permit an individual to participate in or benefit from the . . . facilities . . . of such entity where such individual poses a direct threat to the <em>health or safety</em> of others.\" 42 U.S.C. § 12182(b)(3) (emphasis added). It then continues, \"The term 'direct threat' means a significant risk to the <em>health or safety</em> of others that cannot be eliminated by a modification of policies, practices, or procedures or by the provision of auxiliary aids or services.\" <em>Id.</em> (emphasis added). Put differently, subsection (b)(3) reflects congressional intent that, at a minimum, the safety of others is \"necessary\" under subsection (b)(2)(A)(i). It's not a far leap to conclude that the customer's own safety is likewise \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "And in any case, we cannot say that the term \"necessary\" unambiguously does not include a customer's own safety. So even if, after we apply all the statutory-interpretation tools in our judicial toolbox, <span class=\"pagination-marker\">[**21]</span>  \"necessary\" is ambiguous as to whether it includes the customer's own safety, <em>Chevron, U.S.A., Inc. v. Nat. Res. Def. Council, Inc.</em>, 467 U.S. 837, 843, 104 S. Ct. 2778, 81 L. Ed. 2d 694 (1984), requires us to defer to the administering agency's notice-and-comment-promulgated rule that answers this question, as long as \"the agency's answer is based on a permissible construction of the statute.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the administering agency—the Department of Justice—has promulgated a rule that is based on just such a construction. Title 28 C.F.R. § 36.301(b) provides that \"[a] public accommodation may impose legitimate safety requirements that are necessary for safe operation.\" It continues, further specifying that \"[s]afety requirements must be based on actual risks and not on mere speculation, stereotypes, or generalizations about individuals with disabilities.\" <em>Id.</em> We have no trouble concluding that this regulation, which is at most a logical extension of the congressional intent to protect safety as reflected in subsection (b)(3), \"is based on a permissible construction of the statute,\" <em>Chevron</em>, 467 U.S. at 843. In sum, we agree with the parties that safety-related reasons qualify as \"necessary\" under subsection (b)(2)(A)(i)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1256]</span>  That established, we consider the parties' arguments about what, if anything, else the term \"necessary\" includes. Universal would extend the definition of \"necessary\" beyond <span class=\"pagination-marker\">[**22]</span>  safety. If \"necessary\" means only \"safety,\" it contends, then Congress's exception in subsection (b)(3) for \"direct threat[s] to . . . health or safety\" would be surplusage. Put another way, Congress explicitly stated that the ADA did not require a public accommodation to allow participation that would constitute a \"direct threat\" to the health or safety of others. 42 U.S.C. § 12812(b)(3). So if only those eligibility criteria that are required for safety qualify as \"necessary\" under subsection (b)(2)(A)(i), Universal says, \"necessary\" would be redundant of the \"direct threat\" provision."
+    },
+    {
+      "type": "paragraph",
+      "content": "We agree with Universal that \"necessary\" includes more than what is required for safety. Nothing in Title III suggests that the general definition of \"necessary\" is limited to what is required for safety. And the \"surplusage canon obliges us, whenever possible, to disfavor an interpretation when that interpretation would render a clause, sentence, or word . . . superfluous, void, or insignificant.\" <em>In re Shek</em>, 947 F.3d 770, 777 (11th Cir. 2020) (quotation omitted). Plus, even if we get to the Department of Justice regulation, it says only that safety is <em>a</em> permissible justification for a discriminatory eligibility criterion, not that it is the <em>only</em> permissible justification. 28 C.F.R. § 36.301(b). Still, though, this conclusion—that <span class=\"pagination-marker\">[**23]</span>  \"necessary\" must include more than safety concerns—does not tell us what else \"necessary\" includes."
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal says \"necessary\" includes at least three other justifications. First, Universal asserts that it is \"necessary\" to exclude Campbell from the Aqua Coaster (and other rides) because state law requires it. Second, Universal contends that it is \"necessary\" to follow manufacturers' recommendations because manufacturers have a comparative advantage in identifying safety risks. And third, Universal argues that it is necessary to exclude Campbell for administrative feasibility and uniformity reasons. None of these justifications are persuasive."
+    },
+    {
+      "type": "paragraph",
+      "content": "2. \"Necessary\" to Comply with State Law"
+    },
+    {
+      "type": "paragraph",
+      "content": "The first reason Universal gives for why it must exclude Campbell is because state law requires it. We are not persuaded."
+    },
+    {
+      "type": "paragraph",
+      "content": "Florida law acts in a somewhat attenuated (multiple-step) way to require Universal to bar Campbell from riding. First, Florida requires amusement parks to follow some (undefined) certain minimum safety standards for amusement rides. Fla. Stat. § 616.242.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> Second, Florida directed the Florida Department of Agriculture and Consumer Services to adopt rules \"which are the same as or similar to\" national standards <span class=\"pagination-marker\">[**24]</span>  like the ASTM International Committee F24 Standards on Amusement Rides and Devices. <em>Id.</em> § 616.242(4)(a). Third, in response, the Department adopted the \"F-24 Committee standards.\" Fla. Admin. Code § 5J-18.0011(1) (Jul. 5, 2016). For their part, the F-24 standards require ride operators to comply with the manufacturer's ridership eligibility criteria. And finally, the manufacturer here—ProSlide—says that people with certain limb permutations cannot ride the Aqua Coaster."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1257]</span>  To recap, then, Florida law requires that amusement parks comply with ASTM standards. ASTM standards, in turn, demand compliance with manufacturer recommendations. And the manufacturer here says that Campbell can't ride because he doesn't have two hands."
+    },
+    {
+      "type": "paragraph",
+      "content": "As we've mentioned, Universal argues that the term \"necessary\" in subsection (b)(2)(A)(i) encompasses compliance with Florida law. In other words, Universal says, it can impose discriminatory eligibility criteria when state law requires it to do so. Under-stood this way, no conflict arises between state law and federal law, even if state law requires discrimination without any legitimate reason for doing so: the ADA prohibits discrimination except where \"necessary,\" and compliance with state law is \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "But there's one big problem <span class=\"pagination-marker\">[**25]</span>  with this interpretation: it conflicts with the \"plain meaning of the statutory language\" and \"the context of the entire statute, as assisted by the canons of statutory construction.\" <em>Edison v. Douberly</em>, 604 F.3d 1307, 1310 (11th Cir. 2010). When we employ all the tools in our statutory-interpretation toolbox, we must conclude that the text of the ADA precludes us from finding that it is \"necessary\" to comply with state law when state law otherwise requires a public accommodation to violate the ADA."
+    },
+    {
+      "type": "paragraph",
+      "content": "We begin again from the recognition that the statutory text of subsection 12182(b)(2)(A)(i) does not answer the specific question here: that is, whether compliance with state law qualifies as \"necessary\" under that subsection. As with the question of safety, though nothing in the definition of \"necessary\"—that which cannot be avoided, inevitable—forbids Universal's answer that state law is \"necessary,\" nothing in the definition requires that result, either. But statutory context and the canons of construction both firmly counsel against adopting Universal's definition."
+    },
+    {
+      "type": "paragraph",
+      "content": "First, the statutory context: Universal's proposed answer—that \"necessary\" includes what state law requires—would conflict with the ADA's non-preemption provision when state law requires less discrimination <span class=\"pagination-marker\">[**26]</span>  protection for those with a disability than does the ADA. In this respect, the ADA explicitly provides that the ADA does not preempt state laws that provide greater protection to those with a disability. 42 U.S.C. § 12201(b) (\"Nothing in this chapter shall be construed to invalidate or limit the remedies, rights, and procedures . . . of any State . . . that provides greater or equal protection for the rights of individuals with disabilities than are afforded by this chapter.\"). So by implication, a state law that provides <em>less</em> protection than the ADA to those with a disability is preempted. For instance, if a state passed a law that required public accommodations to discriminate against those with a disability—say, to get a business license—that law would be preempted by the ADA. But if the state passed a law requiring businesses to provide <em>all</em> accommodations (not just <em>reasonable</em> ones) to those with a disability, that law would not be preempted by the ADA because it would provide greater protection to those with disabilities."
+    },
+    {
+      "type": "paragraph",
+      "content": "So if compliance with state law qualified as \"necessary\" when it required discrimination that violates the ADA, it would conflict with the ADA's preemption provision. And \"a state <span class=\"pagination-marker\">[**27]</span>  law at odds with a valid Act of Congress is no law at all.\" <em>Barber ex rel. Barber v. Colo. Dep't of Revenue</em>, 562 F.3d 1222, 1234 (10th Cir. 2009) (Gorsuch, J., concurring in the judgment). To paraphrase then-Judge Gorsuch, \"the demands of the federal [ADA] do not yield to state laws that discriminate against the disabled; it works the other  <span class=\"pagination-marker\">[*1258]</span>  way around.\" <em>Id.</em> (discussing the demands of the federal Rehabilitation Act)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Separate and apart from the ADA's preemption provision, Universal's construction of the ADA does not make sense. Congress passed a sweeping law to prohibit discrimination unless discrimination is \"necessary.\" <em>See</em> 42 U.S.C. § 12182(b)(2)(A)(i). If compliance with state law were \"necessary,\" then any state could unilaterally nullify the ADA by enacting a state law requiring discrimination. That can't be right. <em>Belevich v. Thomas</em>, 17 F.4th 1048, 1053 (11th Cir. 2021) (\"[E]ven if we agreed . . . that the statute is silent on this point, we would conclude that these specific defenses contravene the express purpose of the statute.\"); A. Scalia & B. Garner, Reading Law: The Interpretation of Legal Texts 63 (2012) (\"A textually permissible interpretation that furthers rather than obstructs the document's purpose should be favored.\"). As the Second Circuit put it when considering Title II of the ADA, \"If all state laws were insulated from Title II's reasonable modification <span class=\"pagination-marker\">[**28]</span>  requirement solely because they were state laws, 'state law [would serve as] an obstacle to the accomplishment and execution of the full purposes and objectives of Congress' in enacting Title II.\" <em>Mary Jo C. v. New York State &amp; Loc. Ret. Sys.</em>, 707 F.3d 144, 163 (2d Cir. 2013) (alteration in original) (quoting <em>Marsh v. Rosenbloom</em>, 499 F.3d 165, 177 (2d Cir. 2007))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Still, this analysis doesn't prevent a state from regulating to ensure safety. After all, if a state imposed a requirement on businesses that related to legitimate safety concerns, then compliance with that state law would be \"necessary.\" But compliance would be necessary because the rule promoted safety, not because the rule was a state law."
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal also resists the conclusion that compliance with state law does not qualify as \"necessary\" on the ground that if Universal fails to follow Florida law, Florida will subject Universal to closure or criminal and civil penalties, or all those things."
+    },
+    {
+      "type": "paragraph",
+      "content": "We don't agree. If the ADA requires allowing Campbell to ride, then Universal doesn't face criminal and civil penalties from Florida. The Supremacy Clause requires \"a different order of priority.\" <em>Quinones v. City of Evanston</em>, 58 F.3d 275, 277 (7th Cir. 1995); <em>see</em> U.S. CONST. art. VI, cl. 2. If federal law requires Universal to allow Campbell to ride, and state law forbids it, then Universal must let Campbell ride. <em>Quinones</em>, 58 F.3d at 277 (\"A discriminatory state law is not a <em>defense</em> to <span class=\"pagination-marker\">[**29]</span>  liability under federal law; it is a <em>source</em> of liability under federal law.\"); <em>see also </em><em>Nat'l Fed'n of the Blind v. Lamone</em>, 813 F.3d 494, 508 (4th Cir. 2016) (\"[T]he strong form of defendants' argument—that the mere fact of a state statutory requirement insulates public entities from making otherwise reasonable modifications to prevent disability discrimination—cannot be correct.\"). Instead, Universal can assert the ADA as a defense to an enforcement action by Florida or seek a declaratory judgment ahead of time."
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal cites <em>Brickers v. Cleveland Board of Education</em> for the proposition that it faces what the Sixth Circuit has described as a \"Hobson's choice\" of \"subject[ing] itself to potential ADA liability . . . or . . . subject[ing] itself to potential penalties from the state[.]\" 145 F.3d 846, 850 (6th Cir. 1998)."
+    },
+    {
+      "type": "paragraph",
+      "content": "We respectfully disagree and decline to follow the Sixth Circuit. Instead, we align with the other circuits that have correctly recognized that federal law—not state law—must be followed when the two conflict. <em>Cf. </em><em>Barber</em>, 562 F.3d at 1233 (\"Reliance on state statutes to excuse non-compliance with federal laws is simply unacceptable under the Supremacy Clause.\").  <span class=\"pagination-marker\">[*1259]</span>  As then-Judge Gorsuch explained, \"[s]tate officials who rely on their compliance with discriminatory state laws as evidence of their reasonableness <span class=\"pagination-marker\">[**30]</span>  will normally find themselves proving their own liability, not shielding themselves from it.\" <em>Id.</em> at 1234 (Gorsuch, J., concurring in the judgment)."
+    },
+    {
+      "type": "paragraph",
+      "content": "We hold that compliance with state law does not qualify as \"necessary\" under subsection (b)(2)(A)(i) of the ADA. Therefore, it does not excuse from ADA liability a public accommodation that imposes discriminatory eligibility criteria because of state law."
+    },
+    {
+      "type": "paragraph",
+      "content": "3. Comparative Advantage"
+    },
+    {
+      "type": "paragraph",
+      "content": "Universal also says it is \"necessary\" to follow manufacturers' recommendations because manufacturers have a comparative advantage in identifying safety risks. ProSlide, Universal points out, has thirty-five years of experience designing water slides and may have sold the same ride to multiple water parks, while Universal had only the one version of the ride."
+    },
+    {
+      "type": "paragraph",
+      "content": "We disagree that the comparative advantage of a manufacturer in identifying safety risks, in and of itself, qualifies as \"necessary\" under subsection (b)(2)(A)(i) and excuses a public accommodation from otherwise complying with the ADA. The ADA expressly prohibits the use of discriminatory eligibility criteria \"through contractual or other arrangements.\" 42 U.S.C. § 12182(b)(1)(D). So the mere fact that a manufacturer has more experience and therefore a comparative advantage in identifying safety risks <span class=\"pagination-marker\">[**31]</span>  does not make complying with its recommendations \"necessary\" when those recommendations are not, in fact, based on actual risks."
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the manufacturer's comparative advantage is relevant with regard to <em>safety</em>-related concerns. Universal doesn't argue that the manufacturer has superior insight into any other way a requirement could be \"necessary.\" As we've already mentioned, though, we agree that \"necessary\" includes safety. And we go one step further—only safety requirements addressing <em>actual</em> safety risks are \"necessary\" under the ADA."
+    },
+    {
+      "type": "paragraph",
+      "content": "Congress enacted the ADA to address disability discrimination based on stereotypes about disability. <em>Id.</em> § 12101(a) (\"The Congress finds that—(1) physical or mental disabilities in no way diminish a person's right to fully participate in all aspects of society, yet many people with physical or mental disabilities have been precluded from doing so because of discrimination; others who . . . are regarded as having a disability also have been subjected to discrimination[.]\"). So it's not surprising that the ADA expressly prohibits discrimination against people both with disabilities and against people because of a \"perceived physical or mental impairment whether or <span class=\"pagination-marker\">[**32]</span>  not the impairment limits or is perceived to limit a major life activity.\" <em>Id.</em> § 12102(3)(A) (emphasis added). Put simply, stereotypes about what people with disabilities can or cannot do don't justify exclusion under the ADA."
+    },
+    {
+      "type": "paragraph",
+      "content": "Applying that principle here, we hold that a manufacturer-imposed safety requirement is \"necessary\" only to the extent it is related to actual risks to the health and safety of guests. A safety requirement imposed because of a stereotype is not \"necessary\" within the meaning of the ADA, when we consider the context that the ADA's definition of disability supplies. <em>See </em><em>DBB, Inc.</em>, 180 F.3d at 1281. So a manufacturer's eligibility requirement, without more—that is, a manufacturer's eligibility requirement that is not based on actual safety risks—does not qualify as \"necessary\" under subsection (b)(2)(A)(i) just because a manufacturer has a comparative  <span class=\"pagination-marker\">[*1260]</span>  advantage compared to a public accommodation in designing eligibility requirements."
+    },
+    {
+      "type": "paragraph",
+      "content": "And, to the extent the term \"necessary\" is ambiguous, the regulations reinforce this conclusion. <em>Chevron</em>, 467 U.S. at 843. As we've said, 28 C.F.R. § 36.301(b) provides that \"[s]afety requirements must be based on actual risks and not on mere speculation, stereotypes, or generalizations about individuals with disabilities.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the record <span class=\"pagination-marker\">[**33]</span>  reveals no \"actual risks\" to people like Campbell. To the contrary, the parties stipulated that \"[a]side from identifying one risk that involves a potential hazard for a visually impaired patron . . . the hazard analyses performed by ProSlide and RAMS  <span class=\"pagination-marker\">[*1261]</span>  identified no specific risks for anyone with a limb difference or other physical disability.\" So when ProSlide recommends that Universal not let Campbell ride, it raises the question, why? Based on the parties' stipulation, the recommendation identified no safety-related justification. Nor does Universal posit a different reason why ProSlide's recommendation is \"necessary\" for the slide.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> So Universal's appeal to comparative advantage doesn't save its discriminatory eligibility criterion here."
+    },
+    {
+      "type": "paragraph",
+      "content": "4. Administrative Feasibility and Uniformity"
+    },
+    {
+      "type": "paragraph",
+      "content": "Finally, Universal says it is \"necessary\" to exclude Campbell because making particularized safety determinations about the ability or inability of each guest to safely ride would be administratively infeasible. Rather, Universal asserts, a uniform rule is necessary. We think Universal overstates its concern on this record."
+    },
+    {
+      "type": "paragraph",
+      "content": "Of course, administrative feasibility could be \"necessary,\" given a record that <span class=\"pagination-marker\">[**34]</span>  supports that conclusion. Even the ADA recognizes in subsection (b)(2)(A)(iii) that public accommodations need not make reasonable accommodations for those with disabilities if doing so would result in an undue burden on the public accommodation. 42 U.S.C. § 12182(b)(2)(A)(iii). Similarly, we think that, if a public accommodation could not feasibly safely administer a facility without employing a discriminatory eligibility criterion, that criterion could be said to be \"necessary.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "But at this point in this case, Universal hasn't shown that administrative feasibility is relevant. Universal argues that it would be burdensome to have to anticipate all possible variations of limb differences and other abilities. But Universal stipulated that \"[a]side from identifying one risk that involves a potential hazard for a visually impaired patron[,] . . . the hazard analyses performed by ProSlide and RAMS identified no specific risks for anyone with a limb difference or other physical disability.\" In other words, Universal has not identified a single specific risk to anyone with any type of limb difference. So it's not as though ProSlide and RAMS found actual risks for people with certain limb differences but did not consider the risks specific to those <span class=\"pagination-marker\">[**35]</span>  with other types of limb differences because doing so would have been cost-prohibitive—Universal stipulated that \"ProSlide and RAMS identified no specific risks <em>for anyone with a limb difference</em> ....\" (Emphasis added). And how a risk to a visually impaired rider has any relevance to risks for those with limb differences is not self-explanatory. In sum, on this record, Universal has not shown that the term \"necessary\" includes administrative efficiency or uniformity."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>IV. CONCLUSION</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "For the foregoing reasons, we vacate and remand the district court's order for further proceedings consistent with this order."
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>VACATED AND REMANDED</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>The parties have generally stipulated to the facts as we relate them. Where they haven't, we recite the facts in the light most favorable to the nonmoving party, here, Campbell. <em>St. Charles Foods, Inc. v. Am.'s Favorite Chicken Co.</em>, 198 F.3d 815, 819 (11th Cir. 1999). Therefore, the actual facts may or may not be as stated. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>This section technically exempts Universal because Universal employs over 1,000 people and has full-time, in-house safety inspectors. Fla. Stat. § 616.242(11)(a)(1). But Universal and all exempt entities still must file an affidavit stating that they have complied with the section's standards. <em>Id.</em> </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>And as we've explained, Universal can't nullify the ADA by contract. For instance, if ProSlide offered to sell its waterslide to Universal only if Universal agreed to discriminate without a legitimate reason under the ADA against people with a disability, that contract would not insulate Universal from liability. <em>See</em> 42 U.S.C. § 12182(b)(1)(D) (explaining that public accommodations cannot \"directly or through contractual or other arrangements, utilize standards or criteria or methods of administration\" that have the effect of discriminating on the basis of disability.\"). </p>"
+    }
+  ]
+}

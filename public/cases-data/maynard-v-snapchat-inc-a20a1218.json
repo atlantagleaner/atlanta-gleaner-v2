@@ -1,0 +1,148 @@
+{
+  "case_id": "maynard-v-snapchat-inc-a20a1218",
+  "metadata": {
+    "title": "Maynard v. Snapchat, Inc.",
+    "court": "Court of Appeals of Georgia",
+    "date": "January 25, 2023",
+    "docket": "A20A1218.",
+    "notice": null,
+    "judges": "[***1] DOYLE, Presiding Judge. McFadden, P. J., and Hodges, J., concur.",
+    "opinion_by": "DOYLE",
+    "appellant_counsel": [
+      "Bondurant Mixson & Elmore, Michael B. Terry, Naveen Ramachandrappa, Amanda K. Seals",
+      "Law Office of Michael L. Neff, Michael L. Neff, D. Dwayne Adams, T. Shane Peagler, Susan M. Cremer",
+      "Henningsen Injury Attorneys, Todd R. Henningsen, for appellants.",
+      "Greenberg Traurig, Lori G. Cohen, Sean P. Jessee, Andrew Z. Smith"
+    ],
+    "appellee_counsel": [
+      "Munger, Tolles & Olson, Jonathan H. Blavin, John B. Major, Anne K. Conley, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*507]</span>  <span class=\"pagination-marker\">[**534]</span>   Doyle, Presiding Judge."
+    },
+    {
+      "type": "paragraph",
+      "content": "This case now comes on remand from the Supreme Court of Georgia. As recounted by the Supreme Court:"
+    },
+    {
+      "type": "paragraph",
+      "content": "While driving over 100 miles per hour, Christal McGee rear-ended a car driven by Wentworth Maynard, causing him to suffer severe injuries. When the collision occurred, McGee was using a “Speed Filter” feature within Snapchat, a mobile phone application, to record her real-life speed on a photo or video that she could then share with other Snapchat users. Wentworth and his wife, Karen Maynard, sued McGee and Snapchat, Inc. (“Snap”), alleging that Snap had negligently designed Snapchat's Speed Filter. The trial court dismissed the design-defect claim against Snap, and a divided panel of the Court of Appeals affirmed, holding that Snap did not owe a legal duty to the Maynards because a manufacturer's duty to design reasonably safe products does not extend to people injured by a third party's intentional and tortious misuse of the manufacturer's product.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*508]</span> After granting the Maynards' petition for certiorari, the Supreme Court reversed this Court, explaining that"
+    },
+    {
+      "type": "paragraph",
+      "content": "a manufacturer has a duty under our decisional <span class=\"pagination-marker\">[***2]</span>  law to use reasonable care in selecting from alternative designs to reduce reasonably foreseeable risks of harm posed by its products. When a particular risk of harm from a product is not reasonably foreseeable, a manufacturer owes no design duty to reduce that risk. How a product was being used (e.g., intentionally, negligently, properly, improperly, or not at all) and who was using it (the plaintiff or a third party) when an injury occurred are relevant considerations in determining whether a manufacturer could reasonably foresee a particular risk of harm from its product. Nevertheless, our decisional law does not recognize a blanket exception to a manufacturer's design duty in all cases of intentional or tortious third-party use. Because the holding of the Court of Appeals conflicts with these principles, and because the Maynards adequately alleged that Snap could reasonably foresee the particular risk of harm from the Speed Filter at issue here, we reverse the judgment of the Court of Appeals and remand for further proceedings.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "In remanding, the Supreme Court instructed this Court to address the trial  <span class=\"pagination-marker\">[**535]</span>  court's alternative basis for granting Snap's motion to dismiss, i.e., that the <span class=\"pagination-marker\">[***3]</span>  allegations in the Maynards' complaint, even when taken as true at the motion to dismiss stage, fail to support an inference that Snap's allegedly negligent design was the proximate cause of Maynard's injuries. Because the Maynards' complaint alleged facts that, if proven, sufficiently demonstrate that Snap's negligent design proximately caused Maynard's injuries, we now reverse the trial court's judgment granting Snap's motion to dismiss on proximate cause grounds."
+    },
+    {
+      "type": "paragraph",
+      "content": "As the Supreme Court recounted the legal context for a negligent design claim, it included an explanation of proximate cause:"
+    },
+    {
+      "type": "paragraph",
+      "content": "A breach of a duty constitutes a proximate cause of an injury only if the injury is the “probable” result of the breach, “according to ordinary and usual experience,” as opposed to “merely a possible” result of a breach, “according <span class=\"pagination-marker\">[*509]</span>  to occasional experience.” We have explained that it is important to recognize that “probable,” in the rule as to causation, does not mean “more likely than not” but rather “not unlikely”; or, more definitely, “such a chance of harm as would induce a prudent man not to run the risk; such a chance of harmful result that a prudent man would foresee an appreciable risk <span class=\"pagination-marker\">[***4]</span>  that some harm would happen.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "Further, (1) under “the well-established doctrine of intervening causes,” a defendant's breach of a duty does not constitute a “proximate cause” of a plaintiff's injury when there has intervened between the act of the defendant and the injury to the plaintiff, an independent act or omission of someone other than the defendant, which was not foreseeable by the defendant, was not triggered by the defendant's act, and which was sufficient of itself to cause the injury. …"
+    },
+    {
+      "type": "paragraph",
+      "content": "[In sum], the proximate-cause inquiry asks whether “a prudent manufacturer would foresee an appreciable risk that,” as a result of an unreasonable design decision, “some harm would happen” “according to ordinary and usual experience.”<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "As noted in each of our Courts' opinions, we examine these questions under the standard of review applicable to Snap's motion to dismiss:"
+    },
+    {
+      "type": "paragraph",
+      "content": "A motion to dismiss for failure to state a claim upon which relief may be granted should not be sustained unless (1) the allegations of the complaint disclose with certainty that the claimant would not be entitled to relief under any state of provable facts asserted in support thereof; and (2) the movant establishes that <span class=\"pagination-marker\">[***5]</span>  the claimant could not possibly introduce evidence within the framework of the complaint sufficient to warrant a grant of the relief sought.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the Maynards have alleged that Snap designed and distributed a feature known as the Speed Filter for Snap's social media application, Snapchat:"
+    },
+    {
+      "type": "paragraph",
+      "content": "[Snap] is a social media company that makes [digital] products allowing users to create, upload, post, send, receive, <span class=\"pagination-marker\">[*510]</span>  share, and store digital photos and videos. [Snap] created and distributed a feature within its application, known as the Speed Filter, that allows Snapchat users to record their [real-time] speed and overlay that speed onto a Snapchat photo or video. Snapchat users can then share on social media that photo or video with their speed as a “Snap,” which is Snapchat's messaging product.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Also, according to the complaint, Snap created built-in rewards or incentives to use its product in excessive or dangerous ways, and Snap purposefully designed its application to encourage such behavior. These designs encouraged dangerous behavior among its mostly-young user base, and before the accident in this case, Snap knew that many users were driving in excess of 100 miles per hour to record excessive <span class=\"pagination-marker\">[***6]</span>  speeds and share them  <span class=\"pagination-marker\">[**536]</span>  among their peers. The Maynards allege that the design of the Speed Filter dangerously affects the driving behavior of its users, including the driver in this case."
+    },
+    {
+      "type": "paragraph",
+      "content": "With respect to this case in particular, the complaint alleges that McGee — the driver who hit Wentworth — was motivated by the Speed Filter, as her passenger explained: “[Despite being asked to slow down, s]he was just trying to get the car to 100 [mph] to post it on Snapchat. She said, ‘I'm about to post it.’” The driver was also heard saying, “Let's see how fast we can go! I want to hit 100,” as she accelerated the car to 100 miles per hour. Because McGee was driving so fast, the complaint alleges, she could not react in time when Maynard turned onto the roadway traveling in the same direction; at that point, McGee drove into the back of Maynard's car at approximately 107 miles per hour."
+    },
+    {
+      "type": "paragraph",
+      "content": "(2) Based on these facts as alleged, a finder of fact could infer that Snap's Speed Filter was a proximate cause of the collision. As outlined above, the complaint points to evidence that could be introduced to show an explicit causal connection between the driver's conduct and the Speed Filter. Due to the way that the Speed Filter allegedly <span class=\"pagination-marker\">[***7]</span>  encourages reckless behavior and given the facts to support an inference that this occurred in this case, the complaint adequately states a case alleging a negligent design causing “such a chance of harmful result that a prudent [manufacturer] would foresee an appreciable risk that some harm would happen.”<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*511]</span> Further, Snap cannot escape potential liability at this stage by characterizing McGee's wrongful conduct as an intervening cause of the collision."
+    },
+    {
+      "type": "paragraph",
+      "content": "[The intervening act] rule does not insulate the defendant if the defendant had reasonable grounds for apprehending that such wrongful act would be committed. Stated differently, if the character of the intervening act claimed to break the connection between the original wrongful act and the subsequent injury was such that its probable or natural consequences could reasonably have been anticipated, apprehended, or foreseen by the original wrong-doer, the causal connection is not broken, and the original wrong-doer is responsible for all of the consequences resulting from the intervening act.<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Accordingly, based on the record before us, the trial court erred by granting Snap's motion to dismiss on proximate cause grounds."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment reversed. <span class=\"pagination-marker\">[***8]</span>  McFadden, P. J., and Hodges, J., concur</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>(Footnote omitted.) <em>Maynard v. Snapchat, Inc.</em>, 313 Ga. 533, 533-534 (870 SE2d 739) (2022). </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>Id. at 534. For purposes of this appeal, we refer to the allegations in the Maynards' second amended complaint. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>(Citations and punctuation omitted.) Id. at 538-540 (2). </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>(Citation and punctuation omitted.) <em>Williams v. DeKalb County</em>, 308 Ga. 265, 270 (2) (840 SE2d 423) (2020). </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup><em>Maynard v. Snapchat, Inc.</em>, 357 Ga. App. 496, 497-498 (851 SE2d 128) (2020), reversed and remanded by <em>Maynard</em>, 313 Ga. at 533. </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup>(Citation and punctuation omitted.) <em>Maynard</em>, 313 Ga. at 538 (2). </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup>(Citations and punctuation omitted.) <em>Goldstein, Garber &amp; Salama, LLC v. J. B.</em>, 300 Ga. 840, 841-842 (797 SE2d 87) (2017). </p>"
+    }
+  ]
+}

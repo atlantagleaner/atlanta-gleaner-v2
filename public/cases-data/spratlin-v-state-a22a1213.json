@@ -1,0 +1,159 @@
+{
+  "case_id": "spratlin-v-state-a22a1213",
+  "metadata": {
+    "title": "Spratlin v. State",
+    "court": "Court of Appeals of Georgia",
+    "date": "February 2, 2023",
+    "docket": "A22A1213.",
+    "notice": null,
+    "judges": "[***1] DILLARD, Presiding Judge. Mercier and Markle, JJ., concur.",
+    "opinion_by": "DILLARD",
+    "appellant_counsel": [
+      "Benjamin A. Pearlman, for appellant.",
+      "Peters Rubin Sheffield & Hodges, Jason B. Sheffield",
+      "Willis Law Firm, Greg A. Willis, amici curiae."
+    ],
+    "appellee_counsel": [
+      "Deborah Gonzalez, District Attorney, Gerald L. Henderson, Assistant District Attorney, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*607]</span>  <span class=\"pagination-marker\">[**848]</span>   Dillard, Presiding Judge."
+    },
+    {
+      "type": "paragraph",
+      "content": "Following a trial by jury, Dusty Spratlin was convicted of criminal trespass. On appeal from this conviction, Spratlin argues the trial court erred by admitting evidence of testimonial statements made by the deceased victim. And because the trial court failed to conduct a proper analysis under <em>Crawford v. Washington</em><sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> before admitting the complained-of statements, we vacate the trial court's judgment and remand the case for additional proceedings consistent with this opinion.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Viewed in the light most favorable to the jury's verdict,<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> the record shows that on January 26, 2020, Athens-Clarke County law enforcement  <span class=\"pagination-marker\">[**849]</span>  officers responded to an incident at the home of Rosa Pearson, who was Spratlin's long-term partner and the mother of his two children. Pearson called 911 because, while she was pulling into her driveway, Spratlin shot the windshield of her van with a BB gun, leaving the windshield damaged with holes and cracks. Pearson—who was accompanied in the vehicle by one of the couple's children—immediately drove away from the scene and called the police."
+    },
+    {
+      "type": "paragraph",
+      "content": "In that 911 call, Pearson <span class=\"pagination-marker\">[***2]</span>  relayed that Spratlin fired a pellet gun at her vehicle, dropped the gun in the yard, and left the scene on foot. Officers arrived at the home approximately six minutes later, before Pearson returned. Then, when Pearson arrived, the statements she made about the incident to law enforcement were captured on the body cameras of two officers. The officers were unable to locate Spratlin at that time, but apprehended him several hours later when a relative who lived on the same street as Pearson reported that he was at her home. Spratlin was later indicted and tried on two counts of aggravated assault (family violence) and one count of criminal trespass."
+    },
+    {
+      "type": "paragraph",
+      "content": "At trial, the child who was in the van when Spratlin fired the gun did not testify. And tragically, Pearson passed away (from unrelated natural causes) just weeks after the incident in question. <span class=\"pagination-marker\">[*608]</span>  As a result, because Pearson was unavailable to testify, the State sought to admit her 911 call and the body-camera footage as non-testimonial “excited utterances.” Spratlin objected on the grounds that, inter alia, the statements were both inadmissible hearsay and violated the Confrontation Clause of the Sixth Amendment to the United States Constitution.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup> Specifically, as to the Confrontation Clause arguments, Spratlin asserted that the statements <span class=\"pagination-marker\">[***3]</span>  made during the 911 call and recorded on the officers' body cameras were all testimonial in nature because there was no ongoing emergency when Pearson called 911 or when she returned to the scene."
+    },
+    {
+      "type": "paragraph",
+      "content": "Following a pretrial hearing, the trial court ruled that Pearson's statements on the 911 recording and body-camera footage were admissible as excited utterances.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> Spratlin then asked the trial court to “address the proffer in the [C]onfrontation [C]lause,” noting that the hearsay objection and the Confrontation Clause objection were two separate and distinct issues. The trial court then responded as follows: “I think my ruling overrides your argument that the [C]onfrontation [C]lause overrides [sic] the issue that the statements need to be excluded because they are excited utterances, and I'm just denying your motion. … I'm finding that the [C]onfrontation [C]lause arguments do not apply in this case.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "Spratlin was ultimately convicted by the jury on the single count of criminal trespass but acquitted on the two counts of aggravated assault. Following that conviction, he filed a motion for new trial. And at the motion-for-new-trial hearing, the trial court, once again, considered Spratlin's argument <span class=\"pagination-marker\">[***4]</span>  that the 911 call recording and body-camera footage were admitted in violation of the Confrontation Clause. More specifically, Spratlin asserted the trial court conflated the hearsay analysis and Confrontation Clause analysis during its pretrial consideration of the arguments against admission of the evidence. To its credit, in responding to this argument, the State acknowledged that a Confrontation Clause analysis and a hearsay analysis are two separate and distinct questions."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*609]</span> The trial court denied Spratlin's motion for new trial. And again, on the question of the admissibility of Pearson's statements on the  <span class=\"pagination-marker\">[**850]</span>  911 recording and in the body-camera footage, the trial court concluded that they “were not violations of the Confrontation Clause … because each of these statements satisfied the excited utterances exception to the Georgia hearsay rule.” In doing so, the trial court reasoned that when the challenged statements were made, Pearson “was still under the stress of excitement from her interaction with the Defendant[.]” This appeal follows."
+    },
+    {
+      "type": "paragraph",
+      "content": "Spratlin, once again, argues Pearson's statements on the 911 recording and body-camera footage were improperly admitted into evidence by the trial court. And in response, the State claims the trial court properly concluded that <span class=\"pagination-marker\">[***5]</span>  this evidence falls squarely within an exception to the hearsay rule as excited utterances; but as to application of the Confrontation Clause, the State notes that “the trial court never appears to have either conducted a full Confrontation Clause analysis or rendered a distinct ruling on whether Pearson's statements were testimonial.” Indeed, the State concedes that before <em>and</em> after trial, the trial court “appears to have conflated its assessment of hearsay with its Confrontation Clause analysis”—a concession the State repeated at oral argument before this Court.<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) Because the trial court indeed conflated its hearsay analysis with an analysis of Spratlin's Confrontation Clause arguments, as applied to the 911 recording and body-camera footage, we cannot discern whether it abused its discretion in concluding this evidence was admissible.<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup> And as a result, we must vacate the trial court's judgment and remand for it to consider the issue anew, separating its hearsay and Confrontation Clause analyses.<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*610]</span> The Confrontation Clause of the United States Constitution “imposes an absolute bar to admitting out-of-court statements in evidence when they are testimonial in nature, and when the defendant does not have an opportunity to cross-examine the declarant.”<sup><sup><a href=\"#fn-10\" id=\"ref-10\">10</a></sup>9</sup> And if the primary purpose of a statement is “to establish evidence that could <span class=\"pagination-marker\">[***6]</span>  be used in a future prosecution,” that statement is testimonial in nature.<sup><sup><a href=\"#fn-11\" id=\"ref-11\">11</a></sup>10</sup> Importantly, only <em>after</em> a court determines that a statement is nontestimonial in nature do the “normal rules regarding the admission of hearsay apply.”<sup><sup><a href=\"#fn-12\" id=\"ref-12\">12</a></sup>11</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[**851]</span>  In a Confrontation Clause analysis, statements are nontestimonial in nature when made in “the course of police interrogation under circumstances objectively indicating that the primary purpose of the interrogation is to enable police assistance to meet an ongoing emergency.”<sup><sup><a href=\"#fn-13\" id=\"ref-13\">13</a></sup>12</sup> Then, if the answer to that question is “yes,” the court proceeds to consider the admissibility of statements under an exception to the hearsay rule.<sup><sup><a href=\"#fn-14\" id=\"ref-14\">14</a></sup>13</sup> But here, the trial court only considered the <span class=\"pagination-marker\">[*611]</span>  statements in question under a hearsay analysis and, using its conclusion that the statements were admissible as “excited utterances,”<sup><sup><a href=\"#fn-15\" id=\"ref-15\">15</a></sup>14</sup> it also found the Confrontation Clause did not bar admission of the statements. It erred in doing so."
+    },
+    {
+      "type": "paragraph",
+      "content": "In light of the trial court's failure to first separately conduct a Confrontation Clause analysis before determining whether the statements in the 911 call and body-camera recordings were admissible under an exception to the hearsay rule, we vacate the trial court's <span class=\"pagination-marker\">[***7]</span>  judgment and remand for it to consider these issues in a manner consistent with this opinion.<sup><sup><a href=\"#fn-16\" id=\"ref-16\">16</a></sup>15</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment vacated and case remanded for further proceedings. Mercier and Markle, JJ., concur</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>541 U.S. 36 (124 SCt 1354, 158 LE2d 177) (2004). </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>In a separate enumeration of error, Spratlin argues the trial court erred in overruling his <em>Batson</em> challenge to the State's use of peremptory strikes during jury selection. Because we vacate and remand the case on the basis of the trial court's failure to properly conduct a <em>Crawford</em> analysis, we need not reach this separate claim of error. Nevertheless, we thank the Georgia Association of Criminal Defense Lawyers for its submission of a thoughtful amicus brief on this issue. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup><em>See, e.g.</em>, <em>Hines v. State</em>, 353 Ga. App. 710, 711 (1) (839 SE2d 208) (2020). </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup><em>See</em> U.S. Const. Amend. VI (providing that “[i]n all criminal prosecutions, the accused shall enjoy the right … to be confronted with the witnesses against him”); <em>see also</em> Ga. Const. Art. I, Sec. I, Par. XIV (“Every person charged with an offense against the laws of this state … shall be confronted with the witnesses testifying against such person.”); <em>Philpot v. State</em>, 309 Ga. App. 196, 198-99 (1) (a) (709 SE2d 831) (2011) (noting that “[t]his ancient right dates back to Roman times, and is a bedrock procedural guarantee that applies to both federal and state prosecutions” (citations and punctuation omitted)). </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup><em>See</em> OCGA § 24-8-803 (2) (“The following shall not be excluded by the hearsay rule, even though the declarant is available as a witness: … A statement relating to a startling event or condition made while the declarant was under the stress of excitement caused by the event or condition.”). </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup>Oral argument was held in this case on September 7, 2022, and is currently archived. <em>See</em> Court of Appeals of Georgia, Oral Argument, Case No. A22A1213 (Sept. 7, 2022), available at https://vimeo.com/749512254. </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup><em>See </em><em>Sullivan v. State</em>, 308 Ga. 772, 782 (4) (843 SE2d 411) (2020) (“A trial court's decision to admit evidence is reviewed for an abuse of discretion.” (punctuation omitted)); <em>Jenkins v. State</em>, 303 Ga. 314, 316 (2) (812 SE2d 238) (2018) (same); <em>Pierce v. State</em>, 302 Ga. 389, 391 (1) (807 SE2d 425) (2017) (“We review the trial court's decision to admit evidence for an abuse of discretion.” (punctuation omitted)). </p>"
+    },
+    {
+      "id": "fn-9",
+      "return_id": "ref-9",
+      "content": "<p><sup>8 </sup><em>See </em><em>Sanchious v. State</em>, 309 Ga. 580, 582 (847 SE2d 166) (2020) (Per Curiam) (vacating Court of Appeals of Georgia's opinion and remanding for further proceedings when Court of Appeals conflated hearsay and Confrontation Clause analyses). <em>Cf. </em><em>State v. Pickett</em>, 288 Ga. 674, 680 (2) (d) (706 SE2d 561) (2011) (holding that Court of Appeals “erred in affirming rather than vacating the trial court's judgment and remanding the case for the court to exercise its discretion again using properly-supported factual findings and the correct legal analysis” in considering a speedy-trial claim); <em>State v. Curry</em>, 317 Ga. App. 611, 617 (3) (732 SE2d 459) (2012) (“We therefore vacate the trial court's order and remand this case for the court to again exercise its discretion in using properly supported factual findings and the correct legal analysis, reflected in an adequate written order.” (punctuation omitted)). </p>"
+    },
+    {
+      "id": "fn-10",
+      "return_id": "ref-10",
+      "content": "<p><sup>9 </sup><em>McCord v. State</em>, 305 Ga. 318, 321 (2) (a) (825 SE2d 122) (2019) (punctuation omitted); <em>accord Grier v. State</em>, 313 Ga. 236, 241 (3) (a) (869 SE2d 423) (2022); <em>see Crawford</em>, 541 U.S. at 59 (IV) n.9 (“The Clause does not bar admission of a statement so long as the declarant is present at trial to defend or explain it.”). </p>"
+    },
+    {
+      "id": "fn-11",
+      "return_id": "ref-11",
+      "content": "<p><sup>10 </sup><em>McCord</em>, 305 Ga. at 321 (2) (a) (punctuation omitted); <em>accord </em><em>Munn v. State</em>, 313 Ga. 716, 724-25 (5) (a)-(b) (873 SE2d 166) (2022); <em>see </em><em>Davis v. Washington</em>, 547 U.S. 813, 822 (II) (126 SCt 2266, 165 LE2d 224) (2006) (explaining that statements “are testimonial when the circumstances objectively indicate that there is no … ongoing emergency, and that the primary purpose of the interrogation is to establish or prove past events potentially relevant to later criminal prosecution”). </p>"
+    },
+    {
+      "id": "fn-12",
+      "return_id": "ref-12",
+      "content": "<p><sup>11 </sup><em>McCord</em>, 305 Ga. at 322 (2) (a) (punctuation omitted); <em>see </em><em>Munn</em>, 313 Ga. at 725 (5) (b) (proceeding to consider whether statements were admissible under a hearsay exception only after concluding admission of the statements did not violate the Confrontation Clause); <em>see also </em><em>Pitts v. State</em>, 280 Ga. 288, 288 (627 SE2d 17) (2006) (“In <em>Crawford v. Washington</em>, the United States Supreme Court held that the admission of out-of-court statements that are testimonial in nature violates the Confrontation Clause unless the declarant is unavailable and the defendant had a prior opportunity for cross-examination. When the statement at issue is non-testimonial in nature, however, the State's normal rules regarding the admission of hearsay apply.” (citation omitted)). </p>"
+    },
+    {
+      "id": "fn-13",
+      "return_id": "ref-13",
+      "content": "<p><sup>12 </sup><em>McCord</em>, 305 Ga. at 322 (2) (a) (i) (punctuation omitted); <em>accord </em><em>Michigan v. Bryant</em>, 562 U.S. 344, 356 (II) (131 SCt 1143, 179 LE2d 93) (2011). </p>"
+    },
+    {
+      "id": "fn-14",
+      "return_id": "ref-14",
+      "content": "<p><sup>13 </sup><em>See McCord</em>, 305 Ga. at 324 (2) (a) (ii) (holding that the trial court did not err when, after concluding there was no Confrontation Clause violation, the trial court then determined whether the statements were admissible under an exception to the hearsay rule); <em>Thomas v. State</em>, 284 Ga. 540, 543-44 (2) (668 SE2d 711) (2008) (“Once a determination is made that a statement is nontestimonial in nature, normal rules regarding the admission of hearsay apply.” (punctuation omitted)); <em>see also Crawford</em>, 541 U.S. at 68 (V) (C) (“[When] nontestimonial hearsay is at issue, it is wholly consistent with the Framers' design to afford the States flexibility in their development of hearsay law—as does [<em>Ohio v. Roberts</em>, 448 U.S. 56 (100 SCt 2531, 65 LE2d 597) (1980)], and as would an approach that exempted such statements from Confrontation Clause scrutiny altogether. [When] testimonial evidence is at issue, however, the Sixth Amendment demands what the common law required: unavailability and a prior opportunity for cross-examination.”). </p>"
+    },
+    {
+      "id": "fn-15",
+      "return_id": "ref-15",
+      "content": "<p><sup>14 </sup><em>See</em> OCGA § 24-8-803 (2) (defining an “excited utterance,” which is admissible as an exception to the rule against hearsay, as “[a] statement relating to a startling event or condition made while the declarant was under the stress of excitement caused by the event or condition”); <em>Murray v. State</em>, 359 Ga. App. 101, 102-03 (a) (856 SE2d 765) (2021) (“[W]hile the declarant must still be under the stress or excitement that the startling event caused, the excited utterance need not be made contemporaneously to the startling event. It is the totality of the circumstances, not simply the length of time that has passed between the event and the statement, that determines whether a hearsay statement was an excited utterance.” (punctuation and emphasis omitted)). </p>"
+    },
+    {
+      "id": "fn-16",
+      "return_id": "ref-16",
+      "content": "<p><sup>15 </sup><em>See supra</em> note 8; <em>see also</em> <em>Redding v. State</em>, 313 Ga. 730, 736 (2) (873 SE2d 158) (2022) (vacating judgment and remanding to the trial court to appropriately apply the law to its analysis of an issue); <em>State v. Copeland</em>, 310 Ga. 345, 346 (850 SE2d 736) (2020) (same). The State urges us to affirm the trial court's judgment as right-for-any-reason because “[its] factual findings would support its implied determination that Pearson's statements were not testimonial.” But because the trial court applied an erroneous legal theory to the Confrontation Clause question by conflating that analysis with the hearsay analysis, we conclude that vacating the trial court's judgment and remanding the case for further proceedings is the more prudent course of action. <em>See</em> <em>City of Gainesville v. Dodd</em>, 275 Ga. 834, 838-39 (573 SE2d 369) (2002) (“[J]udicial economy may be maximized by returning the case to the trial court upon the appellate court's discovery that the trial court relied on an erroneous legal theory or reasoning. … Which course to pursue must be left to the appellate court's discretion.”). </p>"
+    }
+  ]
+}

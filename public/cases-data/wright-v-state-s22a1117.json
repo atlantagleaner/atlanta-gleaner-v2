@@ -1,0 +1,115 @@
+{
+  "case_id": "wright-v-state-s22a1117",
+  "metadata": {
+    "title": "Wright v. State",
+    "court": "Supreme Court of Georgia",
+    "date": "January 18, 2023",
+    "docket": "S22A1117.",
+    "notice": null,
+    "judges": "[***1] BOGGS, Chief Justice. All the Justices concur.",
+    "opinion_by": "BOGGS",
+    "appellant_counsel": [
+      "Darden Law Firm, Richard M. Darden",
+      "Robert L. Persse, for appellant.",
+      "George E. Barnhill, District Attorney, John A. Rumker, Assistant District Attorney"
+    ],
+    "appellee_counsel": [
+      "Christopher M. Carr, Attorney General, Patricia B. Attaway Burton, Deputy Attorney General, Paula K. Smith, Senior Assistant Attorney General, Emily R. Polk, Assistant Attorney General, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*459]</span>  <span class=\"pagination-marker\">[**295]</span>   Boggs, Chief Justice."
+    },
+    {
+      "type": "paragraph",
+      "content": "Appellant Walter Russell Wright challenges his conviction for felony murder in connection with the shooting death of Oletha Brady. Appellant contends that the evidence was legally insufficient to support his conviction, that the trial court committed plain error in instructing the jury on good character evidence, and that he was denied the effective assistance of counsel when counsel failed to object to that instruction. We conclude that the evidence was sufficient; <span class=\"pagination-marker\">[*460]</span>  that the instruction on good character evidence, which tracked the pattern jury instruction in effect both then and now, was not erroneous; and that Appellant's counsel did not perform deficiently in failing to make a meritless objection to the instruction. Accordingly, we affirm.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Viewed in the light most favorable to the verdicts, the evidence at trial showed the following. On May 13, 2017, at 12:50 a.m., a Coffee County 911 operator received a “hang-up” call and called the number back; it rang four times before Appellant answered. Appellant told the operator that Brady shot herself with his gun and that he did not know how she got it because he wore <span class=\"pagination-marker\">[***2]</span>  it “by his foot.” Sheriff's deputies responded to Brady's home within ten minutes of the 911 call. When Appellant opened the door to Brady's home, the deputies saw Brady lying face-up on the living room floor with a gunshot wound to her torso and a Taurus .38 Special revolver on the floor near her body. The .38 Special contained four live rounds and one fired shell. Appellant told one of the deputies that he and Brady were having sex on the couch when the gun that was in his ankle holster “went off.” The deputy observed the empty gun holster strapped to Appellant's ankle. Appellant also stated at the scene that while he and Brady were having sex on the couch, Brady got his gun and shot herself. A bullet was later recovered from a blood-stained couch cushion."
+    },
+    {
+      "type": "paragraph",
+      "content": "At trial, a paramedic who arrived at Appellant's home shortly after the deputies arrived testified that Brady was wearing a nightgown and that her body was cold to the  <span class=\"pagination-marker\">[**296]</span>  touch, her skin was turning gray, she had no pulse, and she was not breathing. The paramedic further testified that she had never seen a body that was cold to the touch and with graying skin within 15 minutes after an injury had occurred. A GBI forensic firearms examiner <span class=\"pagination-marker\">[***3]</span>  testified that the .38 Special found next to Brady's body would not fire “without the trigger being pulled and held to the rear.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "The medical examiner who performed the autopsy on Brady was admitted as an expert in forensic pathology and testified at trial as follows. The cause of death was a gunshot wound to the torso, which entered the center of Brady's chest just below the breastbone <span class=\"pagination-marker\">[*461]</span>  and exited through her back. When the gun was fired, it was anywhere from a few inches to three feet away from Brady. The medical examiner concluded that the manner of death was homicide rather than accident or suicide, based on her experience as a medical examiner and her examination of multiple gunshot wound cases involving homicide, accident, and suicide."
+    },
+    {
+      "type": "paragraph",
+      "content": "After being taken into custody, Appellant waived his rights under <em>Miranda v. Arizona</em>, 384 U.S. 436 (86 SCt 1602, 16 LE2d 694) (1966), and was interviewed twice by law enforcement officers. The interviews were video-recorded and played for the jury. According to Appellant, he and Brady lived next to each other and had been in an on-and-off relationship for six years, but the relationship had ended. On the evening of the shooting, Appellant was outside his home when Brady walked over and invited him to her home. Appellant <span class=\"pagination-marker\">[***4]</span>  went to Brady's home, and the two began drinking and talking about Appellant's relationships with other women. According to Appellant, he was involved with three other women and these other relationships were “causing issues.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "Appellant then provided three conflicting accounts of Brady's death. In one version that he told, Brady wanted to have sex, but he declined because he was involved with someone else; he then went to the bathroom; and when he came out, he heard a pop and saw Brady lying on the living room floor with a gunshot wound. In the second version, he and Brady were having sex on the couch when the gun in his ankle holster discharged. In Appellant's final version, he was sitting on the floor in the living room taking his shoes off when he removed the gun from his ankle holster and he saw that the gun was cocked; he attempted to lower the hammer, but the gun accidentally discharged; and Brady, who was standing in the kitchen behind him, was struck by the bullet. Appellant elected not to testify at trial, but he called three witnesses who testified that he had a reputation for peacefulness, honesty, and abiding by the law.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "2. Appellant contends, in conclusory terms, that the <span class=\"pagination-marker\">[***5]</span>  evidence at trial failed to prove beyond a reasonable doubt either that he killed Brady or that he did so with the requisite criminal intent. We disagree."
+    },
+    {
+      "type": "paragraph",
+      "content": "Appellant's sole conviction is for felony murder, which does not require proof of intent to kill; the State needed only to prove that the defendant possessed the criminal intent to commit the underlying <span class=\"pagination-marker\">[*462]</span>  felony — here, aggravated assault. See <em>Mathews v. State</em>, 314 Ga. 360, 365 (877 SE2d 188) (2022). When properly viewed in the light most favorable to the verdicts, the evidence presented at trial and summarized above was sufficient as a matter of constitutional due process to authorize a rational jury to find Appellant guilty beyond a reasonable doubt of felony murder through the commission of aggravated assault with a deadly weapon. See <em>Jackson v. Virginia</em>, 443 U.S. 307, 319 (99 SCt 2781, 61 LE2d 560) (1979). See also <em>Adkins v. State</em>, 314 Ga. 477, 482 (877 SE2d 582) (2022) (holding that jury was free to reject as unreasonable the defense theory of suicide where medical examiner testified that injury was not one that typically would have been self-inflicted and that suicide was unlikely); <em>Mathews</em>, 314 Ga. at 364-365 (stating that (1) “[c]riminal intent is a question for the jury, and it may be inferred from that person's conduct before, during, and after the commission of the  <span class=\"pagination-marker\">[**297]</span>  crime” (citation and punctuation omitted)); <em>Eberhart v. State</em>, 307 Ga. 254, 262 (835 SE2d 192) (2019) (holding that the jury was free to reject <span class=\"pagination-marker\">[***6]</span>  a claim of accident and that whether the acts charged were committed by accident was a jury question)."
+    },
+    {
+      "type": "paragraph",
+      "content": "3. Acknowledging that the plain error standard of OCGA § 17-8-58 (b) applies because he raised no objection to the trial court's jury instruction on good character evidence, Appellant asserts that the trial court erred in its instruction on good character evidence because it failed to inform the jury that good character is a substantive fact that in and of itself may create a reasonable doubt as to a defendant's guilt and lead to an acquittal. See OCGA § 17-8-58 (b) (authorizing review of jury instruction for plain error even though a defendant fails to object at trial and where the defendant raises the issue on appeal). To establish plain error, Appellant"
+    },
+    {
+      "type": "paragraph",
+      "content": "must point to an error that was not affirmatively waived, the error must have been clear and not open to reasonable dispute, the error must have affected his substantial rights, and the error must have seriously affected the fairness, integrity, or public reputation of judicial proceedings."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Armstrong v. State</em>, 310 Ga. 598, 605-606 (852 SE2d 824) (2020) (citation and punctuation omitted). And if an appellant fails to establish any one of these elements, his plain error claim fails. Id. at 606."
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court instructed the jury as follows: <span class=\"pagination-marker\">[***7]</span>"
+    },
+    {
+      "type": "paragraph",
+      "content": "[Y]ou have heard the evidence of the character of the defendant for particular traits, more specifically, honesty, peacefulness, and being law-abiding in an effort to show the <span class=\"pagination-marker\">[*463]</span>  defendant likely acted in keeping with such character or trait at pertinent times or with reference to issues in this case. This evidence has been offered in the form of opinions of other witnesses and their testimony as to the defendant's reputation. You shall consider any such evidence, along with all the other — other evidence in deciding whether or not you have a reasonable doubt about the guilt of the defendant."
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court's instruction substantially tracked the language of the current pattern jury instruction set forth in Georgia Suggested Pattern Jury Instructions, Vol. II: Criminal Cases, § 1.37.10 (4th ed. 2007; updated Aug. 2022).<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> And we have previously rejected the contention that this pattern charge is inadequate if it omits the “substantive fact” language. <em>Jackson v. State</em>, 305 Ga. 614, 620-621 (825 SE2d 188) (2019) (holding that there was no clear error in giving pattern charge on defendant's good character without additional language stating that “good character is a substantive fact which itself creates reasonable doubt as to the defendant's guilt”). Indeed, the year before Appellant's trial, we held that an instruction substantially <span class=\"pagination-marker\">[***8]</span>  similar to the current pattern jury charge on good character “properly explained” how character evidence ought to be considered by the jury and that there was no plain error in giving the pattern charge without including the “substantive fact” language. <em>Williams v. State</em>, 304 Ga. 455, 458-459 (818 SE2d 653) (2018). Accordingly, Appellant cannot establish that the alleged error was clear and not  <span class=\"pagination-marker\">[**298]</span>  open to reasonable dispute, and thus, his claim of plain error fails."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*464]</span> 4. Finally, Appellant asserts that his trial counsel provided constitutionally ineffective assistance in failing to object to the trial court's instruction on good character evidence. A convicted defendant who claims that his attorney's assistance was so defective as to require reversal of his conviction must prove both that the attorney's performance was professionally deficient and that this deficiency resulted in prejudice to his case. See <em>Strickland v. Washington</em>, 466 U.S. 668, 687 (104 SCt 2052, 80 LE2d 674) (1984). To prevail on a claim of ineffective assistance, an appellant must satisfy both prongs of the <em>Strickland</em> test, and if the appellant's showing fails as to one prong, this Court need not examine the other prong. Id. at 697."
+    },
+    {
+      "type": "paragraph",
+      "content": "(2) Appellant's trial counsel testified at the motion for new trial hearing that he did not object to the trial court's instruction on good character because he believed it was legally correct. As explained in Division 3 above, the trial court properly instructed the jury on how to consider the character evidence, <span class=\"pagination-marker\">[***10]</span>  and thus, an objection to the instruction would have been meritless. And trial counsel does not perform deficiently by failing to make a meritless objection. See <em>Martin v. State</em>, 308 Ga. 479, 484 (841 SE2d 667) (2020). Accordingly, the claim of ineffective assistance of trial counsel fails."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment affirmed. All the Justices concur.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>The crime was committed on May 13, 2017. On August 3, 2017, a Coffee County grand jury indicted Appellant for malice murder and felony murder based on aggravated assault with a deadly weapon. At a trial from January 15 to 18, 2019, the jury found him not guilty of malice murder but guilty of felony murder. On January 30, 2019, the trial court sentenced Appellant to serve life in prison without the possibility of parole. Appellant filed a motion for new trial on February 28, 2019, which he amended with new counsel on November 15, 2021. The trial court held an evidentiary hearing on March 18, 2022, and denied the motion on April 11, 2022. Appellant filed a timely notice of appeal, and the case was docketed in this Court to the August 2022 term and submitted for a decision on the briefs. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>OCGA §§ 24-4-404 (a) (1) and 24-4-405 (a) authorize a criminal defendant to offer evidence of a pertinent trait of character by presenting testimony as to the defendant's reputation for that trait. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>The suggested pattern jury instruction states as follows:</p><p>You have heard evidence of the (character of the defendant) (character of the defendant for a particular trait, more specifically _________) in an effort to show that the defendant likely acted in keeping with such character or trait at pertinent times or with reference to issues in this case. This evidence has been offered in the form of (opinion of (an) other witness(es)) (reputation) (specific instances of conduct of the defendant showing such trait). You should consider any such evidence along with all the other evidence in deciding whether or not you have a reasonable doubt about the guilt of the defendant.</p><p>…</p><p><em>Note: The committee feels the above charge is complete and adequate for the principle of Good Character. However, in view of </em><em>State v. Hobbs, 288 Ga. 551 (705 SE2d 147) (2010) (pre-new evidence code), in order to be safe, consider <span class=\"pagination-marker\">[***9]</span>  adding the following:</em></p><p>(Good character is not just a witness credibility issue, nor is it an excuse for crime. However, you may consider it as weighing on the issue of whether or not the defendant is guilty of the charges in the indictment.)</p><p>Georgia Suggested Pattern Jury Instructions, Vol. II: Criminal Cases, § 1.37.10 (4th ed. 2007; updated Aug. 2022). </p>"
+    }
+  ]
+}

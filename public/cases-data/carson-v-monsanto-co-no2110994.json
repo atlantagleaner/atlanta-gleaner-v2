@@ -1,0 +1,277 @@
+{
+  "case_id": "carson-v-monsanto-co-no2110994",
+  "metadata": {
+    "title": "Carson v. Monsanto Co.",
+    "court": "United States Court of Appeals for the Eleventh Circuit",
+    "date": "July 10, 2023",
+    "docket": "No. 21-10994",
+    "notice": null,
+    "judges": "Before WILLIAM PRYOR, Chief Judge, and WILSON, JORDAN, ROSENBAUM, NEWSOM, BRANCH, GRANT, LUCK, LAGOA, BRASHER, ABUDU, and TJOFLAT,* Circuit Judges. WILLIAM PRYOR, Chief Judge, delivered the opinion of the Court, in which JORDAN, ROSENBAUM, NEWSOM, BRANCH, GRANT, LUCK, LAGOA, BRASHER, ABUDU, and TJOFLAT, Circuit Judges, join. JORDAN, Circuit Judge, filed a concurring opinion. WILSON, Circuit Judge, filed a dissenting opinion.",
+    "opinion_by": "WILLIAM PRYOR",
+    "appellant_counsel": [
+      "JOHN D. CARSON, Plaintiff - Appellant: David Charles Frederick, Scott Kelly Attaway, Rund Khayyat, Derek Reinbold, Kellogg Hansen Todd Figel & Frederick, PLLC, WASHINGTON, DC",
+      "Ashleigh Ruth Madison, Southeast Law, LLC, SAVANNAH, GA.",
+      "Chase Boswell, Michael J. Thomas, Pennington, PA, TALLAHASSEE, FL",
+      "Martin C. Calhoun, Joe Gregory Hollingsworth, Eric Gordon Lasker, Hollingsworth, LLP, WASHINGTON, DC",
+      "Kenneth Lee Marshall, Bryan Cave Leighton Paisner, LLP, SAN FRANCISCO, CA.",
+      "PUBLIC LAW SCHOLARS, Amicus Curiae: Ashley Conrad Keller, Keller Postman, LLC, CHICAGO, IL.",
+      "PUBLIC CITIZEN, Amicus Curiae: Adina H. Rosenbaum, Allison M. Zieve, Public Citizen Litigation Group, WASHINGTON, DC.",
+      "EDWIN HARDEMAN: Jennifer A. Moore, Moore Law Group, PLLC, LOUISVILLE, KY",
+      "Aimee Wagstaff, Andrus Wagstaff, LAKEWOOD, CO",
+      "David Wool, Wool Trial Law, DENVER, CO.",
+      "FARMWORKER ASSOCIATION OF FLORIDA, PESTICIDE ACTION NETWORK, UNITED FARM WORKERS & UFW FOUNDATION, [**2]  FARMWORKER JUSTICE, MIGRANT CLINICIANS NETWORK, Amicus Curiaes: Alisa A. Coe, Earthjustice, TALLAHASSEE, FL",
+      "Patti Ann Goldman, Earthjustice, SEATTLE, WA.",
+      "AVA PILLIOD, ALBERTA PILLIOD, : Aimee Wagstaff, Andrus Wagstaff, LAKEWOOD, CO",
+      "R. Brent Wisner, Wisner Baum, LLP, LOS ANGELES, CA",
+      "David Wool, Wool Trial Law, DENVER, CO.",
+      "PUBLIC JUSTICE: Leah Marie Nicholls, Public Justice, PC, WASHINGTON, DC.",
+      "PUBLIC JUSTICE, P.C., Amicus Curiae: Leslie A. Brueckner, Senior Attorney, Bailey & Glasser, LLP, OAKLAND, CA",
+      "David Wool, Wool Trial Law, DENVER, CO.",
+      "THE RETAIL LITIGATION CENTER: Joshua Craddock, Wilson Sonsini Goodrich & Rosati, BOULDER, CO",
+      "Mark Yohalem, Wilson Sonsini Goodrich & Rosati - CA, LOS ANGELES, CA.",
+      "CHAMBER OF COMMERCE OF THE UNITED STATES OF AMERICA, THE PHARMACEUTICAL RESEARCH AND MANUFACTURERS OF AMERICA, Amicus Curiaes: William Robert Stein, Attorney, Hughes Hubbard & Reed, LLP, WASHINGTON, DC",
+      "Thomas Lee, Law Office of Thomas Lee, NEW YORK, NY",
+      "Theodore Mayer, Hughes Hubbard & Reed, LLP, NEW YORK, NY.",
+      "PRODUCTS LIABILITY ADVISORY COUNCIL, INC, Amicus Curiae: William Robert Stein, Attorney, Hughes Hubbard & Reed, LLP, WASHINGTON, DC.",
+      "CROPLIFE AMERICA, Amicus [**3]  Curiae: Shannen Wayne Coffin, Mark Christopher Savignac, Steptoe & Johnson, LLP, WASHINGTON, DC",
+      "Sara Beth Watson, Wiley Rein LLP, WASHINGTON, DC.",
+      "ATLANTIC LEGAL FOUNDATION, WASHINGTON LEGAL FOUNDATION, Amicus Curiaes: Lawrence Steven Ebner, Capital Appellate Advocacy PLLC & Atlantic Legal Foundation, WASHINGTON, DC.",
+      "DREXEL CHEMICAL COMPANY, Amicus Curiae: Michael F. Rafferty, Louis Bernsen, Harris Shelton Hanover & Walsh, PLLC, MEMPHIS, TN."
+    ],
+    "appellee_counsel": [
+      "MONSANTO COMPANY, Defendant - Appellee: Michael X. Imbroscio, David Meir Zionts, Covington & Burling, LLP, WASHINGTON, DC"
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1263]</span>  William Pryor, Chief Judge:"
+    },
+    {
+      "type": "paragraph",
+      "content": "This appeal presents the question whether, under an express-preemption provision, a federal agency action that otherwise lacks the force of law preempts the requirements of state law. John Carson developed cancer after decades of using  <span class=\"pagination-marker\">[*1264]</span>  the popular weedkiller Roundup. He sued its manufacturer, <span class=\"pagination-marker\">[**4]</span>  Monsanto Company, for failing to warn him that the product can increase users' cancer risks. The district court ruled that a provision of the Federal Insecticide, Fungicide, and Rodenticide Act, 7 U.S.C. § 136v(b), expressly preempts some of Carson's claims under Georgia law because the Environmental Protection Agency had approved a label for Roundup that lacked a cancer warning and the Agency classifies Roundup's main ingredient—glyphosate—as \"not likely to be carcinogenic.\" Carson argues that his suit is not preempted because the relevant agency actions did not have the force of law, which he characterizes as a prerequisite for express preemption. After a panel of this Court reversed the district court, we granted rehearing en banc to address whether a \"force-of-law\" analysis is relevant in this context. We conclude that this question must be answered by recourse to ordinary principles of statutory interpretation, and we remand this appeal to the panel to decide whether Carson's suit is preempted."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>I. BACKGROUND</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "John Carson used Roundup on his lawn for thirty years until 2016, when he was diagnosed with malignant fibrous histiocytoma, a form of cancer. He sued Monsanto, Roundup's manufacturer, in the district court. He alleged that Monsanto knew or should <span class=\"pagination-marker\">[**5]</span>  have known that Roundup was carcinogenic but did not warn users of that danger. <em>See </em><em>Greenway v. Peabody Int'l Corp.</em>, 163 Ga. App. 698, 294 S.E.2d 541, 545-46 (Ga. Ct. App. 1982) (establishing that a manufacturer must \"exercise reasonable care to inform [buyers] of its [product's] dangerous condition or of the facts which make it likely to be dangerous\" (citation omitted))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Monsanto moved for a judgment on the pleadings on the ground that a provision of the Federal Insecticide, Fungicide, and Rodenticide Act, 7 U.S.C. § 136v(b), expressly preempted Carson's suit and, in the alternative, that the suit was impliedly preempted by the Environmental Protection Agency's previous approval of Roundup's labeling and continued adherence to the reasoning for that decision. The Act expressly preempts a state-law pesticide rule, including a common-law cause of action, if it is a \"requirement[] for labeling or packaging in addition to or different from those required under\" the Act. <em>Id.; see </em><em>Bates v. Dow Agrosciences LLC</em>, 544 U.S. 431, 443-44, 125 S. Ct. 1788, 161 L. Ed. 2d 687 (2005). Monsanto argued that because the Environmental Protection Agency, which administers the Act, had declined to require a cancer warning when it registered and continued to approve Roundup for sale, <em>see</em> 7 U.S.C. § 136a(a), a Georgia-law requirement of a cancer label would be \"in addition to or different from\" what the Act required."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court agreed with Monsanto and granted judgment <span class=\"pagination-marker\">[**6]</span>  on the pleadings in Monsanto's favor insofar as Carson's suit relied on the lack of a cancer warning in Roundup's label. <em>Carson v. Monsanto Co.</em>, 508 F. Supp. 3d 1369 (S.D. Ga. 2020). The district court assumed in Carson's favor that Monsanto failed to perform its duty under Georgia law \"to provide adequate warnings or other clinically relevant information and data regarding . . . the [cancer] risks associated with\" Roundup. <em>Id.</em> at 1376. But it ruled that this state-law requirement was expressly preempted because the Georgia requirement \"would be in direct conflict with the EPA's approved label because the EPA classifies [Roundup's active ingredient,] glyphosate[,] as 'not likely to be carcinogenic to humans' and considers glyphosate products with cancer warnings to be 'misbranded.'\" <em>Id.</em> The parties reached a partial settlement,  <span class=\"pagination-marker\">[*1265]</span>  and Carson amended his complaint to abandon the claims that were not dismissed."
+    },
+    {
+      "type": "paragraph",
+      "content": "A panel of this Court reversed. <em>Carson v. Monsanto Co.</em>, 51 F.4th 1358 (11th Cir.), <em>reh'g en banc granted, op. vacated</em>, No. 21-10994, 2022 U.S. App. LEXIS 35150, 2022 WL 17813843 (11th Cir. Dec. 19, 2022). It determined that Georgia's common-law standard for product-safety warnings was less demanding than the federal prohibition against marketing \"misbranded\" pesticides. <em>Id.</em> at 1363 (citing 7 U.S.C. § 136(q)(1)(G); <em>Greenway</em>, 294 S.E.2d at 545-46). And it held that the Agency's approval of Roundup labels without a cancer warning, even in the light <span class=\"pagination-marker\">[**7]</span>  of the Agency's internal scientific conclusions about Roundup's active ingredient, did not preempt the Georgia cause of action. <em>Id.</em> at 1363-65. The panel explained that because \"only federal action with the force of law has the capacity to preempt state law[,] . . . any preemption analysis of agency action in the [Federal Insecticide, Fungicide, and Rodenticide Act] context beyond the statute itself first requires us to do a <em>Mead</em> analysis.\" <em>Id.</em> at 1362. By \"<em>Mead</em> analysis,\" the panel referred to the question whether \"the agency [is] able to speak with the force of law when it addresses ambiguity in the statute [it administers] or fills a space in the enacted law.\" <em>United States v. Mead Corp.</em>, 533 U.S. 218, 229, 121 S. Ct. 2164, 150 L. Ed. 2d 292 (2001). Because \"the EPA registration process\" does not have the force of law under the <em>Mead</em> framework, the panel reasoned, the result of that process could not preempt Carson's suit. <em>Carson</em>, 51 F.4th at 1363-64. The panel also rejected Monsanto's implied-preemption theory. <em>Id.</em> at 1364 n.11."
+    },
+    {
+      "type": "paragraph",
+      "content": "We granted Monsanto's petition for rehearing en banc and vacated the panel opinion. <em>Carson</em>, 2022 U.S. App. LEXIS 35150, 2022 WL 17813843. We instructed the parties to address two questions about how a \"force-of-law\" analysis applies:"
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Can an express-preemption provision like § 136v(b) give preemptive effect to a federal agency action that otherwise lacks the \"force of law\"? Or must a reviewing court determine, as a threshold matter, <span class=\"pagination-marker\">[**8]</span>  whether federal agency action has the \"force of law\"?"
+    },
+    {
+      "type": "paragraph",
+      "content": "2. How should a reviewing court identify the federal \"requirements . . . under this subchapter\" to which § 136v(b) refers, and what role, if any, does a \"force of law\" analysis play in that determination?"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>II. JURISDICTION</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Although the parties do not dispute our jurisdiction, we have an \"independent obligation to ensure that subject-matter jurisdiction exists before reaching the merits of a dispute.\" <em>Jacobson v. Fla. Sec'y of State</em>, 974 F.3d 1236, 1245 (11th Cir. 2020). We have statutory jurisdiction because the combination of the judgment on the pleadings and Carson's amendment of his complaint to remove the unresolved claims left nothing for the district court to adjudicate. <em>See</em> 28 U.S.C. § 1291. We also have jurisdiction under Article III of the Constitution despite the parties' contingent settlement agreement because this appeal is still a live controversy in which both parties assert adverse legal positions and have a financial stake in prevailing on appeal. <em>See </em><em>Havens Realty Corp. v. Coleman</em>, 455 U.S. 363, 370-71, 102 S. Ct. 1114, 71 L. Ed. 2d 214 (1982); <em>Linde v. Arab Bank, PLC</em>, 882 F.3d 314, 318, 324-25 (2d Cir. 2018); <em>Keefe v. Prudential Prop. &amp; Cas. Ins. Co.</em>, 203 F.3d 218, 222, 224 (3d Cir. 2000); <em>Tuepker v. State Farm Fire &amp; Cas. Co.</em>, 507 F.3d 346, 357 n.11 (5th Cir. 2007); <em>United States ex rel. Roby v. Boeing Co.</em>, 302 F.3d 637, 641 (6th Cir. 2002); <em>John Doe 1 v. Abbott Lab'ys</em>, 571 F.3d 930, 932-33 (9th Cir. 2009)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1266]</span>  Our dissenting colleague contends that this appeal should be dismissed as collusive because it lacks the \"honest and actual antagonistic assertion of rights,\" <em>United States v. Johnson</em>, 319 U.S. 302, 305, 63 S. Ct. 1075, 87 L. Ed. 1413 (1943) (citation omitted), necessary for a justiciable \"Case\" or \"Controversy,\" U.S. Const. art. III, § 2. <em>See</em> Dissenting Op. at 1. But we respectfully disagree. <span class=\"pagination-marker\">[**9]</span>  The stark contrast between this appeal and the collusive lawsuit in <em>United States v. Johnson</em> proves the point."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>United States v. Johnson</em> was a no-lose proposition for a plaintiff, Roach, who had only a nominal role in the litigation. Roach used a fake name to file suit under a wartime price-control statute against his landlord, Johnson, at Johnson's request. <em>Johnson</em>, 319 U.S. at 303-04. Johnson paid all of Roach's costs. <em>Id.</em> \"[T]he plaintiff did not employ, pay, or even meet, the attorney who appeared of record in his behalf . . . .\" <em>Id.</em> at 304. He did not even read the complaint filed in his name. <em>Id.</em> Instead, the suit was filed at Johnson's instruction and maintained under his full control because he wanted a federal court to declare the price-control statute unconstitutional. <em>Id.</em> at 302-04. The Supreme Court condemned that abuse of the courts and required that the suit be dismissed after the United States intervened and presented undisputed evidence of the collusive nature of the suit. <em>Id.</em> at 304-05."
+    },
+    {
+      "type": "paragraph",
+      "content": "In contrast, both parties have a real interest in the legal positions they advance in this appeal, and nothing in the record establishes that Monsanto controls Carson or his representation. The district court rejected two of Carson's claims seeking <span class=\"pagination-marker\">[**10]</span>  compensation for a serious illness that he alleges Monsanto caused. He would have reason to appeal that judgment absent any settlement agreement. To be sure, Monsanto paid him to abandon his other claims and to appeal the judgment against him, but if he wins, he receives a larger payout than if he loses, which means that he has a stake in this appeal. And unlike Roach, Carson has zealously asserted his rights before this Court, and there is no suggestion that Monsanto selected or controls his counsel."
+    },
+    {
+      "type": "paragraph",
+      "content": "For its part, Monsanto's encouragement of the appeal—possibly to create a circuit split—does not deprive us of jurisdiction. In the settlement, Monsanto secured the abandonment of several of Carson's potentially valuable claims. And Monsanto has an interest in winning on appeal: it seeks the dismissal of the remaining claim against it and is liable for a smaller settlement payment if it prevails. If it loses the appeal, Monsanto will pay Carson more (and, incidentally, no circuit split will occur). Because this appeal is not collusive, we must fulfill our \"virtually unflagging\" \"obligation to hear and decide cases within [our] jurisdiction.\" <em>Lexmark Int'l, Inc. v. Static Control Components, Inc.</em>, 572 U.S. 118, 126, 134 S. Ct. 1377, 188 L. Ed. 2d 392 (2014) (citation and internal quotation marks omitted). <span class=\"pagination-marker\">[**11]</span>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>III. STANDARD OF REVIEW</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "\"We review a judgment on the pleadings <em>de novo</em>.\" <em>Cannon v. City of W. Palm Beach</em>, 250 F.3d 1299, 1301 (11th Cir. 2001). \"Judgment on the pleadings is appropriate where there are no material facts in dispute and the moving party is entitled to judgment as a matter of law.\" <em>Id.</em> We accept the factual allegations in the complaint as true. <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>IV. DISCUSSION</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "\"Express preemption arises when the text of a federal statute explicitly manifests Congress's intent to displace  <span class=\"pagination-marker\">[*1267]</span>  state law.\" <em>MSP Recovery Claims, Series LLC v. United Auto. Ins. Co.</em>, 60 F.4th 1314, 1321 (11th Cir. 2023) (alterations adopted) (citation omitted); <em>see</em> U.S. Const. art. VI, cl. 2 (\"This Constitution, and the Laws of the United States which shall be made in Pursuance thereof[,] . . . shall be the supreme Law of the Land[,] . . . any Thing in the Constitution or Laws of any State to the Contrary notwithstanding.\"). Express preemption turns primarily on \"the language of the pre-emption statute and the statutory framework surrounding it.\" <em>Medtronic, Inc. v. Lohr</em>, 518 U.S. 470, 486, 116 S. Ct. 2240, 135 L. Ed. 2d 700 (1996) (citation and internal quotation marks omitted), <em>abrogated in part on other grounds by </em><em>Puerto Rico v. Franklin Cal. Tax-Free Tr.</em>, 579 U.S. 115, 136 S. Ct. 1938, 195 L. Ed. 2d 298 (2016). Where Congress has enacted an express-preemption provision, we identify the state law that it preempts according to ordinary principles of statutory interpretation, and no presumption against preemption applies. <em>See </em><em>Franklin Cal. Tax-Free Tr.</em>, 579 U.S. at 125."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under the Act, a \"State shall not impose or continue <span class=\"pagination-marker\">[**12]</span>  in effect any requirements for labeling or packaging in addition to or different from those required under\" the Act. 7 U.S.C. § 136v(b). So if a state-law rule is a requirement for labeling or packaging a pesticide, it is preempted unless \"fully consistent,\" <em>Bates</em>, 544 U.S. at 452, with the \"requirements for labeling or packaging . . . required under\" the Act, 7 U.S.C. § 136v(b). The parties agree that Carson's suit relies on a Georgia \"requirement[] for labeling or packaging.\" <em>See </em><em>Bates</em>, 544 U.S. at 443 (holding that a common-law duty can constitute a \"requirement[]\" of state law displaced by section 136v(b))."
+    },
+    {
+      "type": "paragraph",
+      "content": "The remaining question is whether Carson's suit depends on a state-law rule that is \"in addition to or different from\" the \"requirements . . . required under\" the Act. 7 U.S.C. § 136v(b). The parties dispute whether the Agency's decision to register Roundup as an approved pesticide without a cancer warning, along with the Agency's repeated scientific conclusions about its active ingredient, glyphosate, establish that the \"requirements . . . required under\" the Act do not include a warning about Roundup's cancer risks. This question must be answered by recourse to the ordinary principles of statutory interpretation. <em>See </em><em>Franklin Cal. Tax-Free Tr.</em>, 579 U.S. at 125."
+    },
+    {
+      "type": "paragraph",
+      "content": "Whether the Agency has acted with the force of law with respect to <span class=\"pagination-marker\">[**13]</span>  Roundup's lack of a cancer warning is relevant to express preemption only if the specific \"language of [section 136v(b)] and the statutory framework surrounding it\" require that inquiry. <em>See </em><em>Medtronic</em>, 518 U.S. at 486 (citation and internal quotation marks omitted). A \"force-of-law\" inquiry assesses whether an agency action falls within the scope of the agency's \"congressionally delegated authority.\" <em>Cf. </em><em>Merck Sharp &amp; Dohme Corp. v. Albrecht</em>, 139 S. Ct. 1668, 1679, 203 L. Ed. 2d 822 (2019). That inquiry is usually irrelevant where Congress has enacted an express-preemption provision, which necessarily has the force of law as a \"Law[] of the United States . . . made in Pursuance\" of the Constitution. <em>See</em> U.S. Const. art. VI, cl. 2."
+    },
+    {
+      "type": "paragraph",
+      "content": "Carson's argument that the Supremacy Clause of the Constitution, <em>id.</em>, mandates a force-of-law analysis when interpreting any express-preemption provision relies on inapposite implied-preemption decisions. In the case of implied preemption, a force-of-law inquiry is necessary to establish whether \"it would have been impossible for [the defendant]  <span class=\"pagination-marker\">[*1268]</span>  to comply with the state-law duty . . . without violating federal law.\" <em>Wyeth v. Levine</em>, 555 U.S. 555, 563, 129 S. Ct. 1187, 173 L. Ed. 2d 51 (2009). A conflict between a state-law rule that has the force of law and a federal agency rule that does not have the force of law is not the type of conflict between state and federal legal obligations that the Supremacy Clause addresses. But this reasoning <span class=\"pagination-marker\">[**14]</span>  does not extend to express-preemption cases, where, as we have explained, the meaning of the express-preemption provision—not conflicting federal and state legal obligations—triggers preemption."
+    },
+    {
+      "type": "paragraph",
+      "content": "Within the limits of its enumerated constitutional powers, <em>see</em> U.S. Const. art. I, §§ 8-9, Congress may define the body of law that an express provision preempts. Our role when confronted with an express-preemption provision is to apply the text that embodies Congress's decision. And we leave for the panel's consideration Carson's argument that section 136v(b)'s reference to \"requirements\" compels a force-of-law inquiry as a matter of statutory interpretation. We express no opinion on the answer to that question."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>V. CONCLUSION</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We <strong>REMAND</strong> this appeal to the panel for the resolution of all remaining issues."
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur by:</strong> JORDAN"
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Jordan, Circuit Judge, Concurring:"
+    },
+    {
+      "type": "paragraph",
+      "content": "I join the Court's opinion, but write separately with some additional thoughts as to why this appeal presents a proper \"case or controversy\" within the meaning of Article III."
+    },
+    {
+      "type": "paragraph",
+      "content": "After the district court dismissed Mr. Carson's failure-to-warn claim on federal preemption grounds, the parties entered into a settlement agreement that set up, and provided the contours of, Mr. Carson's appeal. For the sum of $100,000, <span class=\"pagination-marker\">[**15]</span>  Mr. Carson would dismiss his other claims with prejudice and institute an appeal of the district court's preemption ruling (and only the preemption ruling). If he lost the appeal, he could keep the $100,000. But if he won the appeal, Monsanto would pay him an additional sum—more than double the original amount—as a final resolution of the failure-to-warn claim. If Mr. Carson did not pursue his appeal, he would have to pay Monsanto back $99,900."
+    },
+    {
+      "type": "paragraph",
+      "content": "In some ways, the parties' settlement is similar to the typical \"high-low\" agreement seen in civil cases at the trial court level—before the jury has reached a verdict, the parties agree that if the plaintiff loses, the defendant will nevertheless pay him or her a certain minimum amount (the \"low\" floor), and if the plaintiff wins, the payment will be capped at a higher maximum amount no matter how large the verdict is (the \"high\" ceiling). <em>See generally</em> J.J. Prescott, Kathryn E. Spier, & Albert Yoon, <em>Trial and Settlement: A Study of High-Low Agreements</em>, 57 J. L. & Econ. 699, 700 (2014) (\"A high-low agreement is a contract in which a defendant agrees to pay the plaintiff a minimum recovery in return for the plaintiff's agreement to accept a maximum amount regardless of the <span class=\"pagination-marker\">[**16]</span>  outcome of the trial.\") (citation and internal quotation marks omitted). If Mr. Carson loses the preemption fight on appeal, he receives $100,000. If he wins, he gets substantially more."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under Supreme Court precedent, the agreement between Mr. Carson and Monsanto does not make the appeal moot. The agreement generally liquidates the damages sought by Mr. Carson depending on the outcome of the appeal but does not resolve the parties' legal dispute about preemption. <em>See </em><em>Nixon v. Fitzgerald</em>, 457 U.S. 731, 743-44, 102 S. Ct. 2690, 73 L. Ed. 2d 349 (1982); <em>Havens Realty Corp.  <span class=\"pagination-marker\">[*1269]</span>  v. Coleman</em>, 455 U.S. 363, 370-71, 102 S. Ct. 1114, 71 L. Ed. 2d 214 (1982)."
+    },
+    {
+      "type": "paragraph",
+      "content": "The agreement is, however, a bit peculiar. As noted, it basically forces Mr. Carson to file and pursue an appeal of the preemption ruling in order to receive the $100,000. And it prevents him from appealing any other issues. It seems to me that Monsanto—the prevailing party below—is the \"driving force\" behind the appeal in an effort to create a circuit split on the matter of preemption. I can therefore see why Judge Wilson is concerned. <em>Cf</em>. James E. Pfander & David R. Pekarek Krohn, <em>Interlocutory Review by Agreement of the Parties: A Preliminary Analysis</em>, 105 Nw. U. L. Rev. 1043, 1085 (2011) (\"In cases in which the parties enter into settlement agreements, conditionally resolving their dispute subject to the appellate court's resolution of an outstanding <span class=\"pagination-marker\">[**17]</span>  issue, justiciability issues might appear especially acute.\"). Nevertheless, I conclude that there is no \"case or controversy\" problem under Article III."
+    },
+    {
+      "type": "paragraph",
+      "content": "First, it seems to me that there is \"an actual controversy,\" and that there remain \"adverse interests.\" <em>Lord v. Veazie</em>, 49 U.S. 251, 255, 12 L. Ed. 1067 (1850). Mr. Carson has always maintained that his failure-to-warn claim is not preempted. In the normal course of events, one would expect a personal-injury plaintiff in his position to appeal if his state-law tort claim was dismissed on federal preemption grounds. So the agreement's requirement that Mr. Carson appeal in order to secure the $100,000, while admittedly odd, is not constitutionally problematic. Things would be different if Monsanto tried to control (or limit) the precise legal theories or arguments that Mr. Carson could present on appeal regarding preemption. <em>See</em> Richard H. Fallon, Jr., John F. Manning, Daniel J. Meltzer, & David L. Shapiro, Hart and Wechsler's The Federal Courts and the Federal System 96 (7th ed. 2015) (\"In principle it is easy to see why an important constitutional issue should not be determined in a proceeding in which one nominal party has dominated the conduct of the other.\"). But that is not what is going on here. <span class=\"pagination-marker\">[**18]</span>  And although the Supreme Court \"has not spoken expansively on what makes parties legally adverse,\" William K. Kelley, <em>The Constitutional Dilemma of Litigation Under the Independent Counsel System</em>, 83 Minn. L. Rev. 1197, 1212 (1999), I think there is sufficient adversity. Mr. Carson maintains that he suffered harm due to Monsanto's conduct and continues to seek damages for his alleged injuries—damages which will increase if he is successful on appeal. Monsanto, for its part, seeks to defend the victory it secured in the district court on the failure-to-warn claim, and wants to limit its ultimate exposure to Mr. Carson."
+    },
+    {
+      "type": "paragraph",
+      "content": "Second, to the extent that the settlement agreement constitutes Monsanto's strategy for trying to create a circuit split, that is also not fatal under Article III. Individual, institutional, and corporate litigants sometimes engage in certain conduct in order to tee up test cases on novel questions of law. As long as Article III justiciability concerns are satisfied, the federal courts have the authority to decide such test cases. <em>See, e.g., </em><em>Evers v. Dwyer</em>, 358 U.S. 202, 204, 79 S. Ct. 178, 3 L. Ed. 2d 222 (1958) (allowing challenge to state laws requiring segregated seating on public buses: \"That the appellant may have boarded this particular bus for the purpose of instituting this litigation <span class=\"pagination-marker\">[**19]</span>  is not significant.\"); Ralph C. Chandler, Richard A. Enslen, & Peter G. Renstrom, Constitutional Law Deskbook § 8:106 (Aug. 2022 update) (\"Test cases have often been used to raise certain issues and satisfy the demands of the standing requirement.\")."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1270]</span>  Third, some of our sister circuits have adjudicated appeals involving similar settlement agreements without finding any Article III problems. <em>See, e.g., </em><em>Linde v. Arab Bank, PLC</em>, 882 F.3d 314, 322, 324-25 (2d Cir. 2018); <em>John Doe I v. Abbot Laboratories</em>, 571 F.3d 930, 932-33 (9th Cir. 2009); <em>Tuepker v. State Farm Fire &amp; Cas. Co.</em>, 507 F.3d 346, 357 n.11 (5th Cir. 2007); <em>Keefe v. Prudential Prop. &amp; Cas. Ins. Co.</em>, 203 F.3d 218, 200, 222-24 (3d Cir. 2000). Their decisions make sense to me, and I find them persuasive. \"As long as the parties have an adequate financial incentive to pursue their opposing views of the issue on appeal, continued litigation at the appellate court level does not appear to threaten the requirement of adversary presentation.\" Pfander & Krohn, <em>Interlocutory Review by Agreement of the Parties</em>, 105 Nw. U. L. Rev. at 1088."
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Dissent by:</strong> WILSON"
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Dissent</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Wilson, Circuit Judge, Dissenting:"
+    },
+    {
+      "type": "paragraph",
+      "content": "The majority provides a thorough and well-reasoned analysis of the force-of-law issues in this appeal. However, I believe that the parties' settlement agreement abuses this court's process, so this appeal should be dismissed as non-justiciable. The Monsanto Company, which prevailed below, paid $100,000 to Carson, not to resolve this litigation, but to ensure it reached our court.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>1</sup> The agreement <span class=\"pagination-marker\">[**20]</span>  <em>required</em>—not merely permitted—Carson to file a notice of appeal challenging the district court's preemption decision. It <em>required</em>—not merely permitted—Carson to fully prosecute this appeal or face forfeiture of nearly the entire $100,000 payment. This agreement usurped Carson's role as master of his own appeal and placed the course of this litigation \"under the domination of\" Monsanto, depriving it of an \"'honest and actual antagonistic assertion of rights' to be adjudicated.\" <em>United States v. Johnson</em>, 319 U.S. 302, 305, 63 S. Ct. 1075, 87 L. Ed. 1413 (1943). Because this case lacks the \"indispensable\" adversarial character necessary for our jurisdiction, it is our duty to dismiss this appeal. <em>Id.</em> Since we do not, I respectfully dissent."
+    },
+    {
+      "type": "paragraph",
+      "content": "This court's power under the Constitution is limited to actual cases or controversies. U.S. Const. art. III, § 2; <em>see </em><em>Arizonans for Off. Eng. v. Arizona</em>, 520 U.S. 43, 64, 117 S. Ct. 1055, 137 L. Ed. 2d 170 (1997). And we are obligated to ensure that the case or controversy remains \"extant at all stages of review.\" <em>Arizonans</em>, 520 U.S. at 67; <em>see also </em><em>In re Grand Jury Subpoena, FGJ-21-01-MIA</em>, 58 F.4th 1232, 1233 (11th Cir. 2023) (\"We are obligated to review our appellate jurisdiction sua sponte 'whenever jurisdiction may be lacking.'\"). In addition to traditional standing and mootness concerns, we must be watchful of \"friendly,\" \"feigned,\" and \"collusive\" lawsuits that lack the necessary adversarial character. <em>See </em><em>Flast v. Cohen</em>, 392 U.S. 83, 100, 88 S. Ct. 1942, 20 L. Ed. 2d 947 (1968)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Recall that the district court entered <span class=\"pagination-marker\">[**21]</span>  judgment on the pleadings against Carson on his failure-to-warn theory, holding that it was preempted by 7 U.S.C. § 136v(b), but did not rule on Carson's design defect and negligence theories. At that point, Monsanto and Carson entered—what they describe as—a \"high-low\" settlement agreement. The public details of the agreement consist of the following: (1) Carson filed a consent motion to amend his complaint, removing the design defect and negligence theories and leaving only the failure-to-warn theory; (2) Carson promised to file a notice of appeal regarding the failure-to-warn theory and to fully pursue that appeal in this court; (3) In return,  <span class=\"pagination-marker\">[*1271]</span>  Monsanto paid Carson $100,000 up-front and promised him a significant—but confidential—additional sum if Carson obtains a favorable ruling in this appeal; and (4) If Carson elects to dismiss this appeal or otherwise fails to fully prosecute it, he must pay $99,900 of the $100,000 back to Monsanto.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Agreements such as this raise troubling questions about both the adversariness of the parties and whether the judiciary can provide meaningful relief to the parties after their agreement to settle. Despite Monsanto's arguments, this agreement is unlike the so-called <span class=\"pagination-marker\">[**22]</span>  \"high-low\" arrangements the Supreme Court approved in <em>Havens Realty Corporation v. Coleman</em>, 455 U.S. 363, 102 S. Ct. 1114, 71 L. Ed. 2d 214 (1982) and <em>Nixon v. Fitzgerald</em>, 457 U.S. 731, 102 S. Ct. 2690, 73 L. Ed. 2d 349 (1982). In <em>Havens</em>, the parties agreed after the Court of Appeals rendered its decision, but before the Supreme Court granted certiorari, that the respondents-plaintiffs would receive $400 if they prevailed before the Supreme Court and $0 if they did not. <em>Havens</em>, 455 U.S. at 370-71. The Court held the case was not moot because the settlement agreement was contingent on the final approval of the district court, and because it \"would merely liquidate [petitioners'] damages.\" <em>Id.</em> at 371. In <em>Nixon</em>, the petitioner paid the respondent $142,000 and promised a further $28,000 if respondent was successful on appeal. <em>Nixon</em>, 457 U.S. at 743-44. Similar to <em>Havens</em>, the agreement was entered into after the judgment of the Court of Appeals, but before the Supreme Court granted certiorari. <em>Id.</em> And again, it was the petitioner—the losing party below—who promised to pay more money if the opposing party prevailed on appeal, in effect liquidating their damages. <em>Id.</em> at 744."
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, Monsanto—the prevailing party below—is the one paying for this appeal. It is Monsanto who is driving this appeal forward. Rather than an honest attempt to liquidate damages and avoid the uncertainty of further litigation, this arrangement seeks to <span class=\"pagination-marker\">[**23]</span>  create it. This agreement appears to be nothing more than an attempt by Monsanto to seek a favorable appellate decision in conflict with the Ninth Circuit's decision in <em>Hardeman v. Monsanto Company</em>, 997 F.3d 941 (9th Cir. 2021) (finding plaintiffs' failure-to-warn claims not preempted by 7 U.S.C. § 136v(b)).<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>3</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Further, this agreement is unlike the agreements described in the decisions collected in Judge Jordan's concurrence. Jordan Concurring Op. at 4. None of those cases involved a situation where the prevailing party paid the losing party to file the appeal and fully prosecute it. <em>See </em><em>Linde v. Arab Bank PLC</em>, 882 F.3d 314, 322 (2d Cir. 2018) (noting appeal brought by defendant after losing at trial); <em>John Doe 1 v. Abbott Labs.</em>, 571 F.3d 930, 932 (9th Cir. 2009)  <span class=\"pagination-marker\">[*1272]</span>  (noting appeal brought by defendant after losing motion to dismiss); <em>Keefe v. Prudential Prop. &amp; Cas. Ins. Co.</em>, 203 F.3d 218, 222 (3d Cir. 2000) (noting appeal brought by defendant after losing partial summary judgment); <em>Tuepker v. State Farm Fire &amp; Cas. Co.</em>, 507 F.3d 346, 350 (5th Cir. 2007) (noting appeal brought by both parties under 28 U.S.C. 1292(b) certification procedure after defendant's motion to dismiss was denied). I would agree that an honest attempt to liquidate damages <span class=\"pagination-marker\">[**24]</span>  in an agreement that \"represent[s] the parties' efforts reasonably to estimate the plaintiffs' ability ultimately to procure the 'relief upon which the suit was originally premised,'\" <em>Linde</em>, 882 F.3d at 325, is valid under the Supreme Court's precedents. But respectfully, I think the particular terms of this agreement do not meet that standard."
+    },
+    {
+      "type": "paragraph",
+      "content": "Finally, the promised payment contingent on the outcome of this appeal does not solve the problem. <em>Cf. </em><em>Moore v. Harper</em>, 600 U.S. __, __; No. 21-1271, 2023 U S LEXIS 2787 *74 (2023) (Thomas, J., dissenting) (\"But as should be obvious, such a trigger provision cannot be the entire basis of an Article III case or controversy.\"). Carson's claims in this case were resolved by the settlement agreement before this appeal was filed. He was paid to drop two of his claims, and even if he prevails on this appeal, the parties have already agreed to dismiss his failure-to-warn claims on remand. This litigation continues before this court only due to the friendly and collusive nature of the settlement agreement which paid Carson to file this appeal and requires him to maintain it."
+    },
+    {
+      "type": "paragraph",
+      "content": "* * *"
+    },
+    {
+      "type": "paragraph",
+      "content": "Unquestionably, parties are free to strategize around when and which decision <em>they</em> will appeal in order to make an \"honest and actual antagonistic assertion of [<em>their</em>] rights.\" <em>Johnson</em>, 319 U.S. at 305. However, in my view, when a <span class=\"pagination-marker\">[**25]</span>  victorious, deep-pocketed party pays his adversary to file an appeal, the manufactured controversy that results \"tarnishes the integrity of the judicial process.\" <em>Id.</em> In situations like this, to guard ourselves against ruling on hypothetical controversies and the temptation to issue advisory opinions, the Supreme Court instructs that we should dismiss this appeal. <em>See </em><em>Flast</em>, 392 U.S. at 100; <em>Johnson</em>, 319 U.S. at 305."
+    },
+    {
+      "type": "paragraph",
+      "content": "On remand, I urge the panel to scrutinize the agreement in this case and assure itself that a live case or controversy remains extant. For these reasons, I respectfully dissent."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>* </sup>Senior Circuit Judge Tjoflat elected to participate in this decision, pursuant to 28 U.S.C. § 46(c). Judge Jill Pryor is recused. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>1 </sup>The parties were granted leave to file their settlement agreement under seal in this court. Because it remains under seal, I reference only the publicly available facts regarding it. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>2 </sup>The $100 discrepancy is because the agreement allocates $100 of the $100,000 as consideration for the confidentiality of the agreement. </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>3 </sup><em>See</em> Oral Argument at 14:40-14:58, <em>Carson v. Monsanto Co.</em>, No. 21-10994 (June 13, 2023) (en banc), https://www.ca11.uscourts.gov/oral-argument-recordings.</p><p><strong>Judge Wilson</strong>: \"Why would Monsanto pay you, your client, $100,000 in exchange for filing the appeal and then give you more money if you win, if for any reason other than to create a circuit split?\"</p><p><strong>Counsel for Carson</strong>: \"I cannot think of a reason.\"</p><p>Monsanto's parent company, Bayer AG, has stated its intention of seeking a circuit split to facilitate Supreme Court review of the preemption issues in this case. <em>See Five-Point Plan to Close the Roundup™ Litigation</em>, Bayer, https://www.bayer.com/en/roundup-litigation-five-point-plan [https://perma.cc/6YT2-DSNU] (archived on June 15, 2023). </p>"
+    }
+  ]
+}

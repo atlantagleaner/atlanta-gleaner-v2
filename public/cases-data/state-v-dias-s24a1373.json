@@ -1,0 +1,147 @@
+{
+  "case_id": "state-v-dias-s24a1373",
+  "metadata": {
+    "title": "State v. Dias",
+    "court": "Supreme Court of Georgia",
+    "date": "March 13, 2025",
+    "docket": "S24A1373.",
+    "notice": null,
+    "judges": "[***1] ELLINGTON, Justice. PETERSON, Presiding Justice, concurring. Justice Bethel, and Justice McMillian, and Justice Pinson join in this concurrence. All the Justices concur.",
+    "opinion_by": "ELLINGTON",
+    "appellant_counsel": [
+      "Keith E. Gammage, Solicitor-General",
+      "Steven E. Rosenberg",
+      "Christopher M. Carr, Attorney General, Beth A. Burton, Deputy Attorney General, Meghan H. Hill, Clint C. Malcolm, Senior Assistant Attorneys General, for appellant."
+    ],
+    "appellee_counsel": [
+      "Chestney & Sullivan Law Firm, James K. Sullivan, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*261]</span>   <span class=\"pagination-marker\">[**291]</span>  Ellington, Justice."
+    },
+    {
+      "type": "paragraph",
+      "content": "Christine Dias stands accused in the State Court of Fulton County of driving under the  <span class=\"pagination-marker\">[**292]</span>  influence of alcohol to the extent that it was less safe for her to drive, OCGA § 40-6-391 (a) (1), and other traffic offenses. Dias moved to suppress evidence that she refused the arresting officer's request to submit to a blood test and to declare OCGA § 40-6-392 (d), which provides that the refusal of a defendant to submit to a blood test at the time of her arrest for DUI “shall be admissible in evidence against [her,]” unconstitutional. After a hearing, the trial court granted Dias's motion, on the basis that OCGA § 40-6-392 (d) is unconstitutional, and ruled that the blood-test refusal evidence is inadmissible at her trial. The State appealed to the Court of Appeals.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> The Court of Appeals transferred the case to this Court, based on its determination that the trial court directly and distinctly ruled on the novel constitutional question at issue.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*262]</span>  The material facts, as developed at the hearing on Dias's motion to suppress, are undisputed. On April 10, 2020, a law <span class=\"pagination-marker\">[***2]</span>  enforcement officer arrested Dias in Fulton County on suspicion of driving under the influence of alcohol, read Dias the statutory implied consent notice for drivers aged 21 years and over,<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> and requested that Dias submit to a blood test. Dias refused to submit to a blood test, and no test was performed. In her motion to suppress evidence that she refused the requested blood test, Dias argued that there were no exigent circumstances to justify the warrantless search involved in a state-administered blood test and that, in refusing the test, she “was simply invoking her right under the Fourth Amendment not to be subjected to an unlawful search.” Dias argued that “[s]uch assertion of a constitutional right cannot be used against her at trial as it affects her 5th Amendment Due Process rights; her 4th Amendment right against unreasonable searches and seizures; and Art. I, Sec. I, Par. XVI of the Georgia Constitution.”<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court determined that it was required to follow"
+    },
+    {
+      "type": "paragraph",
+      "content": "clear, unequivocal law as set out by Georgia's Supreme Court. A warrant <em>is</em> required for a blood draw, absent exigent circumstances or consent. Olevik[ v. State, 302 Ga. 228 (806 SE2d 505) (2017),] and Williams[ v. State, 296 Ga. 817 (771 SE2d 373) (2015)]. Whatever the wisdom of earlier decisions involving forced surgery and blood draws in other contexts, or in later cases involving breath and urine, which rely <span class=\"pagination-marker\">[***3]</span>  on a defendant's affirmative participation, Olevik and Williams are squarely on point. “Georgians do have a [constitutional] right to refuse to consent to warrantless blood tests, absent some other exception to the warrant requirement.” Olevik, 302 Ga. at 233. … The Court therefore finds that OCGA § 40-6-392 (d) is not constitutional as applied to Dias when viewed in light of Williams and Olevik. A blood draw is a search, and the burden rests upon the State to show that a warrantless search is constitutional under these circumstances. Williams[,] 296 Ga. [at] 819[.] The State has not carried this burden; no facts were elicited to show a warrant, consent or exigent circumstances. Where a person exercises her constitutional right against self-incrimination same is <span class=\"pagination-marker\">[*263]</span>  not admissible at trial, Elliott v. State, 305 Ga. 179 [(824 SE2d 265)] (2019), but the statute, OCGA § 40-6-392 (d), makes no provision for exclusion where these are not  <span class=\"pagination-marker\">[**293]</span>  shown. Accordingly, the Court GRANTS the motion, finding the statute unconstitutional and Dias' refusal inadmissible at trial."
+    },
+    {
+      "type": "paragraph",
+      "content": "(Emphasis in original.)"
+    },
+    {
+      "type": "paragraph",
+      "content": "On appeal, the State contends that introducing a blood-test refusal into evidence in a DUI case “does not violate the Fifth Amendment nor Article I, Sec. I, Par[ ]. XVI of the Georgia Constitution [of 1983].” And the State contends that such use of a blood-test refusal in a DUI case “does not offend search and seizure principles” <span class=\"pagination-marker\">[***4]</span>  and “is allowable pursuant to the Fourth Amendment of the United States Constitution as well as Article I, Sec. I, Par[ ]. XIII of the Georgia Constitution [of 1983].” The State argues that the trial court therefore erred in excluding Dias's refusal to take a blood test “by finding that said refusal was the product of an illegal, warrantless search in violation of the Fourth Amendment guarantee against unreasonable searches and seizures as well as the Fifth Amendment protection against self-incrimination and the State equivalent found at [Paragraph XVI].”"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) To the extent that the trial court granted Dias's motion on the basis that, under <em>Elliott</em>, the State is precluded from introducing at trial evidence that a DUI suspect refused to submit to a blood test because such refusal constitutes the exercise of the right against self-incrimination under Paragraph XVI, the trial court erred. In <em>Elliott</em>, we held only that “Paragraph XVI precludes admission of evidence that a suspect refused to consent to a <em>breath</em> test. Consequently, we conclude that OCGA §§ 40-5-67.1 (b) and 40-6-392 (d) are unconstitutional to the extent that they allow a defendant's refusal to submit to a <em>breath</em> test to be admitted into evidence at a criminal trial.” Elliott, 305 Ga. at 223 (IV) (E) (emphasis supplied). See Olevik, 302 Ga. at 244 (2) (c) (iii) (“Compelling a defendant to perform an act that is incriminating in nature is precisely what Paragraph XVI prohibits.”).<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> We <span class=\"pagination-marker\">[***5]</span>  did <em>not</em> hold in <em>Elliott</em>, or in any <span class=\"pagination-marker\">[*264]</span>  other case, that evidence that a DUI suspect asserted her right under the Fourth Amendment to refuse to submit to a warrantless blood test is inadmissible at trial on the basis that, as Dias claims, use of such evidence would infringe upon her right against unreasonable searches and seizures under the Fourth Amendment, her right to due process under the Fifth Amendment, and Paragraph XVI.<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup> The novel constitutional  <span class=\"pagination-marker\">[**294]</span>  question that was raised below — whether the evidence at issue is inadmissible on grounds other than the self-incrimination holdings in Olevik and <em>Elliott</em> — was not directly and distinctly ruled on by the trial court. That remains an open question,<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup> on which we express no view today."
+    },
+    {
+      "type": "paragraph",
+      "content": "Accordingly, we vacate the trial court's judgment excluding the blood-test refusal evidence, and we remand to the trial court for consideration of any other basis for excluding such evidence raised in the proceedings below."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment vacated and case remanded. All the Justices concur.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur by:</strong> PETERSON"
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Peterson, Presiding Justice, concurring."
+    },
+    {
+      "type": "paragraph",
+      "content": "I fully concur in the Court's opinion today that vacates the trial court's order and remands the case. That order declared that <span class=\"pagination-marker\">[***6]</span>  a Georgia statute violates the Georgia Constitution on a search and seizure basis but grounded that conclusion in inapplicable precedent about compelled self-incrimination that expressly said it didn't apply to search and seizure issues. Instead, the state constitutional issue <span class=\"pagination-marker\">[*265]</span>  argued below is novel; the trial court did not engage with the novelty. Vacatur and remand for consideration of the actual novel issue is appropriate in such circumstances. But it's also appropriate for another reason: our caselaw has over and over again made clear that Georgia courts should not reach a constitutional challenge to a state statute if there's an alternative ground on which to decide the case. See, e.g., State v. Randall, 318 Ga. 79, 81-82 (2) (897 SE2d 444) (2024); Sons of Confederate Veterans v. Henry County Bd. of Commrs., 315 Ga. 39, 65 (2) (d) (i) (880 SE2d 168) (2022) (citing Deal v. Coleman, 294 Ga. 170, 171 (1) n.7 (751 SE2d 337) (2013))."
+    },
+    {
+      "type": "paragraph",
+      "content": "There may well be such a ground here. The Georgia Evidence Code provides that relevant evidence may be excluded if, among other things, “its probative value is substantially outweighed by the danger of unfair prejudice[.]” OCGA § 24-4-403 (“Rule 403”). It seems to me that evidence of a criminal defendant's refusal to consent to a warrantless search may be relevant to whether the defendant believed a search would have discovered incriminating evidence, in that it may have at least more than zero probative <span class=\"pagination-marker\">[***7]</span>  value that the defendant was conscious of guilt. See Olds v. State, 299 Ga. 65, 75 (2) (786 SE2d 633) (2016) (explaining that relevance “is a binary concept — evidence is either relevant or it is not” and that evidence is relevant when “it has ‘<em>any tendency</em>’ to prove or disprove a fact” (emphasis in original))."
+    },
+    {
+      "type": "paragraph",
+      "content": "But Rule 403 is about weighing the probative value of relevant evidence against the danger of unfair prejudice that evidence poses. And probative value is relative, not binary; as distinguished from relevance, “the probative value of evidence derives in large part from the <em>extent to which</em> the evidence tends to make the existence of a fact more or less probable.” Olds, 299 Ga. at 75 (2) (emphasis in original)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Evidence that someone refuses to consent to a warrantless search may be relevant in the sense that it provides nonzero probative value to prove consciousness of guilt. But it seems to me that the probative value of that evidence will rarely be more than barely nonzero. There are a host of reasons why completely law-abiding Georgians may decline to consent to a warrantless search:"
+    },
+    {
+      "type": "paragraph",
+      "content": "They might have a deeply held appreciation for our hard-won constitutional rights and are simply declining on principle."
+    },
+    {
+      "type": "paragraph",
+      "content": "All of those are perfectly good reasons not to consent. None of those reasons offer any basis for suspecting the nonconsenting person of a crime. And so the mere fact that a person asked by law enforcement if she will allow a warrantless blood draw says “no” — an answer both the United States and Georgia Constitutions vest every Georgian with the absolute right to give — usually cannot be said to have much more than barely nonzero probative value as to guilt of a suspected crime."
+    },
+    {
+      "type": "paragraph",
+      "content": "But when a Georgian says “no” when asked to submit to a warrantless blood draw and a prosecutor then seeks to offer that response as affirmative evidence of guilt, the risk of unfair prejudice will <span class=\"pagination-marker\">[***9]</span>  often be much higher than barely nonzero."
+    },
+    {
+      "type": "paragraph",
+      "content": "And whether or not that alternative ground is ultimately dispositive, the trial court has not yet addressed it.<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup> It should do so on remand before reaching any constitutional issues. See Randall, 318 Ga. at 82 (2) (trial court should have resolved Rule 403 argument before reaching constitutional challenge to admissibility of blood test refusal evidence)."
+    },
+    {
+      "type": "paragraph",
+      "content": "I am authorized to state that Justice Bethel, Justice McMillian, and Justice Pinson join in this concurrence."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>1 </sup>Provided specified procedural requirements are satisfied, as they were here, “[a]n appeal may be taken by and on behalf of the State of Georgia from the superior courts … [f]rom an order, decision, or judgment excluding any … evidence to be used by the state at trial[.]” OCGA § 5-7-1 (a) (5). <a href=\"#fn-2\" id=\"ref-2\">2</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>2 </sup>See Ga. Const. of 1983, Art. VI, Sec. VI, Par. II (1) (This Court “shall exercise exclusive appellate jurisdiction in … all cases in which the constitutionality of a law, ordinance, or constitutional provision has been drawn in question.”); Nathans v. Diamond, 282 Ga. 804, 807-808 (2) (654 SE2d 121) (2007) (“It is well established that this Court does not ever pass upon the constitutionality of an Act of the General Assembly unless it clearly appears in the record that the point was directly and properly made in the court below and distinctly passed on by the trial judge.” (citation and punctuation omitted)). <a href=\"#fn-3\" id=\"ref-3\">3</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>3 </sup>See OCGA §§ 40-5-55 (a); 40-5-67.1 (b) (2). <a href=\"#fn-4\" id=\"ref-4\">4</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>4 </sup>Ga. Const. of 1983, Art. I, Sec. I, Par. XVI provides: “No person shall be compelled to give testimony tending in any manner to be self-incriminating.” <a href=\"#fn-5\" id=\"ref-5\">5</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>5 </sup>See also Awad v. State, 313 Ga. 99, 102 (2), 103 (3) (868 SE2d 219) (2022) (“Under <em>Elliott</em>, whether Paragraph XVI requires a court to grant a motion to suppress a defendant's refusal to submit to a state-administered chemical test turns on whether the defendant would have been required to perform an act to generate the test sample.” A urine test requires a defendant to “urinate into a container, at the time and in the manner directed by the State, to ensure that the State can obtain a usable test sample for chemical analysis.” Because a urine test requires “the defendant to affirmatively give the State evidence from the defendant's body in a particular manner that is neither natural nor automatic[,] … Paragraph XVI affords a [DUI] defendant a right to refuse to submit [to a state-administered urine test] and a right to suppress evidence of the defendant's refusal” under our holdings in Olevik and <em>Elliott</em>.). <a href=\"#fn-6\" id=\"ref-6\">6</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>6 </sup>See La Anyane v. State, 321 Ga. 312, 318 (2) (a) (ii) (913 SE2d 635) (2025) (“It is true that we held in Elliott v. State, 305 Ga. 179 (824 SE2d 265) (2019), that OCGA § 40-6-392 (d) is unconstitutional as applied to <em>breath</em> tests, because under the Georgia Constitution, providing deep lung air for a breath test is a self-incriminatory act, and a person's exercise of her right not to incriminate herself cannot be used against her. See Ga. Const. of 1983, Art. I, Sec. I, Par. XVI; Elliott, 305 Ga. at 209 (IV). But we have never held that drawing someone's blood implicates the right against compelled self-incrimination under the Georgia Constitution, and the United States Supreme Court has rejected the argument that the federal right against compelled self-incrimination is implicated by a blood draw.”); Elliott, 305 Ga. at 224 (Boggs, J., concurring) (“[T]he scope of [<em>Elliott</em> and <em>Olevik</em>] is limited to chemical tests of a driver's breath; they do not apply to tests of a driver's blood.”); Olevik, 302 Ga. at 232, 233 (2) (a) n.2 (“Nothing we say here should be understood as casting any doubt on Strong[ v. State, 231 Ga. 514 (202 SE2d 428) (1973),]'s self-incrimination holding.”); Strong, 231 Ga. at 519 (“[T]he use of the results of [a] blood test against [the defendant] at the trial [did not] require[ ] him to give evidence against himself. [The defendant] was not compelled or forced to remove the incriminating blood. The removal of a substance from the body through a minor intrusion does not cause the person to be a witness against himself within the meaning of Fifth Amendment protection and similar provisions of Georgia law.”), overruled on other grounds by Williams, 296 Ga. at 821. <a href=\"#fn-7\" id=\"ref-7\">7</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>7 </sup>See State v. Randall, 318 Ga. 79, 81-83 (2) (897 SE2d 444) (2024); State v. Randall, 315 Ga. 198, 200 (1) (880 SE2d 134) (2020). <a href=\"#fn-8\" id=\"ref-8\">8</a>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<sup>8 </sup>Dias does not appear to have specifically raised Rule 403 in her motion to suppress or the motions in limine that she has filed so far. But there doesn't seem to be anything preventing her from raising it on remand. And her constitutional claim is an as-applied claim, not a facial claim. Determining whether a statute challenged as unconstitutional as-applied actually applies to the challenger is often a condition precedent to reaching the constitutional question. See, e.g., Dias v. Boone, 320 Ga. 785, 801-806 (3) (c) (912 SE2d 547) (2025). If the refusal evidence is excluded under Rule 403, then the challenged statute is not being applied to Dias and the trial court has no reason to reach her constitutional claims. <a href=\"#fn-9\" id=\"ref-9\">9</a>"
+    }
+  ],
+  "footnotes": []
+}

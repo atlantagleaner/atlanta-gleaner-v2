@@ -1,0 +1,77 @@
+{
+  "name": "atlanta-gleaner-v2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "parse-opinions": "node scripts/process-cases.js",
+    "sync-editorial": "node scripts/build-case-editorial.js",
+    "fetch-news": "tsx scripts/fetch-news.ts",
+    "fetch-news:sync": "tsx scripts/fetch-news.ts --sync"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@radix-ui/react-accordion": "^1.0.4",
+    "@tanstack/react-query": "^5.96.2",
+    "@vercel/blob": "^0.23.4",
+    "@vercel/edge-config": "^1.4.3",
+    "blackjack-engine": "^0.1.2",
+    "cheerio": "^1.0.0-rc.12",
+    "framer-motion": "^12.38.0",
+    "fuse.js": "^7.3.0",
+    "linkedom": "^0.18.12",
+    "lucide-react": "^1.8.0",
+    "mammoth": "^1.12.0",
+    "metascraper": "^5.50.0",
+    "metascraper-author": "^5.50.0",
+    "metascraper-date": "^5.50.0",
+    "metascraper-description": "^5.50.0",
+    "metascraper-image": "^5.50.0",
+    "metascraper-logo": "^5.50.0",
+    "metascraper-publisher": "^5.50.0",
+    "metascraper-readability": "^5.50.0",
+    "metascraper-title": "^5.50.0",
+    "metascraper-url": "^5.50.0",
+    "next": "^16.2.1",
+    "react": "^18",
+    "react-card-flip": "^1.2.3",
+    "react-dom": "^18",
+    "sanitize-html": "^2.17.2",
+    "spotify-web-api-node": "^5.0.2",
+    "three": "^0.183.2",
+    "tween.js": "^16.6.0"
+  },
+  "devDependencies": {
+    "@types/mozilla-readability": "^0.2.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/sanitize-html": "^2.16.1",
+    "@types/spotify-web-api-node": "^5.0.11",
+    "@types/three": "^0.183.1",
+    "autoprefixer": "^10.4.19",
+    "jszip": "^3.10.1",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  },
+  "description": "",
+  "main": "next.config.mjs",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atlantagleaner/atlanta-gleaner-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atlantagleaner/atlanta-gleaner-v2/issues"
+  },
+  "homepage": "https://github.com/atlantagleaner/atlanta-gleaner-v2#readme"
+}

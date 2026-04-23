@@ -1,0 +1,227 @@
+{
+  "case_id": "lee-v-state-s25a1002",
+  "metadata": {
+    "title": "Lee v. State",
+    "court": "Supreme Court of Georgia",
+    "date": "December 9, 2025",
+    "docket": "S25A1002.",
+    "notice": null,
+    "judges": "[***1] MCMILLIAN, Justice. All the Justices concur.",
+    "opinion_by": "MCMILLIAN",
+    "appellant_counsel": [
+      "Matthew K. Winchester, for appellant.",
+      "John H. Cranford, Jr., District Attorney, Zachary M. Taylor, Assistant District Attorney"
+    ],
+    "appellee_counsel": [
+      "Christopher M. Carr, Attorney General, Beth A. Burton, Deputy Attorney General, Meghan H. Hill, Senior Assistant Attorney General, Mathew E. Plott, Assistant Attorney General, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*327]</span>   <span class=\"pagination-marker\">[**280]</span>  McMillian, Justice."
+    },
+    {
+      "type": "paragraph",
+      "content": "Appellant Kevin James Lee was convicted of the malice murder of his wife, Ann Berry.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>  <span class=\"pagination-marker\">[**281]</span>  On appeal, Lee argues that the evidence was insufficient to support his conviction under OCGA § 24-14-6; that the trial court abused its discretion in admitting certain testimony under the residual hearsay exception, OCGA § 24-8-807 (“Rule 807”), and in excusing one of the jurors; and that his trial counsel rendered constitutionally ineffective assistance in failing to file a plea in bar for unconstitutional speedy trial delay and in failing to adequately present the State’s plea offer to Lee. For the reasons that follow, we affirm."
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Viewed in the light most favorable to the verdict, the evidence presented at trial showed that Lee murdered Berry in 1991 as she was attempting to escape their abusive relationship. Lee buried her body near their home, where it was unearthed almost two decades later by teenagers who were digging a firepit."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*328]</span>  On the night of July 31, 1991, Berry telephoned her sister, Sheila Storey, and asked if Berry and her children could come live with Storey. Storey knew something was wrong because she could hear Lee yelling and the children crying in the <span class=\"pagination-marker\">[***2]</span>  background. Storey said that Berry “absolutely” could come live with her and offered to come help her pack, but Berry responded that she could handle the packing on her own and would take her own car because she had paid for it. Storey replied that she would see Berry in a couple hours. Berry never arrived, and Storey never saw or heard from her sister again."
+    },
+    {
+      "type": "paragraph",
+      "content": "In the days following Berry’s disappearance, Storey tried unsuccessfully to contact her multiple times. After a few days, Lee answered the phone and said that Berry left him and the children for another man. Storey testified that she had no knowledge of any other man in Berry’s life. Multiple family friends, including Denise Harvard, also testified that Berry never went anywhere without her children. Over the years, Lee would give varying accounts to friends and family about the circumstances of Berry’s alleged departure, such as telling one friend, Tammy Riley, that Berry “got on cocaine and ran off with a cocaine dealer.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "About a week after Berry’s disappearance, Lee took the children and moved to Kansas. Storey went to clean out Berry and Lee’s house and discovered that almost all of Berry’s possessions were still there, including <span class=\"pagination-marker\">[***3]</span>  her clothes, jewelry, and pictures. Storey attempted to file a missing person’s report but later discovered that it had not been processed, and Berry was not officially listed as missing until 1997."
+    },
+    {
+      "type": "paragraph",
+      "content": "In April 2011, a group of teenagers was digging a firepit in the woods less than 100 yards from where Berry and Lee once lived and unearthed a trash bag containing human skeletal remains. DNA testing confirmed the remains were Berry’s, and the medical examiner classified her death as a homicide."
+    },
+    {
+      "type": "paragraph",
+      "content": "After interviewing individuals who had been associated with Berry in 1991, and exploring possible explanations for her disappearance, law enforcement obtained an arrest warrant for Lee. Lee was ultimately located in California and arrested in 2018."
+    },
+    {
+      "type": "paragraph",
+      "content": "At trial, multiple friends and family members testified about seeing Lee and Berry in heated arguments during their relationship. A co-worker of Berry, who worked with Berry in “the late eighties,” witnessed Lee come into their workplace multiple times cursing at Berry, and on one occasion, witnessed Lee get angry with Berry, tell her that she had to move out and that he was keeping the children, take their children from her and put them into his vehicle, <span class=\"pagination-marker\">[***4]</span>  and “knock[ ] her out into the parking lot” as she attempted to reach into <span class=\"pagination-marker\">[*329]</span>  his vehicle for the children while he drove away. Riley saw Lee “get physical” with Berry “a few times” and observed “her face and stuff bruised up.” And though Storey never witnessed any physical violence, she saw the couple argue often, observed bruises on Berry’s neck and arms — which Berry said were from “tussling” with Lee — and noticed that Berry had begun wearing long sleeves and pants, even in the heat of the summer."
+    },
+    {
+      "type": "paragraph",
+      "content": "One friend of Berry and Lee was Larry Cook, who was himself incarcerated for murder at the time he testified at Lee’s trial.  <span class=\"pagination-marker\">[**282]</span>  Cook testified that Berry and Lee “argued a lot,” but he never observed any physical violence between them. He also testified that it was rare for Berry to go anywhere without her children, and when asked, he testified that he and Berry never had a romantic relationship and he did not claim any knowledge of her dating another man. Cook also acknowledged at trial that he had spent the previous 27 years incarcerated for murdering a woman and burying her, volunteering that the murder he was convicted of was “very similar to this one,” but he expressly denied killing Berry <span class=\"pagination-marker\">[***5]</span>  or having anything to do with her disappearance or death, stating flatly, “No, I did not; Ann was my friend.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) 2. Lee first asserts that the evidence was insufficient to sustain his convictions as a matter of Georgia statutory law under OCGA § 24-14-6 (“To warrant a conviction on circumstantial evidence, the proved facts shall not only be consistent with the hypothesis of guilt, but shall exclude every other reasonable hypothesis save that of the guilt of the accused.”). As an initial matter, because the trial court set aside Lee’s conviction for concealing the death of another, we do not review the sufficiency of the evidence to support that count.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Turning to the malice murder conviction,<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> Lee argues that the evidence, which was entirely circumstantial, showed there were two suspects with opportunity to kill Berry — Lee and Cook — and that evidence did not prove beyond a reasonable doubt that Lee was the killer because it did not exclude the reasonable hypothesis that Cook was the killer. “Under Georgia statutory law, a conviction may rest solely on circumstantial evidence if that evidence ‘exclude[s] every other reasonable hypothesis save that of the guilt of the accused.’ ” Rashad v. State, 318 Ga. 199, 206, 897 S.E.2d 760 (2024) (quoting OCGA § 24-14-6). <span class=\"pagination-marker\">[*330]</span>  “Not every <span class=\"pagination-marker\">[***6]</span>  hypothesis is a reasonable one, however, and the evidence need not exclude every conceivable inference or hypothesis — only those that are reasonable.” Rashad, 318 Ga. at 206 (punctuation omitted). Further, “[w]hether any alternative hypotheses are reasonable and whether the circumstantial evidence excludes any such hypotheses are questions for the jury and we will not disturb the jury’s findings on those questions unless they are insupportable as a matter of law.” Id. (quotation marks omitted). And we have observed that such “[q]uestions about the reasonableness of hypotheses” that “are for the jury to decide” “include the possibility of another perpetrator.” Nichols v. State, 292 Ga. 290, 291, 736 S.E.2d 407 (2013). See also Jackson v. State, 307 Ga. 770, 772, 838 S.E.2d 246 (2020); Brown v. State, 301 Ga. 728, 731, 804 S.E.2d 16 (2017)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the jury heard that Berry called her sister in an attempt to flee her abusive relationship with Lee — and take their children with her — as Lee yelled and the children cried in the background on the night Berry disappeared. The jury also heard about the inconsistent accounts Lee gave regarding the circumstances of Berry’s departure and that Berry’s remains were buried less than 100 yards from the house she shared with Lee and from which she was attempting to leave the night she disappeared. And the jury <span class=\"pagination-marker\">[***7]</span>  heard Cook testify and deny killing Berry, which the jury was entitled to credit. Because there was ample evidence from which the jury could reject as unreasonable Lee’s alternate theory that Cook was the killer and instead find beyond a reasonable doubt that Lee murdered Berry with malice aforethought, this enumeration fails. See, e.g., Brown, 301 Ga. at 728; Nichols, 292 Ga. at 291–92."
+    },
+    {
+      "type": "paragraph",
+      "content": "(2) 3. Lee next asserts that the trial court abused its discretion in admitting, under Rule 807’s residual exception, harmful  <span class=\"pagination-marker\">[**283]</span>  hearsay from Storey, Harvard, and Riley about statements made by Berry about the state of her relationship with Lee.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup> This claim fails."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*331]</span>  On January 20, 2022, the State filed notice of intent to introduce “residual hearsay” under Rule 807, to include statements made by Berry to various witnesses, including Storey, Harvard, and Riley, “as previously provided in discovery.” Prior to trial, the court heard argument from the parties regarding the State’s notice. The State represented that Storey would “be testifying as to information conveyed to her by the deceased, about the relationship she had with [Lee], most particularly about events that occurred on July the 31st of 1991.” In addition to arguing that the statements should be admitted under Rule 807, the State also argued that the statements made during the July 31, 1991 phone call would be admissible under the “excited utterance” and the “then existing state of mind” exceptions to hearsay. See OCGA § 24-8-803(2) & (3). The State further proffered that Storey would also “testify about instances of conduct <span class=\"pagination-marker\">[***9]</span>  between [Lee and Berry] that Ms. Berry conveyed to Ms. Storey about fights they had gotten into and various things like that.” Turning to Harvard and Riley, the State represented that those witnesses were close friends of Berry whom she confided in and that they would testify “how things were going in the relationship for good and ill; how [Berry] cared for her children, how she — what was going on, on a day-to-day basis.” In arguing the issue, both the State and Lee specifically analyzed the standards for admission of statements under Rule 807’s residual exception, including the requirement of “exceptional guarantees of trustworthiness” and whether it had been met. The trial court ruled that “some of it is part of the excited utterance or whatever else,” and that “I’m going to allow it in under 807,” while also noting that “again, the Miller [v. State, 303 Ga. 1, 810 S.E.2d 123 (2018)] case does say that it’s a rare exception. So let’s try to limit that as much as we possibly can, all right?” Thereafter, Storey, Harvard, and Riley testified."
+    },
+    {
+      "type": "paragraph",
+      "content": "In its order denying Lee’s motion for new trial, the court set forth Rule 807’s requirement of “circumstantial guarantees of trustworthiness”; found that “Story [sic] testified that she and Ann are sisters and were <span class=\"pagination-marker\">[***10]</span>  very close. The pair talked to each other daily and shared the personal details of their lives with each other. Story [sic] and Ann continued this close relationship until Ann’s death”; and ruled that “[i]n light of the evidence of their sibling relationship and the circumstances in which Ann made the statements at issue to Story [sic], the Court [cannot say] that it abused its discretion by admitting the statements under Rule 807.” The trial court further concluded, “[t]he record does not show any hearsay elicited by the state for witnesses Harvard and Riley. There is neither error nor harm.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*332]</span>  On appeal, Lee argues that the State neither provided the particulars of the statements in its notice, nor showed that the statements were accompanied by circumstantial guarantees of trustworthiness, and that because the trial court’s ruling in limine did not address the exceptional guarantees of trustworthiness standard, the trial court abused its discretion in admitting, under Rule 807’s residual exception, “hearsay from Story [sic], Harvard and Riley” “about the state of [Berry’s] relationship with Lee[.]” However, the record shows that the trial court ruled in limine after hearing the parties specifically argue the exceptional <span class=\"pagination-marker\">[***11]</span>  guarantees of trust <span class=\"pagination-marker\">[**284]</span>  worthiness standard and whether it had been met, providing further findings in its order denying Lee’s motion for new trial that it did not abuse its discretion in admitting Storey’s testimony under Rule 807. Accordingly, Lee’s argument — that the absence of an explicit finding on the record regarding Rule 807’s exceptional guarantees of trustworthiness standard in the trial court’s ruling in limine constitutes an abuse of discretion — fails, and we see no abuse of discretion in the trial court’s ruling. See, e.g., Jacobs v. State, 303 Ga. 245, 248–51, 811 S.E.2d 372 (2018)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Moreover, with respect to Riley’s and Harvard’s testimony, Lee cites their short direct testimonies in their entirety to support his claim, but our review of that testimony shows that the trial court was correct that the record does not show any hearsay statements from Berry elicited from Harvard or Riley about the state of the relationship between Berry and Lee.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> Because the premise of Lee’s argument — that these witnesses testified about Berry’s statements about the state of the relationship between Berry and Lee — is incorrect, this enumeration also fails as to Riley’s and Harvard’s testimony for this reason."
+    },
+    {
+      "type": "paragraph",
+      "content": "(3) 4. Lee also asserts that the trial court abused its discretion <span class=\"pagination-marker\">[***12]</span>  when it excused Juror 4 on the third day of trial and substituted an alternate juror, over Lee’s objection, without good or legal cause. We disagree."
+    },
+    {
+      "type": "paragraph",
+      "content": "The record shows that Juror 4 arrived late the second day of trial and then called the clerk’s office the morning of the third day and said she would not be coming to court that day because of a conflict with her college class schedule. The trial court directed the clerk’s office to contact Juror 4 and inform her that she needed to appear because she had not been released. After waiting more than two hours, the trial court told the parties that it did not intend to <span class=\"pagination-marker\">[*333]</span>  delay things further since it was unclear if Juror 4 would ever appear and it did not look like she would. The court then stated that “unless somebody can give me a legal reason to the contrary,” it would replace Juror 4 with an alternate and proceed with trial. Lee objected to the replacement of Juror 4 but did not offer any legal authority to support his objection."
+    },
+    {
+      "type": "paragraph",
+      "content": "“It is well established that OCGA § 15-12-172 gives a trial court the discretion to discharge a juror and replace him or her with an alternate at any time so long as the trial court has a sound legal basis.” Smith v. State, 307 Ga. 680, 686, 838 S.E.2d 321 (2020) (quotation <span class=\"pagination-marker\">[***13]</span>  marks omitted). See also OCGA § 15-12-172 (providing that if a juror “dies, becomes ill, [or] upon other good cause shown to the court is found to be unable to perform [her] duty, or is discharged for other legal cause, the first alternate juror shall take [her] place”). In <em>Smith</em>, where the relevant juror was late previously and called the clerk’s office the morning of the second day of trial, saying that she was running late again, we held that “[i]t was not an abuse of discretion for the court to conclude that waiting for [the juror] to arrive would unnecessarily delay the trial and that replacing her with an alternate juror was appropriate.” 307 Ga. at 686. See also Brooks v. State, 281 Ga. 14, 18, 635 S.E.2d 723 (2006) (observing that “[t]he juror’s tardiness was a sound basis for her dismissal”)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under the circumstances of this case, the trial court did not abuse its discretion in dismissing Juror 4 and substituting an alternate for good cause, where she was not only late, but informed the court that she would not be coming at all for the third day of trial. Accordingly, this enumeration fails."
+    },
+    {
+      "type": "paragraph",
+      "content": "5. Finally, Lee asserts that his trial counsel rendered constitutionally ineffective assistance by (a) failing to file a plea in bar for unconstitutional pre-trial delay <span class=\"pagination-marker\">[***14]</span>  under the Speedy Trial Clause of the Sixth Amendment to the United States Constitution, and (b) failing to adequately present the State’s plea offer to Lee. These claims also fail."
+    },
+    {
+      "type": "paragraph",
+      "content": "To prevail on these claims, Lee must show both deficient performance and resulting prejudice. See Strickland v. Washington, 466 US 668, 687, 104 S. Ct. 2052, 80  <span class=\"pagination-marker\">[**285]</span>  L. Ed. 2d 674 (1984). To show deficient performance, Lee “must demonstrate that counsel performed counsel’s duties in an objectively unreasonable way, considering all of the circumstances and in the light of prevailing professional norms.” Payne v. State, 314 Ga. 322, 328–29, 877 S.E.2d 202 (2022). “In determining whether counsel’s performance was deficient, the relevant inquiry is ‘whether, in light of all the circumstances, the identified acts or omissions were outside the wide range of professionally competent assistance.’ ” Ford v. Tate, 307 Ga. 383, 386,  <span class=\"pagination-marker\">[*334]</span>  835 S.E.2d 198 (2019) (quoting <em>Strickland, 466 US at 690</em>). “The law recognizes a strong presumption that counsel performed reasonably,” and Lee “bears the burden of overcoming this presumption.” Blocker v. State, 316 Ga. 568, 578, 889 S.E.2d 824 (2023) (punctuation omitted). Lee “must show that no reasonable lawyer would have done what his lawyer did, or would have failed to do what his lawyer did not.” Id. (punctuation omitted). To establish prejudice, Lee “must show that there is a reasonable probability that, but for counsel’s deficiency, the result of the trial would have been different.” Zayas v. State, 319 Ga. 402, 409, 902 S.E.2d 583 (2024) (punctuation <span class=\"pagination-marker\">[***15]</span>  omitted). If either prong is not met, we need not address the other. Id."
+    },
+    {
+      "type": "paragraph",
+      "content": "(4) (a) <em>Failure to file plea in bar on constitutional speedy trial grounds.</em> On August 24, 2021 — after Lee had sent multiple letters to his trial counsel and the trial court, asserting that he wished to demand a speedy trial — Lee’s trial counsel requested permission to file an out-of-time demand for a statutory speedy trial. On September 14, 2021, the trial court held a hearing on the motion. On September 28, 2021, the trial court entered a written order finding no good cause and denied Lee’s motion. Lee did not file a constitutional speedy trial demand, nor did he move to dismiss the indictment on speedy trial grounds. He now argues that his trial counsel rendered ineffective assistance by failing to file a plea in bar on constitutional speedy trial grounds."
+    },
+    {
+      "type": "paragraph",
+      "content": "“Whether to file a demand for speedy trial is usually a matter of trial tactics and strategy, as a delay in bringing the case to trial may work to a defendant’s advantage.” Jones v. State, 296 Ga. 561, 569, 769 S.E.2d 307 (2015). See also Smith v. State, 297 Ga. 214, 217, 773 S.E.2d 209 (2015), overruled on other grounds by Johnson v. State, 315 Ga. 876, 885 S.E.2d 725 (2023). And “[a]s with other tactical or strategic decisions, trial counsel’s decision to file, or not, a demand for speedy trial should not be evaluated <span class=\"pagination-marker\">[***16]</span>  in hindsight.” Jones, 296 Ga. at 569."
+    },
+    {
+      "type": "paragraph",
+      "content": "Both of Lee’s trial attorneys testified that they researched and discussed both statutory and constitutional speedy trial claims and that they had concerns that any speedy trial demand would fail because of the delay attributed to Lee in combination with the other circumstances of the case. One counsel testified that his investigator “was chasing people down and tracking people down and doing everything he could,” and “we had evidence out there and we did some research on speedy’s that if ... the delay can be attributed back to our side, then that weakened our trying to be victorious,” and they “anticipated some evidence that was going to come out,” including “Mr. Lee moving around a lot and not staying in one location for <span class=\"pagination-marker\">[*335]</span>  significant amounts of time.”<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup> Lee’s other attorney testified that after discussing the different types of speedy trial demands, “as far as the constitutional speedy, I think we addressed that in the nature of the case in the review of the law,” and “I don’t know that we felt that that was a viable option.” They acknowledged that they moved for permission to file an out-of-time statutory speedy trial demand at Lee’s request, but one of them testified that <span class=\"pagination-marker\">[***17]</span>  even at that time, he needed additional time to prepare for trial, and that when the case was finally tried in March 2022, “both sides were finally both ready to try the case.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "The record therefore supports that trial counsel made a strategic decision not to assert a constitutional speedy trial demand or to file a plea in bar on constitutional speedy  <span class=\"pagination-marker\">[**286]</span>  trial grounds. That decision was not unreasonable based on their analysis of the relevant case law and their assessment that Lee had contributed to the delay, at least in part by “moving around a lot and not staying in one location,” and because counsel needed more time to investigate the case and prepare for trial. See Smith, 297 Ga. at 217 (no deficiency in failing to demand a speedy trial where “trial counsel testified at the motion for new trial hearing that he made a strategic decision not to file a speedy trial demand”); Bowling v. State, 289 Ga. 881, 889–90, 717 S.E.2d 190 (2011) (“Trial counsel’s strategic decision to forego filing an out-of-time demand for speedy trial to continue to pursue his investigation was reasonable and did not constitute ineffective assistance.”). Although Lee now claims that he was unaware of the arrest warrants against him and was not trying to evade them, the trial court was authorized <span class=\"pagination-marker\">[***18]</span>  to discredit his claims and to credit other evidence and testimony to the contrary. And in any event, Lee’s purported attempt to evade the arrest warrants was not the only reason given for counsels’ decision not to file a constitutional speedy trial demand. See Head v. Thomason, 276 Ga. 434, 439, 578 S.E.2d 426 (2003) (no deficiency in counsel’s strategic decision to waive jury trial, even where one of the reasons for giving the advice proved to be mistaken in hindsight), overruled on other grounds by State v. Lane, 308 Ga. 10, 838 S.E.2d 808 (2020)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Because Lee has failed to show that his trial counsel’s strategic decision not to file a plea in bar on constitutional speedy trial grounds was objectively unreasonable under the circumstances of this case, this claim fails."
+    },
+    {
+      "type": "paragraph",
+      "content": "(5) (b) <em>Failure to adequately present plea offer.</em> Before jury selection on the first day of trial, the trial court had the State place its plea <span class=\"pagination-marker\">[*336]</span>  offer on the record: Lee could plead guilty to Count 2, concealing the death of another (a misdemeanor), pursuant to North Carolina v. Alford, 400 US 25, 91 S. Ct. 160, 27 L. Ed. 2d 162 (1970), receive credit for time served, and “walk away.” The trial court explained that an Alford plea meant Lee could plead to a charge in his best interest even if he maintained he “didn’t do [it],” rather than risk a life sentence if the case proceeded to trial and he was found <span class=\"pagination-marker\">[***19]</span>  guilty of murder, and confirmed that trial counsel had also gone over this offer with Lee. Lee insisted, “I still deny. I refuse taking the plea, Your Honor.” Trial counsel asked for additional time to speak to Lee, which the trial court granted, as the State informed, “I’ll leave that offer on the table until the jury is in the room and begin voir dire.” After a short recess, Lee confirmed that he had sufficient time to speak with his attorneys, and that they had gone over discovery, the State’s offer, and the sentence he was facing, but he remained insistent about going to trial, saying:"
+    },
+    {
+      "type": "paragraph",
+      "content": "[W]hat I don’t understand is things that are stated by two separate investigators that shine the light on another possible suspect and another possible motive and it’s documented. And I don’t understand why the other investigator is not here, you know, and it just seems like I’m praying that it’s still other things that are documented come to light during the trial and it shows other possibilities than just myself. And I’m pretty much ready to take that chance."
+    },
+    {
+      "type": "paragraph",
+      "content": "I don’t know what will come out at trial. I pray that a lot of other things that are documented by investigators, by Atkins comes to light.[<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup>] I <span class=\"pagination-marker\">[***20]</span>  don’t know how to  <span class=\"pagination-marker\">[**287]</span>  address it in the court and bring it out during trial. I pray it gets brought out and mentioned. And I’m ready to put my life in the juror’s [sic] hands."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*337]</span>  Lee’s trial counsel explained, however, that there were inconsistencies in some of the statements recorded in Investigator Atkins’s notes and that counsel had spoken with Investigator Atkins, who was now living in Florida, and “he doesn’t remember. ... So, I wasn’t sure calling Investigator Atkins was really beneficial.” In response, the State argued that the statements of others noted by Investigator Atkins would be impermissible hearsay."
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court then stated, “Mr. Lee, so let’s put it this way, are you listening to me? ... I’m not going to let that in. But, even if I did let it in, what would you hope to do with it? What would you hope would happen?” Lee replied, “I just want that part ... to be heard. If I’m going to trial for murder, then I want —” at which point the court interjected, “But you don’t have to. I mean, he says he’s going to dismiss the murder. ... [W]ell, look I’m not going to talk you into it. ... [S]o I guess we’re going forward with the trial, right?” Lee’s response: “Yes, Your Honor.” The trial court <span class=\"pagination-marker\">[***21]</span>  then inquired about scheduling and asked Lee’s trial counsel whether they intended to present evidence or witnesses, and trial counsel represented, “We’re not sure at this time, but we’re not anticipating any.” After taking up logistical matters regarding how jury selection would proceed, the prospective jurors entered the courtroom, and jury selection commenced."
+    },
+    {
+      "type": "paragraph",
+      "content": "Lee appears to be arguing on appeal that he thought Investigator Atkins, who was no longer with the Coweta County Sheriff’s Office, would be available to testify from his reports. He argues that trial counsel rendered ineffective assistance, not in failing to convey the offer itself to him, but in failing to definitively inform him during his consideration of the plea offer that Investigator Atkins would not be a defense witness or available to rebut the State’s witnesses. Lee now claims that he would have taken the plea had he known that Investigator Atkins was not available as a witness."
+    },
+    {
+      "type": "paragraph",
+      "content": "Lee has failed to demonstrate deficiency. The record leaves no question that the terms of the plea offer, along with the risks of rejecting it, were clearly explained to Lee by both his trial counsel and the trial court. And his argument that <span class=\"pagination-marker\">[***22]</span>  his attorneys failed to inform him that Investigator Atkins would not be part of the defense, plus his claim that he would have taken the plea had he been aware, are belied by the record."
+    },
+    {
+      "type": "paragraph",
+      "content": "As noted above, at the pre-trial hearing, in Lee’s presence, his trial counsel explained that due to problems with that evidence and because Investigator Atkins “doesn’t remember,” he “wasn’t sure calling Investigator Atkins was really beneficial.” Trial counsel also stated that the defense was “not anticipating” calling “any” witnesses or presenting any evidence at trial. At that time, the trial court also advised Lee regarding statements in Investigator Atkins’s report, <span class=\"pagination-marker\">[*338]</span>  “Mr. Lee, so let’s put it this way, are you listening to me? ... I’m not going to let that in.” And Lee himself acknowledged at that hearing that although he didn’t understand why, he knew Investigator Atkins was “not here.” Moreover, at the motion for new trial hearing, trial counsel confirmed that Lee “would’ve been advised,” while the plea offer was still open, “that we didn’t believe that Investigator Atkins was going to provide substantive value during the defense based on our conversation[s] or based on what was intimated to us <span class=\"pagination-marker\">[***23]</span>  by our investigator.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "In light of this evidence, the trial court did not abuse its discretion in choosing to discredit Lee’s own self-serving testimony that he was not aware that Investigator Atkins would not be a part of his defense and that he would have accepted the State’s plea offer had he been aware. See, e.g., Robinson v. State, 322 Ga. 279, 283–84, 919 S.E.2d 659 (2025) (affirming trial court’s ruling that defendant failed to establish trial counsel was deficient in communicating plea offer where record evidence contradicted defendant’s  <span class=\"pagination-marker\">[**288]</span>  self-serving testimony that counsel did not communicate the offer to him); Bryant v. State, 306 Ga. 687, 696, 832 S.E.2d 826 (2019) (“The trial court was entitled to believe counsel’s testimony that she discussed with the appellant the risks of going to trial, [including] the evidence against him ... . And the trial court was entitled to disbelieve the appellant’s testimony that counsel did not ... .”). Lee has not shown that his trial counsel performed deficiently in this respect. Rather, the record shows that Lee fully understood the risk he was taking and chose to “put [his] life in the juror[s'] hands.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "Accordingly, Lee has not carried his burden of showing deficiency under <em>Strickland</em>, and his ineffectiveness claim fails.<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment affirmed. All the Justices concur.</em> <span class=\"pagination-marker\">[***24]</span>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>Berry disappeared in 1991, but her remains were not discovered until 2011. On June 4, 2012, a Coweta County grand jury indicted Lee — who lived in California at the time — for malice murder (Count 1) and concealing the death of another (Count 2). On June 11, 2012, the trial court granted the State’s motion to place the case on the dead docket until Lee was arrested. On October 26, 2018, after Lee’s arrest in California, the State moved to have the case returned to active status, and the trial court entered an order doing so that same day. At a trial held from March 7–9, 2022, the jury found Lee guilty of both counts. The trial court sentenced Lee to life in prison for malice murder, plus 12 months in prison to be served consecutively for concealing the death of another.</p><p>Lee filed a timely motion for new trial, which was amended by new counsel. Following a hearing, at which the State conceded that Lee’s conviction for concealing the death of another should be set aside because the State failed to properly indict that offense within the applicable statute of limitation or allege a tolling exception, the trial court entered an order on October 18, 2024, setting aside Lee’s sentence for concealing the death of another and denying the remainder of Lee’s motion for new trial, as amended. Lee filed a timely notice of appeal that same day, and the case was docketed to the August 2025 term of this Court and submitted for a decision on the briefs. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>The parties agree on appeal that although the trial court entered an order setting aside Lee’s conviction and sentence for concealing the death of another, no amended final sentencing disposition has been entered to that effect. Nothing in this opinion is to be read to preclude the trial court on remand from entering a corrected sentencing disposition. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>“A person commits the offense of murder when he unlawfully and with malice aforethought, either express or implied, causes the death of another human being.” OCGA § 16-5-1(a). </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>Rule 807 provides:</p><p>A statement not specifically covered by any law but having equivalent circumstantial guarantees of trustworthiness shall not be excluded by the hearsay rule, if the court determines that:</p><p>(1) The statement is offered as evidence of a material fact;</p><p>(2) The statement is more probative on the point for which it is offered than any other evidence which the proponent can procure through reasonable efforts; and</p><p>(3) The general purposes of the rules of evidence and the interests of justice will best be served by admission of the statement into evidence.</p><p>However, a statement may not be admitted under this Code section <span class=\"pagination-marker\">[***8]</span>  unless the proponent of it makes known to the adverse party, sufficiently in advance of the trial or hearing to provide the adverse party with a fair opportunity to prepare to meet it, the proponent’s intention to offer the statement and the particulars of it, including the name and address of the declarant. </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>When asked, “Ann never told you anything about being abused?” Harvard simply replied, “No.” Riley testified about a statement Berry made about going to the dentist. </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup>Lee argues that his “moving around” was not an attempt to evade arrest, and that his counsel erred in considering that factor in not filing a constitutional speedy trial demand. </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup>Prior to trial, Lee sent a letter to trial counsel specifically requesting certain witnesses to be placed under subpoena for the defense, including the State’s investigator from the 1990s investigation, Investigator Ricky Atkins. In reports dated March 5, 1997, Investigator Atkins wrote that a convenience store clerk observed Berry get into a red pickup truck with an unknown individual who was not Lee; when Storey cleaned out Berry’s closet, Berry’s four favorite outfits were missing; Storey told Atkins that Berry used cocaine and was engaged in an affair with Cook behind Lee’s back; and Storey said that Cook owned a red truck.</p><p>At the motion for new trial hearing, Lee’s trial counsel testified that during their investigation of the case, they spoke with Investigator Atkins, “and he indicated that he didn’t remember anything about anything,” so counsel tried to refresh his recollection with his report but “determined that after speaking to him that he was not going to be any help in defending Mr. Lee.” Trial counsel further testified that their notes indicated, “we had spoken with [Lee] about the Atkins issue.” His other trial counsel agreed, testifying that “Mr. Lee would’ve been advised that we didn’t believe that Investigator Atkins was going to provide substantive value during the defense based on our conversation[s].” </p>"
+    },
+    {
+      "id": "fn-9",
+      "return_id": "ref-9",
+      "content": "<p><sup>8 </sup>Lee also argues that the cumulative prejudice from trial counsel’s deficiencies and the trial court’s errors requires reversal. But because we have neither found nor assumed any such error, there can be no cumulative prejudice. </p>"
+    }
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "case_id": "united-states-v-tia-deyon-pugh-no2113136",
+  "metadata": {
+    "title": "United States v. Tia Deyon Pugh",
+    "court": "United States Court of Appeals for the Eleventh Circuit",
+    "date": "January 18, 2024",
+    "docket": "No. 21-13136",
+    "notice": null,
+    "judges": "Before LAGOA and BRASHER, Circuit Judges, and BOULEE,* District Judge.",
+    "opinion_by": "BRASHER",
+    "appellant_counsel": [
+      "TIA DEYON PUGH, Defendant - Appellant: Gordon Gray Armstrong III, Gordon G. Armstrong, III, PC, MOBILE, AL."
+    ],
+    "appellee_counsel": [
+      "UNITED STATES OF AMERICA, Plaintiff - Appellee: Christopher John Bodnar, Scott Alan Gray, U.S. Attorney Service - Southern District of Alabama, MOBILE, AL."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*1323]</span>  Brasher, Circuit Judge:"
+    },
+    {
+      "type": "paragraph",
+      "content": "This appeal raises questions of first impression about the constitutionality of 18 U.S.C. § 231(a)(3), which prohibits impeding law enforcement officers during a civil disorder affecting interstate commerce. During a riotous protest in Mobile, Alabama, Tia Pugh shattered the window of a police car that was blocking protestors from walking onto the interstate. After the government charged Pugh with impeding law enforcement during a civil disorder, she moved to dismiss the indictment. She argued that Section 231(a)(3) is facially unconstitutional because it: (1) exceeds Congress's power to legislate under the Commerce Clause, (2) is a substantially overbroad regulation of activities protected by the First Amendment, (3) is a content-based restriction of expressive activities <span class=\"pagination-marker\">[**2]</span>  in violation of the First Amendment, and (4) is vague in violation of the Fifth Amendment's Due Process Clause. The district court rejected these arguments, Pugh's case went to trial, and a jury found her guilty. Pugh argues that the district court erred in rejecting her four challenges to the constitutionality of Section 231(a)(3). We disagree and affirm Pugh's conviction."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>I</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "In May 2020, protesters planned to march through the streets of downtown Mobile, Alabama, to protest police brutality after the death of George Floyd. Mobile police officers developed an operational plan to protect the protestors and the public. As part of that plan, the police placed traffic units in the area to redirect protesters away from Interstate 10, which was near the protest route."
+    },
+    {
+      "type": "paragraph",
+      "content": "On the day of the protest, Tia Pugh and a group of protestors deviated from the planned protest route and approached a ramp to Interstate 10. The ramp they approached was near Exit 26B of Interstate 10, an exit used by commercial vehicles carrying hazardous materials across state lines. In response, the police attempted to block access to the ramp by forming a barricade. The police, in coordination with the Alabama Department of Transportation, shut down traffic along the ramp and closed the <span class=\"pagination-marker\">[**3]</span>  exit. The Alabama Department of Transportation also rerouted vehicles on the interstate, which slowed traffic and forced commercial vehicles carrying hazardous materials to take a longer route."
+    },
+    {
+      "type": "paragraph",
+      "content": "The protest eventually devolved into a riot. Police officers used tear gas to disperse people from the highway. Around that time, Pugh smashed a police car window with a baseball bat before running away. Pugh's attack immobilized the vehicle, and police officers had to be \"pulled off of the barricade line to guard the vehicle\" and the equipment inside."
+    },
+    {
+      "type": "paragraph",
+      "content": "A grand jury indicted Pugh on one count of impeding law enforcement during a civil disorder in violation of 18 U.S.C. § 231(a)(3). Pugh moved to dismiss the indictment on the ground that  <span class=\"pagination-marker\">[*1324]</span>  Section 231(a)(3) is unconstitutional. As relevant here, Pugh argued that the statute was facially unconstitutional because it: (1) exceeds Congress's authority under the Commerce Clause; (2) too broadly regulates speech and expressive conduct protected by the First Amendment; (3) constitutes a content-based restriction of expressive activities protected by the First Amendment; and (4) fails to provide fair notice and encourages arbitrary and discriminatory enforcement, in violation of the Fifth Amendment's Due Process Clause. After a grand jury issued a superseding indictment, <span class=\"pagination-marker\">[**4]</span>  Pugh renewed her motion to dismiss and reasserted her arguments."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court denied Pugh's motion and rejected each of her arguments. The case went to trial, and the government presented evidence and testimony about the protest, its impact on interstate commerce, and Pugh's conduct. The district court instructed the jury that Pugh could be found guilty of violating Section 231(a)(3) only if the government established beyond a reasonable doubt that: (1) Pugh \"knowingly committed an act or attempted to commit an act with the intended purpose of obstructing, impeding, or interfering with one or more law enforcement officers\"; (2) at the time of the act or attempted act, the \"officer or officers were engaged in the lawful performance of their official duties incident to and during a civil disorder\"; and (3) \"the civil disorder obstructed, delayed, or adversely affected interstate commerce or the movement of any article or commodity in interstate commerce in any way or to any degree.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "The jury found Pugh guilty of violating Section 231(a)(3). The district court sentenced Pugh to time served and imposed monetary penalties and restitution. Pugh timely appealed."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>II</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "We generally review a district court's order denying a <span class=\"pagination-marker\">[**5]</span>  motion to dismiss an indictment for an abuse of discretion. <em>United States v. Focia</em>, 869 F.3d 1269, 1285 (11th Cir. 2017) (citing <em>United States v. Di Pietro</em>, 615 F.3d 1369, 1370 n.1 (11th Cir. 2010)). But \"[w]e review a challenge to the constitutionality of a statute de novo.\" <em>United States v. Knight</em>, 490 F.3d 1268, 1270 (11th Cir. 2007) (emphasis added) (citing <em>United States v. Ballinger</em>, 395 F.3d 1218, 1225 (11th Cir. 2005)); <em>accord </em><em>Focia</em>, 869 F.3d at 1285 (quoting <em>Di Pietro</em>, 615 F.3d at 1370 n.1)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>III</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Section 231(a)(3) punishes \"[w]hoever commits or attempts to commit any act to obstruct, impede, or interfere with any fireman or law enforcement officer\" who is \"lawfully engaged in the lawful performance of his official duties incident to and during the commission of a civil disorder.\" 18 U.S.C. § 231(a)(3). The civil disorder must be one \"which in any way or degree obstructs, delays, or adversely affects commerce or the movement of any article or commodity in commerce or the conduct or performance of any federally protected function.\" <em>Id.</em> A related provision defines \"civil disorder\" and \"commerce\" for Section 231(a)(3). <em>See id.</em> § 232(1)-(2). A \"civil disorder\" is \"any public disturbance involving acts of violence by assemblages of three or more persons, which causes an immediate danger of or results in damage or injury to the property or person of any other individual.\" <em>Id.</em> § 232(1). And \"commerce\" is defined as \"commerce (A) between any State or the District of Columbia and any place outside thereof; (B) between points within any State or the District of <span class=\"pagination-marker\">[**6]</span>  Columbia, but through any place outside thereof;  <span class=\"pagination-marker\">[*1325]</span>  or (C) wholly within the District of Columbia.\" <em>Id.</em> § 232(2)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh argues that Section 231(a)(3) is unconstitutional because it (1) exceeds Congress's authority under the Commerce Clause, (2) is a substantially overbroad regulation that criminalizes activities protected by the First Amendment, (3) is a content-based restriction of expressive activities in violation of the First Amendment, and (4) is vague in violation of the Fifth Amendment's Due Process Clause."
+    },
+    {
+      "type": "paragraph",
+      "content": "These four arguments are all facial challenges to the constitutionality of Section 231(a)(3). \"A facial challenge, as distinguished from an as-applied challenge, seeks to invalidate a statute or regulation itself.\" <em>Horton v. City of St. Augustine</em>, 272 F.3d 1318, 1329 (11th Cir. 2001) (quoting <em>United States v. Frandsen</em>, 212 F.3d 1231, 1235 (11th Cir. 2000)). Generally, \"a plaintiff bringing a facial challenge must 'establish that no set of circumstances exists under which the [law] would be valid' or show that the law lacks 'a plainly legitimate sweep.'\" <em>Ams. for Prosperity Found. v. Bonta</em>, 594 U.S. 595, 141 S. Ct. 2373, 2387, 210 L. Ed. 2d 716 (2021) (alteration in original) (citation omitted) (first quoting <em>United States v. Salerno</em>, 481 U.S. 739, 745, 107 S. Ct. 2095, 95 L. Ed. 2d 697 (1987); and then quoting <em>Wash. State Grange v. Wash. State Republican Party</em>, 552 U.S. 442, 449, 128 S. Ct. 1184, 170 L. Ed. 2d 151 (2008))."
+    },
+    {
+      "type": "paragraph",
+      "content": "In determining whether a statute meets this standard, we \"consider[] only applications of the statute in which it actually authorizes or prohibits conduct.\" <em>City of Los Angeles v. Patel</em>, 576 U.S. 409, 418, 135 S. Ct. 2443, 192 L. Ed. 2d 435 (2015). Although \"the underlying facts\" of the case \"are largely irrelevant\" in a facial challenge, <em>Cheshire Bridge Holdings, LLC v. City of Atlanta</em>, 15 F.4th 1362, 1365 (11th Cir. 2021) (citing <em>Patel</em>, 576 U.S. at 415; <em>Miami Herald Publ'g Co. v. City of Hallandale</em>, 734 F.2d 666, 674 n.4 (11th Cir. 1984)), the facts may establish that circumstances <span class=\"pagination-marker\">[**7]</span>  exist under which the statute is valid, <em>see </em><em>United States v. Paige</em>, 604 F.3d 1268, 1274 (11th Cir. 2010) (rejecting facial challenge under the Commerce Clause because the law \"was constitutionally applied to [the defendant's] conduct\" (citing <em>Horton</em>, 272 F.3d at 1329)). And for all arguments but First Amendment ones, the \"fact that [a statute] might operate unconstitutionally under some conceivable set of circumstances is insufficient to render it wholly invalid\" because federal courts \"have not recognized an 'overbreadth' doctrine outside the limited context of the First Amendment.\" <em>Salerno</em>, 481 U.S. at 745 (citing <em>Schall v. Martin</em>, 467 U.S. 253, 269 n.18, 104 S. Ct. 2403, 81 L. Ed. 2d 207 (1984))."
+    },
+    {
+      "type": "paragraph",
+      "content": "With these principles in mind, we next consider Pugh's four facial challenges to the constitutionality of Section 231(a)(3)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>A</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "We will start with Pugh's argument that Section 231(a)(3) is facially unconstitutional because it exceeds Congress's power under the Commerce Clause. Pugh's argument turns on whether the jurisdictional element of the statute—the requirement that the civil disorder \"in any way or degree obstruct[], delay[], or adversely affect[] commerce\"—is enough to limit the statute's scope to constitutional applications. 18 U.S.C. § 231(a)(3). We believe that it is."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under the Commerce Clause, Congress has the power to regulate interstate commerce. <em>See</em> U.S. Const. art. I, § 8, cl. 3. The Supreme Court has \"identified three broad categories of [interstate] activity that Congress may regulate under its commerce power.\" <em>United States v. Lopez</em>,  <span class=\"pagination-marker\">[*1326]</span>  514 U.S. 549, 558, 115 S. Ct. 1624, 131 L. Ed. 2d 626 (1995) (citing <span class=\"pagination-marker\">[**8]</span>  <em>Perez v. United States</em>, 402 U.S. 146, 150, 91 S. Ct. 1357, 28 L. Ed. 2d 686 (1971); <em>Hodel v. Va. Surface Min. &amp; Reclamation Ass'n, Inc.</em>, 452 U.S. 264, 276-77, 101 S. Ct. 2352, 69 L. Ed. 2d 1 (1981)). The three categories are: (1) \"the use of the channels of interstate commerce,\" <em>id.</em> (citing <em>United States v. Darby</em>, 312 U.S. 100, 114, 61 S. Ct. 451, 85 L. Ed. 609 (1941); <em>Heart of Atlanta Motel, Inc. v. United States</em>, 379 U.S. 241, 256, 85 S. Ct. 348, 13 L. Ed. 2d 258 (1964)); (2) \"the instrumentalities of interstate commerce, or persons or things in interstate commerce,\" <em>id.</em> (citing <em>Houston, E. &amp; W. T. R. Co.</em>, 234 U.S. 342, 34 S. Ct. 833, 58 L. Ed. 1341 (1914); <em>S. Ry. Co. v. United States</em>, 222 U.S. 20, 32 S. Ct. 2, 56 L. Ed. 72 (1911); <em>Perez</em>, 402 U.S. at 150); and (3) \"those activities having a substantial relation to interstate commerce, . . . <em>i.e.</em>, those activities that substantially affect interstate commerce,\" <em>id.</em> at 558-59 (citations omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under our precedents, if a criminal statute contains a jurisdictional element that limits the statute to constitutional applications, that jurisdictional element \"immunizes [the statute] from . . . [a] facial constitutional attack.\" <em>United States v. Scott</em>, 263 F.3d 1270, 1273 (11th Cir. 2001) (citing <em>United States v. McAllister</em>, 77 F.3d 387, 390 (11th Cir. 1996))<em>; see also </em><em>United States v. Morrison</em>, 529 U.S. 598, 611-12, 120 S. Ct. 1740, 146 L. Ed. 2d 658 (2000). The reason is that \"[w]hen a statute expressly requires that the proscribed conduct have an appropriate nexus with interstate commerce, courts can 'ensure, through case-by-case inquiry,' that each application of the statute is constitutional, and thus the statute should not be struck down as being facially unconstitutional.\" <em>Ballinger</em>, 395 F.3d at 1228 n.5 (quoting <em>Lopez</em>, 514 U.S. at 561)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh argues that the jurisdictional element in Section 231(a)(3) is not enough to limit its scope to constitutional applications. Under the relevant part of the statute, a jury must find that a defendant committed an \"act to obstruct, <span class=\"pagination-marker\">[**9]</span>  impede, or interfere with\" a law enforcement officer while that officer was performing \"his official duties incident to and during the commission of a civil disorder which in any way or degree obstructs, delays, or adversely affects commerce or the movement of any article or commodity in commerce.\" 18 U.S.C. § 231(a)(3). The statute's jurisdictional element criminalizes acts during civil disorders that \"<em>affect[] commerce</em> or the movement of any article or commodity <em>in commerce</em>.\" <em>Id.</em> (emphases added). \"The 'in commerce' language denotes the first two <em>Lopez</em> categories—regulation of the channels and of the instrumentalities of commerce.\" <em>Ballinger</em>, 395 F.3d at 1231. And \"[t]he 'affecting commerce' language invokes the third <em>Lopez</em> category—regulation of intrastate activities that substantially affect commerce.\" <em>Id.</em> Congress, therefore, invoked the full scope of its commerce power in Section 231(a)(3)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh says this element fails because its broadest reach—any act to obstruct an officer during a civil disorder that \"adversely affects commerce\"—is beyond Congress's power to regulate. She points to three parts of this phrase that, she says, make it overinclusive. First, she says this language does not limit the statute's reach to intrastate \"activities that 'substantially <span class=\"pagination-marker\">[**10]</span>  affect' interstate commerce\" because the element is directed to acts that merely \"affect\" commerce. Second, she says that the jurisdictional element is too removed from her actions. That is, the jury was not required to find that her \"act\" affected interstate commerce—the jury needed to  <span class=\"pagination-marker\">[*1327]</span>  find only that the \"civil disorder\" in which her act occurred affected interstate commerce. Third, she argues that the use of the phrase \"incident to\" further attenuates the link between the criminal act and the civil disorder that must affect commerce."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh's first argument is foreclosed by our precedent, which approves of the \"affect\" language. In <em>United States v. Castleberry</em>, 116 F.3d 1384 (11th Cir. 1997), we upheld the Hobbs Act against a commerce clause challenge. <em>See </em><em>id.</em> at 1387. That \"Act prohibits extortion or robbery that 'in any way or degree obstructs, delays, or affects commerce or the movements of any article or commodity in commerce.'\" <em>Id.</em> at 1386 (quoting 18 U.S.C. § 1951(a) (1994); and citing <em>Stirone v. United States</em>, 361 U.S. 212, 218, 80 S. Ct. 270, 4 L. Ed. 2d 252 (1960)). The defendant in <em>Castleberry</em> argued that the jurisdictional element of the Hobbs Act did not require a sufficient connection between the criminal act of robbery and interstate commerce. <em>See </em><em>id.</em> at 1387. But we disagreed. We instead held that, because the statute \"contains a jurisdictional requirement that the [criminal act] be connected <span class=\"pagination-marker\">[**11]</span>  in any way to interstate commerce,\" the statute survived a facial challenge. <em>Id.</em> The jurisdictional element here is the same as the one in <em>Castleberry</em> in using \"affect\" instead of \"substantially affect.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh's second argument—that the criminal act is too removed from any connection to commerce—is not so easily resolved. Unlike the Hobbs Act, Section 231(a)(3) does not require that the criminal act itself be linked to commerce—it requires only that the civil disorder \"incident to and during\" which the criminal act occurred be linked to commerce. Does this more removed connection make a difference in the result?"
+    },
+    {
+      "type": "paragraph",
+      "content": "We believe the answer is \"no.\" Although the Supreme Court has not approved this precise language, the Court has concluded that a similarly removed jurisdictional element satisfies the Commerce Clause. In <em>Russell v. United States</em>, 471 U.S. 858, 105 S. Ct. 2455, 85 L. Ed. 2d 829 (1985), the Court upheld the constitutionality of a statute that criminalizes the arson of \"any building . . . used . . . in any activity affecting interstate or foreign commerce.\" <em>Id.</em> at 859 (alterations in original) (quoting 18 U.S.C. § 844(i)). There, the statute did not link the criminal act of arson itself to interstate commerce but rather the destroyed property. Still, the Court held that the government could convict a Chicago arsonist who set fire <span class=\"pagination-marker\">[**12]</span>  to a Chicago property as long as the property sat in the broader commercial market. <em>Id.</em> at 860. There was no need for a jury finding that the arson itself affected interstate commerce."
+    },
+    {
+      "type": "paragraph",
+      "content": "It seems clear from <em>Russell</em> that the jurisdictional element of interstate commerce need not link directly to the criminalized act itself as long as the object of the criminal act is sufficiently connected to interstate commerce. In <em>Russell</em>, the Court upheld the statute because commercial buildings were \"used in an activity affecting [interstate] commerce,\" and thus criminals who burned those buildings down necessarily affected interstate commerce. <em>Id.</em> at 862. There was a logical connection between the criminal act and commerce, even though the act's effect on commerce was mediated through the victim of the crime. Likewise, Section 231(a)(3) makes it illegal to \"impede . . . any fireman or law enforcement officer\" who is trying to quell a civil disorder that \"in any way or degree . . . adversely affects commerce.\" Just as Congress had the power to outlaw the burning of commercial buildings in <em>Russell</em> because of the buildings' effect on interstate commerce, Congress has the power to outlaw interference  <span class=\"pagination-marker\">[*1328]</span>  with police as they try to eliminate civil disorders that <span class=\"pagination-marker\">[**13]</span>  affect interstate commerce."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh's contrary view would anomalously allow Congress to criminalize creating a civil disorder that affected interstate commerce but not a person's interference with an officer's efforts to stop that disorder. Such an irrational line is inconsistent with the scope of Congress's authority. Congress has the \"authority to 'make all Laws which shall be necessary and proper' to 'regulate Commerce . . . among the several States,'\" even by regulating conduct that is not itself interstate commerce. <em>See </em><em>Gonzales v. Raich</em>, 545 U.S. 1, 22, 125 S. Ct. 2195, 162 L. Ed. 2d 1 (2005) (quoting U.S. Const. art. I, § 8). We therefore reject Pugh's argument that the jurisdictional element of Section 231(a)(3) is too attenuated."
+    },
+    {
+      "type": "paragraph",
+      "content": "Having resolved Pugh's second argument, we turn to Pugh's third and final point. She notes that the language of the statute criminalizes impeding an officer engaged in \"his official duties <em>incident to</em> and during commission of a civil disorder\" affecting interstate commerce. 18 U.S.C. § 231(a)(3) (emphasis added). She complains that \"incident to\" further removes the impeding act from the jurisdictional element. We disagree."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh rightly defines the adjectival form of incident as \"[d]ependent on, subordinate to, arising out of, or otherwise connected with (something else, usu. of greater <span class=\"pagination-marker\">[**14]</span>  importance).\" <em>Incident, Black's Law Dictionary</em> (11th ed. 2019). But Pugh erroneously argues that this language means that the statute requires that the officer's duties be only incidentally related to a civil disorder affecting interstate commerce. Pugh misunderstands how the phrase \"incident to\" is used in legal parlance. Consider \"search incident to arrest.\" This doctrine does not allow an officer to search anything incidentally related to an arrest, however removed. Instead, it requires the search to connect to or arise out of arrest, limiting the search to the person of the arrestee or an area they control. <em>See </em><em>Birchfield v. North Dakota</em>, 579 U.S. 438, 460, 136 S. Ct. 2160, 195 L. Ed. 2d 560 (2016) (quoting <em>United States v. Robinson</em>, 414 U.S. 218, 224, 94 S. Ct. 467, 38 L. Ed. 2d 427 (1973)). That same reasoning applies to this statute."
+    },
+    {
+      "type": "paragraph",
+      "content": "Lastly, we think that the conduct Pugh was convicted for strongly suggests that the jurisdictional element is constitutional. <em>See </em><em>Paige</em>, 604 F.3d at 1274. Pugh interfered with a police officer's ability to open an interstate highway by disabling a police car near an exit ramp. Her criminal act required commercial vehicles to be rerouted as they transported hazardous material. Her conduct is perhaps a quintessential example of the nexus between a criminal act and interstate commerce."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh's facial challenge therefore fails under the Commerce Clause."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>B</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Next, <span class=\"pagination-marker\">[**15]</span>  Pugh asserts that Section 231(a)(3) violates the First Amendment because it broadly prohibits protected speech and expressive conduct. The First Amendment provides that \"Congress shall make no law . . . abridging the freedom of speech.\" U.S. Const. amend. I. Under that provision, \"a law may be invalidated as [facially] overbroad if a substantial number of its applications are unconstitutional, judged in relation to the statute's plainly legitimate sweep.\" <em>Ams. for Prosperity Found.</em>, 141 S. Ct. at 2387 (quoting <em>United States v. Stevens</em>, 559 U.S. 460, 473, 130 S. Ct. 1577, 176 L. Ed. 2d 435 (2010)). While \"'[s]ubstantial overbreadth' is not a precisely defined term[,] . . . we know it requires 'a realistic danger that the statute itself will significantly  <span class=\"pagination-marker\">[*1329]</span>  compromise recognized First Amendment protections of parties not before the Court.'\" <em>Doe v. Valencia Coll.</em>, 903 F.3d 1220, 1232 (11th Cir. 2018) (quoting <em>Members of the City Council v. Taxpayers for Vincent</em>, 466 U.S. 789, 801, 104 S. Ct. 2118, 80 L. Ed. 2d 772 (1984))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh must carry a heavy burden to establish unconstitutional overbreadth. To prevail on this claim, Pugh must establish \"from the text of the [challenged provisions] and from actual fact that a substantial number of instances exist in which [the provisions] cannot be applied constitutionally.\" <em>Cheshire Bridge Holdings</em>, 15 F.4th at 1370-71 (alterations in original) (quoting <em>N.Y. State Club Ass'n v. City of New York</em>, 487 U.S. 1, 14, 108 S. Ct. 2225, 101 L. Ed. 2d 1 (1988)). Courts have \"vigorously enforced the requirement that a statute's overbreadth be <em>substantial</em>, not only in an absolute sense, but also relative to the statute's plainly legitimate sweep.\" <em>United States v. Williams</em>, 553 U.S. 285, 292, 128 S. Ct. 1830, 170 L. Ed. 2d 650 (2008) (citing <em>Bd. of Trs. of the State Univ. of N.Y. v. Fox</em>, 492 U.S. 469, 485, 109 S. Ct. 3028, 106 L. Ed. 2d 388 (1989); <em>Broadrick v. Oklahoma</em>, 413 U.S. 601, 615, 93 S. Ct. 2908, 37 L. Ed. 2d 830 (1973)). \"Rarely, if ever, <span class=\"pagination-marker\">[**16]</span>  will an overbreadth challenge succeed against a law or regulation that is not specifically addressed to speech or to conduct necessarily associated with speech (such as picketing or demonstrating).\" <em>Virginia v. Hicks</em>, 539 U.S. 113, 124, 123 S. Ct. 2191, 156 L. Ed. 2d 148 (2003)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Our \"first step in overbreadth analysis is to construe the challenged statute.\" <em>Williams</em>, 553 U.S. at 293. Then we consider whether Pugh has established that \"the statute, as we have construed it, criminalizes a substantial amount of protected expressive activity.\" <em>Id.</em> at 297."
+    },
+    {
+      "type": "paragraph",
+      "content": "According to Pugh, Section 231(a)(3) applies to a range of speech and expressive conduct, including \"yell[ing] at police to desist from an arrest, . . . flip[ping] off officers to distract or to encourage resistance, or . . . record[ing] police activity with a cell phone.\" But we cannot say Section 231(a)(3) affects much speech at all. \"The 'mere fact that one can conceive of some impermissible applications of a statute is not sufficient to render it susceptible to an overbreadth challenge.'\" <em>Williams</em>, 553 U.S. at 303 (quoting <em>Taxpayers for Vincent</em>, 466 U.S. at 800)."
+    },
+    {
+      "type": "paragraph",
+      "content": "The government must prove four elements under Section 231(a)(3). First, the government must establish that the defendant committed (or tried to commit) \"any act to obstruct, impede, or interfere with any fireman or law enforcement officer.\" 18 U.S.C. § 231(a)(3). Second, the fireman or law enforcement officer must have <span class=\"pagination-marker\">[**17]</span>  been \"lawfully engaged in the lawful performance of his official duties.\" <em>Id.</em> Third, the fireman or law enforcement officer must have been performing those official duties \"incident to and during the commission of a civil disorder.\" <em>Id.</em> Fourth, the civil disorder must have \"in any way or degree obstruct[ed], delay[ed], or adversely affect[ed] commerce or the movement of any article or commodity in commerce or the conduct or performance of any federally protected function.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pugh argues that the first element regulates speech, focusing particularly on the word \"interfere.\" Section 231(a)(3)'s first element requires that the defendant \"commit[] or attempt[] to commit any act to obstruct, impede, or interfere with any fireman or law enforcement officer.\" <em>Id.</em> The words \"commit any act to obstruct, impede, or interfere\" are not statutorily defined. We may therefore look to \"dictionaries in existence around the time of enactment\" <span class=\"pagination-marker\">[*1330]</span>  —around 1968—to interpret the \"plain and ordinary meaning\" of these words. <em>United States v. Chinchilla</em>, 987 F.3d 1303, 1308 (11th Cir. 2021) (quoting <em>EEOC v. Catastrophe Mgmt. Sols.</em>, 852 F.3d 1018, 1026 (11th Cir. 2016))."
+    },
+    {
+      "type": "paragraph",
+      "content": "It is hard to see how either \"obstruct\" or \"impede\" apply to speech or expressive conduct, except at the margins. In ordinary language around the time of Section 231(a)(3)'s enactment, \"obstruct\" meant \"to block <span class=\"pagination-marker\">[**18]</span>  or close up by an obstacle.\" <em>Webster's Seventh New Collegiate Dictionary</em> 583 (7th ed. 1969) (defining \"obstruct further to mean \"to hinder from passage, action, or operation: impede\" and \"to cut off from sight\"); <em>accord The Random House College Dictionary</em> 918 (1973). And, in the specific context of \"obstructing an officer,\" it \"implie[d] forcible resistance.\" <em>Obstructing an officer, Black's Law Dictionary</em> (rev. 4th ed. 1968). Likewise, around that time, \"impede\" meant \"to interfere with the progress of\" and to \"block.\" <em>Webster's Seventh New Collegiate Dictionary</em> 418 (7th ed. 1969); <em>accord Black's Law Dictionary</em> (rev. 4th ed. 1968) (defining \"impede\" as \"[t]o obstruct[,] hinder[,] check[, or] delay\"); <em>The Random House College Dictionary</em> 666 (1973) (defining \"impede\" as \"to retard in movement or progress by means of obstacles or hinderances\" and to \"ostruct\" or \"hinder\"). Therefore, around the time Section 231(a)(3) was enacted, the terms to \"obstruct\" and to \"impede\" were similar and meant to block through an obstacle, forcible resistance, or by other means. One cannot block a fireman or law enforcement officer with speech alone."
+    },
+    {
+      "type": "paragraph",
+      "content": "The term \"interfere\" carries a slightly broader meaning. To \"interfere\" <span class=\"pagination-marker\">[**19]</span>  meant \"to come in collision or be in opposition\" and to \"clash\" as well as \"to enter into or take a part in the concerns of others.\" <em>Webster's Seventh New Collegiate Dictionary</em> 441 (7th ed. 1969); <em>accord The Random House College Dictionary</em> 694 (1973) (defining \"interfere\" as \"to come into opposition, as one thing with another, esp[ecially] with the effect of hampering action or procedure,\" as well as \"to take part in the affairs of others\" and \"meddle\"). In legal contexts, \"interfere\" meant \"to check; hamper; hinder; disturb; intervene; intermeddle; interpose; to enter into, or to take part in, the concerns of others.\" <em>Black's Law Dictionary</em> (rev. 4th ed. 1968). But in the context of Section 231(a)(3) the term \"interfere\" is \"narrowed by the [] canon of <em>noscitur a sociis—</em> which counsels that a word is given more precise content by the neighboring words with which it is associated.\" <em>Williams</em>, 553 U.S. at 294 (citing <em>Jarecki v. G.D. Searle &amp; Co.</em>, 367 U.S. 303, 307, 81 S. Ct. 1579, 6 L. Ed. 2d 859, 1961-2 C.B. 254 (1961); 2A Norman J. Singer & J.D. Shambie Singer, <em>Sutherland Statutes and Statutory Construction</em> § 47:16 (7th ed. 2007)). That is, the surrounding words—\"obstruct\" and \"impede\"—cabin the scope of \"interfere.\" <em>Cf. </em><em>Paresky v. United States</em>, 995 F.3d 1281, 1288 (11th Cir. 2021) (explaining that because the word \"'sum' [in a statute] finds itself traveling with 'tax' and 'penalty,' <span class=\"pagination-marker\">[**20]</span>  [] we therefore use [] <em>noscitur a sociis</em> . . . to understand [its] meaning\"). Although \"interfere,\" by itself, could include speech, it is best read in Section 231(a)(3) alongside \"obstruct\" and \"impede\" as prohibiting someone from hindering a law enforcement officer or fireman with more than mere words."
+    },
+    {
+      "type": "paragraph",
+      "content": "Having interpreted Section 231(a)(3) as focused on obstructive <em>conduct</em>, we turn to Pugh's facial overbreadth challenge and whether she has established that the statute \"criminalizes a substantial amount of protected expressive activity.\" <em>United States v. Dean</em>, 635 F.3d 1200, 1205 (11th Cir. 2011) (quoting <em>Williams</em>, 553 U.S. at 297).  <span class=\"pagination-marker\">[*1331]</span>  It is obvious that the statute does not. We need not decide today whether the statute might prohibit certain kinds of expressive activities that have the effect of blocking police officers from quieting a riot—such as directing others to riot. It is sufficient to say that Pugh cannot identify from the text of Section 231(a)(3) or from any actual prosecutions that \"a substantial number of instances exist in which [the provisions] cannot be applied constitutionally.\" <em>Cheshire Bridge Holdings</em>, 15 F.4th at 1370-71 (alteration in original) (quoting <em>N.Y. State Club Ass'n</em>, 487 U.S. at 14)."
+    },
+    {
+      "type": "paragraph",
+      "content": "One last point: Pugh says that we must declare this statute unconstitutional under the Supreme Court's decision in <em>City of Houston v. Hill</em>, 482 U.S. 451, 107 S. Ct. 2502, 96 L. Ed. 2d 398 (1987). We disagree. In <em>Hill</em>, the Supreme Court held unconstitutional a city ordinance <span class=\"pagination-marker\">[**21]</span>  that made it \"unlawful to interrupt a police officer in the performance of his or her duties.\" <em>Id.</em> at 453. But there are two crucial differences between Section 231(a)(3) and the municipal ordinance in that case."
+    },
+    {
+      "type": "paragraph",
+      "content": "First, the municipal ordinance in <em>Hill</em> prohibited only <em>verbal</em> interference with law enforcement. <em>See </em><em>id.</em> at 460-61. As the Court explained, state law preempted the municipal ordinance insofar as it prohibited any physical assault on a police officer. <em>See </em><em>id.</em> at 460. So the only field of operation for the ordinance was to \"prohibit[] verbal interruptions of police officers.\" <em>Id.</em> at 461. Unlike that municipal ordinance, Section 231(a)(3) is directed at conduct, not speech."
+    },
+    {
+      "type": "paragraph",
+      "content": "Second, in <em>Hill</em>, there was real-world evidence that the municipality was enforcing its ordinance to prohibit speech. The target of the statute's enforcement in <em>Hill</em> was arrested for shouting at officers, \"[w]hy don't you pick on somebody your own size?\" <em>Id.</em> at 454. He had been arrested three other times for similar speech. <em>See </em><em>id.</em> at 455 n.4. And he introduced evidence that others had been charged for similar speech crimes, including \"several reporters.\" <em>Id.</em> at 455. Here, on the other hand, it is merely hypothetical that Section 231(a)(3) could be enforced against speech. And \"[t]he 'mere fact that one can conceive of some impermissible applications <span class=\"pagination-marker\">[**22]</span>  of a statute is not sufficient to render it susceptible to an overbreadth challenge.'\" <em>Williams</em>, 553 U.S. at 303 (quoting <em>Taxpayers for Vincent</em>, 466 U.S. at 800). Unlike the arrestee in <em>Hill</em>, Pugh cannot establish that Section 231(a)(3) prohibits a <em>substantial</em> amount of protected conduct as required to succeed on her facial overbreadth challenge."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>C</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Having dealt with Pugh's overbreadth argument, we turn to Pugh's other First Amendment claim. Pugh asserts that, on its face, Section 231(a)(3) is a content-based restriction of activities protected by the First Amendment. \"Government regulation of speech is content based if a law applies to particular speech because of the topic discussed or the idea or message expressed.\" <em>Reed v. Town of Gilbert</em>, 576 U.S. 155, 163, 135 S. Ct. 2218, 192 L. Ed. 2d 236 (2015) (citing <em>Sorrell v. IMS Health Inc.</em>, 564 U.S. 552, 563-66, 131 S. Ct. 2653, 180 L. Ed. 2d 544 (2011); <em>Carey v. Brown</em>, 447 U.S. 455, 462, 100 S. Ct. 2286, 65 L. Ed. 2d 263 (1980); <em>Police Dep't of Chi. v. Mosley</em>, 408 U.S. 92, 95, 92 S. Ct. 2286, 33 L. Ed. 2d 212 (1972)). \"In other words, a regulation is content-based if it 'suppress[es], disadvantage[s], or impose[s] differential burdens upon speech because of its content,' . . . <em>i.e.</em>, if it draws 'facial distinctions . . . defining regulated speech  <span class=\"pagination-marker\">[*1332]</span>  by particular subject matter.'\" <em>Speech First, Inc. v. Cartwright</em>, 32 F.4th 1110, 1126 (11th Cir. 2022) (some alterations in original) (citation omitted) (first quoting <em>Turner Broad. Sys., Inc. v. FCC.</em>, 512 U.S. 622, 642, 114 S. Ct. 2445, 129 L. Ed. 2d 497 (1994); and then quoting <em>Reed</em>, 576 U.S. at 163-64)."
+    },
+    {
+      "type": "paragraph",
+      "content": "To determine whether a regulation is a content-based restriction of speech, we first consider whether the regulation, \"'on its face[,]' draws distinctions based on the message a speaker conveys.\" <em>Reed</em>, 576 U.S. at 163 (quoting <em>Sorrell</em>, 564 U.S. at 566). If the law is facially content <span class=\"pagination-marker\">[**23]</span>  neutral, we then consider whether the regulation \"cannot be 'justified without reference to the content of the regulated speech[]' or [] [was] adopted by the government 'because of disagreement with the message [the speech] conveys.'\" <em>Id.</em> at 164 (fourth alteration in original) (quotation marks omitted) (quoting <em>Ward v. Rock Against Racism</em>, 491 U.S. 781, 791, 109 S. Ct. 2746, 105 L. Ed. 2d 661 (1989))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Section 231(a)(3) is not a content-based regulation of speech. If it affects speech at all, Section 231(a)(3) is content-neutral. It applies to \"<em>any</em> act to obstruct, impede, or interfere with any fireman or law enforcement officer\" performing official duties \"incident to and during the commission of a civil disorder\" affecting commerce or a federally protected function. 18 U.S.C. § 231(a)(3) (emphasis added). In criminalizing \"any act to obstruct, impede, or interfere,\" <em>id.</em>, the statute does not \"draw[] distinctions based on the message\" conveyed by the relevant act, <em>Reed</em>, 576 U.S. at 163. Instead, Section 231(a)(3) applies as long as the act is \"to obstruct, impede or interfere with any fireman or law enforcement officer\" performing official duties."
+    },
+    {
+      "type": "paragraph",
+      "content": "Still, Pugh asserts that Section 231(a)(3) \"singles out forms of expression that . . . criticize, challenge, insult, or object to the actions of law enforcement officers.\" But the statute does not distinguish between acts that are critical of law <span class=\"pagination-marker\">[**24]</span>  enforcement and acts that are neutral toward, or favor, law enforcement. <em>Cf. </em><em>McCullen v. Coakley</em>, 573 U.S. 464, 479, 134 S. Ct. 2518, 189 L. Ed. 2d 502 (2014) (holding that a statute was not a content-based restriction because \"[w]hether petitioners violate[d] the [a]ct 'depend[ed]' not 'on what they say,' . . . but simply on where they say it\" (citation omitted) (quoting <em>Holder v. Humanitarian L. Project</em>, 561 U.S. 1, 27, 130 S. Ct. 2705, 177 L. Ed. 2d 355 (2010)))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Moreover, Pugh has not successfully established that Section 231(a)(3) was enacted to suppress expressive content. Because the broad language of the statute \"help[s] confirm that it was not enacted to burden a narrower category of disfavored speech\" but is instead content-neutral and because there is no evidence to the contrary, we hold that § 231(a)(3) is not a content-based regulation of speech. <em>Id.</em> at 481 (citing Elena Kagan, <em>Private Speech, Public Purpose: The Role of Governmental Motive in First Amendment Doctrine</em>, 63 U. Chi. L. Rev. 413, 451-52 (1996))."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>D</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "Finally, Pugh asserts that Section 231(a)(3) violates the Fifth Amendment's Due Process Clause because it is vague on its face. The Fifth Amendment's Due Process Clause provides that \"[n]o person shall . . . be deprived of life, liberty, or property, without due process of law.\" U.S. Const. amend. V. \"[T]he [g]overnment violates this guarantee by taking away someone's life, liberty, or property under a criminal law so vague that it fails to give ordinary people fair notice of the conduct it punishes[] or so standardless  <span class=\"pagination-marker\">[*1333]</span>  that it invites arbitrary enforcement.\" <em>Johnson v. United States</em>, 576 U.S. 591, 595, 135 S. Ct. 2551, 192 L. Ed. 2d 569 (2015) (citing <em>Kolender v. Lawson</em>, 461 U.S. 352, 357-58, 103 S. Ct. 1855, 75 L. Ed. 2d 903 (1983))."
+    },
+    {
+      "type": "paragraph",
+      "content": "\"[A] plaintiff who engages in some conduct that is <span class=\"pagination-marker\">[**25]</span>  clearly proscribed cannot complain of the vagueness of the law as applied to the conduct of others.\" <em>Humanitarian L. Project</em>, 561 U.S. at 20 (quoting <em>Vill. of Hoffman Ests. v. Flipside, Hoffman Ests., Inc.</em>, 455 U.S. 489, 495, 102 S. Ct. 1186, 71 L. Ed. 2d 362 (1982)). Accordingly, we have held that \"a facial vagueness challenge\" cannot be maintained \"by one to whom a statute may be constitutionally applied.\" <em>Di Pietro</em>, 615 F.3d at 1373 (citing <em>Humanitarian L. Project</em>, 561 U.S. at 17-20)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, Section 231(a)(3) constitutionally applies to Pugh's conduct. Her act of disabling a police car on an interstate ramp during a civil disorder undoubtedly obstructed the law enforcement response to the riot in which she was participating. Accordingly, Pugh \"may not challenge the statute on vagueness grounds based on its application to others.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>IV</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court's order denying Pugh's motion to dismiss, Pugh's conviction, and her sentence are <strong>AFFIRMED</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>* </sup>Honorable J. P. Boulee, United States District Judge for the Northern District of Georgia, sitting by designation. </p>"
+    }
+  ]
+}

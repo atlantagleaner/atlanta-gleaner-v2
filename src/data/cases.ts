@@ -88,8 +88,16 @@ function resolveEditorialStatus(
   return 'pending'
 }
 
+const CASE_EDITORIAL_BY_DOCKET_KEY = new Map<string, EditorialCaseContent>(
+  Object.values(CASE_EDITORIAL).map((entry) => [
+    normalizeKeyPart(entry.docketNumber),
+    entry,
+  ])
+)
+
 function applyEditorialOverlay(caseData: CaseLaw): CaseLaw {
   const editorial = CASE_EDITORIAL[caseData.slug]
+    || CASE_EDITORIAL_BY_DOCKET_KEY.get(normalizeKeyPart(caseData.docketNumber))
     || CASE_EDITORIAL_BY_MATCH_KEY.get(
       buildEditorialMatchKey(caseData.title, caseData.docketNumber, caseData.dateDecided)
     )

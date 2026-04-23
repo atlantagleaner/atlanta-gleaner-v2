@@ -1,0 +1,244 @@
+{
+  "case_id": "state-v-harris-s23a0090s23a0091",
+  "metadata": {
+    "title": "State v. Harris",
+    "court": "Supreme Court of Georgia",
+    "date": "May 16, 2023",
+    "docket": "S23A0090, S23A0091.",
+    "notice": null,
+    "judges": "[***1] BETHEL, Justice. All the Justices concur.",
+    "opinion_by": "BETHEL",
+    "appellant_counsel": [
+      "Fani T. Willis, District Attorney, Michael S. Carlson, Kevin C. Armstrong, Kelcee N. Jones-Connor, Adam R. Abbate, Assistant District Attorneys",
+      "Christopher M. Carr, Attorney General, Beth A. Burton, Deputy Attorney General, Paula K. Smith, Senior Assistant Attorney General, for appellant."
+    ],
+    "appellee_counsel": [
+      "Rickey L. Richardson, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*272]</span>  <span class=\"pagination-marker\">[**53]</span>   Bethel, Justice."
+    },
+    {
+      "type": "paragraph",
+      "content": "Lorenzo Harris was indicted for malice murder and other offenses arising from the shooting of Larry Jones. Pursuant to OCGA § 5-7-1 (a), the State appeals the trial court's pretrial rulings, which were not reduced to writing, granting Harris's motion in limine to exclude evidence of two prior incidents and his motion to suppress identification evidence. In the absence of a written order from the trial court regarding the appealed rulings, we directed the parties to brief the issue of this Court's jurisdiction. Upon review, we conclude that we have jurisdiction over these appeals, vacate the trial court's rulings, and remand for further proceedings."
+    },
+    {
+      "type": "paragraph",
+      "content": "1. According to the affidavit supporting the warrant for Harris's arrest, Jones was shot on March 26, 2019, in the parking lot of an apartment building at 20 Vanira Avenue in Atlanta.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> Surveillance video recordings<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> of the parking lot captured around the time of the incident show a man leaving the apartment of Shirley Ndetti and entering a red truck. The man then shot Jones in the back and drove away. Jones died as a result of his injuries. Three .40-caliber shell casings were recovered at the scene <span class=\"pagination-marker\">[***2]</span>  of the shooting."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*273]</span> During their investigation, police interviewed Ndetti and showed her a single photograph of Harris. She confirmed that the person depicted in the photograph, whom she knew as “Low,” visited her apartment the night of the shooting and left shortly before Ndetti heard gunshots. The State indicated at pretrial hearings that it intends to introduce evidence at trial showing that Harris owns a red truck, as well as Harris's phone records, which place him in the area around the time of the shooting."
+    },
+    {
+      "type": "paragraph",
+      "content": "Before trial, the State sought an order confirming the admissibility of evidence related to prior shootings, which allegedly linked Harris to Jones's shooting, as intrinsic evidence. At pretrial hearings, counsel for both Harris and the State proffered the following account of the two prior shootings.  <span class=\"pagination-marker\">[**54]</span>  The first incident<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> (the “Almond Incident”) occurred in September 2019; the victim, Mario Almond, was robbed at gunpoint by three men while conducting a jewelry sale with Harris, and Almond alleged that Harris orchestrated the robbery. The second incident (the “Hank Aaron Incident”) occurred on March 7, 2019, and arose from a shooting incident involving damage to property at 942 Hank <span class=\"pagination-marker\">[***3]</span>  Aaron Drive, one block from where Jones was shot. Police recovered 13 .40-caliber cartridge casings at that location, which were forensically determined to have been fired by the same gun that was used 19 days later during the Jones shooting.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Among other pretrial filings, Harris filed a motion in limine to exclude evidence of the prior shootings as “inadmissible, prejudicial, inflammatory and not relevant.” He also filed a motion to suppress Ndetti's identification of Harris, arguing that the use of a single-photograph lineup was improper. The trial court held hearings on these motions, excluded evidence of two prior shootings, relying on OCGA § 24-4-403 (“Rule 403”), and suppressed Ndetti's identification. It is from these rulings that the State appeals."
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) 2. Before reaching the merits of the State's appeal, we must consider whether we have jurisdiction over this appeal in the absence of a written order from the trial court with respect to the rulings at <span class=\"pagination-marker\">[*274]</span>  issue in this case. See <em>Woods v. State</em>, 279 Ga. 28, 28 (1) (608 SE2d 631) (2005) (“It is incumbent upon the Court to question its jurisdiction in all cases in which jurisdiction may be in doubt.”). We conclude that this appeal is properly before us."
+    },
+    {
+      "type": "paragraph",
+      "content": "Substantively, three oral rulings made at separate hearings <span class=\"pagination-marker\">[***4]</span>  are at issue here. At the first hearing on May 4, 2022, the trial court orally granted Harris's motion in limine with respect to the Almond Incident, and the State orally requested that the trial court enter a written order memorializing its ruling. At that time, the trial court indicated that it would not prepare and enter its own order, instead informing counsel that it would file a written order only when a party prepared a draft order and submitted it for the court's consideration. At the second hearing on May 27, 2022, the trial court excluded the evidence of the Hank Aaron Incident. Before doing so, the trial court asked if counsel for either Harris or the State could, either collaboratively or independently, submit a proposed order reflecting its prior rulings. Neither the State nor Harris's counsel submitted a proposed order. At the final hearing on June 9, 2022, the trial court orally granted Harris's motion to suppress Ndetti's identification, but the State did not request a written order for the ruling on the motion to suppress at that hearing."
+    },
+    {
+      "type": "paragraph",
+      "content": "The next day, on Friday, June 10, 2022, the State filed a “notice of need for written orders on pretrial motions,” which specifically <span class=\"pagination-marker\">[***5]</span>  requested that the trial court enter written orders memorializing its oral rulings on Harris's motion in limine and motion to suppress “so that the State may exercise its statutory rights of appeal on those orders.” In a written order entered that afternoon, the trial court acknowledged the State's request for written orders, but rather than memorializing its oral rulings, it indicated that the State's filing failed to state the statutory basis for an appeal and noted that the State would be permitted to provide an amended filing specifying the statutory basis for appeal. With the case scheduled for trial only three days later, on Monday, June 13, 2022, the State did not respond to the trial court's order and instead filed its notice of appeal  <span class=\"pagination-marker\">[**55]</span>  after the close of business that day (the last business day before the jury was scheduled to be selected), appealing the trial court's rulings on the motion in limine excluding evidence of the prior shootings and the motion to suppress Ndetti's identification of Harris under OCGA § 5-7-1."
+    },
+    {
+      "type": "paragraph",
+      "content": "As an initial matter, we address whether the State waived its right to appeal by failing to comply with the trial court's requests for a proposed order. A trial court may <span class=\"pagination-marker\">[***6]</span>  — and routinely does — request, or even mandate, that a party submit a proposed order memorializing the court's oral rulings. But such requests will not absolve the trial <span class=\"pagination-marker\">[*275]</span>  court of its duty to issue written orders; the ultimate responsibility for entering a written order rests with the trial court. See <em>Titelman v. Stedman</em>, 277 Ga. 460, 462 (591 SE2d 774) (2003) (recognizing the trial court's “clear legal duty to enter a written order”); <em>State v. Morrell</em>, 281 Ga. 152, 153 (3) (635 SE2d 716) (2006) (same). Thus, the fact that the trial court in this case requested that the parties submit a proposed order and that the State failed to do so does not preclude the State's appeal.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "OCGA § 5-7-1 (a) authorizes the State to appeal a trial court's order, decision, or judgment under certain circumstances in a criminal case. Ordinarily, “an order is not appealable [under OCGA § 5-7-1 (a)] unless it is in writing.” <em>Morrell</em>, 281 Ga. at 152 (2). But an exception to this general rule arises where “the transcript affirmatively shows that the State requested the trial court to put the oral order in written form and that the trial court refused to do so.” Id. See also <em>State v. Lynch</em>, 286 Ga. 98, 99 (686 SE2d 244) (2009) (authorizing the State's appeal of an oral ruling suppressing evidence where, in response to the State's request for a written order, “the trial court stated that ‘the record speaks for itself’ and never entered <span class=\"pagination-marker\">[***7]</span>  a written order”). This exception is grounded in the State's statutory right to appeal and serves to prevent the State's statutory right to appeal from being frustrated. See OCGA § 5-7-1 (a). Absent such an exception, the State's ability to exercise its right to appeal in any given case would depend on whether the trial court timely carried out its duty to file a written order, effectively leaving the State's right to appeal to the trial court's discretion. But the statute allows the trial court no such role in approving the State's appeal; the <em>Morrell</em> exception simply recognizes as much. Here, the focus is on the application of that exception at the intersection of the absence of a requested written order and the expiration of the right under OCGA § 5-7-1 (a) (4), (5), when jeopardy attaches."
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, the transcripts of the pretrial hearings, reflecting the interaction between the trial court and the State, provide some context for the trial court's <em>failure</em> to enter written orders. But, standing alone, the transcripts are insufficient to establish the trial court's <em>refusal</em> to enter written orders. The record,<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup> however, affirmatively <span class=\"pagination-marker\">[*276]</span>  shows that the trial court refused the State's request for a written order. See <em>Lynch</em>, 286 Ga. at 99. Specifically, the <span class=\"pagination-marker\">[***8]</span>  trial court's June 10 order, which pointed to the State's failure to allege its statutory basis for appeal, affirmatively effectuates such refusal."
+    },
+    {
+      "type": "paragraph",
+      "content": "Although the trial court's June 10 order does not articulate an unequivocal <em>refusal</em> to enter written orders, the substance of the order combined with the circumstances under which the order was entered operated as a refusal. Critically, in addition to having requested a written order for the trial court's ruling on the admissibility of the Almond Incident at the hearing on May 4, the State filed its motion for written orders — which made explicit the State's intent to appeal all  <span class=\"pagination-marker\">[**56]</span>  three of the trial court's rulings and, therefore, its immediate need for written orders — on Friday, June 10, the last business day before the trial's scheduled start date of Monday, June 13. Given the impending trial, any further delay in entering written orders would have rendered nugatory the State's right of appeal. See OCGA § 5-7-1 (a) (5) (requiring that the order decision or judgment be “ruled on prior to the impaneling of a jury or the defendant being put in jeopardy”). But despite its awareness of the imminent trial, the trial court failed to fulfill its duty <span class=\"pagination-marker\">[***9]</span>  to memorialize in writing its oral rulings and instead, only hours before the close of business, entered a non-responsive order to the State's time-sensitive request. Here, we conclude that the denial of a motion for a written order, when entered on the Friday afternoon before a trial scheduled for the next Monday, operates as a refusal for purposes of the exception articulated in <em>Morrell</em>. As a result, under the particular facts presented here, the <em>Morrell</em> exception is satisfied."
+    },
+    {
+      "type": "paragraph",
+      "content": "Given our determination that an appeal is proper under <em>Morrell</em>, we must also determine whether it was timely. OCGA § 5-7-1 (a) (5) (A), which applies only to the trial court's rulings on motions to exclude evidence to be used by the State at trial, requires the State's notice of appeal to be “filed within two days of such order, decision, or judgment[.]” The trial court's May 4 and May 27 oral rulings on Harris's motion in limine occurred more than two days before the State's June 10 notice of appeal was filed. The trial court's refusal to issue written orders, however, occurred on June 10, the same day that the State filed its notice of appeal. This case thus highlights an open question about when the two-day filing period commences under OCGA § 5-7-1 (a) (5) (A) in the absence <span class=\"pagination-marker\">[***10]</span>  of a written order. In other words, does the clock start when the trial court issues the oral <span class=\"pagination-marker\">[*277]</span>  ruling or when the trial court refuses the State's request for a written order?"
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Morrell</em> generally mandates a written order, and it follows that the two-day filing period should commence at the time of the order's entry. But in the absence of a written order, as here, the two-day filing period must commence with the trial court's refusal of the State's request to provide a written order. In determining the precise time of the refusal, the appellate court must engage in a case-specific factual inquiry, asking at what point, as affirmatively shown by the record, the trial court refused the State's request. Here, the clock started on June 10 when the trial court declined to issue written orders in response to the State's request earlier that day. Therefore, the State's June 10 notice of appeal was timely."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>Case No. S23A0090</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "(2) 3. We now turn to the State's contention that the trial court abused its discretion by excluding evidence of two prior shootings. Because the record reflects that the trial court's analysis under Rule 403 employed an erroneous legal standard, we agree."
+    },
+    {
+      "type": "paragraph",
+      "content": "The State sought to admit evidence of the Almond and Hank <span class=\"pagination-marker\">[***11]</span>  Aaron Incidents as intrinsic evidence.<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup> The trial court relied on Rule 403 to grant Harris's motion in limine and exclude the evidence of both incidents. In excluding the evidence of the Almond Incident, the trial court explained that the State was “not charging [Harris] with a crime spree.” When asked to elaborate on the “legal basis” of its decision, the trial court stated that the evidence was “highly prejudicial” and “not probative.” When excluding the evidence of the Hank Aaron Incident, the trial court reasoned that the evidence “is more prejudicial than probative,” the evidence “goes to bad character,” and the facts are not “intrinsically intertwined to the charges that are related to this case.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "On appeal, the State maintains that the evidence from the two prior shootings is admissible as intrinsic evidence and that the trial court's exclusion of the evidence was an abuse of discretion. We review a trial court's ruling regarding the admissibility of evidence  <span class=\"pagination-marker\">[**57]</span>  as intrinsic for an abuse of discretion. See <em>Harris v. State</em>, 310 Ga. 372, 378 (2) (b) (850 SE2d 77) (2020). But a trial court does not have <span class=\"pagination-marker\">[*278]</span>  discretion to apply an incorrect legal standard. See <em>Welbon v. State</em>, 301 Ga. 106, 109-110 (2) (799 SE2d 793) (2017) (“Where the trial court has used a wrong standard in reaching its conclusion, a remand may be appropriate[.]” (citation and punctuation omitted)). <span class=\"pagination-marker\">[***12]</span>  See also <em>State v. Jackson</em>, 351 Ga. App. 675, 677 (832 SE2d 654) (2019) (“[W]hile the abuse-of-discretion standard presupposes a range of possible conclusions that can be reached by a trial court with regard to a particular evidentiary issue, it does not permit a clear error of judgment or the application of the wrong legal standard.” (citation and punctuation omitted))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Evidence may be admitted “as intrinsic evidence, rather than extrinsic evidence subject to Rule 404 (b), when it is (1) an uncharged offense arising from the same transaction or series of transactions as the charged offense; (2) necessary to complete the story of the crime; or (3) inextricably intertwined with the evidence regarding the charged offense.” (Citation and punctuation omitted.) <em>Harris</em>, 310 Ga. at 377 (2) (b). “Intrinsic evidence must also satisfy Rule 403.” <em>Williams v. State</em>, 302 Ga. 474, 485 (IV) (d) (807 SE2d 350) (2017). Whether the trial court concluded that the evidence at issue was intrinsic evidence or assumed as much and simply moved to analyze whether the evidence should be excluded under Rule 403 is unclear. But we need not review whether the trial court found the evidence to be intrinsic because the trial court erred by applying an incorrect standard in its application of Rule 403.<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Under Rule 403,"
+    },
+    {
+      "type": "paragraph",
+      "content": "[r]elevant evidence may be excluded if its probative value is substantially outweighed by the danger of unfair prejudice, confusion <span class=\"pagination-marker\">[***13]</span>  of the issues, or misleading the jury or by considerations of undue delay, waste of time, or needless presentation of cumulative evidence."
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court never recited the correct standard under Rule 403. Rather, in both rulings, the trial court applied a different, incorrect standard in determining whether to exclude the evidence under Rule 403. First, the trial court stated that the evidence of the <span class=\"pagination-marker\">[*279]</span>  Almond Incident was “highly prejudicial” and “not probative.” But it is not enough that the trial court considered the evidence to be “highly prejudicial”; rather, the court must assess the danger of <em>unfair</em> prejudice. See OCGA § 24-4-403; <em>Middlebrooks v. State</em>, 310 Ga. 748, 751 (2) (b) (854 SE2d 503) (2021) (“[A]ll inculpatory evidence is inherently prejudicial; it is only when <em>unfair</em> prejudice substantially outweighs probative value that the rule permits exclusion.” (citation and punctuation omitted; emphasis in original)). See also <em>Harris v. State</em>, 314 Ga. 238, 263 (3) (a) (875 SE2d 659) (2022) (“Rule 403's term ‘unfair prejudice’ speaks to the capacity of some concededly relevant evidence to lure the factfinder into declaring guilt on an improper basis rather than on proof specific to the offense charged.” (citation and punctuation omitted))."
+    },
+    {
+      "type": "paragraph",
+      "content": "Second, the trial court stated that the evidence of the Hank Aaron Incident is “more prejudicial than probative.” But the proper standard requires <span class=\"pagination-marker\">[***14]</span>  the trial court to determine whether the “probative value [of the evidence] is <em>substantially outweighed</em> by the danger of unfair prejudice[.]” (Emphasis supplied.) OCGA § 24-4-403. See, e.g., <em>Jackson</em>, 351 Ga. App. at 677 (remanding because the trial court erred in applying the wrong standard under Rule 403 when it determined that the probative value was not outweighed — rather than not substantially outweighed — by the danger of unfair prejudice)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Accordingly, the trial court erred when it incorrectly applied Rule 403 to exclude the evidence of the Almond Incident and the  <span class=\"pagination-marker\">[**58]</span>  Hank Aaron Incident. The trial court's order must therefore be vacated and the case remanded for the trial court to reconsider the motion under the correct legal standard and consistent with the directions of the Court. See <em>State v. Atkins</em>, 304 Ga. 413, 423 (2) (c) (819 SE2d 28) (2018)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>Case No. S23A0091</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "(3) 4. The State argues that the trial court abused its discretion by granting Harris's motion to suppress Ndetti's out-of-court identification of Harris because her identification was merely “confirmatory.” Because we cannot determine whether the trial court applied the correct legal standard, we vacate its grant of the motion to suppress and remand for proceedings consistent with this opinion."
+    },
+    {
+      "type": "paragraph",
+      "content": "Police investigators interviewed Ndetti with her husband, Sammie <span class=\"pagination-marker\">[***15]</span>  Glenn, on two occasions. The trial court was informed through the representations of defense counsel that during the first interview, the investigators were “impermissibly suggestive, aggressive, [and] <span class=\"pagination-marker\">[*280]</span>  intimidating” toward Ndetti and Glenn.<sup><sup><a href=\"#fn-10\" id=\"ref-10\">10</a></sup>9</sup> The second interview began with a different investigator, Detective Danny Agan, asking if Ndetti or Glenn was familiar with the shooting.<sup><sup><a href=\"#fn-11\" id=\"ref-11\">11</a></sup>10</sup> Ndetti said yes and explained that on the day Jones was shot, a person named “Low”<sup><sup><a href=\"#fn-12\" id=\"ref-12\">12</a></sup>11</sup> came to her apartment to give money to Glenn. Shortly after “Low” left the apartment, Ndetti heard gunshots. She described “Low” as a “big man” and explained that over the past year, he had periodically brought money to Glenn. Just before the interview concluded, Detective Agan showed Glenn and Ndetti a single photograph depicting Harris and asked “Who is that right there?” Ndetti responded “That's him” and Detective Agan confirmed that she was referring to the man she knew as “Low.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "In a pretrial motion, Harris moved to suppress the out-of-court identification. The trial court granted Harris's motion, finding that the “identification was highly suggestive” and that it “also meets the second prong.” The court further noted that <span class=\"pagination-marker\">[***16]</span>  it “got the impression that [the witnesses] were being steered toward a certain outcome,” it was sure the witnesses knew “more than one big guy,” “no other photos were presented,” and “the answers were fed, or suggested, to them by the detective.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "On appeal, the State argues that this ruling was erroneous because although the investigator only used one photograph, Ndetti was merely confirming a known acquaintance. We review a trial court's ruling on a motion to suppress identification evidence for an abuse of discretion. See <em>Newton v. State</em>, 308 Ga. 863, 866 (2) (843 SE2d 857) (2020)."
+    },
+    {
+      "type": "paragraph",
+      "content": "“Evidence of an out-of-court identification violates due process and is inadmissible at trial if the identification procedure is so impermissibly suggestive that it could result in a substantial likelihood of misidentification.” (Citation and punctuation omitted.) <em>Newton</em>, 308 Ga. at 865 (2). “An identification procedure is unduly suggestive when it leads the witness to the virtually inevitable identification of the defendant as the perpetrator, and is equivalent to the authorities telling the witness, ‘This is our suspect.’ ” (Citation and punctuation omitted.) Id."
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court did not abuse its discretion by concluding that Detective Agan's use of a single photograph was impermissibly <span class=\"pagination-marker\">[***17]</span>  <span class=\"pagination-marker\">[*281]</span>  suggestive. See <em>Leeks v. State</em>, 309 Ga. App. 724, 727 (2) (710 SE2d 908) (2011) (“[D]isplaying a single photograph to a witness is impermissibly suggestive.”). But even where the identification procedure was impermissibly suggestive, the identification may be excluded only if a substantial likelihood of misidentification exists. <em>Newton</em>, 308 Ga. at 867 (2)."
+    },
+    {
+      "type": "paragraph",
+      "content": "In determining whether there is a substantial likelihood of misidentification, a  <span class=\"pagination-marker\">[**59]</span>  trial court must look to the “totality of the circumstances[.]” <em>State v. Hattney</em>, 279 Ga. 88, 89 (610 SE2d 44) (2005). Several factors are considered when determining the likelihood of misidentification, including:"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) a witness' opportunity to view the accused at the time of the crime; (2) the witness' degree of attention; (3) the accuracy of the witness' prior description of accused; (4) the witness' level of certainty at the confrontation;[<sup><sup><a href=\"#fn-13\" id=\"ref-13\">13</a></sup>12</sup>] and (5) the length of time between the crime and the confrontation."
+    },
+    {
+      "type": "paragraph",
+      "content": "(Citation and punctuation omitted.) <em>Lewis v. State</em>, 314 Ga. 654, 670 (6) (b) (878 SE2d 467) (2022). “Moreover, whether the witness knows the defendant is a critical factor in determining the reliability of an identification.” (Citation and punctuation omitted.) Id."
+    },
+    {
+      "type": "paragraph",
+      "content": "If the witness was acquainted or otherwise personally familiar with the suspect before making an out-of-court identification, then there is not a substantial likelihood of misidentification regardless of an impermissibly suggestive procedure. See <em>Hattney</em>, 279 Ga. at 90 (“If the <span class=\"pagination-marker\">[***18]</span>  trial court determines that [the witness] had known [the suspects] for a sufficient period of time so that his out-of-court identification of them pursuant to the single photograph showups was reliable and not subject to a substantial risk of misidentification, then evidence <span class=\"pagination-marker\">[*282]</span>  of the out-of-court identification would be admissible.”). See, e.g., <em>Newton</em>, 308 Ga. at 867 (2) (concluding that the defendant failed to show a substantial likelihood of misidentification where the witness told investigators that he knew the defendant for two years prior to the shooting and that he saw him near the scene of the crime that night); <em>Pruitt v. State</em>, 270 Ga. 745, 751-752 (15) (514 SE2d 639) (1999) (concluding that there was no substantial likelihood of misidentification regardless of whether the photographic lineup was impermissibly suggestive because the witness testified that she recognized the defendant as a regular customer at her store and that she remembered seeing him at the store on the night of the murder). Rather, the use of photographs under such circumstances functionally serves the purpose of confirming the suspect's identity. See <em>Gibson v. State</em>, 283 Ga. 377, 378-379 (2) (659 SE2d 372) (2008) (“[S]howing [the witness] a single photograph of defendant merely confirmed her previous identification of him.”). See also <em>Walker v. State</em>, 295 Ga. 688, 693 (3) (763 SE2d 704) (2014) (concluding that <span class=\"pagination-marker\">[***19]</span>  presenting a single photograph to a witness to confirm the defendant's identity “created no substantial likelihood of misidentification” because the witness testified that she knew the defendant for 11 years, spent a lot of time with his family, and saw the defendant on the day of the shooting); <em>Lewis</em>, 314 Ga. at 670-671 (6) (b) (concluding that the investigator's use of a single photograph “did not create a substantial likelihood of misidentification” where the witness told the investigator that he knew the defendant, placed the defendant at the scene of the crime that night, provided a description of the defendant, and rejected three prior photos of other men); <em>Williams v. State</em>, 272 Ga. 828, 829 (2) (537 SE2d 39) (2000) (“Given [the witness's] testimony that she had seen appellant in the neighborhood on several prior occasions, knew him by his nickname, knew where his family lived, and had clearly seen his face during the commission of the crime, we find that the in-court identification was independent  <span class=\"pagination-marker\">[**60]</span>  of the pretrial photographic identification thereby indicating its reliability.”)."
+    },
+    {
+      "type": "paragraph",
+      "content": "But, here, it is not clear to what extent the trial court considered the “critical factor” of substantial likelihood of misidentification despite significant evidence of Ndetti's familiarity <span class=\"pagination-marker\">[***20]</span>  with Harris, including her statement that he periodically visited her home and left her apartment moments before the shooting. Indeed, the trial court simply mentioned that the “second prong” was met and that the trial court was “sure [the witnesses] know more than one big guy,” with no apparent consideration of Ndetti's familiarity with Harris. We decline to consider in the first instance whether Ndetti's familiarity required the trial court to determine, as a matter of law, that there was no substantial likelihood of misidentification. Rather, we vacate <span class=\"pagination-marker\">[*283]</span>  the trial court's grant of Harris's motion to suppress Ndetti's identification and remand for the trial court to reconsider the motion under the standards set forth above.<sup><sup><a href=\"#fn-14\" id=\"ref-14\">14</a></sup>13</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgments vacated and cases remanded with direction in Case Nos. S23A0090 and S23A0091. All <span class=\"pagination-marker\">[***21]</span>  the Justices concur.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>The background facts set forth in this opinion concerning the crime and the evidence that was excluded under OCGA § 24-4-403 were drawn from the affidavit supporting the warrant for Harris‘s arrest, a police report, and discussions between the trial court, defense counsel, and the prosecutor during the pretrial hearings. However, the facts concerning the identification were supported by a recording of the interview and a witness who was called at the hearing on the motion to suppress. The trial court did not issue written orders containing any findings of fact. Our recitation is solely for the purpose of establishing context, and nothing in this opinion should be understood as establishing or resolving any disputed fact. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>The video recordings were not tendered as exhibits to the motion to suppress or the motion in limine and are not part of the record before this Court. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>We use “first” and “second” to denote the order of the argument. Chronologically, the Almond Incident occurred five to six months after Jones was shot. Meanwhile, the Hank Aaron Incident appears to have taken place just under three weeks before Jones was shot. </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>The State represented at pretrial hearings that it expects the evidence at trial to show that Harris is linked to the shell casings recovered from the Hank Aaron Incident through an August 2018 shooting of Daniel Troutman (the “Troutman Incident”). The shell casings recovered from the Troutman Incident were a forensic match to both the casings recovered from the Hank Aaron Incident and the Jones shooting. Troutman initially identified Harris as the shooter, but he later testified under oath at an evidentiary hearing in another case that Harris was not the shooter. The Troutman Incident is not at issue on appeal because the trial court declined to make a ruling as to the admissibility of its evidence at the pretrial hearings. </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>Of course, where the trial court directs counsel to prepare a draft order and counsel fails to do so, the trial court is not without remedy, including the contempt power, to require its orders be fulfilled. </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup><em>Morrell</em> stated that the exception applies when the “<em>transcript</em> affirmatively shows” that the trial court refused the State's request for a written order. (Emphasis supplied.) 281 Ga. at 153 (2). Yet today we apply this exception where the <em>record</em> affirmatively shows that the trial court refused the State's request for a written order. We do not read the language in <em>Morrell</em> to limit the exception only to refusals shown in the transcript. Rather, refusals otherwise reflected in the record will suffice. </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup>The State also sought to admit this evidence pursuant to OCGA § 24-4-404 (b) (“Rule 404 (b)”), and the trial court denied its motion. The State does not challenge that ruling on appeal, and we do not address it. </p>"
+    },
+    {
+      "id": "fn-9",
+      "return_id": "ref-9",
+      "content": "<p><sup>8 </sup>We note that, as to the Hank Aaron Incident, the trial court commented that the evidence “basically is bad character evidence.” That conclusion, standing alone, is not grounds to deem intrinsic evidence inadmissible because, as this Court has explained, “intrinsic evidence remains admissible even if it incidentally places the defendant's character at issue.” (Citation and punctuation omitted.) <em>Harris</em>, 310 Ga. at 378 (2) (b). If, on remand, the trial court determines that this evidence is not admissible as intrinsic evidence, we note further that the trial court already considered and determined that the evidence was not admissible as extrinsic evidence under Rule 404 (b). </p>"
+    },
+    {
+      "id": "fn-10",
+      "return_id": "ref-10",
+      "content": "<p><sup>9 </sup>The audio recording of this first interview is not contained in the record. Instead, the interaction was only described by Harris's counsel during the pretrial hearings. </p>"
+    },
+    {
+      "id": "fn-11",
+      "return_id": "ref-11",
+      "content": "<p><sup>10 </sup>Unlike the first interview, the trial court heard testimony from Detective Agan about the second interview and an audio recording of the interview. </p>"
+    },
+    {
+      "id": "fn-12",
+      "return_id": "ref-12",
+      "content": "<p><sup>11 </sup>Ndetti referred to the shooter as “Low” and “Felipe,” Harris's reportedly recognized nicknames. </p>"
+    },
+    {
+      "id": "fn-13",
+      "return_id": "ref-13",
+      "content": "<p><sup>12 </sup>We note an apparent discrepancy between the factor concerning “the witness' level of certainty at the confrontation” and our holding in <em>Brodes v. State</em>, 279 Ga. 435 (614 SE2d 766) (2005). In <em>Brodes</em>, we instructed that trial courts should “refrain from informing jurors [that] they may consider a witness's level of certainty when instructing them on the factors that may be considered in deciding the reliability of that identification.” Id. at 442. While it seems incompatible that a trial judge should consider the witness's level of certainty when determining the likelihood of misidentification but the jury may not be instructed to consider the witness's level of certainty when determining the reliability of the identification, no one has asked us to reconsider our decision in <em>Brodes</em>, and the trial court's consideration of this factor is expressly sanctioned under United States Supreme Court precedent, see <em>Neil v. Biggers</em>, 409 U. S. 188, 199 (III) (93 SCt 375, 34 LE2d 401) (1972). See <em>Pearson v. State</em>, 311 Ga. 26, 29 (2) n.5 (855 SE2d 606) (2021) (noting that despite our holding in <em>Brodes</em>, “Georgia courts have continued, as we are obliged to do on matters of federal constitutional law, to follow the holding of the United States Supreme Court in <em>Neil</em>”). Additionally, because no one has asked us to consider this issue as a matter of due process under the Georgia Constitution, we decline to do so today. </p>"
+    },
+    {
+      "id": "fn-14",
+      "return_id": "ref-14",
+      "content": "<p><sup>13 </sup>After the trial court granted Harris's motion to suppress, it discussed and left open the possibility of an in-court identification by Ndetti or Glenn. We note that if, upon remand, the trial court again grants Harris's motion to suppress Ndetti's out-of-court identification, it cannot, despite its suggestion to the contrary, allow an in-court identification by Ndetti. See <em>Hattney</em>, 279 Ga. at 90. </p>"
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "case_id": "united-states-v-perez-quevedo-no2114021nonargumentcalendar",
+  "metadata": {
+    "title": "United States v. Perez-Quevedo",
+    "court": "United States Court of Appeals for the Eleventh Circuit",
+    "date": "December 30, 2022",
+    "docket": "No. 21-14021 Non-Argument Calendar",
+    "notice": "PLEASE REFER TO FEDERAL RULES OF APPELLATE PROCEDURE RULE 32.1 GOVERNING THE CITATION TO UNPUBLISHED OPINIONS.",
+    "judges": "Before ROSENBAUM, JILL PRYOR, and BRANCH, Circuit Judges.",
+    "opinion_by": "PER CURIAM",
+    "appellant_counsel": [
+      "LUIS ERNESTO PEREZ-QUEVEDO, Defendant - Appellant, a.k.a.: Acuerpado: Pedro Luis Amador Jr., Amador Law Firm, PA, TAMPA, FL."
+    ],
+    "appellee_counsel": [
+      "UNITED STATES OF AMERICA, Plaintiff - Appellee: Yvette Rhodes, U.S. Attorney Service - Middle District of Florida, U.S. Attorney, U.S. Attorney's Office, TAMPA, FL."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "Luis Perez-Quevedo appeals his 210-month sentence after pleading guilty without a plea agreement to two criminal counts<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> stemming from his role in an international cocaine-smuggling operation that utilized self-propelled semi-submersible (\"SPSS\") vessels to transport large quantities of cocaine from Colombia to Mexico—with the ultimate goal of getting the drugs into the United States. He argues that the district court erred during sentencing by (1) denying him a \"minor role\" adjustment and (2) failing to address the factors related to the \"minor role\" adjustment.<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> In other words, he argues that the district court's result <em>and</em> process were wrong. After review, we affirm his sentence."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>I. Background</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>A. Facts <span class=\"pagination-marker\">[*2]</span> </em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "From at least July 2015 through October 2017, Perez-Quevedo and other individuals participated in a sophisticated drug-trafficking operation that included building SPSS vessels in Colombia, loading those vessels with significant quantities of cocaine, and dispatching those vessels to Mexico to supply members of the Sinaloa Cartel. The ultimate goal was to distribute the cocaine in the United States."
+    },
+    {
+      "type": "paragraph",
+      "content": "This scheme involved multiple stages and it took roughly six weeks to build each SPSS vessel. First, the organization selected a construction site within the jungles of Colombia. Second, temporary housing was constructed for the workers. Third, a carpentry crew was brought in to complete the wood construction phase. Fourth, a crew of fiberglass fabricators were brought in for fiberglass construction. Fifth, mechanics were brought in to install the engines. Finally, the then-completed SPSS vessel would be moved to a different location for storage until it was time to load the vessel with cocaine and dispatch it to Mexico. As a general matter, workers were not permitted to leave the construction site until the SPSS vessel was completed, and cell phones were not allowed on site."
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo <span class=\"pagination-marker\">[*3]</span>  had a unique organizational role. After developing a relationship with two of the organization's bosses (Fernando Pineda-Jimenez and Rodrigo Pineda) by \"provid[ing] taxi services\" for them for \"about a year,\" Perez-Quevedo was offered a role in the drug-trafficking operation. His responsibilities ranged from \"[h]elping in the construction or building of the site and bedrooms\" to \"be[ing] in charge of [the] radio\" that communicated with boats bringing materials to the construction site to facilitating payment between a boss in the organization (Fernando Pineda-Jimenez) and the head of the fiberglass crew (Adrian Luna-Munoz). At one point, Perez-Quevedo stopped working on the construction of the SPSS vessels and began working for Pineda-Jimenez as a chauffeur as well as someone who would \"stay at the house and [] be responsible for the missus and for the children, to take them to school\" and \"just [] be on the alert to do whatever [Perez-Quevedo] was needed for.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "As it relates to this case, three SPSS vessels were built, loaded with cocaine, and launched.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> The first of these vessels was interdicted by the Coast Guard on July 18, 2015. On board the vessel were four crewmembers and approximately <span class=\"pagination-marker\">[*4]</span>  6,900 kilograms of cocaine.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup> The second vessel was interdicted by the Coast Guard on August 31, 2015. Similar to the first vessel, there were four crewmembers and approximately 6,845 kilograms of cocaine on board. The third vessel was interdicted by the Coast Guard on March 3, 2016. There were four crewmembers and approximately 5,824 kilograms of cocaine on board."
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo's involvement was considered to be the same with each vessel: \"Specifically, Perez-Quevedo was involved in the preparations for this smuggling trip by facilitating operations at the construction site.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>B. Procedural History</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "A federal grand jury returned a two-count indictment naming Perez-Quevedo along with five other individuals for their involvement in the drug-trafficking operation. In short, Count One was for <span class=\"pagination-marker\">[*5]</span>  conspiracy to possess with intent to distribute five kilograms or more of cocaine on a vessel subject to the jurisdiction of the United States and Count Two was for conspiracy to import five kilograms or more of cocaine into the United States."
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo pleaded guilty to both counts and he was adjudicated guilty. There was no plea agreement."
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court held a sentencing hearing to determine the appropriate sentence for Perez-Quevedo. At this hearing, Perez-Quevedo raised numerous arguments. As applicable to this appeal, Perez-Quevedo argued that the district court should apply a reduction in sentencing because he was a \"minor participant.\"<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> The district court, however, concluded that Perez-Quevedo did not qualify as a minor participant:"
+    },
+    {
+      "type": "paragraph",
+      "content": "There are indeed people that are superior to [Perez-Quevedo] in this conspiracy. But there are many, many people that are inferior, many people not listed on that piece of paper, such as the dozen or so or 20 poor saps that rode these boats . . . just pitiful, pitiful people who were way inferior to your client. Your client was involved in the construction of four vessels, massive semi-submersibles. He was trusted by the boss to look after the <span class=\"pagination-marker\">[*6]</span>  boss's family when the boss was traveling. He was a driver or the taxi cab driver in a taxi fleet of one for the underboss who happens to be the brother of the main boss."
+    },
+    {
+      "type": "paragraph",
+      "content": "So given his involvement, including operating the radio telephone or whatever it is, and none of the other workers of course had access to electronics as he testified, I decline to find based on <em>De Varon</em><sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup> that he qualifies as a . . . minor role participant."
+    },
+    {
+      "type": "paragraph",
+      "content": "In addition, the district court considered the fact that Perez-Quevedo was \"tasked with jobs that others [were not]\" and \"allowed at the dispatch site where others [were not]\" as additional evidence that he was a \"trusted individual.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "In light of the evidence, and in consultation with the United States Sentencing Guidelines, the district court sentenced Perez-Quevedo to 210 months' imprisonment and five years' supervised release.<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Importantly, the district court notified defense counsel that his \"well taken objections\" would be preserved and asked if there was \"anything else [he] would like to preserve on the record.\" Defense counsel responded, \"[n]one other than those made already.\""
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo timely appealed."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>II. Standard of Review</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We review <span class=\"pagination-marker\">[*7]</span>  the district court's denial of a role reduction for clear error. <em>United States v. Valois</em>, 915 F.3d 717, 730 n.8 (11th Cir. 2019); <em>United States v. De Varon</em>, 175 F.3d 930, 934 (11th Cir. 1999) (<em>en banc</em>). To be clearly erroneous, the district court's finding must leave us with a \"definite and firm conviction that a mistake has been committed.\" <em>United States v. Rothenberg</em>, 610 F.3d 621, 624 (11th Cir. 2010) (quotations omitted). \"The district court's choice between two permissible views of the evidence as to the defendant's role in the offense will rarely constitute clear error so long as the basis of the trial court's decision is supported by the record and does not involve a misapplication of a rule of law.\" <em>United States v. Cruickshank</em>, 837 F.3d 1182, 1192 (11th Cir. 2016) (quotations omitted & alterations adopted). \"The defendant bears the burden of establishing his minor role in the offense by a preponderance of the evidence.\" <em>Id.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "When a party fails to make a specific objection at sentencing and raises that objection for the first time on appeal, we will review only for plain error. <em>United States v. Ramirez-Flores</em>, 743 F.3d 816, 821 (11th Cir. 2014)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>III. Discussion</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo argues on appeal that he \"should be treated as a minor participant for his role\" in the drug-trafficking operation. We address (1) whether the district court erred in its determination that Perez-Quevedo was not a \"minor participant\" as well as (2) whether the district court erred in failing to address \"the factors related <span class=\"pagination-marker\">[*8]</span>  to the [minor participant] adjustment\" which Perez-Quevedo argues \"require[s] a reversal.\" We disagree with Perez-Quevedo on both arguments, and we affirm his sentence."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>A. Did the District Court Clearly Err in Determining that Perez-Quevedo was not a \"Minor Participant?\"</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The \"minor participant\" role reduction applies to a defendant who is \"substantially less culpable than the average participant in the criminal activity\" and \"less culpable than most other participants in the criminal activity, but whose role could not be described as minimal.\" U.S.S.G. § 3B1.2, cmt. (n.3(A), 5). In simple terms, the district court should weigh two considerations: (1) the defendant's role and (2) his role as compared to the roles of other participants. <em>De Varon</em>, 175 F.3d at 940. This analysis is \"fact-based\" and considers the \"totality of the circumstances.\" U.S.S.G. § 3B1.2, cmt. (n.3(C)); <em>see also </em><em>Cruickshank</em>, 837 F.3d at 1193-95. The Sentencing Commission has outlined several factors for district courts to use as guideposts when conducting this fact-intensive inquiry:<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "(i) the degree to which the defendant understood the scope and structure of the criminal activity;"
+    },
+    {
+      "type": "paragraph",
+      "content": "(ii) the degree to which the defendant participated in planning or organizing the criminal activity;"
+    },
+    {
+      "type": "paragraph",
+      "content": "(iii) the degree to which the defendant exercised decision-making <span class=\"pagination-marker\">[*9]</span>  authority or influenced the exercise of decision-making authority;"
+    },
+    {
+      "type": "paragraph",
+      "content": "(iv) the nature and extent of the defendant's participation in the commission of the criminal activity, including the acts the defendant performed and the responsibility and discretion the defendant had in performing those acts; [and]"
+    },
+    {
+      "type": "paragraph",
+      "content": "(v) the degree to which the defendant stood to benefit from the criminal activity."
+    },
+    {
+      "type": "paragraph",
+      "content": "U.S.S.G. § 3B1.2, cmt. (n.3(C)). \"The court must consider all of these factors to the extent applicable.\" <em>Valois</em>, 915 F.3d at 732."
+    },
+    {
+      "type": "paragraph",
+      "content": "To begin, it is clear from the record that the district court considered all the arguments, evidence, and additional information put before it, including the Presentence Investigation Report (\"PSI\"), the defendant's sentencing memorandum, the defendant's testimony at the sentencing hearing, and the testimony of a special agent for the Department of Homeland Security at the sentencing hearing. After a thorough inquiry, the district court determined that Perez-Quevedo did not qualify for the \"minor participant\" role reduction for myriad reasons. Some of these reasons included: (1) Perez-Quevedo's role in the construction of—by his own admission—four SPSS vessels, (2) his responsibility for radio communications while other <span class=\"pagination-marker\">[*10]</span>  individuals at the construction site were not allowed to have cellphones, (3) his role in facilitating payment for the fiberglass crew, (4) his connection with higher-ups in the organization and the trust that was placed in Perez-Quevedo to watch over one of the bosses' families, and (5) his presence at the dispatch site where others were not allowed. In addition, the district court considered Perez-Quevedo's testimony that he played a small role in the organization but found that it was not credible. While the district court did not provide a direct accounting of which evidence went to which factor, the record makes clear that the district court considered the evidence pertinent to each factor and was mindful of the Guidelines.<sup><sup><a href=\"#fn-10\" id=\"ref-10\">10</a></sup>9</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "All in all, the district court determined that Perez-Quevedo was not less culpable than the average participant. We do not have to infer this from the district court's other statements because it directly addressed Perez-Quevedo's place in the organizational hierarchy: \"There are indeed people that are superior to [Perez-Quevedo] . . . . But there are many, many people that are inferior, many people not listed on that piece of paper, such as the dozen <span class=\"pagination-marker\">[*11]</span>  or so or 20 poor saps that rode these boats . . . who were way inferior to [Perez-Quevedo].\" Further, the district court considered Perez-Quevedo to be a \"trusted individual\" who performed tasks that others—such as the crewmembers and members of the different construction teams—were not given."
+    },
+    {
+      "type": "paragraph",
+      "content": "After extensive review, we do not have a \"definite and firm conviction\" that the district court made a mistake. <em>Rothenberg</em>, 610 F.3d at 624. Rather, we conclude that the district court did not clearly err in determining the defendant's role. <em>See </em><em>Valois</em>, 915 F.3d at 732."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><em>B. Did the District Court Fail to Consider the Proper Factors when Determining Perez-Quevedo's Role</em>?"
+    },
+    {
+      "type": "paragraph",
+      "content": "Perez-Quevedo also argues that the district court \"failed [to address] the factors related to the adjustment requiring a reversal.\" This argument falls well short."
+    },
+    {
+      "type": "paragraph",
+      "content": "As an initial matter, this is a new argument. To be sure, Perez-Quevedo argued below that he should receive a role reduction. But, given the chance to raise additional objections in order to preserve \"anything else . . . on the record,\" Perez-Quevedo declined. Simply put, Perez-Quevedo preserved his argument that the district court erred in not granting him a role reduction, but he has never before argued that the district <span class=\"pagination-marker\">[*12]</span>  court erred by not considering the proper factors. <em>See </em><em>Ramirez-Flores</em>, 743 F.3d at 821 (\"The defendant . . . fails to preserve a legal issue for appeal if the factual predicates of an objection are included in the sentencing record, but were presented to the district court under a <em>different legal theory</em>. \" (quotations omitted)). As such, we must apply a different standard of review—plain error. <em>Id.; see also </em><em>United States v. Carpenter</em>, 803 F.3d 1224, 1237 (11th Cir. 2015) (\"[Appellant] did not make a specific and contemporaneous objection to either [special condition of his supervised release], and so our review is for plain error.\")."
+    },
+    {
+      "type": "paragraph",
+      "content": "To establish plain error, the appellant must show that: \"(1) an error occurred; (2) the error was plain; (3) it affected his substantial rights; and (4) it seriously affected the fairness of the judicial proceedings.\" <em>Ramirez-Flores</em>, 743 F.3d at 822."
+    },
+    {
+      "type": "paragraph",
+      "content": "As discussed above, it is clear from the record that the district court did in fact consider the proper factors as part of its role determination—especially considering that Perez-Quevedo's arguments, in his sentencing memorandum<sup><sup><a href=\"#fn-11\" id=\"ref-11\">11</a></sup>10</sup> and during the sentencing hearing, as well as the considerations put forth in the PSI—were all geared toward the role determination factors.<sup><sup><a href=\"#fn-12\" id=\"ref-12\">12</a></sup>11</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "As such, he cannot satisfy either of the first <span class=\"pagination-marker\">[*13]</span>  two elements—that an error occurred or that the error was plain—and his argument must fail. <em>See </em><em>Ramirez-Flores</em>, 743 F.3d at 822."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>IV. Conclusion</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The district court was thorough in its sentencing determination. After careful review, we find that it did not fail to consider the relevant role determination factors nor clearly err in ruling that Perez-Quevedo did not qualify for a \"minor participant\" role reduction. Thus, we affirm Perez-Quevedo's sentence."
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>AFFIRMED</strong>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>Perez-Quevedo pleaded guilty to (1) \"conspiracy to distribute and possess with intent to distribute five kilograms or more of cocaine while aboard a vessel subject to the jurisdiction of the United States,\" in violation of 46 U.S.C. §§ 70503(a)(1) and 70506(a) and (b), and 21 U.S.C. § 960(b)(1)(B)(ii); and (2) \"conspiracy to distribute and possess with intent to distribute five kilograms or more of cocaine knowing, intending, and having reasonable cause to believe that such substances would be unlawfully imported into the United States,\" in violation of 21 U.S.C. §§ 959, 963, and 960(b)(1)(B)(ii), and 18 U.S.C. § 3238. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>Perez-Quevedo includes only the first argument in his \"statement of the issues\" section of his brief. He goes on to argue, however, that \"the court failed in addressing the factors related to the adjustment requiring a reversal.\" Despite the lack of clarity, we consider both arguments. </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>The charges against Perez-Quevedo were for his involvement in the construction of three SPSS vessels. At his sentencing hearing, however, Perez-Quevedo admitted that he was involved in building four vessels:</p><p>[Counsel for defendant]: All of those people are involved in this conspiracy. And I'm talking only about this three-boat conspiracy, three semi-submersibles.</p><p>The Court: I thought it was four. Your client said four, didn't he?</p><p>[Counsel for defendant]: My client said four, yes, but he has only been charged with three.</p><p>The Court: All right.</p><p>[Counsel for defendant]: We don't dispute that he was involved in four. </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>Because this SPSS vessel sank while being towed after the interdiction, only 5,621 kilograms were recovered. </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>At the district court, Perez-Quevedo also argued that he was entitled to the \"minimal participant\" adjustment. On appeal, however, he only argues that he was a \"minor participant.\" The \"minimal participant\" and \"minor participant\" adjustments are distinct mitigators under the United States Sentencing Guidelines. <em>See</em> U.S.S.G. § 3B1.2. A defendant is a \"minor participant\" if he is \"substantially less culpable than the average participant\" in the criminal activity and \"less culpable than most other participants in the criminal activity, but whose role could not be described as minimal.\" <em>Id.</em> § 3B1.2, cmt. (n.3(A), 5). Minor participants are entitled to a two-level decrease in offense level. <em>Id.</em> § 3B1.2(b). The \"minimal participant\" adjustment is reserved for individuals who were less involved than \"minor participants.\" <em>See id.</em> § 3B1.2, cmt. (n.4). So, even if Perez-Quevedo had raised a \"minimal participant\" argument, it would necessarily fail because we conclude that the district court did not clearly err in denying Perez-Quevedo a \"minor participant\" adjustment. </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup><em>United States v. De Varon</em>, 175 F.3d 930 (11th Cir. 1999) (<em>en banc</em>). </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup>The total offense level was 37 and Perez-Quevedo fell into criminal history category I, which yielded an advisory guidelines range of 210 to 262 months' imprisonment with a supervised release range of two to five years. </p>"
+    },
+    {
+      "id": "fn-9",
+      "return_id": "ref-9",
+      "content": "<p><sup>8 </sup>As we explained in <em>Cruickshank</em>, these \"amendments to the Sentencing Guidelines . . . further clarify the factors for a court to consider for a minorrole adjustment, and still continue to embrace the approach we took in <em>De Varon</em>.\" 837 F.3d at 1193. And \"[n]ot surprisingly, this non-exhaustive list of factors includes many of the same factors we delineated in <em>De Varon</em>.\" <em>Id.</em> at 1194. </p>"
+    },
+    {
+      "id": "fn-10",
+      "return_id": "ref-10",
+      "content": "<p><sup>9 </sup>The district court stated: \"So given his involvement, including operating the radio telephone . . . and none of the other workers of course had access to electronics as he testified, I decline to find based on <em>De Varon</em> that he qualifies as a . . . minor role participant. So that objection is overruled.\" </p>"
+    },
+    {
+      "id": "fn-11",
+      "return_id": "ref-11",
+      "content": "<p><sup>10 </sup>As to Perez-Quevedo's sentencing memorandum, the district court stated: \"I have received a very good, well structured and well written sentencing memorandum. I appreciate that.\" </p>"
+    },
+    {
+      "id": "fn-12",
+      "return_id": "ref-12",
+      "content": "<p><sup>11 </sup>Near the end of the sentencing hearing, as part of its sentencing explanation, the district court stated: \"After considering the advisory guidelines <em>and all the factors</em>, I find that this guideline range is sufficient . . .\" </p>"
+    }
+  ]
+}

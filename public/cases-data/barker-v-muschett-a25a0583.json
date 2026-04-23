@@ -1,0 +1,125 @@
+{
+  "case_id": "barker-v-muschett-a25a0583",
+  "metadata": {
+    "title": "Barker v. Muschett",
+    "court": "Court of Appeals of Georgia",
+    "date": "June 2, 2025",
+    "docket": "A25A0583.",
+    "notice": null,
+    "judges": "[***1] MCFADDEN, Presiding Judge. Hodges and Pipkin, JJ., concur.",
+    "opinion_by": "MCFADDEN",
+    "appellant_counsel": [
+      "Brodhead Law, Ben C. Brodhead, Ashley B. Fournet, Orlando P. Ojeda, Jr., Michael A. Arndt, for appellant."
+    ],
+    "appellee_counsel": [
+      "Downey & Cleveland, Russell B. Davis, for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*585]</span>   <span class=\"pagination-marker\">[**797]</span>  McFadden, Presiding Judge."
+    },
+    {
+      "type": "paragraph",
+      "content": "Katherine Barker appeals the grant of summary judgment to Marlon Muschett in this action filed by Barker against Muschett so that she could pursue uninsured or underinsured motorist (sometimes referred to as “UM”) benefits under her own insurance policy. As detailed below, Barker had settled with Muschett for the limits of his liability insurance policy. She then brought this action in order to recover uninsured motorist benefits — in reliance on what she describes as a “common law” procedure."
+    },
+    {
+      "type": "paragraph",
+      "content": "At issue is whether that procedure has been superseded by statute. In 1992, the General Assembly enacted OCGA § 33-24-41.1. Under that statute, a limited release compliant with its requirements preserves a claim for UM benefits. Among those requirements is language releasing the settling carrier. OCGA § 33-24-41.1 (b) (1). The release executed by Barker contains no such language."
+    },
+    {
+      "type": "paragraph",
+      "content": "So the issue before us is whether the procedure Barker used has been superseded by statute. Under controlling Supreme Court authority, it has been. As detailed below, that Court has held that OCGA § 33-24-41.1 sets out a singular procedure. “ ‘[T]he limited release provisions of OCGA § 33-24-41.1 were enacted <span class=\"pagination-marker\">[***2]</span>  to provide a statutory framework for a claimant injured in an automobile accident’ ” to accomplish what Barker sought to accomplish here. <em>Carter v. Progressive Mountain Ins.</em>, 295 Ga. 487, 489 (761 SE2d 261) (2014) (quoting <em>Carter v. Progressive Mountain Ins.</em>, 320 Ga. App. 271 (739 SE2d 750) (2013)). It follows that Barker failed to preserve her claim for UM benefits and that we must affirm."
+    },
+    {
+      "type": "paragraph",
+      "content": "1. <em>Background</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "“We review the grant of summary judgment de novo.” <em>Holland v. Cotton States Mut. Ins. Co.</em>, 285 Ga. App. 365, 365 (646 SE2d 477) (2007). So viewed, the record  <span class=\"pagination-marker\">[**798]</span>  shows that Barker and Muschett were involved in an automobile collision. About two months later, Barker submitted a settlement offer to Muschett's insurer, seeking $25,000, the limits of Muschett's insurance policy, in exchange for a release.  <span class=\"pagination-marker\">[*586]</span> The insurer agreed to settle the case, and Barker signed the release and deposited the insurer's check for $25,000. The release provided that Barker released Muschett “from all claims for bodily injuries of [Barker] resulting from the collision … except to the extent that other insurance coverage is available that covers any claim or claims of [Barker] against [Muschett].” The release contains no language releasing the settling carrier."
+    },
+    {
+      "type": "paragraph",
+      "content": "Barker then filed this action against Muschett in order to pursue UM benefits from her own insurer. She served Muschett as well as her own insurer. See OCGA § 33-7-11 (d)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Muschett moved for summary judgment <span class=\"pagination-marker\">[***3]</span>  on the ground that the release Barker had signed did not comply with OCGA § 33-24-41.1 (b) (1). OCGA § 33-24-41.1 sets forth requirements for a limited release when a motor vehicle accident claim is covered by two or more insurance carriers. The release Barker signed did not comply with the statute, because it did not “[r]elease the settling carrier from all liability from any claims of the claimant … based on injuries to such claimant …” OCGA § 33-24-41.1 (b) (1)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Muschett argued below that because the release did not comply with the requirements of OCGA § 33-24-41.1, it did not preserve Barker's claim for UM benefits against her own insurer, and so that there was no basis upon which to maintain the lawsuit against him. The trial court granted Muschett's motion, and Barker filed this appeal."
+    },
+    {
+      "type": "paragraph",
+      "content": "2. <em>UM coverage and OCGA § 33-24-41.1</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Before the enactment of OCGA § 33-24-41.1, Georgia courts had “interpreted the Uninsured Motorist Act[, OCGA § 33-7-11 et seq.,] to require, as a condition precedent to a suit against the insurance carrier, that the insured first sue and recover a judgment against the uninsured motorist, whether known or unknown[.]” <em>Moss v. Cincinnati Ins. Co.</em>, 154 Ga. App. 165, 166 (268 SE2d 676) (1980) (citations omitted). In other words, “a UM carrier was entitled to insist on a judgment in excess of the liability policy limits before fixing coverage under its policy.” <em>Daniels v. Johnson</em>, 270 Ga. 289, 290 (2) (509 SE2d 41) (1998)."
+    },
+    {
+      "type": "paragraph",
+      "content": "The insurer <span class=\"pagination-marker\">[***4]</span>  could waive the condition precedent of insisting on a judgment. <em>United States Fidelity &amp; Guar. Co. v. Lockhart</em>, 124 Ga. App. 810, 811 (1) (186 SE2d 362) (1971). See generally<em>Chandler v. Liberty Mut. Fire Ins. Co.</em>, 333 Ga. App. 595, 598 (1) (773 SE2d 876) (2015) (physical precedent only). So a claimant could maintain an action against his or her own UM insurer after settling with the tortfeasor's insurer if the UM insurer agreed. <em>Daniels</em>, 270 Ga. at 290 (2)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*587]</span>  In 1992,"
+    },
+    {
+      "type": "paragraph",
+      "content": "[t]he legislature enacted OCGA § 33-24-41.1 … to make meaningful the ability of a claimant to settle with the tortfeasor's insurance carrier while preserving his UM claim. … OCGA § 33-24-41.1 (c) … expressly provid[es] that UM policies cannot require permission of the UM carrier before a claimant settles with a liability carrier."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Daniels</em>, 270 Ga. at 290 (2)."
+    },
+    {
+      "type": "paragraph",
+      "content": "“[T]he limited release provisions of OCGA § 33-24-41.1 were enacted to provide a statutory framework for a claimant injured in an automobile accident to settle with the tortfeasor's liability insurance carrier for the liability coverage limit while preserving the claimant's pending claim for underinsured motorist benefits against the claimant's own insurance carrier.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Carter</em>, 295 Ga. at 489 (quoting <em>Carter</em>, 320 Ga. App. at 273)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Accordingly, now “a plaintiff may pursue his UM claim if he settles for the limits of the policy as stated in the policy and executes a limited release in accordance with OCGA § 33-24-41.1. Both of these requirements [have] to be fulfilled before [a plaintiff can] pursue his UM claims.” <span class=\"pagination-marker\">[***5]</span>  <em>Thompson v. Allstate Ins. Co.</em>, 285 Ga. 24, 26 (1) (673 SE2d 227) (2009) (citation and punctuation omitted). “In Georgia, a claimant who settles with a tortfeasor must execute a limited release pursuant to OCGA § 33-24-41.1 in order to preserve the claimant's pending claim for  <span class=\"pagination-marker\">[**799]</span>  UM motorist benefits against his or her own insurance carrier.” <em>Newstrom v. Auto-Owners Ins. Co.</em>, 343 Ga. App. 576, 579 (3) (807 SE2d 501) (2017). See also <em>Chandler</em>, 333 Ga. App. at 598 (1) (physical precedent only) (“Generally, plaintiffs may pursue UM claims only after an insurer offers and the plaintiffs accept an amount equal to the limits stated in the liability policy and the plaintiffs execute a limited release in accordance with OCGA § 33-24-41.1.”)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Barker does not dispute that her release does not comply with OCGA § 33-24-41.1. But, citing <em>Claxton v. Adams</em>, 357 Ga. App. 762 (849 SE2d 494) (2020), she argues that compliance with OCGA § 33-24-41.1 is not mandatory and that her release should be interpreted under common law principles of contract construction. She argues that under the plain language of the release, Barker's claim against Muschett was not barred to the extent that Barker had UM coverage available to cover her claims. We disagree."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*588]</span>  In <em>Claxton</em>, we affirmed a trial court's refusal to enforce a purported settlement agreement. 357 Ga. App. at 762. In that case, the plaintiff sent to the defendant's insurer a demand proposing terms to settle the case. Id. at 763. The insurer responded and provided a <span class=\"pagination-marker\">[***6]</span>  proposed release that included terms which, according to the insurer, complied with OCGA § 33-24-41.1. Id. at 764. The plaintiff notified the insurer that he was rejecting what he characterized as a counteroffer. Id. at 763."
+    },
+    {
+      "type": "paragraph",
+      "content": "We agreed with the plaintiff that the insurer's response was a counteroffer, because it failed to satisfy the requirements of the plaintiff's offer. <em>Claxton</em>, 357 Ga. App. at 769 (4). We rejected the defendant's contention that OCGA § 33-24-41.1 required her to include in the proposed release certain language to which the plaintiff objected. Id. We wrote, “As [plaintiff] points out in his brief, use of a release under OCGA § 33-24-41.1 is optional, and his offer letter never indicated that the release should be or could be issued pursuant to OCGA § 33-24-41.1.” Id. (punctuation omitted). But we did not address the effect of using a release that did not comply with OCGA § 33-24-41.1, including whether such a release would preserve a claim for UM benefits, because that was not an issue in the case."
+    },
+    {
+      "type": "paragraph",
+      "content": "On the other hand, as detailed above, our Supreme Court has held that to preserve a UM claim, a plaintiff must both settle for the limits of the tortfeasor's insurance policy and “execute[ ] a limited release in accordance with OCGA § 33-24-41.1.” <em>Thompson</em>, 285 Ga. at 26 (1) (citation and punctuation omitted). (1) Barker's release did not comply with OCGA § 33-24-41.1, so <span class=\"pagination-marker\">[***7]</span>  Barker did not preserve her claim for UM benefits."
+    },
+    {
+      "type": "paragraph",
+      "content": "According to Barker, the purpose of filing this action against Muschett was to pursue UM benefits. But she did not preserve a claim for UM benefits when she settled with Muschett. And she has failed to point to evidence of any other available insurance coverage that was preserved by the language of the release. See generally<em>Cowart v. Widener</em>, 287 Ga. 622, 623-624 (1) (a) (697 SE2d 779) (2010) (when a defendant moving for summary judgment discharges his burden by negating an essential element of or establishing an absence of evidence to support the plaintiff's claim, the plaintiff must point to specific evidence that creates a triable issue). So we conclude that the trial court did not err in granting Muschett's motion for summary judgment. <em>Arnold v. Neal</em>, 320 Ga. App. 289, 295 (2) (738 SE2d 707) (2013) (physical precedent only)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment affirmed. Hodges and Pipkin, JJ., concur</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*589]</span>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": []
+}

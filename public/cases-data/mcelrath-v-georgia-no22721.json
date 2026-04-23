@@ -1,0 +1,215 @@
+{
+  "case_id": "mcelrath-v-georgia-no22721",
+  "metadata": {
+    "title": "McElrath v. Georgia",
+    "court": "Supreme Court of the United States",
+    "date": "November 28, 2023, Argued; February 21, 2024",
+    "docket": "No. 22-721.",
+    "notice": "The Lexis pagination of this document is subject to change pending release of the final published version.",
+    "judges": "Jackson, J., delivered the opinion for a unanimous Court. Alito, J., filed a concurring opinion.",
+    "opinion_by": "JACKSON",
+    "appellant_counsel": [
+      "Richard A. Simpson argued the cause for petitioner."
+    ],
+    "appellee_counsel": [
+      "Stephen J. Petrany argued the cause for respondent."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*89]</span>  <span class=\"pagination-marker\">[**656]</span>  <span class=\"pagination-marker\">[***423]</span>    Justice Jackson delivered the opinion of the Court."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under Georgia law, a jury’s verdict in a criminal case can be set aside if it is “repugnant”—meaning that it involves “affirmative findings by the jury that are not legally and logically possible of existing simultaneously.”  <span class=\"pagination-marker\">[***424]</span>  308 Ga. 104, 111, 839 S. E. 2d 573, 579 (2020). In this case, a jury found that petitioner Damian McElrath was “not guilty by reason of insanity” with respect to a malice-murder count, but was “guilty but mentally ill” regarding two other counts—felony murder and aggravated assault—all of which pertained to the same underlying homicide. Invoking the repugnancy doctrine, Georgia courts nullified both the “not guilty” and “guilty” verdicts, and authorized McElrath’s retrial."
+    },
+    {
+      "type": "paragraph",
+      "content": "McElrath now maintains that the Fifth Amendment’s Double Jeopardy Clause prevents the State from retrying him for the crime that had resulted in the “not guilty by reason of insanity” finding. Under the circumstances presented here, we agree. <span class=\"pagination-marker\">[****5]</span>  The jury’s verdict constituted an acquittal  <span class=\"pagination-marker\">[*90]</span>  for double jeopardy purposes, and an acquittal is an acquittal notwithstanding its apparent inconsistency with other verdicts that the jury may have rendered."
+    },
+    {
+      "type": "paragraph",
+      "content": "I"
+    },
+    {
+      "type": "paragraph",
+      "content": "A"
+    },
+    {
+      "type": "paragraph",
+      "content": "This case begins with tragedy. In 2012, petitioner Damian McElrath, then 18 years old, killed his mother Diane. Diane, a single parent who had adopted McElrath when he was two years old, struggled for years with caring for him. At a young age, McElrath was diagnosed with bipolar disorder and attention deficit hyperactivity disorder. He responded poorly to psychiatric treatment and sometimes refused to take his prescribed medication. He had trouble in school, including suspensions and low grades, and experienced several run-ins with law enforcement. These issues, among others, led to quarrels between McElrath and his mother."
+    },
+    {
+      "type": "paragraph",
+      "content": "A few years before Diane’s murder, McElrath’s mental health began to deteriorate substantially, eventually manifesting in his belief that Diane was poisoning his food and drink with ammonia and pesticides. At some point, McElrath began to exhibit other delusions, such as a belief that he was an FBI agent who regularly traveled to Russia and had killed multiple people. <span class=\"pagination-marker\">[****6]</span>  These delusions intensified to the point that, just a few weeks before the events giving rise to this case, McElrath was committed to a mental-health facility, where he was diagnosed with schizophrenia. After two weeks of hospitalization, clinical staff believed that McElrath was no longer a threat to himself or others and that there was no evidence of further delusions. Thus, McElrath was discharged."
+    },
+    {
+      "type": "paragraph",
+      "content": "One week later, McElrath stabbed Diane to death. Immediately after the stabbing, McElrath composed a note in which he explained that he had killed Diane because she had been poisoning him and that she had in fact confessed to  <span class=\"pagination-marker\">[*91]</span>  doing so. McElrath then called 911; he told the dispatch officer that he had killed his mother and asked if his actions were wrong. After law enforcement arrived at the scene, McElrath was taken to a police station for interrogation, where he told the investigator, “I killed my Mom because she poisoned me.” 308 Ga., at 105, 839 S. E. 2d, at 575 (internal quotation marks omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/> <span class=\"pagination-marker\">[**657]</span>  B"
+    },
+    {
+      "type": "paragraph",
+      "content": "Georgia charged McElrath with three crimes stemming from Diane’s death: malice murder, felony murder, and aggravated assault. At trial, McElrath did not dispute that he killed Diane but asserted an insanity defense."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[***425]</span>  Under Georgia <span class=\"pagination-marker\">[****7]</span>  law, a jury may find a criminal defendant “not guilty by reason of insanity” if, at the time of the crime, he “did not have mental capacity to distinguish between right and wrong” or he committed the crime “because of a delusional compulsion as to such act which overmastered his will to resist committing the crime.” Ga. Code Ann. §§16-3-2, 16-3-3, 17-7-131(c)(1) (2019). Such a verdict results in the defendant’s commitment to a state mental-health facility until a court determines that release is appropriate. §17-7-131(d). Even if a defendant fails to prove an insanity defense, a Georgia jury may still render a verdict of “guilty but mentally ill,” under which the State Department of Corrections may, at its discretion, refer a defendant for temporary mental-health treatment. §§17-7-131(c)(2), (g)."
+    },
+    {
+      "type": "paragraph",
+      "content": "The jury returned a split verdict against McElrath. It found him not guilty by reason of insanity on the malice-murder charge and guilty but mentally ill on the felony-murder and aggravated-assault charges. The trial court accepted the jury’s verdict, and eventually sentenced McElrath to life imprisonment based on the felony-murder conviction.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*92]</span>  McElrath appealed. He argued that the felony-murder conviction should be vacated because the guilty-but-mentally-ill verdict <span class=\"pagination-marker\">[****8]</span>  for that crime was “repugnant” to the jury’s “not guilty by reason of insanity” verdict for malice murder. See 308 Ga., at 112, 839 S. E. 2d, at 579 (explaining that, under Georgia’s so-called “repugnancy” doctrine, a state court may set aside a verdict as repugnant when there are “affirmative findings by the jury that are not legally and logically possible of existing simultaneously”)."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Supreme Court of Georgia agreed with McElrath that the verdicts were repugnant under Georgia law. <sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> As the court explained, “the not guilty by reason of insanity verdict on malice murder and the guilty but mentally ill verdict on felony murder based on aggravated assault required affirmative findings of different mental states that could not exist at the same time during the commission of those crimes as they were indicted, proved, and charged to the jury.” <em>Ibid.</em>.There was no way to reconcile those verdicts because, as the court noted, the jury could not conclude “that the crimes occurred at different times or through distinct acts.” Ibid., 308 Ga. 104, n. 15, 839 S. E. 2d, at 579, n. 15. But instead of vacating only the felony-murder conviction, as McElrath had requested, the State Supreme Court vacated both the malice-murder and felony-murder verdicts. Id., 308 Ga. at 112, 839 S. E. 2d, at 580.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*93]</span>  <span class=\"pagination-marker\">[**658]</span>   On remand, McElrath argued that <span class=\"pagination-marker\">[****9]</span>   <span class=\"pagination-marker\">[***426]</span>  the Double Jeopardy Clause of the Fifth Amendment prohibited Georgia from retrying him for malice murder in light of the jury’s prior “not guilty by reason of insanity” verdict on that charge. The trial court rejected this argument, and McElrath again appealed."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Supreme Court of Georgia affirmed. 315 Ga. 126, 880 S. E. 2d 518 (2022). The court recognized that, “[u]nder the general principles of double jeopardy,” the verdict of not guilty by reason of insanity “would appear to be an acquittal that precludes retrial, as not guilty verdicts are generally inviolate.” Id., 315 Ga. at 130, 880 S. E. 2d, at 521. But the court concluded that the acquittal at issue in this case “los[t] considerable steam” when considered alongside the verdict of guilty but mentally ill, and because the verdicts were repugnant, “both [were] rendered valueless.” <em>Ibid.</em> In the court’s view, repugnant verdicts were no different for double jeopardy purposes from “a situation in which a mistrial is declared after a jury is unable to reach a verdict.” Ibid., 315 Ga. 126, 880 S. E. 2d, at 522."
+    },
+    {
+      "type": "paragraph",
+      "content": "Justice Pinson concurred, noting that he could not “quite shake the doubt” that the court’s ruling was inconsistent “with the quite-absolute-sounding bar against retrying a defendant who has secured an acquittal verdict.” Id., 315 Ga. at 132, 880 S. E. 2d, at 523. He joined the majority, however, because “[t]his lingering doubt <span class=\"pagination-marker\">[****10]</span>  [was] not enough to justify dissenting from an otherwise unanimous Court.” Id., 315 Ga. at 133, 880 S. E. 2d, at 523."
+    },
+    {
+      "type": "paragraph",
+      "content": "We granted certiorari. <em>600 U. S. ___, 143 S. Ct. 2688, 216 L. Ed. 2d 1255 (2023)</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "II"
+    },
+    {
+      "type": "paragraph",
+      "content": "The Double Jeopardy Clause provides that “[n]o person shall . . . be subject for the same offence to be twice put in jeopardy of life or limb.” U. S. Const., Amdt. 5. The “controlling constitutional principle” of the Clause “focuses on prohibitions against multiple trials.” United States v. Martin  <span class=\"pagination-marker\">[*94]</span>  Linen Supply Co., 430 U. S. 564, 569, 97 S. Ct. 1349, 51 L. Ed. 2d 642 (1977) (internal quotation marks omitted). “[I]t has long been settled under the Fifth Amendment that a verdict of acquittal is final, ending a defendant’s jeopardy, and . . . is a bar to a subsequent prosecution for the same offence.” Green v. United States, 355 U. S. 184, 188, 78 S. Ct. 221, 2 L. Ed. 2d 199, 77 Ohio Law Abs. 202 (1957) (internal quotation marks omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "What, then, is an acquittal? “[O]ur cases have defined an acquittal to encompass any ruling that the prosecution’s proof is insufficient to establish criminal liability for an offense.” Evans v. Michigan, 568 U. S. 313, 318, 133 S. Ct. 1069, 185 L. Ed. 2d 124 (2013). “[L]abels do not control our analysis in this context; rather, the substance of [the ruling] does.” Id., at 322, 133 S. Ct. 1069, 185 L. Ed. 2d 124. In particular, we look to whether the ruling’s substance “relate[s] to the ultimate question of guilt or innocence.” United States v. Scott, 437 U. S. 82, 98, n. 11, 98 S. Ct. 2187, 57 L. Ed. 2d 65 (1978) (internal quotation marks omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Once rendered, a jury’s verdict of acquittal is inviolate. We have described  <span class=\"pagination-marker\">[***427]</span>  this principle—“that ‘[a] verdict of acquittal . . . could not be reviewed, on error or otherwise’”—as <span class=\"pagination-marker\">[****11]</span>  “[p]erhaps the most fundamental rule in the history of double jeopardy jurisprudence.” Martin Linen, 430 U. S., at 571, 97 S. Ct. 1349, 51 L. Ed. 2d 642. This bright-line rule exists to preserve the jury’s  <span class=\"pagination-marker\">[**659]</span>  “overriding responsibility . . . to stand between the accused and a potentially arbitrary or abusive Government that is in command of the criminal sanction.” Id., at 572, 97 S. Ct. 1349, 51 L. Ed. 2d 642."
+    },
+    {
+      "type": "paragraph",
+      "content": "We have long recognized that, while an acquittal might reflect a jury’s determination that the defendant is innocent of the crime charged, such a verdict might also be “the result of compromise, compassion, lenity, or misunderstanding of the governing law.” Bravo-Fernandez v. United States, 580 U. S. 5, 10, 137 S. Ct. 352, 196 L. Ed. 2d 242 (2016); see also United States v. Powell, 469 U. S. 57, 65, 105 S. Ct. 471, 83 L. Ed. 2d 461 (1984). Whatever the basis, the Double Jeopardy Clause prohibits second-guessing the reason for a jury’s acquittal. As a result, “the jury holds an unreviewable power to return a verdict of not guilty even for impermissible reasons.” Smith v. United States, 599 U. S. 236, 253, 143 S. Ct. 1594, 216 L. Ed. 2d 238  <span class=\"pagination-marker\">[*95]</span>  (2023) (internal quotation marks and alterations omitted)."
+    },
+    {
+      "type": "paragraph",
+      "content": "For double jeopardy purposes, a jury’s determination that a defendant is not guilty by reason of insanity is a conclusion that “criminal culpability had not been established,” just as much as any other form of acquittal. Burks v. United States, 437 U. S. 1, 10, 98 S. Ct. 2141, 57 L. Ed. 2d 1 (1978). Such a verdict reflects “that the Government ha[s] failed to come forward with sufficient proof of [a defendant’s] capacity to be responsible for criminal <span class=\"pagination-marker\">[****12]</span>  acts.” <em>Ibid.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "III"
+    },
+    {
+      "type": "paragraph",
+      "content": "Georgia law specifically provides that a defendant who establishes an insanity defense “shall not be found guilty of [the] crime.” Ga. Code Ann. §§16-3-2, 16-3-3. Here, after being instructed on Georgia’s insanity defense, see App. 89a-92a, the jury concluded that McElrath was not guilty by reason of insanity with respect to the malice-murder charge. That jury determination was unquestionably a “ruling that the prosecution’s proof is insufficient to establish criminal liability for an offense.” Evans, 568 U. S., at 318, 133 S. Ct. 1069, 185 L. Ed. 2d 124; see also Burks, 437 U. S., at 10, 98 S. Ct. 2141, 57 L. Ed. 2d 1."
+    },
+    {
+      "type": "paragraph",
+      "content": "This conclusion is consistent with Georgia’s concession that if the “not guilty” verdict were considered in isolation—that is, if the jury had reached the same conclusion under the same circumstances on a single count—it would have constituted a valid verdict of acquittal under state law. See Tr. of Oral Arg. 31-32. As we have long recognized, jeopardy clearly terminates under these circumstances. See United States v. Ball, 163 U. S. 662, 671, 16 S. Ct. 1192, 41 L. Ed. 300 (1896); see also 6 W. LaFave, J. Israel, N. King, & O. Kerr, Criminal Procedure §25.3(b), p. 821 (4th ed. 2015) (describing this principle as “the cornerstone of double jeopardy jurisprudence”)."
+    },
+    {
+      "type": "paragraph",
+      "content": "In resisting this straightforward conclusion, the State reiterates the Georgia Supreme Court’s holding that, because the “not guilty by reason of insanity” verdict was repugnant  <span class=\"pagination-marker\">[***428]</span>  to <span class=\"pagination-marker\">[****13]</span>  the jury’s other verdicts, all the verdicts the jury rendered  <span class=\"pagination-marker\">[*96]</span>  in McElrath’s case were “a nullity and should not have been accepted by the trial court.” 315 Ga., at 127, 880 S. E. 2d, at 520. Georgia thus maintains that, because no verdict under state law issued, no acquittal took place."
+    },
+    {
+      "type": "paragraph",
+      "content": "We cannot agree. To start, it is well established that whether an acquittal has occurred for purposes of the Double Jeopardy Clause is a question of federal, not state, law. Again, an acquittal occurs when there has been a ruling “relat[ing] to the ultimate question of guilt or innocence.” Scott, 437 U. S., at 98, n. 11, 98 S. Ct. 2187, 57 L. Ed. 2d 65 (internal quotation marks omitted).  <span class=\"pagination-marker\">[**660]</span>  And “labels”—including those provided by state law—“do not control our analysis in this context.” Evans, 568 U. S., at 322, 133 S. Ct. 1069, 185 L. Ed. 2d 124. Thus, it is not dispositive whether a factfinder “incanted the word ‘acquit’”; instead, an acquittal has occurred if the factfinder “acted on its view that the prosecution had failed to prove its case.” Id., at 325, 133 S. Ct. 1069, 185 L. Ed. 2d 124. Because of this focus on substance over labels, a State’s “characterization, as a matter of double jeopardy law, of [a ruling] is not binding on us.” Smalis v. Pennsylvania, 476 U. S. 140, 144, n. 5, 106 S. Ct. 1745, 90 L. Ed. 2d 116 (1986); see also Smith v. Massachusetts, 543 U. S. 462, 468-469, 125 S. Ct. 1129, 160 L. Ed. 2d 914 (2005)."
+    },
+    {
+      "type": "paragraph",
+      "content": "To be sure, “[t]he States possess primary authority for defining and enforcing the criminal law,” Engle v. Isaac, 456 U. S. 107, 128, 102 S. Ct. 1558, 71 L. Ed. 2d 783 (1982)—a power that permits States “to regulate procedures under which [their] laws are <span class=\"pagination-marker\">[****14]</span>  carried out,” Patterson v. New York, 432 U. S. 197, 201, 97 S. Ct. 2319, 53 L. Ed. 2d 281 (1977). But the ultimate question is whether the Double Jeopardy Clause recognizes an event as an acquittal. In making that determination, we ask whether—given the operation of state law—there has been “any ruling that the prosecution’s proof is insufficient to establish criminal liability for an offense.” Evans, 568 U. S., at 318, 133 S. Ct. 1069, 185 L. Ed. 2d 124. Here, for the reasons already discussed, the jury’s verdict of not guilty by reason of insanity constituted such a determination.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*97]</span>  That McElrath’s “not guilty by reason of insanity” verdict was accompanied by other verdicts that appeared to rest on inconsistent findings is of no moment. As we have explained, the Double Jeopardy Clause prohibits second-guessing an acquittal for any reason. See Martin Linen, 430 U. S., at 571, 97 S. Ct. 1349, 51 L. Ed. 2d 642. An acquittal is an acquittal, even “when a jury returns inconsistent verdicts, convicting on one count and acquitting on another count, where both counts turn on the very same issue of ultimate fact.” Bravo-Fernandez, 580 U. S., at 8, 137 S. Ct. 352, 196 L. Ed. 2d 242. As far as the Fifth Amendment is concerned, “[i]nconsistency in a verdict is not a sufficient reason for setting it aside.” Harris  <span class=\"pagination-marker\">[***429]</span>  v. Rivera, 454 U. S. 339, 345, 102 S. Ct. 460, 70 L. Ed. 2d 530 (1981) (<em>per curiam</em>)."
+    },
+    {
+      "type": "paragraph",
+      "content": "Georgia contends that this bar to second-guessing an acquittal applies only to <em>general</em> verdicts of acquittal, because in evaluating a general verdict, there is no way to ascertain the true basis <span class=\"pagination-marker\">[****15]</span>  of the jury’s decision. Here, by contrast, the jury based its verdicts on specific “affirmative findings of different mental states that could not exist at the same time.” 308 Ga., at 112, 839 S. E. 2d, at 579. Georgia maintains that, under the State’s repugnancy doctrine, such “special findings” allow for an informed review (and potential nullification) of inconsistent jury verdicts, including a verdict of acquittal. Brief for Respondent 39."
+    },
+    {
+      "type": "paragraph",
+      "content": "Georgia is mistaken. Once there has been an acquittal, our cases prohibit <em>any</em> speculation about the reasons for a jury’s verdict—even when there are specific jury findings that provide a factual basis for such speculation—“because it is impossible for a court to be certain about the ground for the verdict without improperly delving into the jurors’ deliberations.” Smith, 599 U. S., at 252-253, 143 S. Ct. 1594, 216 L. Ed. 2d 238.  <span class=\"pagination-marker\">[**661]</span>  We simply cannot know why the jury in McElrath’s case acted as it did, and the Double Jeopardy Clause forbids us to guess. “To  <span class=\"pagination-marker\">[*98]</span>  conclude otherwise would impermissibly authorize judges to usurp the jury right.” Id., at 252, 143 S. Ct. 1594, 216 L. Ed. 2d 238."
+    },
+    {
+      "type": "paragraph",
+      "content": "***"
+    },
+    {
+      "type": "paragraph",
+      "content": "The jury’s verdict of not guilty by reason of insanity on the malice-murder charge was an acquittal for purposes of the Double Jeopardy Clause. The Clause therefore bars retrial of McElrath on that charge.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> The judgment of the Supreme Court of Georgia is <span class=\"pagination-marker\">[****16]</span>  reversed, and the case is remanded for further proceedings not inconsistent with this opinion."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>It is so ordered</em>."
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur by:</strong> ALITO"
+    },
+    {
+      "type": "paragraph",
+      "content": "<strong>Concur</strong>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Justice Alito, concurring."
+    },
+    {
+      "type": "paragraph",
+      "content": "I join the opinion of the Court but write to clarify my understanding of what we have held. In this case, there was indisputably an acquittal on the malice-murder charge. The jury returned a not-guilty verdict on that count, the trial judge entered a judgment of acquittal on that count, and petitioner appealed that part of the judgment. Because the Constitution does not permit appellate review of an acquittal, the State Supreme Court’s decision must be reversed. As I understand it, our holding extends no further."
+    },
+    {
+      "type": "paragraph",
+      "content": "As the Court recognizes, the situation here is different from one in which a trial judge refuses to accept inconsistent verdicts and thus sends the jury back to deliberate further. Some States follow this practice, and our decision does not address it. We have held that federal law does not prevent the acceptance of inconsistent  <span class=\"pagination-marker\">[***430]</span>  verdicts, United States v. Powell, 469 U. S. 57, 68-69, 105 S. Ct. 471, 83 L. Ed. 2d 461 (1984); Dunn v. United States, 284 U. S. 390, 393-394, 52 S. Ct. 189, 76 L. Ed. 356 (1932), but we have never held that the Constitution mandates that practice—which is not necessarily favorable to either the prosecution or the defense. Nothing  <span class=\"pagination-marker\">[*99]</span>  that we say today should be understood to <span class=\"pagination-marker\">[****17]</span>  express any view about whether a not-guilty verdict that is inconsistent with a verdict on another count and is not accepted by the trial judge constitutes an “acquittal” for double jeopardy purposes."
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>The aggravated-assault conviction merged into the felony-murder conviction because, under Georgia law, it served as a predicate for felony murder. See Culpepper v. State, 289 Ga. 736, 737, 715 S. E. 2d 155, 157 (2011). </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>McElrath appealed directly to the Supreme Court of Georgia, which has appellate jurisdiction over all murder cases. See Ga. Const., Art. VI, §6, ¶3; see also Neal v. State, 290 Ga. 563, 567, 722 S. E. 2d 765, 770 (2012) (Hunstein, C. J., concurring) (noting that the Georgia Constitution provides the State Supreme Court with “jurisdiction to decide direct appeals in life-imprisonment murder cases”). </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>Georgia represents that, outside of this case, the Georgia Supreme Court has applied the repugnancy rule only once, in Turner v. State, 283 Ga. 17, 655 S. E. 2d 589 (2008). See Brief in Opposition 15. In contrast with McElrath’s case, the court in Turner vacated only the guilty verdicts, leaving the jury’s verdict of acquittal intact. See 283 Ga., at 21, 655 S. E. 2d, at 592. </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>We need not, and do not, address the Double Jeopardy Clause’s application to a trial judge’s rejection of inconsistent or incomprehensible jury findings under state law. Cf. Brief for Missouri et al. as <em>Amici Curiae</em> 7-8. What is at issue here is Georgia’s claim that, when a not-guilty verdict on one count is inconsistent with a guilty verdict on another count, double jeopardy poses no barrier to retrial on the former. </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>On remand, the Georgia courts may address as a matter of state law the status of McElrath’s vacated conviction for felony murder. See Tr. of Oral Arg. 64-67. </p>"
+    }
+  ]
+}

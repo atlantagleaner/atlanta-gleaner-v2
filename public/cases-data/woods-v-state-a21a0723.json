@@ -1,0 +1,443 @@
+{
+  "case_id": "woods-v-state-a21a0723",
+  "metadata": {
+    "title": "Woods v. State",
+    "court": "Court of Appeals of Georgia",
+    "date": "October 25, 2021",
+    "docket": "A21A0723.",
+    "notice": null,
+    "judges": "[***1] REESE, Judge. Doyle, P. J., and Brown, J., concur.",
+    "opinion_by": "REESE",
+    "appellant_counsel": [
+      "Hunter J. Rodgers, Keegan C. Gary, for appellant.",
+      "Mark A. Loudon-Brown, amicus curiae."
+    ],
+    "appellee_counsel": [
+      "Dick Donovan, District Attorney, A. Brett Williams, Matthew W. Rollins, Assistant District Attorneys for appellee."
+    ]
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*844]</span>  <span class=\"pagination-marker\">[**197]</span>  Reese, Judge."
+    },
+    {
+      "type": "paragraph",
+      "content": "A jury found John Woods guilty of driving under the influence, less safe, failure to maintain lane, and driving too fast for conditions.<sup><sup><a href=\"#fn-2\" id=\"ref-2\">2</a></sup>1</sup> We originally transferred this case to the Supreme Court of Georgia, which transferred it back to us after determining that it had already rejected an equal protection argument similar to the one raised by Woods. On appeal, Woods argues: (1) OCGA § 24-7-707, which provides for the admission of expert testimony in criminal cases, violates his equal protection rights because the statute provides for a lower standard than civil cases; (2) the arresting officer violated Woods's right against self-incrimination by coercing him to perform field sobriety tests; (3) the trial court erred in admitting into evidence a demonstrative aid; and (4) the trial court erred in denying his demurrers to the accusation. For the reasons set forth infra, we affirm the trial court's evidentiary rulings and the denial of Woods's equal protection claim, but reverse the court's denial of Woods's general demurrers to the traffic violations."
+    },
+    {
+      "type": "paragraph",
+      "content": "Viewed in the light most favorable to the jury's verdict,<sup><sup><a href=\"#fn-3\" id=\"ref-3\">3</a></sup>2</sup> the record shows the following. <span class=\"pagination-marker\">[***2]</span>  In October 2018, Deputy Bobby Kitchens with the Paulding County Sheriff's Office was patrolling around 2:00 a.m. He encountered an overturned vehicle in the middle of the road, with Woods inside. Woods was not injured. Kitchens invited Woods inside his patrol car because it was raining heavily. He informed Woods that he was not under arrest. Once inside the patrol car, Kitchens detected the odor of alcohol emanating from Woods and noticed that his speech was slurred. The two remained in the patrol car until Georgia State Patrol arrived on the scene."
+    },
+    {
+      "type": "paragraph",
+      "content": "Trooper Benjamin Boyd with the Georgia State Patrol arrived and performed a crash investigation. Boyd opined that Woods was traveling too fast for the conditions — dark and raining — which caused Woods to make contact with the embankment or ditch and overturn his vehicle. Boyd went to Kitchens's vehicle to speak with Woods and observed that Woods had bloodshot watery eyes, an odor <span class=\"pagination-marker\">[*845]</span>  of alcohol emanating from his breath, and slurred speech. Boyd testified that, when he was initially speaking with Woods, Woods was not under arrest but was in the patrol car due to rain."
+    },
+    {
+      "type": "paragraph",
+      "content": "Boyd asked Woods to provide a breath sample through a preliminary breath <span class=\"pagination-marker\">[***3]</span>  test (“PBT”). While Woods was performing the test, Boyd told him to “blow, blow, blow.” Boyd then asked Woods to perform some field sobriety tests. Boyd performed the horizontal gaze nystagmus (“HGN”) test on Woods in the back of the patrol car, and Woods did not object to the test. At trial, after being admitted as an expert on the HGN test, Boyd explained to the jury that the test involves the subject, in this case Woods, following the tip of Boyd's index finger with his eyes. As part of the test, Boyd looked for lack of smooth pursuit, distinct and sustained nystagmus (uncontrolled movement) at the maximum deviation, and the onset of nystagmus prior to 45 degrees. Boyd demonstrated to the jury how he performed the test. Boyd observed all of these “clues” when he performed the test on Woods, and thus concluded that Woods was impaired by alcohol."
+    },
+    {
+      "type": "paragraph",
+      "content": "After this testimony, the State sought to introduce a demonstrative aid of a video example of the HGN evaluation performed on two subjects. Boyd testified that he had viewed this video before, that the video accurately reflected his training with respect to HGN, and that the video did not depict Woods's eyes. The court allowed the State <span class=\"pagination-marker\">[***4]</span>  to play the video for the jury, over Woods's prior objections on the grounds of hearsay and lack of foundation. The two-minute video depicted close-up shots of two sets of eyes, with one labeled “impaired” and the other  <span class=\"pagination-marker\">[**198]</span> “sober.” As the video was played for the jury, Boyd explained the differences between the two sets of eyes and the clues he looked for in determining whether the subject was impaired."
+    },
+    {
+      "type": "paragraph",
+      "content": "After performing the HGN test on Woods, Boyd asked Woods to provide a second breath sample. The PBT indicated that the breath sample from Woods was positive for alcohol. Boyd then placed Woods under arrest. Boyd read Georgia's implied consent notice, and Woods refused to take a blood test."
+    },
+    {
+      "type": "paragraph",
+      "content": "The jury found Woods guilty on all charges. The trial court denied Woods's motion for a new trial, and this appeal followed."
+    },
+    {
+      "type": "paragraph",
+      "content": "Woods's equal protection claim presents a question of law, which we review de novo.<sup><sup><a href=\"#fn-4\" id=\"ref-4\">4</a></sup>3</sup> We review for an abuse of discretion the trial court's decision on a motion to suppress, accepting the trial court's factual findings unless clearly erroneous.<sup><sup><a href=\"#fn-5\" id=\"ref-5\">5</a></sup>4</sup> We also review the trial <span class=\"pagination-marker\">[*846]</span>  court's admission of demonstrative evidence for an abuse of discretion.<sup><sup><a href=\"#fn-6\" id=\"ref-6\">6</a></sup>5</sup> Finally, we review de novo a trial court's <span class=\"pagination-marker\">[***5]</span>  ruling on a general demurrer.<sup><sup><a href=\"#fn-7\" id=\"ref-7\">7</a></sup>6</sup> With these guiding principles in mind, we now turn to Woods's claims of error."
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Woods argues that the standard for admitting experts in criminal cases under OCGA § 24-7-707 violates his equal protection rights because it is less strict than the corresponding civil standard."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under OCGA § 24-7-707, “[i]n criminal proceedings, the opinions of experts on any question of science, skill, trade, or like questions shall always be admissible; and such opinions may be given on the facts as proved by other witnesses.” In order for scientific principle or technique to be admissible, the trial court must determine “whether the procedure or technique in question has reached a scientific stage of verifiable certainty.”<sup><sup><a href=\"#fn-8\" id=\"ref-8\">8</a></sup>7</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "By contrast, in civil cases, OCGA § 24-7-702 governs the admission of expert testimony:"
+    },
+    {
+      "type": "paragraph",
+      "content": "(b) If scientific, technical, or other specialized knowledge will assist the trier of fact to understand the evidence or to determine a fact in issue, a witness qualified as an expert by knowledge, skill, experience, training, or education may testify thereto in the form of an opinion or otherwise, if:"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) The testimony is based upon sufficient facts or data;"
+    },
+    {
+      "type": "paragraph",
+      "content": "(2) The testimony is the product of reliable principles <span class=\"pagination-marker\">[***6]</span>  and methods; and"
+    },
+    {
+      "type": "paragraph",
+      "content": "(3) The witness has applied the principles and methods reliably to the facts of the case which have been or will be admitted into evidence before the trier of fact."
+    },
+    {
+      "type": "paragraph",
+      "content": "OCGA § 24-7-702 (f) explicitly provides that courts of this state may draw from the opinions of the United States Supreme Court in <em>Daubert v. Merrell Dow Pharmaceuticals, Inc.</em>,<sup><sup><a href=\"#fn-9\" id=\"ref-9\">9</a></sup>8</sup> <em>General Electric Co. v. Joiner</em>,<sup><sup><a href=\"#fn-10\" id=\"ref-10\">10</a></sup>9</sup> <em>Kumho Tire Co. v. Carmichael</em>,<sup><sup><a href=\"#fn-11\" id=\"ref-11\">11</a></sup>10</sup> and other federal cases applying this rule of evidence."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*847]</span> “One challenging a statute on equal protection grounds must initially establish that he is similarly situated to members of the class who are treated differently from him.”<sup><sup><a href=\"#fn-12\" id=\"ref-12\">12</a></sup>11</sup> “The equal protection clause does not exact uniformity of procedure. The legislature may classify litigation and adopt one type of procedure for one class and a different <span class=\"pagination-marker\">[**199]</span>  type for another.”<sup><sup><a href=\"#fn-13\" id=\"ref-13\">13</a></sup>12</sup> Applying this principle, the Supreme Court of Georgia in <em>Mason v. Home Depot U.S.A.</em> held that, for purposes of evidentiary standards, “parties to civil cases are not similarly situated to those engaged in criminal prosecutions.”<sup><sup><a href=\"#fn-14\" id=\"ref-14\">14</a></sup>13</sup> The Court in that case thus rejected an equal protection challenge to the differing standards for the admission of expert testimony in criminal and civil cases.<sup><sup><a href=\"#fn-15\" id=\"ref-15\">15</a></sup>14</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "When the Supreme Court <span class=\"pagination-marker\">[***7]</span>  of Georgia transferred the instant case to our Court, the Supreme Court relied on <em>Mason</em> in determining that it had already rejected the equal protection challenge raised here.<sup><sup><a href=\"#fn-16\" id=\"ref-16\">16</a></sup>15</sup> Thus, in accordance with the reasoning set forth in the Supreme Court's transfer order and <em>Mason</em>, (1) Woods is not similarly situated to a civil litigant, and therefore the trial court did not err in denying his equal protection claim."
+    },
+    {
+      "type": "paragraph",
+      "content": "2. Woods argues that Boyd violated Woods's right against self-incrimination by coercing him to participate in the HGN test and the PBT."
+    },
+    {
+      "type": "paragraph",
+      "content": "The Georgia Constitution provides that “[n]o person shall be compelled to give testimony tending in any manner to be self-incriminating”<sup><sup><a href=\"#fn-17\" id=\"ref-17\">17</a></sup>16</sup> (“Paragraph XVI”). The Supreme Court of Georgia held in <em>Olevik v. State</em> that Paragraph XVI applies to compelled self-incriminating acts such as breathing into a breathalyzer.<sup><sup><a href=\"#fn-18\" id=\"ref-18\">18</a></sup>17</sup> However, “like other constitutional rights, a suspect may consent to take actions that Paragraph XVI would prevent the State from compelling.”<sup><sup><a href=\"#fn-19\" id=\"ref-19\">19</a></sup>18</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "[W]hether a defendant is compelled to provide self-incriminating evidence in violation of Paragraph XVI is determined under the totality of the circumstances. Determining the voluntariness of (or lack of compulsion <span class=\"pagination-marker\">[***8]</span>  surrounding) a <span class=\"pagination-marker\">[*848]</span>  defendant's incriminating statement or act involves considerations similar to those employed in determining whether a defendant voluntarily consented to a search. We have said that the voluntariness of a consent to search is determined by such factors as the age of the accused, his education, his intelligence, the length of detention, whether the accused was advised of his constitutional rights, the prolonged nature of questioning, the use of physical punishment, and the psychological impact of all these factors on the accused. In determining voluntariness, no single factor is controlling.<sup><sup><a href=\"#fn-20\" id=\"ref-20\">20</a></sup>19</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We note, at the outset, that the facts of this case differ from <em>Olevik</em> and its progeny, because the sobriety tests here were taken before Woods's arrest and before Boyd's reading of the implied consent notice. While the State contends that these facts distinguish the case from <em>Olevik</em> and the application of Paragraph XVI, we decline to adopt that view.<sup><sup><a href=\"#fn-21\" id=\"ref-21\">21</a></sup>20</sup> The totality of the circumstances test as explained in <em>Olevik</em> “is not foreign to trial courts.”<sup><sup><a href=\"#fn-22\" id=\"ref-22\">22</a></sup>21</sup> And we have reviewed trial courts' application of this test to a defendant's pre-arrest consent, especially in determining whether the consent <span class=\"pagination-marker\">[***9]</span>  was voluntary or mere acquiescence to authority.<sup><sup><a href=\"#fn-23\" id=\"ref-23\">23</a></sup>22</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The trial court here, in considering the totality of the circumstances, denied Woods's motion to suppress the field sobriety tests. The court found that there was no evidence of threat or coercion by Boyd. Boyd began most of his sentences with requests, <span class=\"pagination-marker\">[**200]</span>  such as “I am going to ask you to perform HGN” and “Do me a favor and blow into this tube.” Woods was only in the patrol car due to heavy rain, and Boyd confirmed this fact with Woods. Based on these facts, the trial court found that Woods voluntarily consented to the field sobriety tests."
+    },
+    {
+      "type": "paragraph",
+      "content": "Given the applicable “standard of review and the facts in this case, we cannot say that the evidence demanded a finding contrary to the trial court's ruling, and thus we find (2) no abuse of discretion by the trial court in denying [Woods's] motion to suppress.”<sup><sup><a href=\"#fn-24\" id=\"ref-24\">24</a></sup>23</sup> Although Woods argues that he did not provide affirmative consent and <span class=\"pagination-marker\">[*849]</span>  “merely acquiesced” to Boyd's instructions, the facts here do not contain the same hallmarks as other cases in which appellate courts have found mere acquiescence.<sup><sup><a href=\"#fn-25\" id=\"ref-25\">25</a></sup>24</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "3. Woods argues that the trial court erred in admitting the State's HGN demonstrative aid because the video contained <span class=\"pagination-marker\">[***10]</span>  hearsay, lacked a proper foundation, and violated his confrontation rights."
+    },
+    {
+      "type": "paragraph",
+      "content": "“Demonstrative evidence includes charts, models, diagrams, replicas, re-enactments, pictures, or any other device used to aid the trier of fact in understanding the issues and facts at trial.”<sup><sup><a href=\"#fn-26\" id=\"ref-26\">26</a></sup>25</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "[T]he burden is on the party offering demonstrative evidence to lay a proper foundation establishing a similarity of circumstances and conditions. Although the conditions of the demonstration need not be identical to the event at issue, they must be so nearly the same in substantial particulars as to afford a fair comparison in respect to the particular issue to which the demonstrative evidence is directed. Further, experimental or demonstrative evidence, like any evidence offered at trial, should be excluded if its probative value is substantially outweighed by the danger of unfair prejudice, confusion of the issues, or misleading the jury.<sup><sup><a href=\"#fn-27\" id=\"ref-27\">27</a></sup>26</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, Boyd testified that the HGN video accurately reflected his training, that the video did not depict Woods's eyes, and that the video showed substantially similar conditions as the HGN test he performed on Woods. We have held that a trial court did not abuse its discretion in admitting <span class=\"pagination-marker\">[***11]</span>  a similar HGN video, and, given Boyd's testimony, the trial court did not abuse its discretion in admitting the video here.<sup><sup><a href=\"#fn-28\" id=\"ref-28\">28</a></sup>27</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*850]</span> With respect to Woods's argument regarding hearsay and his right to confrontation, the video was not testimonial in nature<sup><sup><a href=\"#fn-29\" id=\"ref-29\">29</a></sup>28</sup> or offered for the truth of the matter asserted,<sup><sup><a href=\"#fn-30\" id=\"ref-30\">30</a></sup>29</sup> but rather to aid the jury <span class=\"pagination-marker\">[**201]</span>  in understanding the HGN test. Further, any error in the admission of the video was harmless in light of Boyd's explanation and demonstration of the HGN test.<sup><sup><a href=\"#fn-31\" id=\"ref-31\">31</a></sup>30</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "4. Woods argues that the trial court erred in denying his general demurrer to the driving-too-fast-for-conditions and failure-to-maintain-lane charges.<sup><sup><a href=\"#fn-32\" id=\"ref-32\">32</a></sup>31</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "A general demurrer challenges the sufficiency of the substance of the indictment. If the accused could admit each and every fact alleged in the indictment and still be innocent of any crime, the indictment is subject to a general demurrer. If, however, the admission of the facts alleged would lead necessarily to the conclusion that the accused is guilty of a crime, the indictment is sufficient to withstand a general demurrer.<sup><sup><a href=\"#fn-33\" id=\"ref-33\">33</a></sup>32</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "“In sum, to withstand a general demurrer, an indictment must: (1) recite the language of the statute that sets out <span class=\"pagination-marker\">[***12]</span>  all the elements of the offense charged, or (2) allege the facts necessary to establish violation of a criminal statute.”<sup><sup><a href=\"#fn-34\" id=\"ref-34\">34</a></sup>33</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "(a) <em>Driving too fast for conditions.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The accusation alleged that Woods"
+    },
+    {
+      "type": "paragraph",
+      "content": "did drive a vehicle at a speed greater than reasonable and prudent under the conditions and without having regard <span class=\"pagination-marker\">[*851]</span>  for the actual and potential hazards then existing when approaching and going around a curve on Hiram Sudie Road when special hazards exist with respect to highway conditions, to wit: wet roadway, in violation of [OCGA §] 40-6-180."
+    },
+    {
+      "type": "paragraph",
+      "content": "Under OCGA § 40-6-180,"
+    },
+    {
+      "type": "paragraph",
+      "content": "[n]o person shall drive a vehicle at a speed greater than is reasonable and prudent under the conditions and having regard for the actual and potential hazards then existing. Consistently with the foregoing, every person shall drive at a reasonable and prudent speed … when approaching and going around a curve … [and] when special hazards exist … by reason of weather or highway conditions."
+    },
+    {
+      "type": "paragraph",
+      "content": "In considering a vagueness attack on OCGA § 40-6-180, the Supreme Court of Georgia has held that the statute is constitutional, but only when read in conjunction with OCGA § 40-6-181.<sup><sup><a href=\"#fn-35\" id=\"ref-35\">35</a></sup>34</sup> OCGA § 40-6-181 provides the maximum lawful speeds for vehicles driving in specific locations. As a consequence of this holding, the Court <span class=\"pagination-marker\">[***13]</span>  further held that the accusation or citation for OCGA § 40-6-180 “must allege the speed of the vehicle and the hazard or condition which made that speed greater than is reasonable and prudent under the conditions.”<sup><sup><a href=\"#fn-36\" id=\"ref-36\">36</a></sup>35</sup> Thus, the Court in that case reversed the denial of a motion to quash or dismiss an indictment that did not allege the speed of the vehicle.<sup><sup><a href=\"#fn-37\" id=\"ref-37\">37</a></sup>36</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, (3) the accusation did not allege Woods's speed or estimate his speed. Because OCGA § 40-6-180 “standing alone is insufficient to define a crime,”<sup><sup><a href=\"#fn-38\" id=\"ref-38\">38</a></sup>37</sup> the accusation was thus subject to a general demurrer.<sup><sup><a href=\"#fn-39\" id=\"ref-39\">39</a></sup>38</sup> Accordingly, we reverse Woods's conviction for driving too fast for conditions."
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[**202]</span> (b) <em>Failure to maintain lane.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "The accusation alleged that Woods, “while operating a motor vehicle upon Hiram Sudie Road, a roadway divided into clearly marked lanes for traffic, did unlawfully fail to drive his vehicle as nearly as practicable entirely within a single traffic lane, in violation of [OCGA §] 40-6-48.”"
+    },
+    {
+      "type": "paragraph",
+      "content": "<span class=\"pagination-marker\">[*852]</span> OCGA § 40-6-48 provides, in relevant part:"
+    },
+    {
+      "type": "paragraph",
+      "content": "Whenever any roadway has been divided into two or more clearly marked lanes for traffic, the following rules, in addition to all others consistent with this Code section, shall apply:"
+    },
+    {
+      "type": "paragraph",
+      "content": "(1) A vehicle shall be driven as nearly as practicable entirely within a single <span class=\"pagination-marker\">[***14]</span>  lane and shall not be moved from such lane until the driver has first ascertained that such movement can be made with safety[.]"
+    },
+    {
+      "type": "paragraph",
+      "content": "Woods contends that the accusation was subject to a general demurrer because it did not allege a necessary element of the offense: that he moved from the lane “without first ascertaining that such movement [could] be made with safety.”<sup><sup><a href=\"#fn-40\" id=\"ref-40\">40</a></sup>39</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "We rejected this argument in <em>Harridge v. State</em>, reasoning that any deficiency in failing to allege this element of the offense was “cured by citation to the applicable statute.”<sup><sup><a href=\"#fn-41\" id=\"ref-41\">41</a></sup>40</sup> However, the Supreme Court of Georgia later overruled this line of reasoning in <em>Jackson v. State</em>, holding that an indictment or accusation must allege all essential elements of a crime (or facts necessary to establish a violation) in order to withstand a challenge to the legality of the indictment.<sup><sup><a href=\"#fn-42\" id=\"ref-42\">42</a></sup>41</sup> “Withstanding such a challenge requires more than simply alleging the accused violated a certain statute.”<sup><sup><a href=\"#fn-43\" id=\"ref-43\">43</a></sup>42</sup>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Here, (4) the accusation does not contain an essential element of the offense — that Woods failed to maintain his lane until he “first ascertained that such movement can be made with safety[.]”<sup><sup><a href=\"#fn-44\" id=\"ref-44\">44</a></sup>43</sup> After the Supreme Court's decision in <em>Jackson</em>, this deficiency can no longer be cured by <span class=\"pagination-marker\">[***15]</span>  a citation to the statute. Accordingly, the accusation was subject to a general demurrer,<sup><sup><a href=\"#fn-45\" id=\"ref-45\">45</a></sup>44</sup> and we thus reverse Woods's conviction for failure to maintain lane."
+    },
+    {
+      "type": "paragraph",
+      "content": "<em>Judgment affirmed in part and reversed in part. Doyle, P. J., and Brown, J., concur.</em>"
+    },
+    {
+      "type": "paragraph",
+      "content": "<br/><strong>End of Document</strong>"
+    }
+  ],
+  "footnotes": [
+    {
+      "id": "fn-2",
+      "return_id": "ref-2",
+      "content": "<p><sup>1 </sup>See OCGA §§ 40-6-391 (a) (1); 40-6-48; 40-6-180. </p>"
+    },
+    {
+      "id": "fn-3",
+      "return_id": "ref-3",
+      "content": "<p><sup>2 </sup>See <em>Rankin v. State</em>, 278 Ga. 704, 705 (606 SE2d 269) (2004). </p>"
+    },
+    {
+      "id": "fn-4",
+      "return_id": "ref-4",
+      "content": "<p><sup>3 </sup>See <em>In the Interest of P. N.</em>, 291 Ga. App. 512 (662 SE2d 287) (2008). </p>"
+    },
+    {
+      "id": "fn-5",
+      "return_id": "ref-5",
+      "content": "<p><sup>4 </sup>See <em>State v. Williams</em>, 337 Ga. App. 791, 792 (788 SE2d 860) (2016). </p>"
+    },
+    {
+      "id": "fn-6",
+      "return_id": "ref-6",
+      "content": "<p><sup>5 </sup>See <em>Smith v. State</em>, 299 Ga. 424, 436 (3) (c) (788 SE2d 433) (2016). </p>"
+    },
+    {
+      "id": "fn-7",
+      "return_id": "ref-7",
+      "content": "<p><sup>6 </sup>See <em>Carlton v. State</em>, 356 Ga. App. 1, 3 (1) (846 SE2d 175) (2020). </p>"
+    },
+    {
+      "id": "fn-8",
+      "return_id": "ref-8",
+      "content": "<p><sup>7 </sup><em>Harper v. State</em>, 249 Ga. 519, 525 (1) (292 SE2d 389) (1982); see <em>Jones v. State</em>, 299 Ga. 40, 42 (2) (785 SE2d 886) (2016) (applying the <em>Harper</em> standard to OCGA § 24-7-707). </p>"
+    },
+    {
+      "id": "fn-9",
+      "return_id": "ref-9",
+      "content": "<p><sup>8 </sup>509 U. S. 579 (113 SCt 2786, 125 LE2d 469) (1993). </p>"
+    },
+    {
+      "id": "fn-10",
+      "return_id": "ref-10",
+      "content": "<p><sup>9 </sup>522 U. S. 136 (118 SCt 512, 139 LE2d 508) (1997). </p>"
+    },
+    {
+      "id": "fn-11",
+      "return_id": "ref-11",
+      "content": "<p><sup>10 </sup>526 U. S. 137 (119 SCt 1167, 143 LE2d 238) (1999). </p>"
+    },
+    {
+      "id": "fn-12",
+      "return_id": "ref-12",
+      "content": "<p><sup>11 </sup><em>Mason v. Home Depot U.S.A.</em>, 283 Ga. 271, 273 (1) (658 SE2d 603) (2008). </p>"
+    },
+    {
+      "id": "fn-13",
+      "return_id": "ref-13",
+      "content": "<p><sup>12 </sup>Id. at 274 (1) (citation and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-14",
+      "return_id": "ref-14",
+      "content": "<p><sup>13 </sup>Id. </p>"
+    },
+    {
+      "id": "fn-15",
+      "return_id": "ref-15",
+      "content": "<p><sup>14 </sup>See id. at 274-275 (1). </p>"
+    },
+    {
+      "id": "fn-16",
+      "return_id": "ref-16",
+      "content": "<p><sup>15 </sup>See <em>Woods v. State</em>, 310 Ga. 358, 358-359 (850 SE2d 735) (2020) (publishing the transfer order). </p>"
+    },
+    {
+      "id": "fn-17",
+      "return_id": "ref-17",
+      "content": "<p><sup>16 </sup>Ga. Const. of 1983, Art. I, Sec. I, Par. XVI. </p>"
+    },
+    {
+      "id": "fn-18",
+      "return_id": "ref-18",
+      "content": "<p><sup>17 </sup>See 302 Ga. 228, 241-244 (2) (c) (iii) (806 SE2d 505) (2017). </p>"
+    },
+    {
+      "id": "fn-19",
+      "return_id": "ref-19",
+      "content": "<p><sup>18 </sup>Id. at 243 (2) (c) (iii). </p>"
+    },
+    {
+      "id": "fn-20",
+      "return_id": "ref-20",
+      "content": "<p><sup>19 </sup>Id. at 251 (3) (b) (citations and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-21",
+      "return_id": "ref-21",
+      "content": "<p><sup>20 </sup>See <em>State v. Bradberry</em>, 357 Ga. App. 60, 66 (3) (849 SE2d 790) (2020) (holding that refusal to take a PBT before arrest implicated the defendant's rights under Paragraph XVI). </p>"
+    },
+    {
+      "id": "fn-22",
+      "return_id": "ref-22",
+      "content": "<p><sup>21 </sup><em>Olevik</em>, 302 Ga. at 252 (3) (b). </p>"
+    },
+    {
+      "id": "fn-23",
+      "return_id": "ref-23",
+      "content": "<p><sup>22 </sup>See <em>Cuaresma v. State</em>, 292 Ga. App. 43, 47 (663 SE2d 396) (2008). </p>"
+    },
+    {
+      "id": "fn-24",
+      "return_id": "ref-24",
+      "content": "<p><sup>23 </sup><em>Fofanah v. State</em>, 355 Ga. App. 895, 898 (846 SE2d 154) (2020) (punctuation and footnote omitted); see also <em>Olevik</em>, 302 Ga. at 252 (3) (b) (affirming the trial court's denial of the motion to suppress when the officer's actions were not threatening or intimidating and the defendant pointed to no other coercive factors beyond the implied consent notice). </p>"
+    },
+    {
+      "id": "fn-25",
+      "return_id": "ref-25",
+      "content": "<p><sup>24 </sup>See <em>State v. Turner</em>, 304 Ga. 356, 360 (1) (818 SE2d 589) (2018) (upholding the trial court's determination that the suspect merely acquiesced to the authority of law enforcement when she gave consent for a single officer to enter her kitchen but instead several officers searched and photographed the suspect's house); <em>Cuaresma</em>, 292 Ga. App. at 47 (2) (holding that the defendant merely acquiesced to authority where officers used harassment, intimidation, and threats of arrest to convince the defendant to consent to a search, and told the defendant that his truck would be searched regardless of his consent); <em>Hollenback v. State</em>, 289 Ga. App. 516, 519 (657 SE2d 884) (2008) (holding that the defendant did not freely consent to a search of her vehicle where the officer informed the defendant that he was going to search the vehicle before she would be allowed to drive away). </p>"
+    },
+    {
+      "id": "fn-26",
+      "return_id": "ref-26",
+      "content": "<p><sup>25 </sup><em>Smith</em>, 299 Ga. at 434 (3) (b) (citations and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-27",
+      "return_id": "ref-27",
+      "content": "<p><sup>26 </sup><em>Monroe v. State</em>, 340 Ga. App. 373, 376 (3) (797 SE2d 245) (2017) (citation and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-28",
+      "return_id": "ref-28",
+      "content": "<p><sup>27 </sup>See <em>Monroe</em>, 340 Ga. App. at 376 (3). </p>"
+    },
+    {
+      "id": "fn-29",
+      "return_id": "ref-29",
+      "content": "<p><sup>28 </sup>See <em>Toney v. State</em>, 304 Ga. App. 25, 28 (2) (695 SE2d 355) (2010) (“Statements are testimonial in nature when the primary purpose of the statements is to establish or prove past events potentially relevant to later criminal prosecution.”) (punctuation and footnote omitted). </p>"
+    },
+    {
+      "id": "fn-30",
+      "return_id": "ref-30",
+      "content": "<p><sup>29 </sup>See <em>Carter v. State</em>, 302 Ga. 200, 204 (2) (b) (805 SE2d 839) (2017) (“[A]n out-of-court statement is not hearsay if it is offered for some purpose other than to prove the truth of the matter asserted.”) (citation and emphasis omitted). </p>"
+    },
+    {
+      "id": "fn-31",
+      "return_id": "ref-31",
+      "content": "<p><sup>30 </sup>See <em>Dunn v. State</em>, 312 Ga. 471, 480 (3) (863 SE2d 159) (2021) (admission of a YouTube video was harmless in light of the other evidence presented at trial); <em>Jackson v. State</em>, 350 Ga. App. 80, 81 (2) (827 SE2d 919) (2019) (“When hearsay evidence is erroneously admitted in violation of the confrontation clause, such an error of constitutional magnitude can be harmless when the evidence at issue is cumulative of other properly admitted evidence.”) (citations and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-32",
+      "return_id": "ref-32",
+      "content": "<p><sup>31 </sup>Woods raised these arguments orally during trial. See <em>Hinkson v. State</em>, 310 Ga. 388, 397 (4) (850 SE2d 41) (2020) (A general demurrer can be raised “at any time during trial.”) (citation and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-33",
+      "return_id": "ref-33",
+      "content": "<p><sup>32 </sup><em>Kimbrough v. State</em>, 300 Ga. 878, 880 (2) (799 SE2d 229) (2017) (citations, punctuation and emphasis omitted). </p>"
+    },
+    {
+      "id": "fn-34",
+      "return_id": "ref-34",
+      "content": "<p><sup>33 </sup><em>Jackson v. State</em>, 301 Ga. 137, 141 (1) (800 SE2d 356) (2017). </p>"
+    },
+    {
+      "id": "fn-35",
+      "return_id": "ref-35",
+      "content": "<p><sup>34 </sup>See <em>Bilbrey v. State</em>, 254 Ga. 629, 631 (1) (331 SE2d 551) (1985). </p>"
+    },
+    {
+      "id": "fn-36",
+      "return_id": "ref-36",
+      "content": "<p><sup>35 </sup>Id. at 632 (2) (citation and punctuation omitted). </p>"
+    },
+    {
+      "id": "fn-37",
+      "return_id": "ref-37",
+      "content": "<p><sup>36 </sup>See id. </p>"
+    },
+    {
+      "id": "fn-38",
+      "return_id": "ref-38",
+      "content": "<p><sup>37 </sup><em>Bilbrey</em>, 254 Ga. at 632 (2). </p>"
+    },
+    {
+      "id": "fn-39",
+      "return_id": "ref-39",
+      "content": "<p><sup>38 </sup>See <em>Jackson</em>, 301 Ga. at 143 (2). </p>"
+    },
+    {
+      "id": "fn-40",
+      "return_id": "ref-40",
+      "content": "<p><sup>39 </sup>(Punctuation omitted.) </p>"
+    },
+    {
+      "id": "fn-41",
+      "return_id": "ref-41",
+      "content": "<p><sup>40 </sup>243 Ga. App. 658, 664 (5) (534 SE2d 113) (2000). </p>"
+    },
+    {
+      "id": "fn-42",
+      "return_id": "ref-42",
+      "content": "<p><sup>41 </sup>See <em>Jackson</em>, 301 Ga. at 140 (1). </p>"
+    },
+    {
+      "id": "fn-43",
+      "return_id": "ref-43",
+      "content": "<p><sup>42 </sup>Id. </p>"
+    },
+    {
+      "id": "fn-44",
+      "return_id": "ref-44",
+      "content": "<p><sup>43 </sup>OCGA § 40-6-48 (1). </p>"
+    },
+    {
+      "id": "fn-45",
+      "return_id": "ref-45",
+      "content": "<p><sup>44 </sup>See <em>Jackson</em>, 301 Ga. at 142-143 (2). </p>"
+    }
+  ]
+}
