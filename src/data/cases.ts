@@ -22,9 +22,13 @@ import type { CaseLaw, EditorialCaseContent, EditorialStatus } from './types'
 
 // ─── Consolidated case data (processed from raw-opinions/*.docx) ────────────
 import CASES_MASTER_RAW from './cases.json'
-import CASE_EDITORIAL_RAW from './case-editorial.json'
+import CASE_EDITORIAL_RAW_ARRAY from './case-editorial.json'
 const CASES_MASTER = CASES_MASTER_RAW as CaseLaw[]
-const CASE_EDITORIAL = CASE_EDITORIAL_RAW as Record<string, EditorialCaseContent>
+const CASE_EDITORIAL_RAW = CASE_EDITORIAL_RAW_ARRAY as EditorialCaseContent[]
+const CASE_EDITORIAL = CASE_EDITORIAL_RAW.reduce((acc, entry) => {
+  acc[entry.slug] = entry
+  return acc
+}, {} as Record<string, EditorialCaseContent>)
 
 function normalizeKeyPart(value: string | undefined): string {
   return (value || '').trim().toLowerCase()
