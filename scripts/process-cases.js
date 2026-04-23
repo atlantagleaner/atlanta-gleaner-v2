@@ -973,6 +973,38 @@ function injectFnMarkers(html) {
 }
 
 /**
+ * Normalize footnote references that Mammoth extracts without anchor tags.
+ *
+ * Some opinions render as nested superscripts like:
+ *   <sup><sup>[1]</sup>1</sup>
+ *
+ * Others expose bare footnote anchors such as:
+ *   <sup><a href="#fn1">1</a></sup>
+ *
+ * Normalize both shapes into the canonical {fn:N} marker so the renderer can
+ * rebuild a single consistent bidirectional anchor set.
+ */
+function normalizeFootnoteRefs(html) {
+  html = html.replace(
+    /<sup>\s*<sup>\s*\[(\d+)\]\s*<\/sup>\s*(\d+)\s*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  html = html.replace(
+    /<sup>\s*<a[^>]*href="#fn(\d+)"[^>]*>.*?<\/a>\s*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  html = html.replace(
+    /<sup>\s*<a[^>]*id="fn(\d+)"[^>]*>.*?<\/a>\s*<\/sup>/gi,
+    '{fn:$1}'
+  );
+  html = html.replace(
+    /<a[^>]*id="fn(\d+)"[^>]*>.*?<\/a>/gi,
+    '{fn:$1}'
+  );
+  return html;
+}
+
+/**
  * Extract footnotes from mammoth HTML.
  * Returns Record<string, string>.
  */
@@ -1360,6 +1392,7 @@ async function parseDocxFile(filename) {
   bodyHtml     = scrubBoilerplate(bodyHtml);
   bodyHtml     = removeFootnoteList(bodyHtml);
   bodyHtml     = injectFnMarkers(bodyHtml);
+  bodyHtml     = normalizeFootnoteRefs(bodyHtml);
   bodyHtml     = markStarPagination(bodyHtml);
   bodyHtml     = stripHyperlinks(bodyHtml);
   bodyHtml     = applyBluebookFormatting(bodyHtml);

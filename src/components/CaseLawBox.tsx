@@ -37,11 +37,18 @@ function renderOpinionHtml(
 ): string {
   if (!footnotes || Object.keys(footnotes).length === 0) return opinionText
 
-  const sortedKeys = Object.keys(footnotes).sort((a, b) => parseInt(a) - parseInt(b))
+  const sortedKeys = Object.keys(footnotes)
+    .filter((key) => {
+      const value = footnotes[key]
+      return typeof value === 'string' && value.trim().length > 0
+    })
+    .sort((a, b) => parseInt(a) - parseInt(b))
   const displayMap: Record<string, number> = {}
   sortedKeys.forEach((key, i) => { displayMap[key] = i + 1 })
 
-  return opinionText.replace(/\{fn:(\d+)\}/g, (_, key) => {
+  let rendered = opinionText
+
+  rendered = rendered.replace(/\{fn:(\d+)\}/g, (_, key) => {
     const n = displayMap[key] ?? key
     return (
       `<sup><a ` +
@@ -53,6 +60,38 @@ function renderOpinionHtml(
       `>${n}</a></sup>`
     )
   })
+
+  // Normalize older extractor output that already contains direct fn anchors.
+  rendered = rendered.replace(/href="#fn(\d+)"/gi, (_, key) => `href="#${slug}-fn-${key}"`)
+  rendered = rendered.replace(/id="fn(\d+)"/gi, (_, key) => `id="${slug}-ref-${key}"`)
+
+  // Normalize the common nested-superscript artifact: <sup><sup>[1]</sup>1</sup>
+  // into a single clickable footnote anchor that points at the published note.
+  rendered = rendered.replace(
+    /<sup>\s*<sup>\s*\[(\d+)\]\s*<\/sup>\s*(\d+)\s*<\/sup>/gi,
+    (_, rawKey, visibleKey) => {
+      const key = rawKey
+      const display = displayMap[key] ?? visibleKey ?? key
+      return (
+        `<sup><a ` +
+        `id="${slug}-ref-${key}" ` +
+        `href="#${slug}-fn-${key}" ` +
+        `class="fn-ref" ` +
+        `style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;` +
+        `color:var(--palette-black);text-decoration:none;vertical-align:super;"` +
+        `>${display}</a></sup>`
+      )
+    }
+  )
+
+  // Some DOCX conversions emit bracketed refs like "[<sup><sup>[1]</sup>1</sup>]";
+  // convert the outer wrapper away while preserving the anchor.
+  rendered = rendered.replace(
+    /\[\s*<sup><a id="([^"]+)" href="([^"]+)" class="fn-ref"[^>]*>([^<]+)<\/a><\/sup>\s*\]/gi,
+    '<sup><a id="$1" href="$2" class="fn-ref">$3</a></sup>'
+  )
+
+  return rendered
 }
 
 // ── Metadata stripper ────────────────────────────────────────────────────────
