@@ -1356,6 +1356,7 @@
         // Wait a moment, then show card flip dialog
         await new Promise(resolve => setTimeout(resolve, 1200));
 
+        await typeText(DialogueSystem.getRevealBridge());
         ExpressionSystem.setExpression('revelation', 400);
         updateCardDisplay(card, { spreadType: 'mirror', revealedCount: 1 });
       }
@@ -1427,14 +1428,39 @@
 async function stateClosing() {
   showCharacter();
   ExpressionSystem.setExpression('knowing-smile', 300);
-    await typeText(DialogueSystem.getClosingBridge());
+
+  const closingDialogue = DialogueSystem.getClosing();
+  await typeText(DialogueSystem.getClosingBridge());
 
   const closingOptions = [
-    { label: 'DRAW AGAIN', value: 'another' },
+    { label: closingDialogue.nextOptions[0].toUpperCase(), value: 'another' },
+    { label: closingDialogue.nextOptions[1].toUpperCase(), value: 'new-question' },
+    { label: closingDialogue.nextOptions[2].toUpperCase(), value: 'repeat-reading' },
   ];
 
-  await showOptions(closingOptions);
+  const choice = await showOptions(closingOptions);
+
+  if (choice === 'repeat-reading') {
+    clearOptions();
+    await setState('READING');
+    return;
+  }
+
   hideCardImage();
+  hideCardGrid();
+  hideOrrery();
+
+  if (choice === 'new-question') {
+    gameState.drawnCards = [];
+    gameState.lightOrShadow = {};
+    gameState.currentCardIndex = 0;
+    await setState('INTENT_SELECT');
+    return;
+  }
+
+  gameState.drawnCards = [];
+  gameState.lightOrShadow = {};
+  gameState.currentCardIndex = 0;
   await setState('GREET');
 }
 
@@ -1453,11 +1479,25 @@ async function stateClosing() {
       }
 
       // Ultimate fallback
-      return {
-        cardSpeaks: `The ${card.name} speaks to your current moment.`,
-        astrophysical: `The cosmos moves in mysterious ways, and ${planet}'s influence is felt.`,
-        absurdTruth: `The universe whispers: you are exactly where you need to be.`,
-      };
+      const fallbackReadings = [
+        {
+          cardSpeaks: `The ${card.name} speaks to your current moment.`,
+          astrophysical: `The cosmos moves in mysterious ways, and ${planet}'s influence is felt.`,
+          absurdTruth: `The universe whispers: you are exactly where you need to be.`,
+        },
+        {
+          cardSpeaks: `The ${card.name} still carries a message, even if the larger pattern is hidden.`,
+          astrophysical: `The sky keeps turning, and ${planet}'s influence keeps shaping the tone of the answer.`,
+          absurdTruth: `Not every answer arrives polished. Some arrive as a nudge.`,
+        },
+        {
+          cardSpeaks: `The ${card.name} stands at the edge of meaning and asks you to listen twice.`,
+          astrophysical: `The current overhead is active, and ${planet} is part of the weather.`,
+          absurdTruth: `The reading is alive, even when it repeats itself a little less neatly.`,
+        },
+      ];
+
+      return fallbackReadings[Math.floor(Math.random() * fallbackReadings.length)];
     }
 
     // ==================== DECK ENGINE ====================

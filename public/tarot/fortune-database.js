@@ -338,6 +338,14 @@ function getSpecificFortune(cardName, intent, planet) {
   return FORTUNES_BY_INTENT[intent]?.[cardKey] || null;
 }
 
+function pickRandomVariant(variants) {
+  if (!Array.isArray(variants) || variants.length === 0) {
+    return null;
+  }
+
+  return variants[Math.floor(Math.random() * variants.length)];
+}
+
 /**
  * Get advanced fallback fortunes
  */
@@ -349,26 +357,102 @@ function getFortuneFallbackAdvanced(card, intent, planet) {
     return intentFortunes[cardKey];
   }
 
-  // If the specific card is missing, use a generic fallback for the intent
-  return {
-    love: {
-      cardSpeaks: `The ${card.name} whispers of connection and the desire to merge souls.`,
-      astrophysical: `Under Venus's benevolent gaze, two orbits are drawn toward intersection.`,
-      absurdTruth: `Love is mutual delusion. Thankfully, it is the best delusion there is.`
-    },
+  // If the specific card is missing, rotate through a small fallback pool.
+  const fallbackPools = {
+    love: [
+      () => ({
+        cardSpeaks: `The ${card.name} whispers of connection and the desire to merge souls.`,
+        astrophysical: `Under Venus's benevolent gaze, two orbits are drawn toward intersection.`,
+        absurdTruth: `Love is mutual delusion. Thankfully, it is the best delusion there is.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} asks for closeness, honesty, and a little more courage than comfort prefers.`,
+        astrophysical: `Venus draws what is willing to meet it. Attraction is a law, not a wish.`,
+        absurdTruth: `The heart is dramatic on purpose. It wants your attention.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} leans toward tenderness, even if it arrives through awkwardness.`,
+        astrophysical: `Venus rewards resonance. What matches your frequency can find you now.`,
+        absurdTruth: `If you keep calling it chaos, the romance will start charging rent.`,
+      }),
+    ],
     ambition: {
-      cardSpeaks: `The ${card.name} burns with the fire of becoming something greater.`,
-      astrophysical: `Mars propels you forward along destiny's path. The cosmos rewards boldness.`,
-      absurdTruth: `Ambition is the universe's fever dream, and you are the fever.`
+      mars: [
+        () => ({
+          cardSpeaks: `The ${card.name} burns with Mars' impatience and the urge to move now, not later.`,
+          astrophysical: `Mars turns momentum into consequence. Action is the language here.`,
+          absurdTruth: `You are not behind. You are being wound up like a weapon that still has work to do.`,
+        }),
+        () => ({
+          cardSpeaks: `The ${card.name} meets Mars in a room full of unfinished plans and unspent drive.`,
+          astrophysical: `Mars rewards directness. The cleaner the strike, the cleaner the result.`,
+          absurdTruth: `Ambition is just appetite with a calendar.`,
+        }),
+        () => ({
+          cardSpeaks: `The ${card.name} carries pressure, heat, and the demand to choose a direction.`,
+          astrophysical: `Mars makes the path visible by making hesitation expensive.`,
+          absurdTruth: `The universe is not asking for perfection. It is asking for motion.`,
+        }),
+      ],
+      default: [
+        () => ({
+          cardSpeaks: `The ${card.name} burns with the fire of becoming something greater.`,
+          astrophysical: `Mars propels you forward along destiny's path. The cosmos rewards boldness.`,
+          absurdTruth: `Ambition is the universe's fever dream, and you are the fever.`,
+        }),
+        () => ({
+          cardSpeaks: `The ${card.name} points to effort that actually changes the room you are in.`,
+          astrophysical: `Mars does not favor drift. It favors deliberate force.`,
+          absurdTruth: `The climb is real, but so is the grip in your hands.`,
+        }),
+        () => ({
+          cardSpeaks: `The ${card.name} asks whether your hunger is steering you or being steered.`,
+          astrophysical: `Mars sharpens desire into action. Wanting becomes doing.`,
+          absurdTruth: `If you are waiting for a sign, this is the alarm clock.`,
+        }),
+      ],
     },
-    mystery: {
-      cardSpeaks: `The ${card.name} conceals what you are meant to discover through living, not thinking.`,
-      astrophysical: `The Moon hides and reveals in the same breath. Trust the darkness.`,
-      absurdTruth: `The answer was always the question you forgot to ask.`
-    }
-  }[intent] || {
-    cardSpeaks: `The ${card.name} speaks to your journey.`,
-    astrophysical: `The cosmos moves in mysterious ways.`,
-    absurdTruth: `You are exactly where you need to be.`
+    mystery: [
+      () => ({
+        cardSpeaks: `The ${card.name} conceals what you are meant to discover through living, not thinking.`,
+        astrophysical: `The Moon hides and reveals in the same breath. Trust the darkness.`,
+        absurdTruth: `The answer was always the question you forgot to ask.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} arrives wrapped in ambiguity, which is just mystery wearing practical shoes.`,
+        astrophysical: `The Moon makes the hidden active. Not knowing is part of the signal.`,
+        absurdTruth: `Mystery is not a bug in the system. It is the system.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} asks you to tolerate the fog long enough for a shape to emerge.`,
+        astrophysical: `The Moon dims certainty so intuition can breathe.`,
+        absurdTruth: `Some doors only open when you stop calling them locked.`,
+      }),
+    ],
   };
+
+  const planetKey = (planet || '').toLowerCase();
+  const pool =
+    (fallbackPools[intent] && fallbackPools[intent][planetKey]) ||
+    (fallbackPools[intent] && fallbackPools[intent].default) ||
+    fallbackPools[intent] ||
+    [
+      () => ({
+        cardSpeaks: `The ${card.name} speaks to your journey.`,
+        astrophysical: `The cosmos moves in mysterious ways.`,
+        absurdTruth: `You are exactly where you need to be.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} speaks, though not always in the language you expect.`,
+        astrophysical: `The sky is still moving, even when the message feels still.`,
+        absurdTruth: `Meaning rarely arrives wearing the outfit you planned.`,
+      }),
+      () => ({
+        cardSpeaks: `The ${card.name} is still a message, even when it feels unfinished.`,
+        astrophysical: `The cosmos prefers layers to slogans.`,
+        absurdTruth: `The reading is not broken; it is being coy.`,
+      }),
+    ];
+
+  return pickRandomVariant(pool)();
 }
