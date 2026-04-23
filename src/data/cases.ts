@@ -309,6 +309,25 @@ const CASES_2026: CaseLaw[] = [
     opinionText:  'Full opinion text to be added.',
     publishedAt:  '2025-12-26',
   },
+  {
+    id:           'woods-2026',
+    slug:         'woods-v-state-361-ga-app-844',
+    title:        'Woods v. State',
+    shortTitle:   'Woods v. State',
+    court:        'Court of Appeals of Georgia',
+    docketNumber: 'A21A0723',
+    dateDecided:  '2021-10-25',
+    citations:    '361 Ga. App. 844; 864 S.E.2d 194; 2021 Ga. App. LEXIS 521',
+    judges:       'Reese, J.',
+    disposition:  'Judgment affirmed in part, reversed in part',
+    coreTerms:    ['driving under the influence', 'HGN test', 'general demurrer'],
+    summary:      'The Court of Appeals affirmed evidentiary rulings but reversed the denial of general demurrers to traffic violations.',
+    holdingBold:  'An accusation for driving too fast for conditions must allege the speed of the vehicle.',
+    conclusionText: 'The Court reversed the convictions for driving too fast for conditions and failure to maintain lane.',
+    opinionAuthor: 'Reese',
+    opinionText:  'Full opinion text provided in master file.',
+    publishedAt:  '2026-04-23',
+  },
 ]
 
 // ─── Combined index ───────────────────────────────────────────────────────────
