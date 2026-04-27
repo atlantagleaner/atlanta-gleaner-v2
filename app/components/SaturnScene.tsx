@@ -45,9 +45,9 @@ const FLIGHT = {
     '3': 0.075,
     WARP: 0.06,
   } as const,
-  yawRate: 0.018,
-  pitchRate: 0.013,
-  rollAmount: 0.38,
+  yawRate: 0.0135,
+  pitchRate: 0.0098,
+  rollAmount: 0.28,
   pitchLimit: Math.PI / 3,
   shipCollisionRadius: 1.2,
   fovNormal: 46,
@@ -386,10 +386,10 @@ function pickRobotLine(lines: readonly string[], exclude?: string | null) {
 
 function shapeFlightAxis(value: number) {
   const magnitude = Math.abs(value)
-  if (magnitude < 0.1) return 0
+  if (magnitude < 0.14) return 0
 
-  const normalized = (magnitude - 0.1) / 0.9
-  const curved = Math.pow(normalized, 1.55)
+  const normalized = (magnitude - 0.14) / 0.86
+  const curved = Math.pow(normalized, 1.9)
   return Math.sign(value) * curved
 }
 

@@ -600,13 +600,13 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
         <div
           style={{
             position: 'absolute',
-            right: isMobile ? 14 : 18,
-            bottom: isMobile ? 20 : 26,
-            width: isMobile ? 152 : 176,
-            height: isMobile ? 314 : 352,
+            right: isMobile ? 12 : 18,
+            bottom: isMobile ? 18 : 26,
+            width: isMobile ? 84 : 94,
+            height: isMobile ? 124 : 136,
             display: 'flex',
             flexDirection: 'column',
-            gap: 8,
+            gap: 4,
             alignItems: 'stretch',
             pointerEvents: 'auto',
           }}
@@ -616,10 +616,10 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'baseline',
-              padding: '0 12px',
+              padding: '0 4px',
               color: 'rgba(255, 241, 210, 0.82)',
-              fontSize: 9,
-              letterSpacing: '0.24em',
+              fontSize: 7,
+              letterSpacing: '0.18em',
             }}
           >
             <span>GEAR</span>
@@ -645,8 +645,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               style={{
                 position: 'absolute',
                 left: '50%',
-                top: 14,
-                bottom: 14,
+                top: 8,
+                bottom: 8,
                 width: 2,
                 transform: 'translateX(-50%)',
                 background: 'linear-gradient(180deg, rgba(255, 236, 200, 0.12), rgba(255, 236, 200, 0.04), rgba(255, 236, 200, 0.12))',
@@ -670,14 +670,14 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0 14px',
+                    padding: '0 7px',
                     pointerEvents: 'none',
                   }}
                 >
                   <div
                     className="gear-stop"
                     style={{
-                      width: isActive ? 26 : 18,
+                      width: isActive ? 14 : 10,
                       height: 2,
                       borderRadius: 999,
                       background: isWarp
@@ -692,8 +692,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                   <div
                     className="gear-stop"
                     style={{
-                      fontSize: isWarp ? 9 : 10,
-                      letterSpacing: '0.18em',
+                      fontSize: isWarp ? 6 : 8,
+                      letterSpacing: '0.08em',
                       color: isActive ? '#fff5d8' : isWarp ? 'rgba(155, 247, 255, 0.72)' : 'rgba(236, 222, 196, 0.58)',
                       textShadow: isActive ? '0 0 8px rgba(255, 241, 210, 0.22)' : 'none',
                     }}
@@ -711,8 +711,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                 left: '50%',
                 top: `${(1 - selectedGearIndex / (DRIVE_GEAR_ORDER.length - 1)) * 100}%`,
                 transform: 'translate(-50%, -50%)',
-                width: isMobile ? 88 : 104,
-                height: isMobile ? 40 : 44,
+                width: isMobile ? 48 : 54,
+                height: isMobile ? 24 : 26,
                 borderRadius: 999,
                 border: `1px solid ${driveGear === 'WARP' ? 'rgba(155, 247, 255, 0.9)' : 'rgba(255, 232, 190, 0.58)'}`,
                 background:
@@ -734,7 +734,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               <div
                 style={{
                   width: 22,
-                  height: 5,
+                  height: 4,
                   borderRadius: 999,
                   background: driveGear === 'WARP' ? 'rgba(233, 255, 255, 0.95)' : 'rgba(255, 248, 230, 0.95)',
                   boxShadow: driveGear === 'WARP' ? '0 0 10px rgba(155, 247, 255, 0.82)' : '0 0 10px rgba(255, 248, 230, 0.32)',
@@ -747,13 +747,13 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '0 12px',
+              padding: '0 4px',
               color: 'rgba(255, 241, 210, 0.58)',
-              fontSize: 8,
-              letterSpacing: '0.16em',
+              fontSize: 6,
+              letterSpacing: '0.08em',
             }}
           >
-            <span>DRAG TO SHIFT</span>
+            <span>SHIFT</span>
             <span style={{ color: driveGear === 'WARP' ? '#9bf7ff' : '#f1e4c2' }}>STOP AT 0</span>
           </div>
         </div>
