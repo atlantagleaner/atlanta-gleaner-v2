@@ -1280,9 +1280,9 @@ export default function SaturnScene({
       emissiveIntensity: 0.14,
     })
     const accentMaterial = new THREE.MeshPhongMaterial({
-      color: 0x2446d8,
+      color: 0xff5abf,
       shininess: 96,
-      emissive: 0x11184e,
+      emissive: 0x4d1738,
     })
     const trimMaterial = new THREE.MeshPhongMaterial({
       color: 0xd4af74,
