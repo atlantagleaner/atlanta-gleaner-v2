@@ -3,13 +3,15 @@
 import { useEffect, useState } from 'react'
 import { SaturnNavbar } from './components/SaturnNavbar'
 import SaturnScene from '../components/SaturnScene'
+import FlightScene from '../components/FlightScene'
+import FlightControls from '../components/FlightControls'
 
 export default function SaturnPage() {
   const [isMobile, setIsMobile] = useState(false)
   const [resetOrbit, setResetOrbit] = useState<(() => void) | null>(null)
   const [isGamePortalOpen, setIsGamePortalOpen] = useState(false)
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
-  const iframeRef = useState<HTMLIFrameElement | null>(null)[1]
+  const [activeMode, setActiveMode] = useState<'orbit' | 'flight'>('orbit')
 
   // Apply Saturn theme to document element for global CSS selectors
   useEffect(() => {
@@ -29,10 +31,17 @@ export default function SaturnPage() {
   const handleGameSelected = (gameName: string) => {
     if (gameName === 'orbit') {
       // Close the overlay, return to default Saturn view
+      setActiveMode('orbit')
+      setIsGamePortalOpen(false)
+      setSelectedGame(null)
+    } else if (gameName === 'flight') {
+      // Full-screen Flight mode — no iframe, replaces SaturnScene
+      setActiveMode('flight')
       setIsGamePortalOpen(false)
       setSelectedGame(null)
     } else {
-      // Open the overlay with the selected game (iframe src will update automatically)
+      // Open the iframe portal for blackjack/tarot/oracle
+      setActiveMode('orbit')
       setSelectedGame(gameName)
       setIsGamePortalOpen(true)
     }
@@ -68,11 +77,11 @@ export default function SaturnPage() {
           }
         }
       `}</style>
-      <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: isMobile ? '550px' : '0' }}>
+      <div data-saturn="true" suppressHydrationWarning style={{ minHeight: '100vh', backgroundColor: '#0B0820', position: 'relative', overflowX: 'hidden', paddingBottom: (isMobile && activeMode !== 'flight') ? '550px' : '0' }}>
       {/* Saturn Navbar */}
       <SaturnNavbar onResetOrbit={resetOrbit || undefined} onGameSelected={handleGameSelected} />
 
-      {/* Interactive Saturn Simulation */}
+      {/* Interactive Saturn Simulation OR Flight Mode (full-screen) */}
       <div style={{
         position: 'fixed',
         inset: 0,
@@ -80,13 +89,20 @@ export default function SaturnPage() {
         width: '100%',
         height: '100%',
       }}>
-        <SaturnScene
-          isInteractive={true}
-          isMobile={isMobile}
-          isGamePortalOpen={isGamePortalOpen}
-          onSceneReady={(camera, orbReset) => setResetOrbit(() => orbReset)}
-        />
+        {activeMode === 'flight' ? (
+          <FlightScene isMobile={isMobile} />
+        ) : (
+          <SaturnScene
+            isInteractive={true}
+            isMobile={isMobile}
+            isGamePortalOpen={isGamePortalOpen}
+            onSceneReady={(camera, orbReset) => setResetOrbit(() => orbReset)}
+          />
+        )}
       </div>
+
+      {/* Flight HUD + Controls overlay (only in flight mode) */}
+      {activeMode === 'flight' && <FlightControls isMobile={isMobile} onExit={() => setActiveMode('orbit')} />}
 
       {/* Game Portal Modal Stacked Below Navbar */}
       {isGamePortalOpen && (
