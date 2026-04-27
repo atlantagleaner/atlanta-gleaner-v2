@@ -17,6 +17,7 @@ export interface FlightControlsProps {
 
 const JOY_RADIUS = 44
 const DRIVE_GEAR_ORDER = DRIVE_GEARS
+const GEAR_TRAVEL_INSET = 0.16
 const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
   R: 'R',
   '0': '0',
@@ -32,6 +33,12 @@ function gearIndex(gear: (typeof DRIVE_GEARS)[number]) {
 
 function gearFromIndex(index: number) {
   return DRIVE_GEAR_ORDER[Math.max(0, Math.min(DRIVE_GEAR_ORDER.length - 1, index))]
+}
+
+function gearTopPercent(index: number) {
+  const t = index / (DRIVE_GEAR_ORDER.length - 1)
+  const travel = 1 - GEAR_TRAVEL_INSET * 2
+  return (GEAR_TRAVEL_INSET + (1 - t) * travel) * 100
 }
 
 export default function FlightControls({ isMobile = false }: FlightControlsProps) {
@@ -156,8 +163,9 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
 
     const gearFromClientY = (clientY: number) => {
       if (!railRect) return driveGearRef.current
-      const t = (clientY - railRect.top) / railRect.height
-      const clamped = Math.max(0, Math.min(1, t))
+      const raw = (clientY - railRect.top) / railRect.height
+      const travel = 1 - GEAR_TRAVEL_INSET * 2
+      const clamped = Math.max(0, Math.min(1, (raw - GEAR_TRAVEL_INSET) / travel))
       const index = Math.round((1 - clamped) * (DRIVE_GEAR_ORDER.length - 1))
       return gearFromIndex(index)
     }
@@ -602,8 +610,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
             position: 'absolute',
             right: isMobile ? 12 : 18,
             bottom: isMobile ? 18 : 26,
-            width: isMobile ? 84 : 94,
-            height: isMobile ? 124 : 136,
+            width: isMobile ? 92 : 104,
+            height: isMobile ? 136 : 150,
             display: 'flex',
             flexDirection: 'column',
             gap: 4,
@@ -665,7 +673,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                     position: 'absolute',
                     left: 0,
                     right: 0,
-                    top: `${(1 - t) * 100}%`,
+                    top: `${gearTopPercent(index)}%`,
                     transform: 'translateY(-50%)',
                     display: 'flex',
                     alignItems: 'center',
@@ -709,7 +717,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               style={{
                 position: 'absolute',
                 left: '50%',
-                top: `${(1 - selectedGearIndex / (DRIVE_GEAR_ORDER.length - 1)) * 100}%`,
+                top: `${gearTopPercent(selectedGearIndex)}%`,
                 transform: 'translate(-50%, -50%)',
                 width: isMobile ? 48 : 54,
                 height: isMobile ? 24 : 26,
