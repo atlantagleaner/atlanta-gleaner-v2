@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { flightCompanion, flightHUD, flightInput, queueFlightMessage, resetFlightInput } from './flightInput'
+import { flightCompanion, flightHUD, flightInput, queueFlightMessage, resetFlightInput, type DriveGear } from './flightInput'
 
 export interface SaturnSceneProps {
   onSceneReady?: (camera: THREE.PerspectiveCamera, resetOrbit: () => void) => void
@@ -29,12 +29,22 @@ const SATURN = {
 }
 
 const FLIGHT = {
-  thrustAcc: 0.003,
-  reverseAcc: 0.0045,
-  drag: 0.9992,
-  maxSpeed: 1.7,
-  maxReverseSpeed: 0.7,
-  warpMult: 7.5,
+  gearSpeeds: {
+    R: -0.55,
+    '0': 0,
+    '1': 0.58,
+    '2': 0.96,
+    '3': 1.36,
+    WARP: 2.3,
+  } as const,
+  gearResponse: {
+    R: 0.18,
+    '0': 0.2,
+    '1': 0.1,
+    '2': 0.085,
+    '3': 0.075,
+    WARP: 0.06,
+  } as const,
   yawRate: 0.018,
   pitchRate: 0.013,
   rollAmount: 0.38,
@@ -73,11 +83,11 @@ const ROBOT_DIALOGUE = {
     'All right, space ace. Nice and gentle. The universe is huge, but we have excellent vibes.',
   ],
   mechanics: [
-    'Tiny reminder: normal thrust is for sightseeing, not panic. It is meant to feel slow.',
+    'Tiny reminder: gear 1 is for sightseeing, not panic. It is meant to feel gentle.',
     'If a planet starts filling the whole canopy, that is your cue to turn before physics says hello.',
     'Warp is best when you already have a clean heading. It is less heroic when aimed badly.',
-    'Short bursts on thrust make steering cleaner than holding it forever.',
-    'Reverse is your dignity button. Use it before a planet becomes the entire plan.',
+    'Shift the lever with intention. The ship likes clear instructions.',
+    'R is your dignity gear. Use it before a planet becomes the entire plan.',
     'The edge markers are not decoration. They are me, lovingly pointing at expensive destinations.',
     'If Earth drifts off center, correct a little. Space rewards patience more than wrestling.',
     'You do not need to oversteer. The ship listens better when you are smooth with it.',
@@ -87,9 +97,9 @@ const ROBOT_DIALOGUE = {
     'A clean turn is prettier than a frantic one. I know because I am watching.',
     'If a world looks huge and peaceful, please remember the huge part.',
     'Quick pilot note: planets are solid. I wish that sounded less obvious and more useful.',
-    'You can feather thrust. We are not required to launch ourselves at every problem.',
+    'You can stay in a lower gear. We are not required to launch ourselves at every problem.',
     'When the nose is where you want it, let the ship glide a second. It feels better.',
-    'Reverse is excellent for changing your mind without announcing it dramatically.',
+    'Reverse gear is excellent for changing your mind without announcing it dramatically.',
     'If the approach feels too fast, it probably is. Space loves subtle mistakes.',
     'Line up your turn before you accelerate. Momentum is stylish but stubborn.',
     'If Saturn disappears behind you, the HUD will still help, but your eyes are the real magic.',
@@ -381,6 +391,14 @@ function shapeFlightAxis(value: number) {
   const normalized = (magnitude - 0.1) / 0.9
   const curved = Math.pow(normalized, 1.55)
   return Math.sign(value) * curved
+}
+
+function getGearSpeed(gear: DriveGear) {
+  return FLIGHT.gearSpeeds[gear]
+}
+
+function getGearResponse(gear: DriveGear) {
+  return FLIGHT.gearResponse[gear]
 }
 
 function createStarLayer({
@@ -775,7 +793,6 @@ export default function SaturnScene({
       state.camera.updateProjectionMatrix()
       flightHUD.warpActive = false
       flightHUD.crashFlash = 0
-      flightHUD.phase = 'flying'
       flightHUD.heading = yawRef.current
       state.scene.fog = new THREE.Fog(WORLD.background, WORLD.fogNear, WORLD.fogFar)
       frontierCleanupRef.current?.()
@@ -1458,7 +1475,6 @@ export default function SaturnScene({
         ship.position.distanceTo(earth.root.getWorldPosition(bodyWorldPos)) - earth.radius * getFlightScale(earth)
       )
       flightHUD.warpActive = false
-      flightHUD.phase = 'flying'
       flightHUD.crashFlash = 0
       flightHUD.heading = yawRef.current
       resetFlightInput()
@@ -1809,6 +1825,7 @@ export default function SaturnScene({
         flightElapsedMs += dt
         const jx = shapeFlightAxis(input.joystick.x)
         const jy = shapeFlightAxis(input.joystick.y)
+        const selectedGear = input.driveGear
 
         yawRef.current += -jx * FLIGHT.yawRate
         pitchRef.current += -jy * FLIGHT.pitchRate
@@ -1818,21 +1835,13 @@ export default function SaturnScene({
         ship.rotation.set(pitchRef.current, yawRef.current, visualRoll, 'YXZ')
         tmpForward.copy(shipForwardLocal).applyQuaternion(ship.quaternion).normalize()
 
-        if (input.thrust) velocityRef.current.addScaledVector(tmpForward, FLIGHT.thrustAcc)
-        if (input.reverse) velocityRef.current.addScaledVector(tmpForward, -FLIGHT.reverseAcc)
+        const desiredSpeed = getGearSpeed(selectedGear)
+        const currentSpeed = velocityRef.current.dot(tmpForward)
+        const nextSpeed = THREE.MathUtils.lerp(currentSpeed, desiredSpeed, getGearResponse(selectedGear))
+        velocityRef.current.copy(tmpForward).multiplyScalar(nextSpeed)
 
-        const forwardSpeed = velocityRef.current.dot(tmpForward)
-        if (forwardSpeed < -FLIGHT.maxReverseSpeed) {
-          const clampedReverse = tmpForward.clone().multiplyScalar(-FLIGHT.maxReverseSpeed)
-          const lateral = velocityRef.current.clone().sub(tmpForward.clone().multiplyScalar(forwardSpeed))
-          velocityRef.current.copy(lateral.add(clampedReverse))
-        }
-
-        if (velocityRef.current.length() > FLIGHT.maxSpeed) velocityRef.current.setLength(FLIGHT.maxSpeed)
-        velocityRef.current.multiplyScalar(FLIGHT.drag)
-
-        const warpActive = input.warp && velocityRef.current.lengthSq() > 0.0006
-        ship.position.addScaledVector(velocityRef.current, warpActive ? FLIGHT.warpMult : 1)
+        const warpActive = selectedGear === 'WARP'
+        ship.position.addScaledVector(velocityRef.current, warpActive ? FLIGHT.gearSpeeds.WARP : 1)
 
         const desiredFov = warpActive ? FLIGHT.fovWarp : FLIGHT.fovNormal
         camera.fov = THREE.MathUtils.lerp(camera.fov, desiredFov, 0.08)
@@ -1854,11 +1863,11 @@ export default function SaturnScene({
         nebulaSprites[2].position.copy(ship.position).add(new THREE.Vector3(900, 1800, 3600).multiplyScalar(1))
         nebulaSprites[2].position.sub(ship.position).multiplyScalar(0.08).add(ship.position)
 
-        const thrustStrength = input.thrust ? 1 : 0
-        const reverseStrength = input.reverse ? 1 : 0
-        engineGlowMaterial.opacity = Math.min(1, 0.34 + thrustStrength * 0.58 + (warpActive ? 0.2 : 0))
-        thrusterGlow.scale.z = 0.6 + thrustStrength * 1.2 + (warpActive ? 1.1 : 0)
-        engineLight.intensity = thrustStrength * 1.35 + (warpActive ? 0.9 : 0)
+        const forwardStrength = THREE.MathUtils.clamp(Math.max(0, nextSpeed) / FLIGHT.gearSpeeds.WARP, 0, 1)
+        const reverseStrength = THREE.MathUtils.clamp(Math.max(0, -nextSpeed) / Math.abs(FLIGHT.gearSpeeds.R), 0, 1)
+        engineGlowMaterial.opacity = Math.min(1, 0.26 + forwardStrength * 0.58 + (warpActive ? 0.24 : 0))
+        thrusterGlow.scale.z = 0.58 + forwardStrength * 1.2 + (warpActive ? 1.1 : 0)
+        engineLight.intensity = forwardStrength * 1.35 + (warpActive ? 1.0 : 0)
         reverseGlowMaterial.opacity = 0.08 + reverseStrength * 0.62
         reverseGlow.scale.z = 0.55 + reverseStrength * 1.05
         reverseLight.intensity = reverseStrength * 1.05
@@ -1912,8 +1921,7 @@ export default function SaturnScene({
         tmpLookAt.copy(FLIGHT.lookAhead).applyQuaternion(ship.quaternion).add(ship.position)
         camera.lookAt(tmpLookAt)
 
-        const displaySpeed = velocityRef.current.length() * (warpActive ? FLIGHT.warpMult : 1)
-        flightHUD.speed = parseFloat(displaySpeed.toFixed(2))
+        flightHUD.speed = parseFloat((nextSpeed * (warpActive ? FLIGHT.gearSpeeds.WARP : 1)).toFixed(2))
         flightHUD.nearest = nearestBody.name
         flightHUD.earthDist = Math.max(
           0,

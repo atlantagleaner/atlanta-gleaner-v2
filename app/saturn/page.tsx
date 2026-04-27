@@ -107,7 +107,7 @@ export default function SaturnPage() {
           />
         </div>
 
-        {activeMode === 'flight' && <FlightControls isMobile={isMobile} onExit={() => setActiveMode('orbit')} />}
+        {activeMode === 'flight' && <FlightControls isMobile={isMobile} />}
 
         {isGamePortalOpen && (
           <div

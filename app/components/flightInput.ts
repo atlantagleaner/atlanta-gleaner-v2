@@ -1,11 +1,12 @@
 // Shared input/output refs for Flight mode.
 // FlightControls writes; SaturnScene reads each frame. No React state, no re-renders.
 
+export const DRIVE_GEARS = ['R', '0', '1', '2', '3', 'WARP'] as const
+export type DriveGear = (typeof DRIVE_GEARS)[number]
+
 export const flightInput = {
   joystick: { x: 0, y: 0 },
-  thrust: false,
-  reverse: false,
-  warp: false,
+  driveGear: '0' as DriveGear,
 }
 
 export const flightHUD = {
@@ -13,7 +14,6 @@ export const flightHUD = {
   nearest: 'SATURN',
   earthDist: 0,
   warpActive: false,
-  phase: 'flying' as 'flying' | 'crashing',
   crashFlash: 0,
   heading: 0,
   hudMarkers: [] as Array<{
@@ -46,7 +46,5 @@ export function clearFlightMessage() {
 export function resetFlightInput() {
   flightInput.joystick.x = 0
   flightInput.joystick.y = 0
-  flightInput.thrust = false
-  flightInput.reverse = false
-  flightInput.warp = false
+  flightInput.driveGear = '0'
 }

@@ -3,6 +3,7 @@
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import {
+  DRIVE_GEARS,
   clearFlightMessage,
   flightCompanion,
   flightHUD,
@@ -12,31 +13,51 @@ import {
 
 export interface FlightControlsProps {
   isMobile?: boolean
-  onExit?: () => void
 }
 
 const JOY_RADIUS = 44
+const DRIVE_GEAR_ORDER = DRIVE_GEARS
+const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
+  R: 'R',
+  '0': '0',
+  '1': '1',
+  '2': '2',
+  '3': '3',
+  WARP: 'WARP',
+}
+
+function gearIndex(gear: (typeof DRIVE_GEARS)[number]) {
+  return DRIVE_GEAR_ORDER.indexOf(gear)
+}
+
+function gearFromIndex(index: number) {
+  return DRIVE_GEAR_ORDER[Math.max(0, Math.min(DRIVE_GEAR_ORDER.length - 1, index))]
+}
 
 export default function FlightControls({ isMobile = false }: FlightControlsProps) {
   const joyBaseRef = useRef<HTMLDivElement>(null)
   const joyThumbRef = useRef<HTMLDivElement>(null)
+  const gearRailRef = useRef<HTMLDivElement>(null)
+  const gearHandleRef = useRef<HTMLDivElement>(null)
   const speedRef = useRef<HTMLSpanElement>(null)
   const nearestRef = useRef<HTMLSpanElement>(null)
   const earthDistRef = useRef<HTMLSpanElement>(null)
   const warpBadgeRef = useRef<HTMLSpanElement>(null)
   const warpVignetteRef = useRef<HTMLDivElement>(null)
   const crashFlashRef = useRef<HTMLDivElement>(null)
-  const thrustBtnRef = useRef<HTMLButtonElement>(null)
-  const reverseBtnRef = useRef<HTMLButtonElement>(null)
-  const warpBtnRef = useRef<HTMLButtonElement>(null)
   const messageTimerRef = useRef<number | null>(null)
   const messageTypeTimerRef = useRef<number | null>(null)
   const [companionMessage, setCompanionMessage] = useState('')
   const [companionVisible, setCompanionVisible] = useState(false)
+  const [driveGear, setDriveGear] = useState<(typeof DRIVE_GEARS)[number]>('0')
+  const driveGearRef = useRef<(typeof DRIVE_GEARS)[number]>('0')
   const [, setHudTick] = useState(0)
+  const selectedGearIndex = gearIndex(driveGear)
 
   useEffect(() => {
     resetFlightInput()
+    setDriveGear('0')
+    driveGearRef.current = '0'
     const prevOverflow = document.body.style.overflow
     const prevTouchAction = document.body.style.touchAction
     document.body.style.overflow = 'hidden'
@@ -120,47 +141,63 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
   }, [])
 
   useEffect(() => {
-    const wire = (
-      btn: HTMLButtonElement | null,
-      key: 'thrust' | 'reverse' | 'warp',
-      activeClass: string
-    ) => {
-      if (!btn) return () => {}
-      let pointerId: number | null = null
-      const press = (e: PointerEvent) => {
-        if (pointerId !== null) return
-        e.preventDefault()
-        pointerId = e.pointerId
-        btn.setPointerCapture?.(e.pointerId)
-        flightInput[key] = true
-        btn.classList.add(activeClass)
-      }
-      const release = (e: PointerEvent) => {
-        if (pointerId !== e.pointerId) return
-        e.preventDefault()
-        try {
-          btn.releasePointerCapture?.(e.pointerId)
-        } catch {}
-        pointerId = null
-        flightInput[key] = false
-        btn.classList.remove(activeClass)
-      }
-      btn.addEventListener('pointerdown', press)
-      btn.addEventListener('pointerup', release)
-      btn.addEventListener('pointercancel', release)
-      return () => {
-        btn.removeEventListener('pointerdown', press)
-        btn.removeEventListener('pointerup', release)
-        btn.removeEventListener('pointercancel', release)
-      }
+    const rail = gearRailRef.current
+    const handle = gearHandleRef.current
+    if (!rail || !handle) return
+
+    let activePointerId: number | null = null
+    let railRect: DOMRect | null = null
+
+    const applyGear = (nextGear: (typeof DRIVE_GEARS)[number]) => {
+      flightInput.driveGear = nextGear
+      driveGearRef.current = nextGear
+      setDriveGear(nextGear)
     }
 
-    const cleanups = [
-      wire(thrustBtnRef.current, 'thrust', 'btn-active-thrust'),
-      wire(reverseBtnRef.current, 'reverse', 'btn-active-reverse'),
-      wire(warpBtnRef.current, 'warp', 'btn-active-warp'),
-    ]
-    return () => cleanups.forEach((cleanup) => cleanup())
+    const gearFromClientY = (clientY: number) => {
+      if (!railRect) return driveGearRef.current
+      const t = (clientY - railRect.top) / railRect.height
+      const clamped = Math.max(0, Math.min(1, t))
+      const index = Math.round((1 - clamped) * (DRIVE_GEAR_ORDER.length - 1))
+      return gearFromIndex(index)
+    }
+
+    const onDown = (e: PointerEvent) => {
+      if (activePointerId !== null) return
+      e.preventDefault()
+      activePointerId = e.pointerId
+      railRect = rail.getBoundingClientRect()
+      rail.setPointerCapture?.(e.pointerId)
+      applyGear(gearFromClientY(e.clientY))
+    }
+
+    const onMove = (e: PointerEvent) => {
+      if (activePointerId !== e.pointerId || !railRect) return
+      e.preventDefault()
+      applyGear(gearFromClientY(e.clientY))
+    }
+
+    const onUp = (e: PointerEvent) => {
+      if (activePointerId !== e.pointerId) return
+      e.preventDefault()
+      try {
+        rail.releasePointerCapture?.(e.pointerId)
+      } catch {}
+      activePointerId = null
+      railRect = null
+    }
+
+    rail.addEventListener('pointerdown', onDown)
+    rail.addEventListener('pointermove', onMove)
+    rail.addEventListener('pointerup', onUp)
+    rail.addEventListener('pointercancel', onUp)
+
+    return () => {
+      rail.removeEventListener('pointerdown', onDown)
+      rail.removeEventListener('pointermove', onMove)
+      rail.removeEventListener('pointerup', onUp)
+      rail.removeEventListener('pointercancel', onUp)
+    }
   }, [])
 
   useEffect(() => {
@@ -170,6 +207,11 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
       const y = (keyState.down ? 1 : 0) - (keyState.up ? 1 : 0)
       flightInput.joystick.x = x
       flightInput.joystick.y = y
+    }
+
+    const setGear = (nextGear: (typeof DRIVE_GEARS)[number]) => {
+      flightInput.driveGear = nextGear
+      setDriveGear(nextGear)
     }
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -194,15 +236,39 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
           keyState.down = true
           updateJoystickFromKeys()
           break
-        case ' ':
-          flightInput.thrust = true
+        case '0':
+          setGear('0')
           break
-        case 'Shift':
-          flightInput.reverse = true
+        case '1':
+          setGear('1')
+          break
+        case '2':
+          setGear('2')
+          break
+        case '3':
+          setGear('3')
+          break
+        case 'r':
+        case 'R':
+          setGear('R')
           break
         case 'e':
         case 'E':
-          flightInput.warp = true
+        case 'End':
+          setGear('WARP')
+          break
+        case 'PageUp': {
+          const nextIndex = Math.min(DRIVE_GEAR_ORDER.length - 1, gearIndex(driveGearRef.current) + 1)
+          setGear(gearFromIndex(nextIndex))
+          break
+        }
+        case 'PageDown': {
+          const nextIndex = Math.max(0, gearIndex(driveGearRef.current) - 1)
+          setGear(gearFromIndex(nextIndex))
+          break
+        }
+        case 'Home':
+          setGear('R')
           break
       }
     }
@@ -228,16 +294,6 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
         case 'S':
           keyState.down = false
           updateJoystickFromKeys()
-          break
-        case ' ':
-          flightInput.thrust = false
-          break
-        case 'Shift':
-          flightInput.reverse = false
-          break
-        case 'e':
-        case 'E':
-          flightInput.warp = false
           break
       }
     }
@@ -315,45 +371,21 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
           -webkit-user-select: none;
           -webkit-tap-highlight-color: transparent;
         }
-        .flight-btn {
-          font-family: monospace;
-          letter-spacing: 0.12em;
-          font-size: 11px;
-          font-weight: 700;
-          color: #fff;
-          background: rgba(184, 134, 11, 0.14);
-          border: 1px solid rgba(184, 134, 11, 0.45);
-          border-radius: 14px;
-          padding: 14px 18px;
-          cursor: pointer;
-          touch-action: none;
-          transition: background 0.08s ease, border-color 0.08s ease, transform 0.06s ease, box-shadow 0.12s ease;
-          backdrop-filter: blur(8px);
-          pointer-events: auto;
-          min-width: 112px;
-          text-align: center;
-        }
-        .flight-btn:active,
-        .btn-active-thrust {
-          background: rgba(255, 166, 59, 0.52) !important;
-          border-color: #ffb35f !important;
-          box-shadow: 0 0 22px rgba(255, 177, 95, 0.38);
-          transform: scale(0.97);
-        }
-        .btn-active-reverse {
-          background: rgba(74, 164, 255, 0.42) !important;
-          border-color: #7ec9ff !important;
-          box-shadow: 0 0 20px rgba(126, 201, 255, 0.45);
-          transform: scale(0.97);
-        }
-        .btn-active-warp {
-          background: rgba(77, 245, 255, 0.44) !important;
-          border-color: #9bf7ff !important;
-          box-shadow: 0 0 28px rgba(120, 243, 255, 0.6);
-          transform: scale(0.97);
-        }
         .joy-base {
           touch-action: none;
+        }
+        .gear-rail {
+          touch-action: none;
+          cursor: grab;
+        }
+        .gear-rail:active {
+          cursor: grabbing;
+        }
+        .gear-stop {
+          transition: opacity 0.15s ease, color 0.15s ease, transform 0.15s ease;
+        }
+        .gear-handle {
+          transition: top 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
         }
         .warp-badge,
         .warp-vignette,
@@ -568,42 +600,162 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
         <div
           style={{
             position: 'absolute',
-            right: isMobile ? 18 : 22,
-            bottom: isMobile ? 22 : 28,
+            right: isMobile ? 14 : 18,
+            bottom: isMobile ? 20 : 26,
+            width: isMobile ? 152 : 176,
+            height: isMobile ? 314 : 352,
             display: 'flex',
             flexDirection: 'column',
             gap: 8,
             alignItems: 'stretch',
-            pointerEvents: 'none',
+            pointerEvents: 'auto',
           }}
         >
-          <button
-            ref={warpBtnRef}
-            className="flight-btn"
+          <div
             style={{
-              fontSize: 12,
-              color: '#d8fbff',
-              background: 'rgba(18, 110, 132, 0.26)',
-              borderColor: 'rgba(132, 242, 255, 0.34)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+              padding: '0 12px',
+              color: 'rgba(255, 241, 210, 0.82)',
+              fontSize: 9,
+              letterSpacing: '0.24em',
             }}
           >
-            WARP
-          </button>
-          <button ref={thrustBtnRef} className="flight-btn" style={{ fontSize: 13 }}>
-            THRUST
-          </button>
-          <button
-            ref={reverseBtnRef}
-            className="flight-btn"
+            <span>GEAR</span>
+            <span style={{ color: driveGear === 'WARP' ? '#9bf7ff' : '#f7ecd0' }}>{DRIVE_GEAR_LABELS[driveGear]}</span>
+          </div>
+          <div
+            ref={gearRailRef}
+            className="gear-rail"
             style={{
-              fontSize: 11,
-              background: 'rgba(24, 62, 112, 0.28)',
-              borderColor: 'rgba(122, 188, 255, 0.38)',
-              color: '#d7e9ff',
+              position: 'relative',
+              flex: 1,
+              borderRadius: 26,
+              background:
+                'linear-gradient(180deg, rgba(12, 12, 18, 0.82) 0%, rgba(14, 13, 20, 0.7) 18%, rgba(6, 6, 10, 0.84) 100%)',
+              border: '1px solid rgba(184, 134, 11, 0.28)',
+              boxShadow: '0 18px 34px rgba(0, 0, 0, 0.32), inset 0 0 22px rgba(184, 134, 11, 0.08)',
+              backdropFilter: 'blur(12px)',
+              overflow: 'hidden',
+            }}
+            aria-label="Gear selector"
+          >
+            <div
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: 14,
+                bottom: 14,
+                width: 2,
+                transform: 'translateX(-50%)',
+                background: 'linear-gradient(180deg, rgba(255, 236, 200, 0.12), rgba(255, 236, 200, 0.04), rgba(255, 236, 200, 0.12))',
+              }}
+            />
+            {DRIVE_GEAR_ORDER.map((gear, index) => {
+              const t = index / (DRIVE_GEAR_ORDER.length - 1)
+              const isActive = driveGear === gear
+              const isAbove = index > selectedGearIndex
+              const isBelow = index < selectedGearIndex
+              const isWarp = gear === 'WARP'
+              return (
+                <div
+                  key={gear}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: `${(1 - t) * 100}%`,
+                    transform: 'translateY(-50%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 14px',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <div
+                    className="gear-stop"
+                    style={{
+                      width: isActive ? 26 : 18,
+                      height: 2,
+                      borderRadius: 999,
+                      background: isWarp
+                        ? 'rgba(155, 247, 255, 0.9)'
+                        : isActive
+                          ? 'rgba(255, 241, 210, 0.92)'
+                          : 'rgba(184, 134, 11, 0.34)',
+                      boxShadow: isWarp && isActive ? '0 0 12px rgba(155, 247, 255, 0.72)' : 'none',
+                      opacity: isActive ? 1 : isAbove ? 0.72 : isBelow ? 0.58 : 0.86,
+                    }}
+                  />
+                  <div
+                    className="gear-stop"
+                    style={{
+                      fontSize: isWarp ? 9 : 10,
+                      letterSpacing: '0.18em',
+                      color: isActive ? '#fff5d8' : isWarp ? 'rgba(155, 247, 255, 0.72)' : 'rgba(236, 222, 196, 0.58)',
+                      textShadow: isActive ? '0 0 8px rgba(255, 241, 210, 0.22)' : 'none',
+                    }}
+                  >
+                    {DRIVE_GEAR_LABELS[gear]}
+                  </div>
+                </div>
+              )
+            })}
+            <div
+              ref={gearHandleRef}
+              className="gear-handle"
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: `${(1 - selectedGearIndex / (DRIVE_GEAR_ORDER.length - 1)) * 100}%`,
+                transform: 'translate(-50%, -50%)',
+                width: isMobile ? 88 : 104,
+                height: isMobile ? 40 : 44,
+                borderRadius: 999,
+                border: `1px solid ${driveGear === 'WARP' ? 'rgba(155, 247, 255, 0.9)' : 'rgba(255, 232, 190, 0.58)'}`,
+                background:
+                  driveGear === 'WARP'
+                    ? 'linear-gradient(180deg, rgba(77, 245, 255, 0.7), rgba(20, 110, 130, 0.58))'
+                    : driveGear === '0'
+                      ? 'linear-gradient(180deg, rgba(255, 244, 223, 0.7), rgba(122, 94, 28, 0.45))'
+                      : 'linear-gradient(180deg, rgba(255, 214, 132, 0.72), rgba(125, 92, 10, 0.55))',
+                boxShadow:
+                  driveGear === 'WARP'
+                    ? '0 0 28px rgba(155, 247, 255, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.22)'
+                    : '0 0 18px rgba(255, 214, 132, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+              }}
+            >
+              <div
+                style={{
+                  width: 22,
+                  height: 5,
+                  borderRadius: 999,
+                  background: driveGear === 'WARP' ? 'rgba(233, 255, 255, 0.95)' : 'rgba(255, 248, 230, 0.95)',
+                  boxShadow: driveGear === 'WARP' ? '0 0 10px rgba(155, 247, 255, 0.82)' : '0 0 10px rgba(255, 248, 230, 0.32)',
+                }}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 12px',
+              color: 'rgba(255, 241, 210, 0.58)',
+              fontSize: 8,
+              letterSpacing: '0.16em',
             }}
           >
-            REVERSE
-          </button>
+            <span>DRAG TO SHIFT</span>
+            <span style={{ color: driveGear === 'WARP' ? '#9bf7ff' : '#f1e4c2' }}>STOP AT 0</span>
+          </div>
         </div>
 
         {!isMobile && (
@@ -620,7 +772,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               whiteSpace: 'nowrap',
             }}
           >
-            ARROWS OR WASD TO STEER  |  SPACE THRUST  |  SHIFT REVERSE  |  E WARP
+            ARROWS OR WASD TO STEER  |  DRAG GEAR LEVER  |  0 STOP  |  1-3 GEAR  |  R REVERSE  |  END WARP
           </div>
         )}
       </div>
