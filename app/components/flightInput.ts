@@ -1,5 +1,5 @@
 // Shared input/output refs for Flight mode.
-// FlightControls writes; FlightScene reads each frame. No React state, no re-renders.
+// FlightControls writes; SaturnScene reads each frame. No React state, no re-renders.
 
 export const flightInput = {
   joystick: { x: 0, y: 0 },
@@ -13,9 +13,18 @@ export const flightHUD = {
   nearest: 'SATURN',
   earthDist: 0,
   warpActive: false,
-  zone: 0,
   phase: 'flying' as 'flying' | 'crashing',
   crashFlash: 0,
+  heading: 0,
+  hudMarkers: [] as Array<{
+    name: string
+    color: string
+    x: number
+    y: number
+    onScreen: boolean
+    behind: boolean
+    distance: number
+  }>,
 }
 
 export const flightCompanion = {

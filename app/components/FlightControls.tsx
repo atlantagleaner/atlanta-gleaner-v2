@@ -17,7 +17,7 @@ export interface FlightControlsProps {
 
 const JOY_RADIUS = 44
 
-export default function FlightControls({ isMobile = false, onExit }: FlightControlsProps) {
+export default function FlightControls({ isMobile = false }: FlightControlsProps) {
   const joyBaseRef = useRef<HTMLDivElement>(null)
   const joyThumbRef = useRef<HTMLDivElement>(null)
   const speedRef = useRef<HTMLSpanElement>(null)
@@ -30,8 +30,10 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
   const reverseBtnRef = useRef<HTMLButtonElement>(null)
   const warpBtnRef = useRef<HTMLButtonElement>(null)
   const messageTimerRef = useRef<number | null>(null)
+  const messageTypeTimerRef = useRef<number | null>(null)
   const [companionMessage, setCompanionMessage] = useState('')
   const [companionVisible, setCompanionVisible] = useState(false)
+  const [, setHudTick] = useState(0)
 
   useEffect(() => {
     resetFlightInput()
@@ -44,6 +46,7 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
       document.body.style.overflow = prevOverflow
       document.body.style.touchAction = prevTouchAction
       if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current)
+      if (messageTypeTimerRef.current) window.clearTimeout(messageTypeTimerRef.current)
     }
   }, [])
 
@@ -106,14 +109,12 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
     base.addEventListener('pointermove', onMove)
     base.addEventListener('pointerup', onUp)
     base.addEventListener('pointercancel', onUp)
-    base.addEventListener('pointerleave', onUp)
 
     return () => {
       base.removeEventListener('pointerdown', onDown)
       base.removeEventListener('pointermove', onMove)
       base.removeEventListener('pointerup', onUp)
       base.removeEventListener('pointercancel', onUp)
-      base.removeEventListener('pointerleave', onUp)
       reset()
     }
   }, [])
@@ -147,12 +148,10 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
       btn.addEventListener('pointerdown', press)
       btn.addEventListener('pointerup', release)
       btn.addEventListener('pointercancel', release)
-      btn.addEventListener('pointerleave', release)
       return () => {
         btn.removeEventListener('pointerdown', press)
         btn.removeEventListener('pointerup', release)
         btn.removeEventListener('pointercancel', release)
-        btn.removeEventListener('pointerleave', release)
       }
     }
 
@@ -254,6 +253,7 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
   useEffect(() => {
     let raf = 0
     let lastMessageId = 0
+    let lastHudRefresh = 0
 
     const tick = () => {
       if (speedRef.current) speedRef.current.textContent = flightHUD.speed.toFixed(2)
@@ -265,13 +265,37 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
 
       if (flightCompanion.id !== lastMessageId && flightCompanion.visible) {
         lastMessageId = flightCompanion.id
-        setCompanionMessage(flightCompanion.message)
         setCompanionVisible(true)
         if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current)
-        messageTimerRef.current = window.setTimeout(() => {
-          setCompanionVisible(false)
-          clearFlightMessage()
-        }, 3600)
+        if (messageTypeTimerRef.current) window.clearTimeout(messageTypeTimerRef.current)
+
+        const fullMessage = flightCompanion.message
+        let charIndex = 0
+        setCompanionMessage('')
+
+        const typeNext = () => {
+          charIndex += 1
+          setCompanionMessage(fullMessage.slice(0, charIndex))
+          if (charIndex >= fullMessage.length) {
+            messageTypeTimerRef.current = null
+            messageTimerRef.current = window.setTimeout(() => {
+              setCompanionVisible(false)
+              clearFlightMessage()
+            }, 2800)
+            return
+          }
+
+          const current = fullMessage[charIndex - 1]
+          const nextDelay = current === '.' || current === '?' || current === '!' ? 220 : current === ',' ? 120 : 42
+          messageTypeTimerRef.current = window.setTimeout(typeNext, nextDelay)
+        }
+
+        messageTypeTimerRef.current = window.setTimeout(typeNext, 220)
+      }
+
+      if (performance.now() - lastHudRefresh > 120) {
+        lastHudRefresh = performance.now()
+        setHudTick((value) => value + 1)
       }
 
       raf = requestAnimationFrame(tick)
@@ -489,23 +513,7 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
           </span>
         </div>
 
-        {onExit && (
-          <button
-            onClick={onExit}
-            className="flight-btn"
-            style={{
-              position: 'absolute',
-              top: isMobile ? 124 : 90,
-              left: isMobile ? 16 : 24,
-              minWidth: 94,
-              padding: '10px 14px',
-              fontSize: 10,
-            }}
-          >
-            EXIT
-          </button>
-        )}
-
+        <HudMarkers isMobile={isMobile} />
         <div
           ref={joyBaseRef}
           className="joy-base"
@@ -616,6 +624,128 @@ export default function FlightControls({ isMobile = false, onExit }: FlightContr
           </div>
         )}
       </div>
+    </>
+  )
+}
+
+function HudMarkers({ isMobile }: { isMobile: boolean }) {
+  const markers = flightHUD.hudMarkers
+  const priorityNames = new Set(['SATURN', 'EARTH', 'SUN'])
+
+  return (
+    <>
+      {markers.map((marker) => {
+        const isPriority = priorityNames.has(marker.name) || marker.name === flightHUD.nearest
+        const baseColor = marker.color
+        const commonStyle = {
+          position: 'absolute' as const,
+          left: `${(marker.x * 100).toFixed(3)}%`,
+          top: `${(marker.y * 100).toFixed(3)}%`,
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none' as const,
+          zIndex: 32,
+        }
+
+        if (marker.onScreen) {
+          return (
+            <div key={marker.name} style={commonStyle}>
+              <div
+                style={{
+                  position: 'relative',
+                  width: isPriority ? 28 : 22,
+                  height: isPriority ? 28 : 22,
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    border: `1px solid ${baseColor}`,
+                    borderRadius: '50%',
+                    opacity: marker.behind ? 0.28 : isPriority ? 0.82 : 0.56,
+                    boxShadow: `0 0 12px ${baseColor}33`,
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    width: isPriority ? 5 : 4,
+                    height: isPriority ? 5 : 4,
+                    borderRadius: '50%',
+                    background: baseColor,
+                    transform: 'translate(-50%, -50%)',
+                    boxShadow: `0 0 10px ${baseColor}`,
+                    opacity: marker.behind ? 0.4 : 1,
+                  }}
+                />
+              </div>
+              {isPriority ? (
+                <div
+                  style={{
+                    marginTop: 5,
+                    padding: '2px 6px',
+                    borderRadius: 999,
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    background: 'rgba(3, 6, 14, 0.64)',
+                    color: '#f2ede4',
+                    fontSize: isMobile ? 8 : 9,
+                    letterSpacing: '0.16em',
+                    textAlign: 'center',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {marker.name}
+                </div>
+              ) : null}
+            </div>
+          )
+        }
+
+        const angle = Math.atan2(marker.y - 0.5, marker.x - 0.5)
+        return (
+          <div key={marker.name} style={commonStyle}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+                opacity: marker.behind ? 0.38 : isPriority ? 0.9 : 0.58,
+              }}
+            >
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderTop: '7px solid transparent',
+                  borderBottom: '7px solid transparent',
+                  borderLeft: `12px solid ${baseColor}`,
+                  filter: `drop-shadow(0 0 6px ${baseColor})`,
+                }}
+              />
+              {isPriority ? (
+                <div
+                  style={{
+                    transform: `rotate(${-angle}rad)`,
+                    padding: '2px 5px',
+                    borderRadius: 999,
+                    background: 'rgba(3, 6, 14, 0.7)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    color: '#f2ede4',
+                    fontSize: isMobile ? 8 : 9,
+                    letterSpacing: '0.14em',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {marker.name}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        )
+      })}
     </>
   )
 }

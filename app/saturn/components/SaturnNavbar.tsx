@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDateTime } from '@/src/hooks'
 
 interface SaturnNavbarProps {
@@ -39,7 +39,7 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
     fontFamily: 'monospace',
     transition: 'all 0.2s ease',
     userSelect: 'none',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }
 
   const dropdownMenuStyle: React.CSSProperties = {
@@ -56,7 +56,7 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
     letterSpacing: '0.15em',
     fontFamily: 'monospace',
     zIndex: 1100,
-    minWidth: '180px'
+    minWidth: '180px',
   }
 
   const dropdownItemStyle: React.CSSProperties = {
@@ -103,15 +103,53 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
     setIsGameMenuOpen(false)
   }
 
+  const gameOptions = [
+    { key: 'orbit', label: 'Orbit' },
+    { key: 'blackjack', label: 'Blackjack' },
+    { key: 'tarot', label: 'Tarot' },
+    { key: 'oracle', label: 'Oracle' },
+    { key: 'flight', label: 'Flight' },
+  ] as const
+
+  const renderGameOptions = (mobile: boolean) =>
+    gameOptions.map((option, index) => {
+      const isFirst = index === 0
+      const isLast = index === gameOptions.length - 1
+
+      return (
+        <div
+          key={option.key}
+          style={{
+            ...gameOptionStyle,
+            ...(mobile && isFirst ? { borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px' } : {}),
+            ...(mobile && isLast ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : {}),
+            ...(isLast ? { borderBottom: 'none' } : {}),
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          onClick={() => handleGameSelect(option.key)}
+        >
+          {option.label}
+        </div>
+      )
+    })
+
   return (
     <>
       {isMobile ? (
-        // Mobile navbar - two rows
-        <nav style={{
-          position: 'fixed', top: '15px', left: '15px', right: '15px',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', zIndex: 1100,
-        }}>
-          {/* Row 1: Date/Time + The Atlanta Gleaner + Menu Button (merged) */}
+        <nav
+          style={{
+            position: 'fixed',
+            top: '15px',
+            left: '15px',
+            right: '15px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px',
+            zIndex: 1100,
+          }}
+        >
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -129,76 +167,82 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                 <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
               </div>
 
-              <div style={{ marginLeft: 'auto' }}>
-                {isMenuOpen ? '−' : '+'}
-              </div>
+              <div style={{ marginLeft: 'auto' }}>{isMenuOpen ? '-' : '+'}</div>
             </button>
             {isMenuOpen && (
-              <div style={{...dropdownMenuStyle, right: '0', marginTop: '8px'}}>
-                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
+              <div style={{ ...dropdownMenuStyle, right: '0', marginTop: '8px' }}>
+                <a
+                  href="/archive"
+                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  ARCHIVE
+                </a>
+                <a
+                  href="/"
+                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  RUNWAY
+                </a>
+                <a
+                  href="/saturn"
+                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  SATURN
+                </a>
+                <a
+                  href="/vault"
+                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  VAULT
+                </a>
+                <a
+                  href="/about"
+                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  ABOUT
+                </a>
               </div>
             )}
           </div>
 
-          {/* Row 2: Saturn Game Selection Dropdown */}
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
-              style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}
+              style={{
+                ...navItemStyle,
+                background: 'rgba(184, 134, 11, 0.1)',
+                borderColor: 'rgba(184, 134, 11, 0.3)',
+              } as React.CSSProperties}
             >
               SATURN
-              <span style={{ fontSize: '10px', transition: 'transform 0.2s', transform: isGameMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
             </button>
-            {isGameMenuOpen && (
-              <div style={{...gameMenuStyle, left: '0'}}>
-                <div
-                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px'}}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => handleGameSelect('orbit')}
-                >
-                  🌐 Orbit
-                </div>
-                <div
-                  style={{...gameOptionStyle}}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => handleGameSelect('blackjack')}
-                >
-                  🃏 Blackjack
-                </div>
-                <div
-                  style={{...gameOptionStyle}}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => handleGameSelect('tarot')}
-                >
-                  🌙 Tarot
-                </div>
-                <div
-                  style={{...gameOptionStyle, borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderBottom: 'none'}}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  onClick={() => handleGameSelect('oracle')}
-                >
-                  🔮 Oracle
-                </div>
-              </div>
-            )}
+            {isGameMenuOpen && <div style={{ ...gameMenuStyle, left: '0' }}>{renderGameOptions(true)}</div>}
           </div>
         </nav>
       ) : (
-        // Desktop navbar
-        <nav style={{
-          position: 'fixed', top: '25px', left: '25px', right: '25px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1100,
-        }}>
+        <nav
+          style={{
+            position: 'fixed',
+            top: '25px',
+            left: '25px',
+            right: '25px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            zIndex: 1100,
+          }}
+        >
           <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            {/* Date/Time + Title + Menu Button (merged) */}
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -216,17 +260,50 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                   <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
                 </div>
 
-                <div style={{ marginLeft: 'auto' }}>
-                  {isMenuOpen ? '−' : '+'}
-                </div>
+                <div style={{ marginLeft: 'auto' }}>{isMenuOpen ? '-' : '+'}</div>
               </button>
               {isMenuOpen && (
-                <div style={{...dropdownMenuStyle, left: '0', marginTop: '8px'}}>
-                  <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                  <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                  <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                  <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                  <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
+                <div style={{ ...dropdownMenuStyle, left: '0', marginTop: '8px' }}>
+                  <a
+                    href="/archive"
+                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    ARCHIVE
+                  </a>
+                  <a
+                    href="/"
+                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    RUNWAY
+                  </a>
+                  <a
+                    href="/saturn"
+                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    SATURN
+                  </a>
+                  <a
+                    href="/vault"
+                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    VAULT
+                  </a>
+                  <a
+                    href="/about"
+                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    ABOUT
+                  </a>
                 </div>
               )}
             </div>
@@ -234,47 +311,15 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setIsGameMenuOpen(!isGameMenuOpen)}
-                style={{ ...navItemStyle, background: 'rgba(184, 134, 11, 0.1)', borderColor: 'rgba(184, 134, 11, 0.3)' } as React.CSSProperties}
-              >
-                SATURN
-                <span style={{ fontSize: '10px', transition: 'transform 0.2s', transform: isGameMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
-              </button>
-              {isGameMenuOpen && (
-                <div style={{...gameMenuStyle}}>
-                  <div
-                    style={{...gameOptionStyle}}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    onClick={() => handleGameSelect('orbit')}
-                  >
-                    🌐 Orbit
-                  </div>
-                  <div
-                    style={{...gameOptionStyle}}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    onClick={() => handleGameSelect('blackjack')}
-                  >
-                    🃏 Blackjack
-                  </div>
-                  <div
-                    style={{...gameOptionStyle}}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    onClick={() => handleGameSelect('tarot')}
-                  >
-                    🌙 Tarot
-                  </div>
-                  <div
-                    style={{...gameOptionStyle, borderBottom: 'none'}}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    onClick={() => handleGameSelect('oracle')}
-                  >
-                    🔮 Oracle
-                  </div>
-                </div>
-              )}
+                style={{
+                  ...navItemStyle,
+                  background: 'rgba(184, 134, 11, 0.1)',
+                  borderColor: 'rgba(184, 134, 11, 0.3)',
+                } as React.CSSProperties}
+            >
+              SATURN
+            </button>
+              {isGameMenuOpen && <div style={gameMenuStyle}>{renderGameOptions(false)}</div>}
             </div>
           </div>
         </nav>
