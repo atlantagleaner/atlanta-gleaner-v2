@@ -65,9 +65,9 @@ const DWARF_BODY_STYLE_MULTIPLIER = 1.45
 const SOLAR_SYSTEM_DISTANCE_SCALE = 1.75
 const SUB_WARP_GEAR_SPEEDS = {
   R: -0.34,
-  '1': 0.28,
-  '2': 0.52,
-  '3': 0.82,
+  '1': 0.1,
+  '2': 0.3,
+  '3': 0.6,
 } as const
 
 function strictRadiusFromSaturn(bodyKmRadius: number) {
