@@ -1197,7 +1197,7 @@ export default function SaturnScene({
 
     onSceneReady?.(camera, resetOrbit)
 
-    const solarCenter = new THREE.Vector3(-13800, 20, 0)
+    const solarCenter = new THREE.Vector3(-scaleSolarDistance(13800), 20, 0)
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.15)
     scene.add(ambientLight)

@@ -71,7 +71,6 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
   const speedRef = useRef<HTMLSpanElement>(null)
   const nearestRef = useRef<HTMLSpanElement>(null)
   const earthDistRef = useRef<HTMLSpanElement>(null)
-  const warpBadgeRef = useRef<HTMLSpanElement>(null)
   const warpVignetteRef = useRef<HTMLDivElement>(null)
   const crashFlashRef = useRef<HTMLDivElement>(null)
   const messageTimerRef = useRef<number | null>(null)
@@ -368,7 +367,6 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
       if (speedRef.current) speedRef.current.textContent = flightHUD.speed.toFixed(2)
       if (nearestRef.current) nearestRef.current.textContent = flightHUD.nearest || 'UNKNOWN'
       if (earthDistRef.current) earthDistRef.current.textContent = `${Math.round(flightHUD.earthDist)}u`
-      if (warpBadgeRef.current) warpBadgeRef.current.style.opacity = flightHUD.warpActive ? '1' : '0'
       if (warpVignetteRef.current) warpVignetteRef.current.style.opacity = flightHUD.warpActive ? '1' : '0'
       if (crashFlashRef.current) crashFlashRef.current.style.opacity = flightHUD.crashFlash.toFixed(2)
 
@@ -563,6 +561,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
             display: 'flex',
             gap: isMobile ? 10 : 14,
             alignItems: 'stretch',
+            overflow: 'visible',
             background: 'rgba(3, 4, 10, 0.58)',
             backdropFilter: 'blur(12px)',
             border: '1px solid rgba(184, 134, 11, 0.26)',
@@ -585,56 +584,27 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
-              gap: 8,
               alignSelf: 'center',
             }}
           >
-            <span
-              ref={warpBadgeRef}
-              className="warp-badge"
-              style={{
-                opacity: flightHUD.warpActive ? 1 : 0.34,
-                color: flightHUD.warpActive ? '#88efff' : 'rgba(255, 236, 200, 0.58)',
-                fontWeight: 700,
-                animation: flightHUD.warpActive ? 'warpPulse 0.7s infinite' : 'none',
-                padding: '2px 8px',
-                borderRadius: 999,
-                border: `1px solid ${flightHUD.warpActive ? 'rgba(136, 239, 255, 0.85)' : 'rgba(184, 134, 11, 0.32)'}`,
-                fontSize: 9,
-                background: flightHUD.warpActive ? 'rgba(4, 18, 24, 0.72)' : 'rgba(18, 12, 4, 0.34)',
-                whiteSpace: 'nowrap',
-                minWidth: 48,
-                textAlign: 'center',
-                boxSizing: 'border-box',
-                transition: 'opacity 180ms ease, color 180ms ease, border-color 180ms ease, background 180ms ease',
-              }}
-            >
-              WARP
-            </span>
             <button
               type="button"
               aria-label="Marker filters"
               aria-expanded={markerMenuOpen}
               onClick={() => setMarkerMenuOpen((open) => !open)}
               style={{
-                width: isMobile ? 24 : 26,
-                height: isMobile ? 24 : 26,
-                borderRadius: '50%',
-                border: `1px solid ${flightHUD.warpActive ? 'rgba(136, 239, 255, 0.9)' : 'rgba(184, 134, 11, 0.42)'}`,
-                background: flightHUD.warpActive
-                  ? 'radial-gradient(circle at 35% 35%, rgba(170, 247, 255, 0.46), rgba(10, 38, 52, 0.9))'
-                  : 'radial-gradient(circle at 35% 35%, rgba(255, 222, 170, 0.32), rgba(18, 13, 5, 0.9))',
-                color: flightHUD.warpActive ? '#9cf4ff' : '#f6e6c2',
-                fontSize: 15,
+                border: 'none',
+                background: 'transparent',
+                color: markerMenuOpen ? '#fff1d0' : '#f6e6c2',
+                fontSize: isMobile ? 18 : 20,
                 lineHeight: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: flightHUD.warpActive
-                  ? '0 0 16px rgba(136, 239, 255, 0.24)'
-                  : '0 0 12px rgba(184, 134, 11, 0.12)',
                 cursor: 'pointer',
                 padding: 0,
+                width: isMobile ? 16 : 18,
+                textShadow: markerMenuOpen ? '0 0 12px rgba(255, 214, 132, 0.42)' : 'none',
               }}
             >
               +
@@ -652,7 +622,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                   background: 'rgba(4, 5, 11, 0.92)',
                   backdropFilter: 'blur(14px)',
                   boxShadow: '0 18px 42px rgba(0, 0, 0, 0.38)',
-                  zIndex: 48,
+                  zIndex: 120,
                 }}
               >
                 <div
