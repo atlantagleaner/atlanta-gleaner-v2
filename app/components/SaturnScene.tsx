@@ -63,6 +63,12 @@ const DWARF_BODY_STYLE_EXPONENT = 0.72
 const DWARF_BODY_STYLE_OFFSET = 0.14
 const DWARF_BODY_STYLE_MULTIPLIER = 1.45
 const SOLAR_SYSTEM_DISTANCE_SCALE = 1.75
+const SUB_WARP_GEAR_SPEEDS = {
+  R: -0.42,
+  '1': 0.46,
+  '2': 0.78,
+  '3': 1.12,
+} as const
 
 function strictRadiusFromSaturn(bodyKmRadius: number) {
   return SATURN.radius * (bodyKmRadius / REAL_RADII_KM.SATURN)
@@ -84,11 +90,12 @@ function scaleSolarDistance(distance: number) {
 
 const FLIGHT = {
   gearSpeeds: {
-    R: -0.55 * SOLAR_SYSTEM_DISTANCE_SCALE,
+    // Keep sub-warp deliberate for close observation while leaving WARP unchanged.
+    R: SUB_WARP_GEAR_SPEEDS.R,
     '0': 0,
-    '1': 0.58 * SOLAR_SYSTEM_DISTANCE_SCALE,
-    '2': 0.96 * SOLAR_SYSTEM_DISTANCE_SCALE,
-    '3': 1.36 * SOLAR_SYSTEM_DISTANCE_SCALE,
+    '1': SUB_WARP_GEAR_SPEEDS['1'],
+    '2': SUB_WARP_GEAR_SPEEDS['2'],
+    '3': SUB_WARP_GEAR_SPEEDS['3'],
     WARP: 2.3 * SOLAR_SYSTEM_DISTANCE_SCALE,
   } as const,
   gearResponse: {
