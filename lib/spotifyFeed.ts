@@ -4,6 +4,48 @@
 
 import SpotifyWebApi from 'spotify-web-api-node'
 import type { GleanerItem } from '@/lib/news/types'
+import { SPOTIFY_SHOW_IDS_ARRAY } from '@/lib/newsConfig'
+import { normalizeFeedText } from '@/lib/rssParser'
+
+const FALLBACK_AUDIO_SHOWS = [
+  { title: 'The Bill Simmons Podcast', showId: '07SjDmKb9iliEzpNcN2xGD' },
+  { title: 'The Rewatchables', showId: '1lUPomulZRPquVAOOd56EW' },
+  { title: 'The Big Picture', showId: '6mTel3azvnK8isLs4VujvF' },
+  { title: 'The Watch', showId: '3IcA76e8ZV0NNSJ81XHQUg' },
+  { title: 'Higher Learning', showId: '4hI3rQ4C0e15rP3YKLKPut' },
+  { title: 'The Rest is History', showId: '7Cvsbcjhtur7nplC148TWy' },
+].map(({ title, showId }) => ({
+  title,
+  url: `https://open.spotify.com/show/${showId}`,
+  source: 'Spotify',
+  publishedAt: new Date().toISOString(),
+  type: 'audio' as const,
+  spotifyId: showId,
+  thumbnailUrl: '',
+}))
+
+function buildFallbackSpotifyShowItem(title: string, showId: string, slot: string): GleanerItem {
+  return {
+    title,
+    url: `https://open.spotify.com/show/${showId}`,
+    source: 'Spotify',
+    publishedAt: new Date().toISOString(),
+    type: 'series' as const,
+    score: 1000,
+    slot,
+    episodes: [
+      {
+    title: `Open ${title}`,
+        url: `https://open.spotify.com/show/${showId}`,
+        source: 'Spotify',
+        publishedAt: new Date().toISOString(),
+        type: 'audio' as const,
+        spotifyId: showId,
+        thumbnailUrl: '',
+      },
+    ],
+  }
+}
 
 // Get Spotify access token via Client Credentials flow
 async function getSpotifyAccessToken(): Promise<string> {
@@ -41,13 +83,26 @@ async function getSpotifyClient() {
   return client
 }
 
+function buildFallbackAudioDispatchItem(): GleanerItem {
+  return {
+    title: 'Audio Dispatch',
+    url: 'https://open.spotify.com',
+    source: 'Spotify',
+    publishedAt: new Date().toISOString(),
+    type: 'series' as const,
+    score: 1000,
+    slot: 'audio_dispatch',
+    episodes: FALLBACK_AUDIO_SHOWS,
+  }
+}
+
 // Build audio dispatch drawer with latest podcast episodes
 export async function buildAudioDispatchItem(): Promise<GleanerItem> {
   try {
     console.log('[buildAudioDispatchItem] Starting Spotify fetch...')
 
-    const { SPOTIFY_SHOW_IDS_ARRAY } = await import('@/lib/newsConfig')
-    console.log(`[buildAudioDispatchItem] Loaded ${SPOTIFY_SHOW_IDS_ARRAY.length} show IDs`)
+    const showIds = SPOTIFY_SHOW_IDS_ARRAY.slice(0, 8)
+    console.log(`[buildAudioDispatchItem] Loaded ${showIds.length}/${SPOTIFY_SHOW_IDS_ARRAY.length} show IDs`)
 
     // Get authenticated client
     console.log('[buildAudioDispatchItem] Authenticating with Spotify...')
@@ -56,9 +111,9 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
 
     // Fetch episodes from all shows in parallel
     console.log('[buildAudioDispatchItem] Fetching episodes from all shows...')
-    console.log('[buildAudioDispatchItem] Show IDs:', SPOTIFY_SHOW_IDS_ARRAY.slice(0, 3))
+    console.log('[buildAudioDispatchItem] Show IDs:', showIds.slice(0, 3))
 
-    const episodeTasks = SPOTIFY_SHOW_IDS_ARRAY.map((showId) => {
+    const episodeTasks = showIds.map((showId) => {
       console.log(`[buildAudioDispatchItem] Creating task for show: ${showId}`)
       return client.getShowEpisodes(showId, { limit: 1 })
     })
@@ -71,10 +126,10 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
     const failureCount = episodeResults.filter(r => r.status === 'rejected').length
 
     if (failureCount > 0) {
-      console.error(`[buildAudioDispatchItem] WARNING: ${failureCount}/${SPOTIFY_SHOW_IDS_ARRAY.length} shows failed to fetch`)
+      console.error(`[buildAudioDispatchItem] WARNING: ${failureCount}/${showIds.length} shows failed to fetch`)
       episodeResults.forEach((result, idx) => {
         if (result.status === 'rejected') {
-          const showId = SPOTIFY_SHOW_IDS_ARRAY[idx]
+          const showId = showIds[idx]
           const errorMsg = result.reason instanceof Error ? result.reason.message : String(result.reason)
           console.error(`  - Show ${showId}: ${errorMsg}`)
         }
@@ -87,14 +142,14 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
     const allEpisodes = episodeResults
       .filter((result) => result.status === 'fulfilled')
       .map((result) => (result as PromiseFulfilledResult<any>).value)
-      .flatMap((result) => result.body?.items || [])
+      .flatMap((result) => result.items || result.body?.items || [])
       .sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
 
     console.log(`[buildAudioDispatchItem] Got ${allEpisodes.length} episodes total`)
 
     // Transform to SeriesViewer-compatible format
     const episodes = allEpisodes.slice(0, 8).map((ep) => ({
-      title: ep.name,
+      title: normalizeFeedText(ep.name),
       url: ep.external_urls.spotify,
       source: ep.show.name,
       publishedAt: ep.release_date,
@@ -104,6 +159,11 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
     }))
 
     console.log(`[buildAudioDispatchItem] Transformed ${episodes.length} episodes for display`)
+
+    if (episodes.length === 0) {
+      console.warn('[buildAudioDispatchItem] No live episodes found; using stable fallback shows')
+      return buildFallbackAudioDispatchItem()
+    }
 
     // Return GleanerItem-compatible structure
     const item: GleanerItem = {
@@ -127,15 +187,46 @@ export async function buildAudioDispatchItem(): Promise<GleanerItem> {
       stack: error instanceof Error ? error.stack?.split('\n').slice(0, 5).join('\n') : undefined,
     })
 
-    return {
-      title: 'Audio Dispatch',
-      url: 'https://open.spotify.com',
-      source: 'Spotify',
-      publishedAt: new Date().toISOString(),
-      type: 'series' as const,
-      score: 1000,
-      slot: 'audio_dispatch',
-      episodes: [],
-    }
+    return buildFallbackAudioDispatchItem()
   }
+}
+
+export async function buildStarTalkItem(): Promise<GleanerItem> {
+  const showId = '1mNsuXfG95Lf76YQeVMuo1'
+
+  try {
+    console.log('[buildStarTalkItem] Starting Spotify fetch...')
+    const client = await getSpotifyClient()
+    const result = (await client.getShowEpisodes(showId, { limit: 3 })) as any
+    const items = ((result.items || result.body?.items || []) as any[]).sort(
+      (a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime(),
+    )
+
+    const episodes = items.slice(0, 3).map((ep) => ({
+      title: normalizeFeedText(ep.name),
+      url: ep.external_urls.spotify,
+      source: 'StarTalk',
+      publishedAt: ep.release_date,
+      type: 'audio' as const,
+      spotifyId: ep.id,
+      thumbnailUrl: ep.images?.[0]?.url || '',
+    }))
+
+    if (episodes.length > 0) {
+      return {
+        title: 'StarTalk',
+        url: `https://open.spotify.com/show/${showId}`,
+        source: 'Spotify',
+        publishedAt: episodes[0]?.publishedAt || new Date().toISOString(),
+        type: 'series' as const,
+        score: 1000,
+        slot: 'science_pin',
+        episodes,
+      }
+    }
+  } catch (error) {
+    console.warn('[buildStarTalkItem] Spotify fetch failed, using fallback show card', error)
+  }
+
+  return buildFallbackSpotifyShowItem('StarTalk', showId, 'science_pin')
 }

@@ -39,7 +39,7 @@ export async function fetchWithTimeout(
 
 // Standard timeout values for different API types
 export const FETCH_TIMEOUTS = {
-  SERPER: 10_000, // 10s for news search
+  NEWS_SEARCH: 10_000, // 10s for feed/article lookup
   YOUTUBE: 15_000, // 15s for YouTube API
   SPOTIFY: 20_000, // 20s for Spotify API
   READER: 8_000, // 8s for article reader

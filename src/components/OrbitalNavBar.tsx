@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useDateTime } from '@/src/hooks'
+import { SiteDropdownMenu } from '@/src/components/navigation/SiteDropdownMenu'
 
 interface OrbitalNavBarProps {
   showRunway?: boolean
@@ -157,97 +158,8 @@ export function OrbitalNavBar({
                 </div>
               </button>
               {isPlusOpen && (
-                <div style={{ ...dropdownMenuStyle, right: '0', marginTop: '8px' }}>
-                  <a
-                    href="/archive"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ARCHIVE
-                  </a>
-                  <a
-                    href="/"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    RUNWAY
-                  </a>
-                  <a
-                    href="/saturn"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    SATURN
-                  </a>
-                  <a
-                    href="/vault"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    VAULT
-                  </a>
-                  <a
-                    href="/about"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ABOUT
-                  </a>
+                <div>
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
             </div>
@@ -343,97 +255,8 @@ export function OrbitalNavBar({
                   {isPlusOpen ? '−' : '+'}
                 </button>
                 {isPlusOpen && (
-                  <div style={{ ...dropdownMenuStyle }}>
-                    <a
-                      href="/archive"
-                      style={{
-                        ...dropdownItemStyle,
-                        display: 'block',
-                        color: '#FFF',
-                        textDecoration: 'none',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          'rgba(255, 165, 0, 0.1)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = 'transparent')
-                      }
-                    >
-                      ARCHIVE
-                    </a>
-                    <a
-                      href="/runway"
-                      style={{
-                        ...dropdownItemStyle,
-                        display: 'block',
-                        color: '#FFF',
-                        textDecoration: 'none',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          'rgba(255, 165, 0, 0.1)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = 'transparent')
-                      }
-                    >
-                      RUNWAY
-                    </a>
-                    <a
-                      href="/saturn"
-                      style={{
-                        ...dropdownItemStyle,
-                        display: 'block',
-                        color: '#FFF',
-                        textDecoration: 'none',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          'rgba(255, 165, 0, 0.1)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = 'transparent')
-                      }
-                    >
-                      SATURN
-                    </a>
-                    <a
-                      href="/vault"
-                      style={{
-                        ...dropdownItemStyle,
-                        display: 'block',
-                        color: '#FFF',
-                        textDecoration: 'none',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          'rgba(255, 165, 0, 0.1)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = 'transparent')
-                      }
-                    >
-                      VAULT
-                    </a>
-                    <a
-                      href="/about"
-                      style={{
-                        ...dropdownItemStyle,
-                        display: 'block',
-                        color: '#FFF',
-                        textDecoration: 'none',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          'rgba(255, 165, 0, 0.1)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = 'transparent')
-                      }
-                    >
-                      ABOUT
-                    </a>
+                  <div>
+                    <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
                   </div>
                 )}
               </div>
@@ -526,97 +349,8 @@ export function OrbitalNavBar({
                 </div>
               </button>
               {isPlusOpen && (
-                <div style={{ ...dropdownMenuStyle, right: '0', top: '100%', marginTop: '8px' }}>
-                  <a
-                    href="/archive"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ARCHIVE
-                  </a>
-                  <a
-                    href="/"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    RUNWAY
-                  </a>
-                  <a
-                    href="/saturn"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    SATURN
-                  </a>
-                  <a
-                    href="/vault"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    VAULT
-                  </a>
-                  <a
-                    href="/about"
-                    style={{
-                      ...dropdownItemStyle,
-                      display: 'block',
-                      color: '#FFF',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 165, 0, 0.1)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
-                  >
-                    ABOUT
-                  </a>
+                <div>
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
             </div>
@@ -719,97 +453,8 @@ export function OrbitalNavBar({
                     {isPlusOpen ? '−' : '+'}
                   </button>
                   {isPlusOpen && (
-                    <div style={{ ...dropdownMenuStyle, right: '0' }}>
-                      <a
-                        href="/archive"
-                        style={{
-                          ...dropdownItemStyle,
-                          display: 'block',
-                          color: '#FFF',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            'rgba(255, 165, 0, 0.1)')
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background = 'transparent')
-                        }
-                      >
-                        ARCHIVE
-                      </a>
-                      <a
-                        href="/runway"
-                        style={{
-                          ...dropdownItemStyle,
-                          display: 'block',
-                          color: '#FFF',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            'rgba(255, 165, 0, 0.1)')
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background = 'transparent')
-                        }
-                      >
-                        RUNWAY
-                      </a>
-                      <a
-                        href="/saturn"
-                        style={{
-                          ...dropdownItemStyle,
-                          display: 'block',
-                          color: '#FFF',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            'rgba(255, 165, 0, 0.1)')
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background = 'transparent')
-                        }
-                      >
-                        SATURN
-                      </a>
-                      <a
-                        href="/vault"
-                        style={{
-                          ...dropdownItemStyle,
-                          display: 'block',
-                          color: '#FFF',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            'rgba(255, 165, 0, 0.1)')
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background = 'transparent')
-                        }
-                      >
-                        VAULT
-                      </a>
-                      <a
-                        href="/about"
-                        style={{
-                          ...dropdownItemStyle,
-                          display: 'block',
-                          color: '#FFF',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            'rgba(255, 165, 0, 0.1)')
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background = 'transparent')
-                        }
-                      >
-                        ABOUT
-                      </a>
+                    <div>
+                      <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
                     </div>
                   )}
                 </div>
@@ -822,3 +467,5 @@ export function OrbitalNavBar({
     </>
   )
 }
+
+

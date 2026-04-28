@@ -33,7 +33,8 @@ export interface CompactEpisode {
   p: string
   v?: string
   s?: string
-  /** channelHandle — grab-bag */
+  sh?: boolean
+  /** channelHandle – grab-bag */
   h?: string
 }
 

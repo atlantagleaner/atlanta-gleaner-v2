@@ -10,7 +10,6 @@ import Fuse from 'fuse.js'
 import { Banner } from '@/src/components/Banner'
 import { SearchInput } from '@/src/components/common/SearchInput'
 import { OrbitalNavBar } from '@/src/components/OrbitalNavBar'
-import { NewsBox } from '@/src/components/NewsBox'
 import { FarSideBox } from '@/src/components/FarSideBox'
 import { ResizablePanels } from '@/src/components/ResizablePanels'
 import { useMobileDetect } from '@/src/hooks'
@@ -765,10 +764,6 @@ export default function ArchivePage() {
         <Banner />
         <ResizablePanels
           left={{
-            label: 'Latest News',
-            node: <NewsBox />,
-          }}
-          center={{
             label: 'ARCHIVE',
             node: (
               <>
@@ -802,12 +797,12 @@ export default function ArchivePage() {
               </>
             ),
           }}
-          right={{
+          center={{
             label: 'The Far Side',
             node: <FarSideBox />,
           }}
-          mobileInitialOpen={{ 0: false, 1: true, 2: false }}
-          mobileOrder={[2, 0, 1]}
+          mobileInitialOpen={{ 0: true, 1: false }}
+          mobileOrder={[1, 0]}
         />
       </main>
     </>

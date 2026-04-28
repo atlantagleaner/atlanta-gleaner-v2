@@ -16,25 +16,25 @@ interface Panel { label: string; node: ReactNode }
 interface ResizablePanelsProps {
   left: Panel
   center: Panel
-  right: Panel
+  right?: Panel
   mobileInitialOpen?: Record<number, boolean>
   mobileOrder?: number[]
 }
 
 // ── Main component ─────────────────────────────────────────────────────────
 export function ResizablePanels({ left, center, right, mobileInitialOpen, mobileOrder }: ResizablePanelsProps) {
-  const panels = [left, center, right]
+  const panels = right ? [left, center, right] : [left, center]
   const { isMobile, mounted } = useMobileDetect(768)
 
   // Only apply mobile layout after hydration to prevent mismatch
   const effectiveIsMobile = mounted ? isMobile : false
 
-  const [widths,   setWidths]   = useState([24, 50, 26])
-  const [order,    setOrder]    = useState([0, 1, 2])
+  const [widths,   setWidths]   = useState(right ? [24, 50, 26] : [74, 26])
+  const [order,    setOrder]    = useState(right ? [0, 1, 2] : [0, 1])
   const [dragSlot, setDragSlot] = useState<number | null>(null)
 
   const containerRef   = useRef<HTMLDivElement>(null)
-  const colRefs        = useRef<(HTMLDivElement | null)[]>([null, null, null])
+  const colRefs        = useRef<(HTMLDivElement | null)[]>(right ? [null, null, null] : [null, null])
   const resizeDragging = useRef<'left' | 'right' | null>(null)
 
   // Drag tracking — all refs so the pointer handler (mounted once) always reads fresh values
@@ -212,7 +212,7 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
 
   // ── Mobile ───────────────────────────────────────────────────────────────
   if (effectiveIsMobile) {
-    const finalOrder = mobileOrder ?? [0, 1, 2]
+    const finalOrder = mobileOrder ?? (right ? [0, 1, 2] : [0, 1])
     return (
       <div style={{ padding: '0 12px 48px' }}>
         {finalOrder.map(idx => (
@@ -226,43 +226,46 @@ export function ResizablePanels({ left, center, right, mobileInitialOpen, mobile
 
   // ── Desktop ──────────────────────────────────────────────────────────────
   return (
-    <div
-      ref={containerRef}
-      style={{
-        display: 'flex', flexDirection: 'row',
-        width: '100%', padding: `0 ${SPACING.lg} ${SPACING.xxxl}`,
-        maxWidth: PAGE_MAX_W, margin: '0 auto',
-        userSelect: 'none', boxSizing: 'border-box',
-        cursor: dragSlot !== null ? 'grabbing' : 'auto',
-      }}
-    >
       <div
-        ref={el => { colRefs.current[0] = el }}
-        style={{ width: `${widths[0]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
+        ref={containerRef}
+        style={{
+          display: 'flex', flexDirection: 'row',
+          width: '100%', padding: `0 ${SPACING.lg} ${SPACING.xxxl}`,
+          maxWidth: PAGE_MAX_W, margin: '0 auto',
+          userSelect: 'none', boxSizing: 'border-box',
+          cursor: dragSlot !== null ? 'grabbing' : 'auto',
+        }}
       >
-        <DragBar label={panels[order[0]].label} onPointerDown={e => startDrag(0, e)} isDragging={dragSlot === 0} />
-        {panels[order[0]].node}
+        <div
+          ref={el => { colRefs.current[0] = el }}
+          style={{ width: `${widths[0]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
+        >
+          <DragBar label={panels[order[0]].label} onPointerDown={e => startDrag(0, e)} isDragging={dragSlot === 0} />
+          {panels[order[0]].node}
+        </div>
+
+        <ResizeHandle onMouseDown={() => { resizeDragging.current = 'left' }} />
+
+        <div
+          ref={el => { colRefs.current[1] = el }}
+          style={{ width: `${widths[1]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
+        >
+          <DragBar label={panels[order[1]].label} onPointerDown={e => startDrag(1, e)} isDragging={dragSlot === 1} />
+          {panels[order[1]].node}
+        </div>
+
+        {right && (
+          <>
+            <ResizeHandle onMouseDown={() => { resizeDragging.current = 'right' }} />
+            <div
+              ref={el => { colRefs.current[2] = el }}
+              style={{ width: `${widths[2]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
+            >
+              <DragBar label={panels[order[2]].label} onPointerDown={e => startDrag(2, e)} isDragging={dragSlot === 2} />
+              {panels[order[2]].node}
+            </div>
+          </>
+        )}
       </div>
-
-      <ResizeHandle onMouseDown={() => { resizeDragging.current = 'left' }} />
-
-      <div
-        ref={el => { colRefs.current[1] = el }}
-        style={{ width: `${widths[1]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
-      >
-        <DragBar label={panels[order[1]].label} onPointerDown={e => startDrag(1, e)} isDragging={dragSlot === 1} />
-        {panels[order[1]].node}
-      </div>
-
-      <ResizeHandle onMouseDown={() => { resizeDragging.current = 'right' }} />
-
-      <div
-        ref={el => { colRefs.current[2] = el }}
-        style={{ width: `${widths[2]}%`, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}
-      >
-        <DragBar label={panels[order[2]].label} onPointerDown={e => startDrag(2, e)} isDragging={dragSlot === 2} />
-        {panels[order[2]].node}
-      </div>
-    </div>
   )
 }

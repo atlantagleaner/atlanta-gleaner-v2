@@ -32,11 +32,14 @@ export function hydrateEpisode(episode: GleanerEpisode | CompactEpisode): Gleane
 
   const comp = episode as CompactEpisode;
   if (comp.s) {
+    const isShow = comp.sh === true
     return {
       title: comp.t,
       publishedAt: comp.p,
       spotifyId: comp.s,
-      url: `https://open.spotify.com/episode/${comp.s}`,
+      url: isShow
+        ? `https://open.spotify.com/show/${comp.s}`
+        : `https://open.spotify.com/episode/${comp.s}`,
       source: 'Spotify',
       type: 'audio',
       thumbnailUrl: '',
@@ -75,11 +78,12 @@ export function createCacheEntry(items: GleanerItem[], cachedAt = new Date().toI
       slot: item.slot,
       ...(item.episodes?.length
         ? {
-            episodes: item.episodes.map((episode) => ({
+          episodes: item.episodes.map((episode) => ({
               t: episode.title,
               p: episode.publishedAt,
               v: episode.videoId,
               s: episode.spotifyId,
+              ...(episode.url?.includes('/show/') ? { sh: true } : {}),
               ...(episode.channelHandle ? { h: episode.channelHandle } : {}),
             })),
           }

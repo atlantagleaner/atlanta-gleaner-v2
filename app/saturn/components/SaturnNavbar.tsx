@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { SiteDropdownMenu } from '@/src/components/navigation/SiteDropdownMenu'
 import { useDateTime } from '@/src/hooks'
 
 interface SaturnNavbarProps {
@@ -40,30 +41,6 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
     transition: 'all 0.2s ease',
     userSelect: 'none',
     textDecoration: 'none',
-  }
-
-  const dropdownMenuStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '100%',
-    marginTop: '8px',
-    background: 'rgba(2, 1, 1, 0.95)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    padding: '8px 0',
-    color: '#FFF',
-    fontSize: '11px',
-    letterSpacing: '0.15em',
-    fontFamily: 'monospace',
-    zIndex: 1100,
-    minWidth: '180px',
-  }
-
-  const dropdownItemStyle: React.CSSProperties = {
-    padding: '8px 16px',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    transition: 'background 0.2s ease',
   }
 
   const gameMenuStyle: React.CSSProperties = {
@@ -167,52 +144,14 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                 <span style={{ opacity: 0.5, fontSize: '8px', letterSpacing: '0.2em' }}>EDITED BY GEORGE WASHINGTON</span>
               </div>
 
-              <div style={{ marginLeft: 'auto' }}>{isMenuOpen ? '-' : '+'}</div>
-            </button>
-            {isMenuOpen && (
-              <div style={{ ...dropdownMenuStyle, right: '0', marginTop: '8px' }}>
-                <a
-                  href="/archive"
-                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  ARCHIVE
-                </a>
-                <a
-                  href="/"
-                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  RUNWAY
-                </a>
-                <a
-                  href="/saturn"
-                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  SATURN
-                </a>
-                <a
-                  href="/vault"
-                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  VAULT
-                </a>
-                <a
-                  href="/about"
-                  style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  ABOUT
-                </a>
-              </div>
-            )}
+                <div style={{ marginLeft: 'auto' }}>{isMenuOpen ? '-' : '+'}</div>
+              </button>
+            <SiteDropdownMenu
+              open={isMenuOpen}
+              onSelect={() => setIsMenuOpen(false)}
+              align="right"
+              variant="dark"
+            />
           </div>
 
           <div style={{ position: 'relative' }}>
@@ -223,7 +162,7 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
                 background: 'rgba(184, 134, 11, 0.1)',
                 borderColor: 'rgba(184, 134, 11, 0.3)',
               } as React.CSSProperties}
-            >
+              >
               SATURN
             </button>
             {isGameMenuOpen && <div style={{ ...gameMenuStyle, left: '0' }}>{renderGameOptions(true)}</div>}
@@ -262,50 +201,12 @@ export function SaturnNavbar({ onResetOrbit, onGameSelected }: SaturnNavbarProps
 
                 <div style={{ marginLeft: 'auto' }}>{isMenuOpen ? '-' : '+'}</div>
               </button>
-              {isMenuOpen && (
-                <div style={{ ...dropdownMenuStyle, left: '0', marginTop: '8px' }}>
-                  <a
-                    href="/archive"
-                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    ARCHIVE
-                  </a>
-                  <a
-                    href="/"
-                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    RUNWAY
-                  </a>
-                  <a
-                    href="/saturn"
-                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    SATURN
-                  </a>
-                  <a
-                    href="/vault"
-                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    VAULT
-                  </a>
-                  <a
-                    href="/about"
-                    style={{ ...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    ABOUT
-                  </a>
-                </div>
-              )}
+              <SiteDropdownMenu
+                open={isMenuOpen}
+                onSelect={() => setIsMenuOpen(false)}
+                align="left"
+                variant="dark"
+              />
             </div>
 
             <div style={{ position: 'relative' }}>

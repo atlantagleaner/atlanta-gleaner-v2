@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { SiteDropdownMenu } from '@/src/components/navigation/SiteDropdownMenu';
 import SaturnScene from '../components/SaturnScene';
 import { CrystalBallModule } from '../saturn/components/CrystalBallModule';
 import { BlackjackModule } from '../saturn/components/BlackjackModule';
@@ -189,15 +190,11 @@ export default function Saturn2Page() {
                 {isPlusMenuOpen ? '−' : '+'}
               </div>
             </button>
-            {isPlusMenuOpen && (
-              <div style={{...dropdownMenuStyle, right: '0', marginTop: '8px'}}>
-                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
-              </div>
-            )}
+              {isPlusMenuOpen && (
+                <div>
+                  <SiteDropdownMenu open={isPlusMenuOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusMenuOpen(false)} />
+                </div>
+              )}
           </div>
           {/* Mobile Game Hub Button */}
           <button onClick={toggleModuleSelector} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)', width: '100%' }}>
@@ -233,15 +230,11 @@ export default function Saturn2Page() {
                 {isPlusMenuOpen ? '−' : '+'}
               </div>
             </button>
-            {isPlusMenuOpen && (
-              <div style={{...dropdownMenuStyle, left: '0', marginTop: '8px'}}>
-                <a href="/archive" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ARCHIVE</a>
-                <a href="/" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>RUNWAY</a>
-                <a href="/saturn" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>SATURN</a>
-                <a href="/vault" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>VAULT</a>
-                <a href="/about" style={{...dropdownItemStyle, display: 'block', color: '#FFF', textDecoration: 'none'}} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 165, 0, 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>ABOUT</a>
-              </div>
-            )}
+              {isPlusMenuOpen && (
+                <div>
+                  <SiteDropdownMenu open={isPlusMenuOpen} align="left" variant="dark" position="static" onSelect={() => setIsPlusMenuOpen(false)} />
+                </div>
+              )}
           </div>
 
           <button onClick={toggleModuleSelector} style={{ ...navItemStyle, background: 'rgba(255, 165, 0, 0.1)', borderColor: 'rgba(255, 165, 0, 0.3)' }}>

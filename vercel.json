@@ -1,20 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cron/refresh-news?mode=prepare",
-      "schedule": "30 2 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-news?mode=prepare",
-      "schedule": "30 3 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-news?mode=publish",
-      "schedule": "0 4 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-news?mode=publish",
-      "schedule": "0 5 * * *"
+      "path": "/api/cron/refresh-news",
+      "schedule": "0 8 * * *"
     }
   ]
 }

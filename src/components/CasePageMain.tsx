@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { PALETTE } from '@/src/styles/tokens'
 import { Banner } from './Banner'
-import { NewsBox } from './NewsBox'
 import CaseLawBox from './CaseLawBox'
 import { FarSideBox } from './FarSideBox'
 import { ResizablePanels } from './ResizablePanels'
@@ -26,19 +25,15 @@ export function CasePageMain({ caseData }: { caseData: CaseLaw }) {
       <Banner />
       <ResizablePanels
         left={{
-          label: 'Latest News',
-          node:  <NewsBox />,
-        }}
-        center={{
           label: 'Case Law Updates',
           node:  <CaseLawBox caseData={caseData} />,
         }}
-        right={{
+        center={{
           label: 'The Far Side',
           node:  <FarSideBox />,
         }}
-        mobileInitialOpen={{ 0: false, 1: true, 2: false }}
-        mobileOrder={[2, 0, 1]}
+        mobileInitialOpen={{ 0: true, 1: false }}
+        mobileOrder={[1, 0]}
       />
     </main>
   )

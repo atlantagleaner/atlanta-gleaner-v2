@@ -1,11 +1,39 @@
-// YouTube featured series + grab bag — used by cron refresh and scripts/fetch-news.
-// Prefer YouTube Data API v3 when YOUTUBE_API_KEY is set; HTML scrape often returns
-// nothing after YouTube page/consent changes.
+// YouTube featured series + grab bag - used by cron refresh and scripts/fetch-news.
+// Prefer the channel uploads feed first because it is the most stable public path.
 
 import type { GleanerEpisode, GleanerItem } from '@/lib/news/types'
 import { fetchWithTimeout, FETCH_TIMEOUTS } from '@/lib/fetchWithTimeout'
+import { fetchFeed, normalizeFeedText } from '@/lib/rssParser'
 
-// ── Scrape helpers (fallback) ─────────────────────────────────────────────────
+function episodeFromFeedItem(item: { title: string; link: string; pubDate: Date }): GleanerEpisode | null {
+  const match = item.link.match(/[?&]v=([^&]+)/)
+  const videoId = match?.[1]
+  if (!videoId || !item.title) return null
+
+  return {
+    title: normalizeFeedText(item.title),
+    url: item.link,
+    source: 'YouTube',
+    publishedAt: item.pubDate.toISOString(),
+    type: 'video',
+    videoId,
+    thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+  }
+}
+
+async function fetchYouTubeUploadsFeed(channelId: string, maxResults: number): Promise<GleanerEpisode[]> {
+  try {
+    const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`
+    const items = await fetchFeed(url)
+    return items
+      .map(episodeFromFeedItem)
+      .filter(Boolean)
+      .slice(0, maxResults) as GleanerEpisode[]
+  } catch (error) {
+    console.warn(`[youtubeFeed] uploads feed failed for ${channelId}`, error)
+    return []
+  }
+}
 
 function extractJsonObject(text: string, marker: string): string | null {
   const start = text.indexOf(marker)
@@ -64,15 +92,17 @@ function rendererToEpisode(renderer: Record<string, unknown>): GleanerEpisode | 
     const nav = renderer.navigationEndpoint as { watchEndpoint?: { videoId?: string } } | undefined
     videoId = nav?.watchEndpoint?.videoId
   }
+
   const title =
     (renderer.title as { simpleText?: string; runs?: Array<{ text: string }> } | undefined)?.simpleText ||
     (renderer.title as { runs?: Array<{ text: string }> } | undefined)?.runs?.map((r) => r.text).join('') ||
     ''
-  const publishedAt =
-    (renderer.publishedTimeText as { simpleText?: string } | undefined)?.simpleText || ''
+
+  const publishedAt = (renderer.publishedTimeText as { simpleText?: string } | undefined)?.simpleText || ''
   if (!videoId || !title) return null
+
   return {
-    title,
+    title: normalizeFeedText(title),
     url: `https://www.youtube.com/watch?v=${videoId}`,
     source: 'YouTube',
     publishedAt,
@@ -97,16 +127,19 @@ async function scrapeYouTubeChannelVideos(
       timeoutMs: FETCH_TIMEOUTS.YOUTUBE,
       label: `YouTubeScrape:${channelTitle}`,
     })
+
     if (!response.ok) {
       console.warn(`[youtubeFeed] scrape HTTP ${response.status} for ${channelTitle}`)
       return []
     }
+
     const html = await response.text()
     const jsonText = extractJsonObject(html, 'ytInitialData')
     if (!jsonText) {
       console.warn(`[youtubeFeed] ytInitialData not found for ${channelTitle}`)
       return []
     }
+
     const data = JSON.parse(jsonText) as unknown
     return collectRenderers(data)
       .map((r) => rendererToEpisode(r as Record<string, unknown>))
@@ -117,8 +150,6 @@ async function scrapeYouTubeChannelVideos(
     return []
   }
 }
-
-// ── Data API (preferred) ──────────────────────────────────────────────────────
 
 export async function fetchYouTubeChannelVideosApi(
   channelId: string,
@@ -162,14 +193,13 @@ export async function fetchYouTubeChannelVideosApi(
       const videoId = item.id?.videoId
       if (!videoId) continue
       out.push({
-        title: item.snippet.title,
+        title: normalizeFeedText(item.snippet.title),
         url: `https://www.youtube.com/watch?v=${videoId}`,
         source: 'YouTube',
         publishedAt: item.snippet.publishedAt,
         type: 'video',
         videoId,
-        thumbnailUrl:
-          item.snippet.thumbnails?.high?.url || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+        thumbnailUrl: item.snippet.thumbnails?.high?.url || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
       })
     }
     return out
@@ -179,25 +209,27 @@ export async function fetchYouTubeChannelVideosApi(
   }
 }
 
-/** Try Data API first; if empty, scrape channel /videos page. */
+/** Try uploads feed first; then Data API; then scrape channel /videos page. */
 export async function fetchChannelEpisodesWithFallback(
   channelId: string,
   channelUrl: string,
   channelTitle: string,
   maxResults: number,
 ): Promise<GleanerEpisode[]> {
+  const feed = await fetchYouTubeUploadsFeed(channelId, maxResults)
+  if (feed.length > 0) return feed
+
   const api = await fetchYouTubeChannelVideosApi(channelId, maxResults)
   if (api.length > 0) return api
+
   return scrapeYouTubeChannelVideos(channelTitle, channelUrl, maxResults)
 }
-
-// ── Featured + grab bag (shared with cron + fetch-news script) ─────────────
 
 export const FEATURED_YOUTUBE_CHANNELS = {
   starTalk: {
     title: 'StarTalk',
     url: 'https://www.youtube.com/@StarTalk/videos',
-    channelId: 'UCv8u5797wK4_YtZ89Y8088A',
+    channelId: 'UCqoAEDirJPjEUFcF2FklnBA',
   },
   pbsSpaceTime: {
     title: 'PBS Space Time',
@@ -206,13 +238,11 @@ export const FEATURED_YOUTUBE_CHANNELS = {
   },
 } as const
 
-/** Strict @handle from `youtube.com/@handle/...` (used for grab-bag episode labels). */
 function youtubeHandleFromChannelUrl(channelUrl: string): string | undefined {
   const m = channelUrl.match(/youtube\.com\/@([^/?#]+)/i)
   return m ? `@${m[1]}` : undefined
 }
 
-/** Curated science channels — 3 picked at random per refresh, 2 videos each → up to 9 in drawer */
 export const GRAB_BAG_CHANNELS = [
   { id: 'kurzgesagt', url: 'https://www.youtube.com/@kurzgesagt/videos', cid: 'UCsXVk37bltUXD1fauIDKJgQ' },
   { id: 'novapbs', url: 'https://www.youtube.com/@novapbs/videos', cid: 'UC9uD-W5zkVUUnp6VByI_zSg' },
@@ -230,7 +260,7 @@ export async function buildFeaturedSeriesItem(
 ): Promise<GleanerItem> {
   const episodes = await fetchChannelEpisodesWithFallback(channelId, channelUrl, title, 3)
   return {
-    title,
+    title: normalizeFeedText(title),
     url: channelUrl,
     source: 'YouTube',
     publishedAt: episodes[0]?.publishedAt || '',
@@ -251,6 +281,7 @@ export async function buildScienceGrabBagItem(): Promise<GleanerItem> {
       return eps.map((ep) => (handle ? { ...ep, channelHandle: handle } : ep))
     }),
   )
+
   const episodes = episodesResults.flat().slice(0, 9)
   return {
     title: 'Grab Bag',

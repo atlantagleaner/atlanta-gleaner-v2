@@ -5,17 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { T, SIZE_SM } from '@/src/styles/tokens'
 import { useDateTime } from '@/src/hooks'
+import { SiteDropdownMenu } from '@/src/components/navigation/SiteDropdownMenu'
 
 // Theme cascade handled entirely by CSS variables in globals.css
 // [data-saturn] selector automatically overrides palette when Saturn page is active
-
-const NAV_LINKS = [
-  { label: 'Archive', href: '/archive' },
-  { label: 'Runway',  href: '/runway'  },
-  { label: 'Saturn',  href: '/saturn'  },
-  { label: 'Vault',   href: '/vault'   },
-  { label: 'About',   href: '/about'   },
-]
 
 export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const pathname    = usePathname()
@@ -25,7 +18,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Isolated routes that should not show the global navbar
-  const isIsolated = pathname === '/saturn' || pathname === '/runway/orbital' || pathname === '/archive'
+  const isIsolated = pathname === '/saturn' || pathname === '/saturn2' || pathname === '/runway/orbital' || pathname === '/archive' || pathname === '/news'
   if (isIsolated) return null
 
   // Show date/time only after hydration (defers rendering until client hydration completes)
@@ -141,21 +134,14 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
           </button>
         </nav>
 
-        <div ref={dropdownRef} className={`ag-dropdown${open ? '' : ' ag-dropdown--closed'}`} aria-hidden={!open}>
-          {NAV_LINKS.map(({ label, href }) => {
-            const active = pathname === href
-            return (
-              <Link key={href} href={href} className="ag-dropdown-link" onClick={() => setOpen(false)}
-                style={{
-                  ...T.nav,
-                  fontWeight: active ? 700 : 500,
-                  color: 'var(--palette-black)',
-                }}
-              >
-                {label}
-              </Link>
-            )
-          })}
+        <div ref={dropdownRef} aria-hidden={!open}>
+          <SiteDropdownMenu
+            open={open}
+            align="left"
+            variant="light"
+            position="static"
+            onSelect={() => setOpen(false)}
+          />
         </div>
       </div>
     </>

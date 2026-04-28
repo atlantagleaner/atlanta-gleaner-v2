@@ -12,7 +12,7 @@ export interface NewsItem {
   publishedAt: string // ISO date string
 }
 
-// Updated weekly — this single source of truth is imported by every page that shows the NewsBox
+// Updated weekly — this snapshot feeds the current news surfaces
 export const NEWS_ITEMS: NewsItem[] = [
   {
     id: '1',

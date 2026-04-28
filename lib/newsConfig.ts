@@ -9,11 +9,11 @@
 // - International, legal, absurd, and macabre stories compete underneath.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type SerperEndpoint = 'news' | 'search' | 'videos';
+export type SearchEndpoint = 'news' | 'search' | 'videos';
 
 export interface SearchQuery {
   q: string;
-  endpoint: SerperEndpoint;
+  endpoint: SearchEndpoint;
   num: number;
 }
 
@@ -213,9 +213,13 @@ export const SOURCE_WEIGHTS = {
   'wsb-tv.com': 42,
   'wsb.com': 42,
   'atlantanewsfirst.com': 40,
+  '11alive.com': 39,
   'wabe.org': 38,
   'gpb.org': 37,
   'cnn.com': 34,
+  'npr.org': 28,
+  'bbc.com': 26,
+  'bbc.co.uk': 26,
   'youtube.com': 20,
 } as const;
 
