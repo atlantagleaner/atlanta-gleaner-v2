@@ -3,6 +3,7 @@
 
 export const DRIVE_GEARS = ['R', '0', '1', '2', '3', 'WARP'] as const
 export type DriveGear = (typeof DRIVE_GEARS)[number]
+export type FlightMarkerCategory = 'planet' | 'moon' | 'phenomena'
 
 export const flightInput = {
   joystick: { x: 0, y: 0 },
@@ -24,6 +25,7 @@ export const flightHUD = {
     onScreen: boolean
     behind: boolean
     distance: number
+    category: FlightMarkerCategory
   }>,
 }
 

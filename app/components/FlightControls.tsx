@@ -9,6 +9,7 @@ import {
   flightHUD,
   flightInput,
   resetFlightInput,
+  type FlightMarkerCategory,
 } from './flightInput'
 
 export interface FlightControlsProps {
@@ -26,6 +27,19 @@ const JOY_THUMB_SIZE = {
 }
 const DRIVE_GEAR_ORDER = DRIVE_GEARS
 const GEAR_TRAVEL_INSET = 0.16
+type MarkerFilterMode = 'everything' | 'planets' | 'moons' | 'phenomena'
+
+const MARKER_FILTER_OPTIONS: Array<{
+  value: MarkerFilterMode
+  label: string
+  description: string
+}> = [
+  { value: 'everything', label: 'EVERYTHING', description: 'All charted markers and frontier anomalies' },
+  { value: 'planets', label: 'PLANETS', description: 'Sun and major planetary bodies' },
+  { value: 'moons', label: 'MOONS', description: 'Major moons in active systems' },
+  { value: 'phenomena', label: 'OTHER', description: 'Dwarf bodies, asteroids, and frontier anomalies' },
+]
+
 const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
   R: 'R',
   '0': '0',
@@ -65,6 +79,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
   const [companionMessage, setCompanionMessage] = useState('')
   const [companionVisible, setCompanionVisible] = useState(false)
   const [driveGear, setDriveGear] = useState<(typeof DRIVE_GEARS)[number]>('0')
+  const [markerMenuOpen, setMarkerMenuOpen] = useState(false)
+  const [markerFilter, setMarkerFilter] = useState<MarkerFilterMode>('everything')
   const driveGearRef = useRef<(typeof DRIVE_GEARS)[number]>('0')
   const [, setHudTick] = useState(0)
   const selectedGearIndex = gearIndex(driveGear)
@@ -85,6 +101,27 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
       if (messageTypeTimerRef.current) window.clearTimeout(messageTypeTimerRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (!markerMenuOpen) return
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null
+      if (target?.closest?.('[data-marker-menu-root="true"]')) return
+      setMarkerMenuOpen(false)
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMarkerMenuOpen(false)
+    }
+
+    window.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [markerMenuOpen])
 
   useEffect(() => {
     const base = joyBaseRef.current
@@ -542,26 +579,130 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
           <HudStat label="NEAR" valueRef={nearestRef} minWidth={66} />
           <HudDivider />
           <HudStat label="EARTH" valueRef={earthDistRef} minWidth={58} />
-          <span
-            ref={warpBadgeRef}
-            className="warp-badge"
+          <div
+            data-marker-menu-root="true"
             style={{
-              opacity: 0,
-              color: '#88efff',
-              fontWeight: 700,
-              animation: 'warpPulse 0.7s infinite',
-              padding: '2px 8px',
-              borderRadius: 999,
-              border: '1px solid rgba(136, 239, 255, 0.85)',
-              fontSize: 9,
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
               alignSelf: 'center',
             }}
           >
-            WARP
-          </span>
+            <span
+              ref={warpBadgeRef}
+              className="warp-badge"
+              style={{
+                opacity: flightHUD.warpActive ? 1 : 0.34,
+                color: flightHUD.warpActive ? '#88efff' : 'rgba(255, 236, 200, 0.58)',
+                fontWeight: 700,
+                animation: flightHUD.warpActive ? 'warpPulse 0.7s infinite' : 'none',
+                padding: '2px 8px',
+                borderRadius: 999,
+                border: `1px solid ${flightHUD.warpActive ? 'rgba(136, 239, 255, 0.85)' : 'rgba(184, 134, 11, 0.32)'}`,
+                fontSize: 9,
+                background: flightHUD.warpActive ? 'rgba(4, 18, 24, 0.72)' : 'rgba(18, 12, 4, 0.34)',
+                whiteSpace: 'nowrap',
+                minWidth: 48,
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                transition: 'opacity 180ms ease, color 180ms ease, border-color 180ms ease, background 180ms ease',
+              }}
+            >
+              WARP
+            </span>
+            <button
+              type="button"
+              aria-label="Marker filters"
+              aria-expanded={markerMenuOpen}
+              onClick={() => setMarkerMenuOpen((open) => !open)}
+              style={{
+                width: isMobile ? 24 : 26,
+                height: isMobile ? 24 : 26,
+                borderRadius: '50%',
+                border: `1px solid ${flightHUD.warpActive ? 'rgba(136, 239, 255, 0.9)' : 'rgba(184, 134, 11, 0.42)'}`,
+                background: flightHUD.warpActive
+                  ? 'radial-gradient(circle at 35% 35%, rgba(170, 247, 255, 0.46), rgba(10, 38, 52, 0.9))'
+                  : 'radial-gradient(circle at 35% 35%, rgba(255, 222, 170, 0.32), rgba(18, 13, 5, 0.9))',
+                color: flightHUD.warpActive ? '#9cf4ff' : '#f6e6c2',
+                fontSize: 15,
+                lineHeight: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: flightHUD.warpActive
+                  ? '0 0 16px rgba(136, 239, 255, 0.24)'
+                  : '0 0 12px rgba(184, 134, 11, 0.12)',
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+              +
+            </button>
+            {markerMenuOpen ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 10px)',
+                  right: 0,
+                  width: isMobile ? 188 : 216,
+                  padding: '10px 10px 8px',
+                  borderRadius: 16,
+                  border: '1px solid rgba(184, 134, 11, 0.28)',
+                  background: 'rgba(4, 5, 11, 0.92)',
+                  backdropFilter: 'blur(14px)',
+                  boxShadow: '0 18px 42px rgba(0, 0, 0, 0.38)',
+                  zIndex: 48,
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: 8,
+                    color: 'rgba(255, 239, 210, 0.68)',
+                    fontSize: 8,
+                    letterSpacing: '0.22em',
+                  }}
+                >
+                  MARKERS
+                </div>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  {MARKER_FILTER_OPTIONS.map((option) => {
+                    const isActive = markerFilter === option.value
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => {
+                          setMarkerFilter(option.value)
+                          setMarkerMenuOpen(false)
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 10px',
+                          borderRadius: 12,
+                          border: `1px solid ${isActive ? 'rgba(255, 220, 156, 0.48)' : 'rgba(255, 255, 255, 0.08)'}`,
+                          background: isActive
+                            ? 'linear-gradient(180deg, rgba(74, 51, 9, 0.7), rgba(22, 16, 7, 0.92))'
+                            : 'rgba(255, 255, 255, 0.03)',
+                          color: isActive ? '#fff2d2' : '#eee7db',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <div style={{ fontSize: 9, letterSpacing: '0.16em', marginBottom: 3 }}>{option.label}</div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.03em', color: 'rgba(238, 231, 219, 0.72)' }}>
+                          {option.description}
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
 
-        <HudMarkers isMobile={isMobile} />
+        <HudMarkers isMobile={isMobile} filter={markerFilter} />
         <div
           ref={joyBaseRef}
           className="joy-base"
@@ -796,8 +937,17 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
   )
 }
 
-function HudMarkers({ isMobile }: { isMobile: boolean }) {
-  const markers = flightHUD.hudMarkers
+function markerMatchesFilter(category: FlightMarkerCategory, filter: MarkerFilterMode) {
+  if (filter === 'everything') return true
+  if (filter === 'planets') return category === 'planet'
+  if (filter === 'moons') return category === 'moon'
+  return category === 'phenomena'
+}
+
+function HudMarkers({ isMobile, filter }: { isMobile: boolean; filter: MarkerFilterMode }) {
+  const visibleMarkers = flightHUD.hudMarkers.filter(
+    (marker) => marker.name === flightHUD.nearest || markerMatchesFilter(marker.category, filter)
+  )
   const priorityNames = new Set([
     'SUN',
     'MERCURY',
@@ -814,7 +964,7 @@ function HudMarkers({ isMobile }: { isMobile: boolean }) {
 
   return (
     <>
-      {markers.map((marker) => {
+      {visibleMarkers.map((marker) => {
         const isPriority = priorityNames.has(marker.name) || marker.name === flightHUD.nearest
         const baseColor = marker.color
         const commonStyle = {

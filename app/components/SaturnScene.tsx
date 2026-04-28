@@ -3,7 +3,15 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { flightCompanion, flightHUD, flightInput, queueFlightMessage, resetFlightInput, type DriveGear } from './flightInput'
+import {
+  flightCompanion,
+  flightHUD,
+  flightInput,
+  queueFlightMessage,
+  resetFlightInput,
+  type DriveGear,
+  type FlightMarkerCategory,
+} from './flightInput'
 
 export interface SaturnSceneProps {
   onSceneReady?: (camera: THREE.PerspectiveCamera, resetOrbit: () => void) => void
@@ -28,14 +36,60 @@ const SATURN = {
   ringOuter: 15.4,
 }
 
+const REAL_RADII_KM = {
+  SUN: 695700,
+  MERCURY: 2439.7,
+  VENUS: 6051.8,
+  EARTH: 6371,
+  MOON: 1737.4,
+  MARS: 3389.5,
+  CERES: 473,
+  JUPITER: 69911,
+  IO: 1821.6,
+  EUROPA: 1560.8,
+  SATURN: 58232,
+  TITAN: 2574.7,
+  ENCELADUS: 252.1,
+  URANUS: 25362,
+  NEPTUNE: 24622,
+  PLUTO: 1188.3,
+} as const
+
+const CHARTED_BODY_FLIGHT_SCALE = 3.8
+const MOON_STYLE_EXPONENT = 0.68
+const MOON_STYLE_OFFSET = 0.22
+const MOON_STYLE_MULTIPLIER = 2.05
+const DWARF_BODY_STYLE_EXPONENT = 0.72
+const DWARF_BODY_STYLE_OFFSET = 0.14
+const DWARF_BODY_STYLE_MULTIPLIER = 1.45
+const SOLAR_SYSTEM_DISTANCE_SCALE = 1.75
+
+function strictRadiusFromSaturn(bodyKmRadius: number) {
+  return SATURN.radius * (bodyKmRadius / REAL_RADII_KM.SATURN)
+}
+
+function stylizedMoonRadiusFromSaturn(bodyKmRadius: number) {
+  const strictRadius = strictRadiusFromSaturn(bodyKmRadius)
+  return MOON_STYLE_OFFSET + MOON_STYLE_MULTIPLIER * Math.pow(strictRadius, MOON_STYLE_EXPONENT)
+}
+
+function stylizedDwarfRadiusFromSaturn(bodyKmRadius: number) {
+  const strictRadius = strictRadiusFromSaturn(bodyKmRadius)
+  return DWARF_BODY_STYLE_OFFSET + DWARF_BODY_STYLE_MULTIPLIER * Math.pow(strictRadius, DWARF_BODY_STYLE_EXPONENT)
+}
+
+function scaleSolarDistance(distance: number) {
+  return distance * SOLAR_SYSTEM_DISTANCE_SCALE
+}
+
 const FLIGHT = {
   gearSpeeds: {
-    R: -0.55,
+    R: -0.55 * SOLAR_SYSTEM_DISTANCE_SCALE,
     '0': 0,
-    '1': 0.58,
-    '2': 0.96,
-    '3': 1.36,
-    WARP: 2.3,
+    '1': 0.58 * SOLAR_SYSTEM_DISTANCE_SCALE,
+    '2': 0.96 * SOLAR_SYSTEM_DISTANCE_SCALE,
+    '3': 1.36 * SOLAR_SYSTEM_DISTANCE_SCALE,
+    WARP: 2.3 * SOLAR_SYSTEM_DISTANCE_SCALE,
   } as const,
   gearResponse: {
     R: 0.18,
@@ -59,8 +113,8 @@ const FLIGHT = {
 }
 
 const FRONTIER = {
-  chartedRadius: 36000,
-  sectorSize: 22000,
+  chartedRadius: scaleSolarDistance(36000),
+  sectorSize: scaleSolarDistance(22000),
   keepRadius: 1,
   bodyMin: 1,
   bodyMax: 4,
@@ -69,8 +123,8 @@ const FRONTIER = {
 
 const SOLAR = {
   orbitTimeScale: 0.000018,
-  earthOrbitRadius: 1360,
-  heliopauseRadius: 78000,
+  earthOrbitRadius: scaleSolarDistance(1360),
+  heliopauseRadius: scaleSolarDistance(78000),
 }
 
 const CHARTED_MARKER_NAMES = new Set([
@@ -92,7 +146,18 @@ const CHARTED_MARKER_NAMES = new Set([
   'PLUTO',
 ])
 
+const PLANET_MARKER_NAMES = new Set(['SUN', 'MERCURY', 'VENUS', 'EARTH', 'MARS', 'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE'])
+const MOON_MARKER_NAMES = new Set(['MOON', 'IO', 'EUROPA', 'TITAN', 'ENCELADUS'])
+const PHENOMENA_MARKER_NAMES = new Set(['CERES', 'PLUTO', 'PSYCHE'])
+
 const COMPANION_REGION_COOLDOWN_MS = 180000
+
+function getMarkerCategory(bodyName: string): FlightMarkerCategory {
+  if (PLANET_MARKER_NAMES.has(bodyName)) return 'planet'
+  if (MOON_MARKER_NAMES.has(bodyName)) return 'moon'
+  if (PHENOMENA_MARKER_NAMES.has(bodyName) || bodyName.startsWith('UNKNOWN SECTOR')) return 'phenomena'
+  return 'phenomena'
+}
 
 const REGION_DIALOGUE = {
   sun: [
@@ -1239,7 +1304,7 @@ export default function SaturnScene({
     const sun = makePlanet({
       name: 'SUN',
       position: solarCenter.clone(),
-      radius: 18,
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.SUN),
       color: 0xffffff,
       emissive: 0xffffff,
       emissiveIntensity: 1.18,
@@ -1247,16 +1312,23 @@ export default function SaturnScene({
       glowColor: 0xffffff,
       glowOpacity: 0.32,
       mapColor: '#ffffff',
-      flightScale: 1.4,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       spinRate: 0.0003,
       approachRange: 180,
     })
 
-    const corona = createPlanetGlow(54, 0xdff5ff, 0.11, Math.max(32, sphereSegments / 2))
+    const sunCoronaRadius = sun.radius * 3
+    const corona = createPlanetGlow(sunCoronaRadius, 0xdff5ff, 0.11, Math.max(32, sphereSegments / 2))
     sun.root.add(corona)
     for (let i = 0; i < 5; i++) {
       const arc = new THREE.Mesh(
-        new THREE.TorusGeometry(24 + i * 4, 0.08, 6, 40, Math.PI * (0.55 + Math.random() * 0.35)),
+        new THREE.TorusGeometry(
+          sun.radius * (1.33 + i * 0.22),
+          Math.max(0.08, sun.radius * 0.0045),
+          6,
+          40,
+          Math.PI * (0.55 + Math.random() * 0.35)
+        ),
         new THREE.MeshBasicMaterial({
           color: i % 2 === 0 ? 0xffffff : 0xffd7a0,
           transparent: true,
@@ -1271,21 +1343,40 @@ export default function SaturnScene({
 
     makePlanet({
       name: 'MERCURY',
-      position: getOrbitPosition({ center: solarCenter, radius: 520, phase: -0.42, vertical: 8, inclination: 0.07 }),
-      radius: 1.4,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(520),
+        phase: -0.42,
+        vertical: scaleSolarDistance(8),
+        inclination: 0.07,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.MERCURY),
       texture: createCraterTexture('#5b5750', '#d8d0c3'),
       mapColor: '#9f9488',
-      flightScale: 2.8,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 1,
       spinRate: 0.0018,
       approachRange: 180,
-      orbit: { center: solarCenter, radius: 520, periodDays: 88, phase: -0.42, vertical: 8, inclination: 0.07 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(520),
+        periodDays: 88,
+        phase: -0.42,
+        vertical: scaleSolarDistance(8),
+        inclination: 0.07,
+      },
     })
 
     makePlanet({
       name: 'VENUS',
-      position: getOrbitPosition({ center: solarCenter, radius: 920, phase: 0.28, vertical: -16, inclination: 0.02 }),
-      radius: 2.8,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(920),
+        phase: 0.28,
+        vertical: scaleSolarDistance(-16),
+        inclination: 0.02,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.VENUS),
       texture: createGradientTexture([
         { at: 0, color: '#f7efd7' },
         { at: 0.46, color: '#f0dfad' },
@@ -1294,7 +1385,7 @@ export default function SaturnScene({
       emissive: 0x6d542b,
       emissiveIntensity: 0.18,
       mapColor: '#fff0bd',
-      flightScale: 3.8,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.92,
       glowColor: 0xfff0bd,
       glowOpacity: 0.13,
@@ -1302,18 +1393,31 @@ export default function SaturnScene({
       atmosphereOpacity: 0.09,
       spinRate: 0.0011,
       approachRange: 240,
-      orbit: { center: solarCenter, radius: 920, periodDays: 224.7, phase: 0.28, vertical: -16, inclination: 0.02 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(920),
+        periodDays: 224.7,
+        phase: 0.28,
+        vertical: scaleSolarDistance(-16),
+        inclination: 0.02,
+      },
     })
 
     const earth = makePlanet({
       name: 'EARTH',
-      position: getOrbitPosition({ center: solarCenter, radius: SOLAR.earthOrbitRadius, phase: 0.95, vertical: 6, inclination: 0.03 }),
-      radius: 3,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: SOLAR.earthOrbitRadius,
+        phase: 0.95,
+        vertical: scaleSolarDistance(6),
+        inclination: 0.03,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.EARTH),
       texture: createEarthTexture(),
       emissive: 0x0f2a55,
       emissiveIntensity: 0.14,
       mapColor: '#73b7ff',
-      flightScale: 5.2,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.84,
       glowColor: 0x8ad6ff,
       glowOpacity: 0.09,
@@ -1321,57 +1425,109 @@ export default function SaturnScene({
       atmosphereOpacity: 0.075,
       spinRate: 0.0019,
       approachRange: 300,
-      orbit: { center: solarCenter, radius: SOLAR.earthOrbitRadius, periodDays: 365.25, phase: 0.95, vertical: 6, inclination: 0.03 },
+      orbit: {
+        center: solarCenter,
+        radius: SOLAR.earthOrbitRadius,
+        periodDays: 365.25,
+        phase: 0.95,
+        vertical: scaleSolarDistance(6),
+        inclination: 0.03,
+      },
     })
 
     makePlanet({
       name: 'MOON',
-      position: getOrbitPosition({ center: earth.root.position as THREE.Vector3, radius: 90, phase: 1.1, vertical: 2, inclination: 0.08 }),
-      radius: 0.82,
+      position: getOrbitPosition({
+        center: earth.root.position as THREE.Vector3,
+        radius: scaleSolarDistance(90),
+        phase: 1.1,
+        vertical: scaleSolarDistance(2),
+        inclination: 0.08,
+      }),
+      radius: stylizedMoonRadiusFromSaturn(REAL_RADII_KM.MOON),
       texture: createCraterTexture('#777a80', '#c4c8cc', 512, 256),
       mapColor: '#b4b7bb',
-      flightScale: 3.2,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 1,
       spinRate: 0.0008,
       approachRange: 120,
-      orbit: { centerBody: earth, radius: 90, periodDays: 27.3, phase: 1.1, vertical: 2, inclination: 0.08 },
+      orbit: {
+        centerBody: earth,
+        radius: scaleSolarDistance(90),
+        periodDays: 27.3,
+        phase: 1.1,
+        vertical: scaleSolarDistance(2),
+        inclination: 0.08,
+      },
     })
 
     makePlanet({
       name: 'MARS',
-      position: getOrbitPosition({ center: solarCenter, radius: 2120, phase: -0.62, vertical: -30, inclination: 0.06 }),
-      radius: 2.2,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(2120),
+        phase: -0.62,
+        vertical: scaleSolarDistance(-30),
+        inclination: 0.06,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.MARS),
       texture: createMarsTexture(),
       emissive: 0x2c120a,
       emissiveIntensity: 0.08,
       mapColor: '#d06d4b',
-      flightScale: 4.4,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       glowColor: 0xcc724a,
       glowOpacity: 0.05,
       atmosphereColor: 0xd46f4b,
       atmosphereOpacity: 0.035,
       spinRate: 0.0014,
       approachRange: 220,
-      orbit: { center: solarCenter, radius: 2120, periodDays: 687, phase: -0.62, vertical: -30, inclination: 0.06 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(2120),
+        periodDays: 687,
+        phase: -0.62,
+        vertical: scaleSolarDistance(-30),
+        inclination: 0.06,
+      },
     })
 
     const ceres = makePlanet({
       name: 'CERES',
-      position: getOrbitPosition({ center: solarCenter, radius: 4100, phase: 1.52, vertical: 42, inclination: 0.18 }),
-      radius: 0.95,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(4100),
+        phase: 1.52,
+        vertical: scaleSolarDistance(42),
+        inclination: 0.18,
+      }),
+      radius: stylizedDwarfRadiusFromSaturn(REAL_RADII_KM.CERES),
       texture: createCraterTexture('#4d4e50', '#8a8d90', 512, 256),
       mapColor: '#85888c',
-      flightScale: 4.1,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 1,
       spinRate: 0.0013,
       approachRange: 160,
-      orbit: { center: solarCenter, radius: 4100, periodDays: 1682, phase: 1.52, vertical: 42, inclination: 0.18 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(4100),
+        periodDays: 1682,
+        phase: 1.52,
+        vertical: scaleSolarDistance(42),
+        inclination: 0.18,
+      },
     })
     ceres.root.scale.set(1.16, 0.92, 1)
 
     makePlanet({
       name: 'PSYCHE',
-      position: getOrbitPosition({ center: solarCenter, radius: 4550, phase: -1.05, vertical: -70, inclination: 0.13 }),
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(4550),
+        phase: -1.05,
+        vertical: scaleSolarDistance(-70),
+        inclination: 0.13,
+      }),
       radius: 0.72,
       texture: createRockTexture('#594338', '#b47d5c', 512, 256),
       mapColor: '#b47d5c',
@@ -1380,13 +1536,26 @@ export default function SaturnScene({
       metalness: 0.22,
       spinRate: 0.0021,
       approachRange: 130,
-      orbit: { center: solarCenter, radius: 4550, periodDays: 1825, phase: -1.05, vertical: -70, inclination: 0.13 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(4550),
+        periodDays: 1825,
+        phase: -1.05,
+        vertical: scaleSolarDistance(-70),
+        inclination: 0.13,
+      },
     })
 
     const jupiter = makePlanet({
       name: 'JUPITER',
-      position: getOrbitPosition({ center: solarCenter, radius: 7800, phase: -0.31, vertical: 70, inclination: 0.05 }),
-      radius: 9,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(7800),
+        phase: -0.31,
+        vertical: scaleSolarDistance(70),
+        inclination: 0.05,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.JUPITER),
       texture: createGradientTexture([
         { at: 0, color: '#5f3a2c' },
         { at: 0.12, color: '#b27a4c' },
@@ -1398,7 +1567,7 @@ export default function SaturnScene({
         { at: 1, color: '#6b432f' },
       ]),
       mapColor: '#d8b07b',
-      flightScale: 8.5,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.95,
       glowColor: 0xe4c28e,
       glowOpacity: 0.06,
@@ -1406,7 +1575,14 @@ export default function SaturnScene({
       atmosphereOpacity: 0.05,
       spinRate: 0.001,
       approachRange: 540,
-      orbit: { center: solarCenter, radius: 7800, periodDays: 4332.6, phase: -0.31, vertical: 70, inclination: 0.05 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(7800),
+        periodDays: 4332.6,
+        phase: -0.31,
+        vertical: scaleSolarDistance(70),
+        inclination: 0.05,
+      },
     })
 
     const redSpot = new THREE.Mesh(
@@ -1419,17 +1595,30 @@ export default function SaturnScene({
 
     const io = makePlanet({
       name: 'IO',
-      position: getOrbitPosition({ center: jupiter.root.position as THREE.Vector3, radius: 125, phase: 1.8, vertical: 4, inclination: 0.04 }),
-      radius: 0.9,
+      position: getOrbitPosition({
+        center: jupiter.root.position as THREE.Vector3,
+        radius: scaleSolarDistance(125),
+        phase: 1.8,
+        vertical: scaleSolarDistance(4),
+        inclination: 0.04,
+      }),
+      radius: stylizedMoonRadiusFromSaturn(REAL_RADII_KM.IO),
       texture: createIoTexture(),
       emissive: 0x4d3a14,
       emissiveIntensity: 0.12,
       mapColor: '#d9bd55',
-      flightScale: 3.5,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.9,
       spinRate: 0.0011,
       approachRange: 130,
-      orbit: { centerBody: jupiter, radius: 125, periodDays: 1.77, phase: 1.8, vertical: 4, inclination: 0.04 },
+      orbit: {
+        centerBody: jupiter,
+        radius: scaleSolarDistance(125),
+        periodDays: 1.77,
+        phase: 1.8,
+        vertical: scaleSolarDistance(4),
+        inclination: 0.04,
+      },
     })
     const ioPlume = createPlume({ color: '#fff0a8', height: 2.4, count: isMobile ? 6 : 12 })
     ioPlume.position.set(0, io.radius * 0.9, 0)
@@ -1437,21 +1626,42 @@ export default function SaturnScene({
 
     makePlanet({
       name: 'EUROPA',
-      position: getOrbitPosition({ center: jupiter.root.position as THREE.Vector3, radius: 178, phase: -0.65, vertical: -6, inclination: 0.05 }),
-      radius: 0.78,
+      position: getOrbitPosition({
+        center: jupiter.root.position as THREE.Vector3,
+        radius: scaleSolarDistance(178),
+        phase: -0.65,
+        vertical: scaleSolarDistance(-6),
+        inclination: 0.05,
+      }),
+      radius: stylizedMoonRadiusFromSaturn(REAL_RADII_KM.EUROPA),
       texture: createEuropaTexture(),
       mapColor: '#f2f0e9',
-      flightScale: 3.4,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.96,
       glowColor: 0xcfe8ff,
       glowOpacity: 0.035,
       spinRate: 0.0009,
       approachRange: 125,
-      orbit: { centerBody: jupiter, radius: 178, periodDays: 3.55, phase: -0.65, vertical: -6, inclination: 0.05 },
+      orbit: {
+        centerBody: jupiter,
+        radius: scaleSolarDistance(178),
+        periodDays: 3.55,
+        phase: -0.65,
+        vertical: scaleSolarDistance(-6),
+        inclination: 0.05,
+      },
     })
 
     const saturnRoot = new THREE.Group()
-    saturnRoot.position.copy(getOrbitPosition({ center: solarCenter, radius: 13800, phase: 0, vertical: -20, inclination: 0.015 }))
+    saturnRoot.position.copy(
+      getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(13800),
+        phase: 0,
+        vertical: scaleSolarDistance(-20),
+        inclination: 0.015,
+      })
+    )
     saturnRoot.rotation.z = SATURN.tilt
 
     const saturnMesh = new THREE.Mesh(
@@ -1523,10 +1733,17 @@ export default function SaturnScene({
       radius: SATURN.radius,
       approachRange: 42,
       mapColor: '#e4c897',
-      flightScale: 3.8,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       spinTarget: saturnMesh,
       spinRate: 0.0015,
-      orbit: { center: solarCenter, radius: 13800, periodDays: 10759, phase: 0, vertical: -20, inclination: 0.015 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(13800),
+        periodDays: 10759,
+        phase: 0,
+        vertical: scaleSolarDistance(-20),
+        inclination: 0.015,
+      },
     })
 
     ringHazards.push({
@@ -1539,8 +1756,14 @@ export default function SaturnScene({
 
     makePlanet({
       name: 'TITAN',
-      position: getOrbitPosition({ center: saturn.root.position as THREE.Vector3, radius: 155, phase: 2.25, vertical: -6, inclination: 0.08 }),
-      radius: 1.15,
+      position: getOrbitPosition({
+        center: saturn.root.position as THREE.Vector3,
+        radius: scaleSolarDistance(155),
+        phase: 2.25,
+        vertical: scaleSolarDistance(-6),
+        inclination: 0.08,
+      }),
+      radius: stylizedMoonRadiusFromSaturn(REAL_RADII_KM.TITAN),
       texture: createGradientTexture([
         { at: 0, color: '#c56f2e' },
         { at: 0.5, color: '#f0a24f' },
@@ -1549,7 +1772,7 @@ export default function SaturnScene({
       emissive: 0x3b1d0b,
       emissiveIntensity: 0.14,
       mapColor: '#f0a24f',
-      flightScale: 4.2,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       glowColor: 0xffb26a,
       glowOpacity: 0.09,
       atmosphereColor: 0xff9d52,
@@ -1557,24 +1780,44 @@ export default function SaturnScene({
       roughness: 0.94,
       spinRate: 0.0007,
       approachRange: 150,
-      orbit: { centerBody: saturn, radius: 155, periodDays: 15.95, phase: 2.25, vertical: -6, inclination: 0.08 },
+      orbit: {
+        centerBody: saturn,
+        radius: scaleSolarDistance(155),
+        periodDays: 15.95,
+        phase: 2.25,
+        vertical: scaleSolarDistance(-6),
+        inclination: 0.08,
+      },
     })
 
     const enceladus = makePlanet({
       name: 'ENCELADUS',
-      position: getOrbitPosition({ center: saturn.root.position as THREE.Vector3, radius: 96, phase: -1.35, vertical: 7, inclination: 0.05 }),
-      radius: 0.58,
+      position: getOrbitPosition({
+        center: saturn.root.position as THREE.Vector3,
+        radius: scaleSolarDistance(96),
+        phase: -1.35,
+        vertical: scaleSolarDistance(7),
+        inclination: 0.05,
+      }),
+      radius: stylizedMoonRadiusFromSaturn(REAL_RADII_KM.ENCELADUS),
       texture: createCraterTexture('#f3fbff', '#d7e5ee', 512, 256),
       emissive: 0xdcecff,
       emissiveIntensity: 0.18,
       mapColor: '#f4fbff',
-      flightScale: 3.5,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       glowColor: 0xdaf4ff,
       glowOpacity: 0.06,
       roughness: 0.78,
       spinRate: 0.001,
       approachRange: 110,
-      orbit: { centerBody: saturn, radius: 96, periodDays: 1.37, phase: -1.35, vertical: 7, inclination: 0.05 },
+      orbit: {
+        centerBody: saturn,
+        radius: scaleSolarDistance(96),
+        periodDays: 1.37,
+        phase: -1.35,
+        vertical: scaleSolarDistance(7),
+        inclination: 0.05,
+      },
     })
     const icePlume = createPlume({ color: '#dff8ff', height: 2.0, count: isMobile ? 7 : 14 })
     icePlume.position.set(0, -enceladus.radius * 0.9, 0)
@@ -1583,15 +1826,21 @@ export default function SaturnScene({
 
     makePlanet({
       name: 'URANUS',
-      position: getOrbitPosition({ center: solarCenter, radius: 27800, phase: 0.07, vertical: 160, inclination: 0.04 }),
-      radius: 4.6,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(27800),
+        phase: 0.07,
+        vertical: scaleSolarDistance(160),
+        inclination: 0.04,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.URANUS),
       texture: createGradientTexture([
         { at: 0, color: '#a0d8e6' },
         { at: 0.5, color: '#77bccf' },
         { at: 1, color: '#9de4f0' },
       ]),
       mapColor: '#9de4f0',
-      flightScale: 5.4,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.9,
       glowColor: 0xa2eeff,
       glowOpacity: 0.07,
@@ -1599,13 +1848,26 @@ export default function SaturnScene({
       atmosphereOpacity: 0.055,
       spinRate: 0.001,
       approachRange: 380,
-      orbit: { center: solarCenter, radius: 27800, periodDays: 30688, phase: 0.07, vertical: 160, inclination: 0.04 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(27800),
+        periodDays: 30688,
+        phase: 0.07,
+        vertical: scaleSolarDistance(160),
+        inclination: 0.04,
+      },
     })
 
     makePlanet({
       name: 'NEPTUNE',
-      position: getOrbitPosition({ center: solarCenter, radius: 43800, phase: -0.15, vertical: -220, inclination: 0.03 }),
-      radius: 4.3,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(43800),
+        phase: -0.15,
+        vertical: scaleSolarDistance(-220),
+        inclination: 0.03,
+      }),
+      radius: strictRadiusFromSaturn(REAL_RADII_KM.NEPTUNE),
       texture: createGradientTexture([
         { at: 0, color: '#365dc6' },
         { at: 0.45, color: '#28469c' },
@@ -1614,7 +1876,7 @@ export default function SaturnScene({
       emissive: 0x11234d,
       emissiveIntensity: 0.12,
       mapColor: '#5c8df0',
-      flightScale: 5.1,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.86,
       glowColor: 0x74acff,
       glowOpacity: 0.06,
@@ -1622,13 +1884,26 @@ export default function SaturnScene({
       atmosphereOpacity: 0.06,
       spinRate: 0.001,
       approachRange: 360,
-      orbit: { center: solarCenter, radius: 43800, periodDays: 60182, phase: -0.15, vertical: -220, inclination: 0.03 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(43800),
+        periodDays: 60182,
+        phase: -0.15,
+        vertical: scaleSolarDistance(-220),
+        inclination: 0.03,
+      },
     })
 
     makePlanet({
       name: 'PLUTO',
-      position: getOrbitPosition({ center: solarCenter, radius: 56400, phase: 0.41, vertical: 310, inclination: 0.22 }),
-      radius: 0.9,
+      position: getOrbitPosition({
+        center: solarCenter,
+        radius: scaleSolarDistance(56400),
+        phase: 0.41,
+        vertical: scaleSolarDistance(310),
+        inclination: 0.22,
+      }),
+      radius: stylizedDwarfRadiusFromSaturn(REAL_RADII_KM.PLUTO),
       texture: createGradientTexture([
         { at: 0, color: '#cda87a' },
         { at: 0.42, color: '#f0d8b9' },
@@ -1638,13 +1913,20 @@ export default function SaturnScene({
       emissive: 0x241913,
       emissiveIntensity: 0.08,
       mapColor: '#d9c7ba',
-      flightScale: 3.4,
+      flightScale: CHARTED_BODY_FLIGHT_SCALE,
       roughness: 0.96,
       glowColor: 0xe8d9cf,
       glowOpacity: 0.05,
       spinRate: 0.0005,
       approachRange: 180,
-      orbit: { center: solarCenter, radius: 56400, periodDays: 90560, phase: 0.41, vertical: 310, inclination: 0.22 },
+      orbit: {
+        center: solarCenter,
+        radius: scaleSolarDistance(56400),
+        periodDays: 90560,
+        phase: 0.41,
+        vertical: scaleSolarDistance(310),
+        inclination: 0.22,
+      },
     })
 
     const beltParticleCount = isMobile ? 1700 : 4200
@@ -1654,10 +1936,10 @@ export default function SaturnScene({
     const beltPalette = ['#262626', '#7a7470', '#8d5943', '#9a8775']
     const beltColor = new THREE.Color()
     for (let i = 0; i < beltParticleCount; i++) {
-      const radius = 3300 + Math.random() * 2700
+      const radius = scaleSolarDistance(3300 + Math.random() * 2700)
       const theta = Math.random() * Math.PI * 2
       beltPositions[i * 3] = solarCenter.x + Math.cos(theta) * radius
-      beltPositions[i * 3 + 1] = solarCenter.y + (Math.random() - 0.5) * 260
+      beltPositions[i * 3 + 1] = solarCenter.y + scaleSolarDistance((Math.random() - 0.5) * 260)
       beltPositions[i * 3 + 2] = solarCenter.z + Math.sin(theta) * radius
       beltColor.set(beltPalette[Math.floor(Math.random() * beltPalette.length)])
       const brightness = 0.32 + Math.random() * 0.42
@@ -2471,7 +2753,7 @@ export default function SaturnScene({
         velocityRef.current.copy(tmpForward).multiplyScalar(nextSpeed)
 
         const warpActive = selectedGear === 'WARP'
-        ship.position.addScaledVector(velocityRef.current, warpActive ? FLIGHT.gearSpeeds.WARP : 1)
+        ship.position.addScaledVector(velocityRef.current, 1)
 
         const desiredFov = warpActive ? FLIGHT.fovWarp : FLIGHT.fovNormal
         camera.fov = THREE.MathUtils.lerp(camera.fov, desiredFov, 0.08)
@@ -2550,7 +2832,7 @@ export default function SaturnScene({
         tmpLookAt.copy(FLIGHT.lookAhead).applyQuaternion(ship.quaternion).add(ship.position)
         camera.lookAt(tmpLookAt)
 
-        flightHUD.speed = parseFloat((nextSpeed * (warpActive ? FLIGHT.gearSpeeds.WARP : 1)).toFixed(2))
+        flightHUD.speed = parseFloat(nextSpeed.toFixed(2))
         flightHUD.nearest = nearestBody.name
         flightHUD.earthDist = Math.max(
           0,
@@ -2601,6 +2883,7 @@ export default function SaturnScene({
             onScreen,
             behind,
             distance,
+            category: getMarkerCategory(body.name),
           }
         })
       } else {
