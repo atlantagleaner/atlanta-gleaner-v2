@@ -89,245 +89,236 @@ const CHARTED_MARKER_NAMES = new Set([
   'ENCELADUS',
   'URANUS',
   'NEPTUNE',
+  'PLUTO',
 ])
 
-const ROBOT_DIALOGUE = {
-  launch: [
-    'Saturn dead ahead. Rings on full display. Try not to make me sound impressed by surviving the parking job.',
-    'Welcome back to the ringed giant, pilot. Beautiful view. Catastrophic place to get careless.',
-    'Saturn is filling the glass. Take a second if you need one. Men have crossed oceans for less.',
-    'We are sitting beside six hundred million miles of perspective. Systems are green. So are your chances if you stay calm.',
-    'That would be Saturn, in case the universe had not made itself obvious.',
-    'Good news, pilot. The machine still flies. Better news, Saturn still knows how to make an entrance.',
-    'You are looking at the finest piece of intimidation in the solar system. Hold the line and enjoy it.',
-    'Saturn ahead. Light discipline, steady hands, no dramatics unless they improve the view.',
-    'Ringed giant in sight. Old service habit says salute it. Practical habit says mind your heading.',
-    'There it is. Saturn. Cold, huge, and entirely indifferent. Try to take that as encouragement.',
-    'Beautiful theater out there. Let us avoid becoming the cautionary tale that completes the performance.',
-    'Pilot, breathe. You are not late, lost, or failing. You are at Saturn. Start from there.',
-    'Saturn off the bow. If that does not quiet the mind for a second, nothing built by man will.',
-    'The rings are catching sunlight like a blade edge. Keep the nose honest and you can stare all you like.',
-    'Mission clock says we are on station. My professional opinion says this is one hell of a station.',
-    'You have a ship, a horizon, and a world worth crossing for. That is enough to begin.',
+const COMPANION_REGION_COOLDOWN_MS = 180000
+
+const REGION_DIALOGUE = {
+  sun: [
+    'The Sun is a G-type main-sequence star. In vacuum, it reads white.',
+    'The Sun contains 99.86% of the total mass of this solar system.',
+    'Its core fuses roughly 600 million tons of hydrogen into helium every second.',
+    'Energy made in the core can take between 10,000 and 170,000 years to reach the surface.',
+    'The corona is hotter than the photosphere, reaching over one million degrees Celsius.',
+    'The solar wind carries charged particles outward at roughly 400 to 800 kilometers per second.',
+    'Solar rotation is differential. The equator turns in about 25 days. The poles take closer to 35.',
+    'The Sun converts roughly four million tons of matter into energy every second.',
+    'Its magnetic field reverses polarity about every eleven years.',
+    'Solar flares can reach temperatures near 100 million degrees Celsius.',
+    'The heliospheric current sheet is the largest structure in the solar system. It is shaped like a spinning skirt.',
+    'The Sun should remain on the main sequence for another five billion years.',
   ],
-  mechanics: [
-    'Gear one is for seeing the country. If you panic in gear one, that is a character issue, not a ship issue.',
-    'Point the nose first. Then add speed. That order has kept better pilots alive.',
-    'A planet filling the canopy is not scenery anymore. It is paperwork.',
-    'Use reverse before the approach becomes a confession.',
-    'Smooth input, smooth turn. The ship responds better to discipline than wrestling.',
-    'You can rotate at zero thrust. Those are attitude jets, not magic. Use them with some self-respect.',
-    'If you are drifting, good. Drift is information. Panic is static.',
-    'The edge markers are me being polite. You can listen now or learn later.',
-    'Do not chase the target with the whole ship. Nudge the nose. Let the line come to you.',
-    'Hold your correction a second longer than your nerves prefer. That is usually the right answer.',
-    'When the heading is clean, then you may feel heroic about the lever.',
-    'A tidy turn saves more time than a sloppy burn.',
-    'If Earth slips off center, make a small correction. This is flight, not fencing.',
-    'You do not need to win against inertia. You need to work with it before it makes a point.',
-    'Reverse is not retreat. Reverse is judgment with mechanical support.',
-    'Treat the ship like a rifle range lesson. Slow is smooth. Smooth is fast. Fast is still not an excuse to be stupid.',
-    'If the stars start smearing under warp, verify the nose and then commit. In that order.',
-    'The calm pilot usually gets home first. Infuriating, I know.',
-    'If you overshoot, relax and widen the correction. Tiny frantic circles are for insects.',
-    'A marker on the edge of the HUD means turn first, accelerate second. The machine is trying to spare us both.',
-    'The ship will coast if you let it. Space does not demand constant theatrics.',
-    'There is no medal for taking a close approach too hot.',
-    'Line up, breathe, move. Flight is mostly sequence discipline with better scenery.',
-    'If a world looks peaceful, remember that peace and impact can share the same horizon.',
-    'A clean heading solves problems before speed makes them expensive.',
-    'You can absolutely trust instinct. Just make sure it is trained instinct, not decorative instinct.',
-    'If the approach feels fast, it is already faster than your conscience likes.',
-    'Zero thrust is still a valid moment to think. Use the jets, square the nose, then decide.',
-    'This ship likes clear orders. Indecision reads like turbulence.',
-    'The prettiest maneuver is usually the least desperate one.',
-    'You are allowed to back off an approach. Pride is heavier than fuel.',
-    'When in doubt, take the calmer vector. Space punishes ego more reliably than error.',
-    'Think of warp as altering the road, not the driver. You still have to know where you are going.',
-    'Warp does not forgive a foolish heading. It just helps you arrive at the mistake faster.',
-    'If the speed readout seems modest in warp, that is because the map is bending more than the engine is boasting.',
-    'Spacetime is doing part of the travel for us in warp. Show some gratitude by not aiming badly.',
-    'Those reaction jets are there so you can think with the ship standing still. Use that privilege.',
-    'If you lose the line to Earth, open the turn. The long arc is usually the merciful one.',
-    'Do not overcorrect because the silence feels judgmental. The silence always feels judgmental.',
-    'A veteran habit: make one good correction, then observe. Do not stack three bad ones out of fear.',
-    'If Saturn is behind you and Earth is ahead, congratulations. You have already solved the philosophical part.',
-    'Flight remains simple under stress: orient, commit, reassess.',
-    'Use lower gears without shame. Every wreck started with someone certain they needed more speed.',
-    'You do not need constant thrust to stay in command. You need composure and a working sense of direction.',
-    'A ship this small survives on pilot judgment. Fortunately, you brought some.',
+  mercury: [
+    'Mercury has a metallic core accounting for about 85% of the planet’s radius.',
+    'Mercury is locked in a 3:2 spin-orbit resonance. It rotates three times for every two orbits of the Sun.',
+    'Water ice survives inside permanently shadowed polar craters.',
+    'Surface temperatures run from about negative 180 degrees Celsius at night to 430 in daylight.',
+    'Mercury has the most eccentric orbit of the major planets.',
+    'It is the second-densest planet in the solar system, behind Earth.',
+    'Mercury has a global magnetic field about one percent as strong as Earth’s.',
+    'Its exosphere contains sodium, magnesium, and calcium, continually replenished by the solar wind.',
+    'Mercury trails a sodium tail that extends millions of kilometers away from the Sun.',
+    'The Caloris Basin is roughly 1,550 kilometers wide, formed by a major early impact.',
+    'Hollows on Mercury are bright, shallow depressions likely formed by sublimation.',
+    'Mercury’s average orbital speed is 47.36 kilometers per second, the fastest in the system.',
   ],
-  facts: [
-    'Saturn would float in an ocean large enough to hold it. Ridiculous image. Accurate physics.',
-    'The rings are not sheets. They are billions of icy fragments keeping absurdly good formation.',
-    'Saturn spins so fast its day is only about ten and a half hours. Giant planet, short attention span.',
-    'The Cassini Division is not empty. It is a structured gap shaped by gravity and orbital resonance.',
-    'Titan has rivers, lakes, and rain, except the chemistry is methane and the weather wants nothing to do with you.',
-    'Enceladus vents ice from a hidden ocean. Small moon, serious internal life.',
-    'Io is under so much tidal stress from Jupiter that it turns strain into volcanoes.',
-    'Europa looks scored with rust-colored fractures because its ice shell keeps shifting over an ocean below.',
-    'Mercury has almost no atmosphere, so sunlight and shadow there do not negotiate with each other.',
-    'Venus is bright because its cloud deck reflects sunlight brutally well. Friendly from a distance. Murderous up close.',
-    'Mars is rarely truly red at close range. More butterscotch, tan, and iron-stained dust.',
-    'Olympus Mons on Mars is the tallest known volcano in the solar system. Scale out here has poor manners.',
-    'Earths blue limb comes from Rayleigh scattering in the atmosphere. Thin gas, extraordinary effect.',
-    'The Moon looks simple until you get close enough to see maria, highlands, ejecta, and every bad day it ever had.',
-    'Jupiter is massive enough to reorganize the rest of the solar system just by existing.',
-    'The Great Red Spot has outlived nations, languages, and several scientific arguments.',
-    'Jupiter also throws moon shadows across its own cloud tops. Sharp black circles. Very clean geometry.',
-    'Uranus rotates on its side like a world that got knocked flat and refused to recover its posture.',
-    'Neptune is darker blue than Uranus and wears bright high clouds of methane ice over deeper weather.',
-    'The asteroid belt is not crowded. It is mostly vacancy with occasional rock.',
-    'Ceres is the largest object in the asteroid belt and still only counts as a dwarf planet. Harsh neighborhood.',
-    'Sunlight reaching Earth is about eight minutes old. Sunlight reaching Saturn is far older and no less real.',
-    'The farther you go, the dimmer the Sun gets by the inverse square law. It does not fade linearly. It falls off hard.',
-    'By Jupiter, sunlight is only a small fraction of what Earth gets. By the outer boundary, it feels like memory with illumination.',
-    'Comet tails do not stream behind them because of speed alone. Radiation pressure and solar wind do the pushing.',
-    'Earth and Moon likely came out of a colossal early impact. Even our home began as wreckage and heat.',
-    'Saturn has more than a hundred known moons. The planet has range issues.',
-    'The ring plane from inside would not look like a solid record. It would look like ice dust pretending to be architecture.',
-    'Neptune has winds faster than the worst hurricanes on Earth. Distance from the Sun does not guarantee calm.',
-    'Mercurys craters hold black shadows because there is no air there to soften light. Vacuum is a hard critic.',
-    'Venus hides its surface so completely that the idea of seeing the ground becomes more theory than travel plan.',
-    'The heliopause is less a wall than a shifting boundary where solar wind finally loses the argument.',
-    'Out near the edge, the Sun stops being a ruler and becomes one bright star among others.',
-    'Most of the solar system is gap. The planets are punctuation marks in a very large sentence.',
-    'Gravity never switches off. It just gets quieter until you stop respecting it and then it gets loud again.',
-    'If Earth were a marble, Jupiter would be closer to a basketball and the empty floor between them would still dominate the room.',
-    'The stars overhead are not points on a ceiling. They are suns, systems, ruins, and futures.',
-    'Astronomy is the repeated discovery that reality is under no obligation to feel proportionate to us.',
-    'Titan keeps an atmosphere thicker than Earths. A moon with weather. The universe does enjoy an upset.',
-    'Enceladus shines so bright because fresh ice reflects light like it was ordered to.',
-    'Uranus and Neptune are called ice giants, but that label hides a lot of violent interior strangeness.',
-    'The Milky Way from vacuum is not a haze. It is structure, dust lanes, and light piled on light.',
-    'Zodiacal light comes from sunlight scattering off interplanetary dust in the plane of the system. Even emptiness has residue.',
-    'The so-called hydrogen wall near the heliosphere is one of those names that sounds invented until the data keeps insisting.',
+  venus: [
+    'Venus rotates retrograde, opposite the direction of most planets.',
+    'A day on Venus is longer than its year. Rotation takes 243 Earth days. Orbit takes 225.',
+    'Its atmosphere is about 96.5% carbon dioxide with clouds of sulfuric acid.',
+    'Surface pressure is roughly 9.2 megapascals, comparable to pressure 900 meters underwater on Earth.',
+    'Venus is the hottest planet in the solar system because of a runaway greenhouse effect.',
+    'Its mean surface temperature is about 464 degrees Celsius, hot enough to melt lead.',
+    'Venus reflects most of the sunlight that hits it. Its albedo is about 0.7.',
+    'Upper-atmosphere winds reach around 360 kilometers per hour, far faster than the planet rotates.',
+    'Venus has no intrinsic magnetic field.',
+    'The planet likely underwent large-scale resurfacing between 300 and 600 million years ago.',
+    'Venus and Earth are close in size, mass, and composition. Similar ingredients. Different outcome.',
+    'The atmosphere super-rotates around the planet in about four Earth days.',
   ],
-  astrophysics: [
-    'Warp aside, ordinary travel still answers to momentum. Turn the ship and inertia keeps the previous opinion.',
-    'Orbital resonance is gravity keeping time. Moons and particles fall into repeating ratios and the system starts to compose itself.',
-    'The Cassini Division exists in part because Mimas keeps tugging ring particles into unstable rhythms. Gravity is a patient sculptor.',
-    'Tidal heating is what happens when gravity kneads a moon until rock or ice starts behaving like a furnace.',
-    'Blackbody radiation is why the Sun is fundamentally white in space even if atmospheres and eyes editorialize the experience.',
-    'Rayleigh scattering favors shorter wavelengths, which is why Earth wears blue around the edge like a quiet flag of life.',
-    'Specular reflection off an ocean can make Earth flash like a signal mirror. Whole planet, one sharp glint.',
-    'An atmosphere does not glow in vacuum. Light only shows where it strikes matter. Useful rule out here.',
-    'Inverse square law means double the distance, quarter the light. The universe charges interest on every mile.',
-    'A gravity well is not really a hole in anything. It is a way of saying spacetime makes certain paths expensive.',
-    'Escape velocity is just the speed required to stop falling back. Nothing mystical. Plenty unforgiving.',
-    'Lagrange points are places where gravities and motion balance just enough for order to pretend it is permanent.',
-    'Accretion is the long habit of dust and rock deciding to become something harder to ignore.',
-    'Protoplanetary disks are what solar systems look like before the furniture settles.',
-    'Angular momentum is why collapsing clouds flatten into disks instead of becoming tidy spheres. Nature dislikes wasted spin.',
-    'The heliosphere is a moving bubble carved by the solar wind. Home field advantage, on a stellar scale.',
-    'Solar prominences are magnetic structures carrying incandescent plasma far above the Suns limb. Not fire. Far stranger.',
-    'A corona runs hotter than the Suns visible surface, which is one of those facts astrophysicists keep politely wrestling.',
-    'Magnetospheres redirect charged particles into invisible architecture around planets. Some worlds carry their own weather shield.',
-    'Jupiters magnetic field is so enormous that if human eyes could read it, the sky would look occupied.',
-    'Redshift is not always speed. Sometimes it is space itself stretching the light on the way to us.',
-    'When we say vacuum, we still do not mean nothing. Space carries fields, particles, dust, and consequences.',
-    'Relativity matters most when speed, gravity, or precision stop being casual. The universe has no problem with any of the three.',
-    'Neutron stars are what happens when matter loses every argument except density.',
-    'Black holes are less cosmic vacuum cleaners than regions where exit routes become unavailable.',
-    'An event horizon is not a surface you strike. It is a boundary after which return stops being a meaningful option.',
-    'Even in open space, navigation is a choreography of reference frames. Position depends on what you are measuring against.',
-    'Planetary atmospheres filter, scatter, absorb, and betray chemistry. Every color out there is testimony.',
-    'Methane can make a world blue. Sulfur can make a moon look diseased. Chemistry has a dramatic streak.',
-    'Heliocentric distance changes not just brightness but mood, shadow hardness, thermal balance, and what kind of mistakes survive.',
-    'A ring system is a gravitational negotiation between collision, resonance, and material too dispersed to become a moon.',
-    'The further out you go, the more the Sun turns from sovereign to reference point.',
-    'Procedural or not, any believable sky needs hierarchy: foreground dust, stellar depth, and light that obeys distance.',
-    'Astrophysics is often the art of accepting that invisible forces are the main characters.',
+  earthMoon: [
+    'Earth is the only known planet with stable bodies of liquid water on its surface.',
+    'Its atmosphere is roughly 78% nitrogen, 21% oxygen, and 1% other gases.',
+    'Earth’s magnetosphere helps shield the surface from high-energy solar and cosmic radiation.',
+    'Earth is the only known planet with active plate tectonics.',
+    'The Moon is in synchronous rotation with Earth, always showing one face.',
+    'Tidal friction causes the Moon to recede from Earth at roughly 3.8 centimeters per year.',
+    'The Moon helps stabilize Earth’s axial tilt.',
+    'Lunar regolith is made of sharp abrasive fragments produced by billions of years of impacts.',
+    'The Giant Impact Hypothesis proposes the Moon formed from debris after a collision with a Mars-sized body.',
+    'Earth’s geocorona extends roughly 100,000 kilometers into space.',
+    'The South Pole-Aitken basin is the largest and oldest confirmed impact basin on the Moon.',
+    'The Moon’s gravity is about 16.6% of Earth’s.',
+    'Earth’s orbital speed is about 29.78 kilometers per second.',
+    'The Moon has only an exosphere, too thin to count as an atmosphere in any ordinary sense.',
   ],
-  humor: [
-    'This is the sort of mission sensible civilizations discuss at memorial services.',
-    'Space remains beautiful mainly because it has no interest in accommodating us.',
-    'We are very small, very outnumbered, and carrying on anyway. Respectable work.',
-    'If anyone asks, we are not lost. We are operating outside the limits of lesser maps.',
-    'There is no traffic out here. Only distance and the occasional consequence.',
-    'The stars always make poor decisions look noble. Do not be fooled by presentation.',
-    'A giant ringed planet behind us and home somewhere ahead. You could charge admission for this anxiety.',
-    'The universe is magnificent and has the bedside manner of an artillery piece.',
-    'I admire your confidence. I admire it most when it coincides with caution.',
-    'If boldness were fuel, we would never need a resupply.',
-    'Please keep all limbs, ambitions, and sudden theories inside the cockpit.',
-    'Space has a way of making every plan feel handwritten.',
-    'I have served in rougher conditions, but very few prettier ones.',
-    'The cosmos does not hand out second chances. Fortunately, I am willing to improvise some.',
-    'If this goes poorly, at least the view will complicate the autopsy report.',
-    'Saturn looks like royalty. We look like two professionals pretending this was straightforward.',
-    'The official assessment is majestic. My unofficial assessment is that majesty often comes with impact risk.',
-    'This would be less stressful if the planets agreed to be smaller out of courtesy.',
-    'I support wonder. I simply object to wonder at terminal velocity.',
-    'Somewhere, somebody would call this humbling. I call it first-rate intimidation.',
-    'There should be medals for surviving beautiful mistakes. We are trying not to qualify.',
-    'A good day in space is one where the scenery stays outside the cockpit.',
-    'You fly like someone with both instincts and unfinished arguments. Useful combination.',
-    'No one mentioned snacks in the mission brief. That remains a failure of leadership.',
-    'The stars are excellent company if you do not expect help from them.',
-    'This route is equal parts pilgrimage and bad influence.',
-    'If courage is fear in uniform, we are dressed correctly.',
-    'Nothing says companionship like mutual survival in an indifferent vacuum.',
-    'At least if we drift into legend, the legend will have production value.',
-    'The universe is old enough to know better and dramatic enough not to care.',
-    'We are either making history or providing future pilots with educational material.',
-    'I would complain about the danger if it were not so visually persuasive.',
-    'That horizon could make a poet honest or a soldier quiet. Same result, really.',
-    'Home is a long way off, which is terrible for morale and excellent for perspective.',
-    'I have no ego to bruise, pilot. That leaves me free to be correct.',
-    'The odds improve noticeably when we refrain from ramming celestial landmarks.',
+  mars: [
+    'Mars gets its color from oxidized iron-rich minerals.',
+    'Olympus Mons is the largest shield volcano in the solar system, about 21 kilometers high.',
+    'Valles Marineris stretches about 4,000 kilometers and cuts as deep as seven.',
+    'Mars has a thin atmosphere, roughly 95% carbon dioxide, with a surface pressure about 0.6% of Earth’s.',
+    'Phobos orbits closer to its planet than any other major moon in the solar system.',
+    'Martian dust makes the sky appear pinkish-red, while sunsets can look blue.',
+    'Geomorphology on Mars indicates it once held standing bodies of liquid water.',
+    'Global dust storms can shroud the entire planet for months.',
+    'Mars has surface gravity about 38% that of Earth.',
+    'The InSight lander detected marsquakes, confirming the planet is still seismically active.',
+    'Curiosity found organic molecules preserved in three-billion-year-old mudstones.',
+    'Mars has no global magnetic field, only localized crustal anomalies.',
+    'Its axial tilt is 25.19 degrees, close to Earth’s.',
+    'The MOXIE instrument on Perseverance successfully produced oxygen from Martian carbon dioxide.',
   ],
-  frontier: [
-    'Charted space ends here. Everything beyond this point is earned the hard way.',
-    'The atlas just ran out of confidence. Maintain yours.',
-    'Unknown sector ahead. Keep your curiosity. Tighten your discipline.',
-    'We have crossed from navigation into reconnaissance.',
-    'Fresh sky. No promises. Good. Promises make people lazy.',
-    'This is where maps turn into witness statements.',
-    'New stars on the board. Same rules apply: observe first, assume nothing.',
-    'Beyond this line, the universe stops being polite about context.',
-    'Uncharted space. Old Corps phrase for this would be proceed intelligently.',
-    'Everything ahead is unfamiliar. That does not make it hostile. It just removes excuses.',
-    'The frontier is mostly silence, scale, and consequences. Keep flying.',
-    'This is the kind of darkness that rewards steady nerves and punishes storytelling.',
+  asteroidBelt: [
+    'The average distance between major asteroids in the belt is roughly one million kilometers.',
+    'The total mass of the asteroid belt is only about four percent of the Moon’s mass.',
+    'Ceres contains roughly 31% of the belt’s total mass.',
+    'Vesta is the second most massive object there and can be seen with the naked eye under the right conditions.',
+    'The main asteroid classes are carbonaceous, silicaceous, and metallic.',
+    'Sixteen Psyche may be the exposed metallic core of a failed protoplanet.',
+    'Kirkwood Gaps are carved by orbital resonances with Jupiter.',
+    'Many asteroids are rubble piles, fragments held together by gravity rather than strength.',
+    'Bright spots in Ceres’ Occator Crater are composed of sodium carbonate salts.',
+    'The belt marks the frost line, where volatile compounds could condense into solid ice during system formation.',
+    'Hydrothermal activity may once have occurred on Ceres.',
+    'Active asteroids keep asteroid-like orbits while showing comet-like behavior.',
   ],
-  discovery: [
-    'New sector acquired. Different sky. Same duty.',
-    'Another patch of the universe has introduced itself. Rude of it not to send coordinates first.',
-    'Unknown terrain, now slightly less unknown.',
-    'Fresh stars on the canopy. Keep your hands steady and your mind open.',
-    'New neighborhood. No local customs, no local mercy, excellent view.',
-    'Sector logged. The sky just changed uniforms on us.',
-    'That is a new piece of creation. Try to appreciate it without colliding with anything.',
-    'Unknown space always arrives in silence first.',
-    'Another sector on the books. We remain alive enough to enjoy the bookkeeping.',
-    'New sky. Same instruction: look closely and do not get sentimental at the controls.',
+  jupiterSystem: [
+    'Jupiter is 318 times more massive than Earth.',
+    'It is more than two and a half times as massive as all the other planets combined.',
+    'The Great Red Spot is an anticyclonic storm larger than Earth’s diameter.',
+    'Jupiter rotates in about 9 hours and 55 minutes, the shortest day of any planet.',
+    'Its magnetic field is generated by a deep layer of liquid metallic hydrogen.',
+    'Io is the most geologically active body in the solar system, with hundreds of active volcanoes.',
+    'Europa’s ice crust is thought to overlie a liquid ocean.',
+    'Ganymede is the largest moon in the solar system and has its own magnetic field.',
+    'Callisto is among the most heavily cratered surfaces known.',
+    'Jupiter radiates about 1.6 times the energy it receives from the Sun.',
+    'Its magnetotail extends all the way to the orbit of Saturn.',
+    'Radiation near the inner Jovian system is lethal to unshielded biology and electronics.',
+    'Jupiter’s atmosphere is about 90% hydrogen and 10% helium by number of atoms.',
+    'Jupiter’s gravity strongly influences the trajectories of comets and asteroids throughout the inner system.',
   ],
-  impactWarning: [
-    'Pilot, that body is growing faster than I like. Back us off now.',
-    'Range is collapsing. Admire from farther out.',
-    'Easy. Nose away. You are about to make geology personal.',
-    'That is close enough for awe. Pull back before it becomes impact.',
-    'Course correction, now. The planet is not moving for us.',
-    'Stand by. You are converting a beautiful approach into a bad report.',
-    'Less romance, more separation. We are closing too hard.',
-    'If you can feel your pulse in the turn, the vector is already wrong.',
-    'Break it off, pilot. This is no longer a pass. It is a warning.',
-    'Back away with dignity while dignity remains available.',
+  saturnSystem: [
+    'Saturn is the least dense planet in the solar system. Its average density is lower than water.',
+    'The ring system extends out to roughly 282,000 kilometers from the planet.',
+    'The rings are composed of about 99.9% water ice.',
+    'Though broad, the main rings are typically only about ten meters thick.',
+    'Enceladus ejects water vapor and ice into space, feeding the E-ring.',
+    'Titan is the only moon in the solar system with a dense atmosphere and stable surface liquids.',
+    'Titan’s lakes and seas are made of liquid methane and ethane.',
+    'A persistent hexagonal cloud pattern sits over Saturn’s north pole.',
+    'Equatorial wind speeds on Saturn can reach about 1,800 kilometers per hour.',
+    'The Cassini Division is roughly 4,800 kilometers wide between the A and B rings.',
+    'Saturn’s magnetic field is almost perfectly aligned with its rotation axis.',
+    'Spokes in Saturn’s rings are likely caused by electrostatic levitation of dust.',
+    'The rings may be only 10 to 100 million years old and are expected to dissipate over time.',
+    'Hyperion rotates chaotically, and Iapetus carries a dramatic two-tone surface.',
   ],
-  recovery: [
-    'Impact confirmed. We will call that reconnaissance by direct contact and not repeat it.',
-    'Well. That was the wrong amount of planet. Resetting.',
-    'Ship reset underway. No sermon. Just do better on the next run.',
-    'We struck the scenery. Fortunately, I planned for your occasional sincerity.',
-    'That approach ended in a lesson. We are resetting before it turns into a habit.',
-    'Collision logged. Pride can file its complaint after we respawn.',
-    'Bad vector. Short ending. Fresh start.',
-    'All right. We hit it. That settles whether it was solid.',
-    'Reset complete in spirit, if not in pilot dignity.',
-    'We have conducted enough close inspection for one life. Starting over.',
+  uranusSystem: [
+    'Uranus has an axial tilt of 97.77 degrees, effectively rolling around the Sun on its side.',
+    'It was the first planet discovered with a telescope, by William Herschel in 1781.',
+    'Uranus takes 84 Earth years to orbit the Sun.',
+    'Sunlight there is about 400 times dimmer than at Earth’s orbit.',
+    'It is classified as an ice giant because of its high fraction of water, methane, and ammonia ices.',
+    'The magnetic field is tilted 59 degrees from the rotation axis and offset from the center.',
+    'Its magnetic tail forms a corkscrew shape because of the planet’s extreme tilt.',
+    'Carbon may compress into diamond rain deep inside Uranus.',
+    'Unlike Jupiter and Saturn, Uranus does not appear to radiate a strong internal heat surplus.',
+    'Its major moon Miranda shows some of the strangest geology in the outer solar system, including canyons about 20 kilometers deep.',
+    'Ariel appears to have a bright surface with evidence of recent tectonic resurfacing.',
+    'Uranus’s ring system is relatively opaque compared with Jupiter’s dusty rings.',
+  ],
+  neptuneSystem: [
+    'Neptune has the strongest sustained winds in the solar system, measured at up to 2,100 kilometers per hour.',
+    'Its deep blue color likely requires something beyond methane alone.',
+    'Neptune was predicted mathematically before it was ever observed.',
+    'It is the most distant major planet, orbiting at about 30 astronomical units from the Sun.',
+    'Neptune takes about 164.8 Earth years to complete one orbit.',
+    'Its magnetic field is tilted 47 degrees relative to the rotation axis.',
+    'Neptune radiates about 2.6 times the energy it receives from the Sun.',
+    'Triton is the only large moon in the solar system with a retrograde orbit.',
+    'Triton erupts nitrogen geysers and remains geologically active.',
+    'Voyager 2 is still the only spacecraft to have flown past Neptune.',
+    'Neptune’s ring arcs are named Liberté, Égalité, Fraternité, and Courage.',
+    'Triton may eventually cross Neptune’s Roche limit and break apart into a ring.',
+  ],
+  kuiperBeltPluto: [
+    'The Kuiper Belt begins beyond Neptune and extends to roughly 50 astronomical units.',
+    'Pluto’s surface includes a nitrogen-ice glacier called Sputnik Planitia.',
+    'Pluto and Charon are tidally locked, always facing one another.',
+    'Water ice on Pluto behaves like bedrock at those temperatures.',
+    'Pluto’s atmosphere expands near perihelion and collapses back out as it moves away from the Sun.',
+    'New Horizons passed within about 12,500 kilometers of Pluto in July 2015.',
+    'Short-period comets generally originate in the Kuiper Belt.',
+    'Sunlight at Pluto is about one fifteen-hundredth as intense as it is at Earth.',
+    'Pluto has cryovolcanoes, including features such as Wright Mons.',
+    'Charon’s northern polar region is reddened by tholins derived from Pluto.',
+    'Most Kuiper Belt objects are reddish from radiation processing of methane-rich ices.',
+    'Arrokoth was the first contact-binary Kuiper Belt object visited by spacecraft.',
+    'Haumea has a ring. Quaoar has a ring outside its Roche limit.',
+    'The belt contains hundreds of thousands of objects larger than 100 kilometers across.',
+  ],
+  cometsOort: [
+    'A comet’s ion tail always points directly away from the Sun.',
+    'The coma forms as volatile material sublimates from the nucleus near the Sun.',
+    'The Oort Cloud is a theoretical spherical reservoir of icy bodies at the outer edge of the system.',
+    'Its outer limit may approximate the gravitational boundary of the solar system.',
+    'Long-period comets can take millions of years to complete a single orbit.',
+    'Comet nuclei are among the darkest objects in the solar system.',
+    'Comets contain complex organic molecules, including amino acids such as glycine.',
+    'Most meteor showers occur when Earth moves through debris left by a comet.',
+    'Passing stars can perturb Oort Cloud objects inward.',
+    'Comet tails can extend more than 100 million kilometers.',
+    'The nucleus of comet 67P was measured as low density, light enough to float in water.',
+    'Centaurs orbit between Jupiter and Neptune and behave like hybrids of asteroids and comets.',
+    'The heliopause is where the outward pressure of the solar wind yields to the interstellar medium.',
+    'Objects in the Oort Cloud may be separated by tens of millions of kilometers.',
+  ],
+  deepAstrophysics: [
+    'Gravity follows the inverse-square law. Double the distance and the pull falls to one quarter.',
+    'Quantum tunneling is one reason fusion can proceed in the Sun’s core.',
+    'Blackbody radiation sets planetary equilibrium temperature as a function of distance and reflectivity.',
+    'Conservation of angular momentum is why the solar system formed from a flattened disk.',
+    'Hydrostatic equilibrium is the balance between gravity and internal pressure.',
+    'The Roche limit defines how close a self-gravitating body can approach before tides can tear it apart.',
+    'A barycenter is the center of mass around which two or more bodies orbit.',
+    'The Jupiter-Sun barycenter lies just outside the Sun’s surface.',
+    'Lagrange points are positions where gravity and orbital motion create relatively stable geometry.',
+    'The Poynting-Robertson effect causes dust to slowly spiral inward toward the Sun.',
+    'Differential rotation means different latitudes of a fluid body can rotate at different speeds.',
+    'Spectroscopy is how chemistry is extracted from light.',
+    'The solar system formed about 4.6 billion years ago from a giant molecular cloud.',
+    'The solar system moves through the Milky Way at about 220 kilometers per second.',
+    'The heliosphere is a protective bubble carved out by the solar wind.',
+    'The Parker spiral is the shape of the Sun’s magnetic field as rotation drags it through space.',
+    'Plasma makes up most of the visible universe.',
+    'A parsec is about 3.26 light-years.',
+    'The astronomical unit is defined as 149,597,870.7 kilometers.',
+    'The solar system takes about 230 million years to orbit the galactic center once.',
+    'Precession is the slow change in the orientation of a rotating axis.',
+    'Earth’s precession cycle takes about 26,000 years.',
+    'A Hill sphere is the region where a planet’s gravity dominates the motion of satellites.',
+    'Cryovolcanism is the eruption of volatiles such as water, ammonia, or methane instead of molten rock.',
+    'Dark matter dominates galactic mass budgets, but within the solar system its dynamical effect is negligible.',
+    'The cosmic microwave background is relic radiation from the early universe.',
+    'Gravitational lensing is light bent by mass.',
+    'Redshift shifts light toward longer wavelengths when source and observer separate, or when space itself stretches.',
+    'The local interstellar medium beyond the heliopause is called the Very Local Interstellar Medium.',
+    'The interstellar medium is mostly gas with a small fraction of dust, but the dust matters far beyond its mass.',
   ],
 } as const
+
+type RegionKey = keyof typeof REGION_DIALOGUE
+
+function shuffleLines(lines: readonly string[]) {
+  const shuffled = [...lines]
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
 
 type Mode = 'orbit' | 'flight'
 
@@ -669,14 +660,6 @@ function createPlume({
   }
 
   return group
-}
-
-function pickRobotLine(lines: readonly string[], exclude?: string | null) {
-  if (lines.length === 0) return ''
-  if (lines.length === 1) return lines[0]
-  const filtered = exclude ? lines.filter((line) => line !== exclude) : [...lines]
-  const pool = filtered.length > 0 ? filtered : [...lines]
-  return pool[Math.floor(Math.random() * pool.length)]
 }
 
 function shapeFlightAxis(value: number) {
@@ -1051,9 +1034,11 @@ export default function SaturnScene({
   const pitchRef = useRef(0)
   const lastTickRef = useRef(0)
   const frontierCleanupRef = useRef<(() => void) | null>(null)
-  const frontierEntryAnnouncedRef = useRef(false)
-  const frontierLastSectorKeyRef = useRef('')
-  const frontierLastAnnounceAtRef = useRef(0)
+  const companionRegionRef = useRef<RegionKey | null>(null)
+  const pendingRegionRef = useRef<RegionKey | null>(null)
+  const lastCompanionAtRef = useRef(-COMPANION_REGION_COOLDOWN_MS)
+  const lastCompanionLineRef = useRef<string | null>(null)
+  const regionPoolRef = useRef(new Map<RegionKey, string[]>())
 
   useEffect(() => {
     modeRef.current = mode
@@ -1074,9 +1059,9 @@ export default function SaturnScene({
     if (mode === 'flight') {
       flightInitializedRef.current = false
       state.scene.fog = new THREE.Fog(WORLD.background, WORLD.flightFogNear, WORLD.flightFogFar)
-      frontierEntryAnnouncedRef.current = false
-      frontierLastSectorKeyRef.current = ''
-      frontierLastAnnounceAtRef.current = 0
+      companionRegionRef.current = null
+      pendingRegionRef.current = null
+      lastCompanionAtRef.current = -COMPANION_REGION_COOLDOWN_MS
     }
 
     if (mode === 'orbit') {
@@ -1090,6 +1075,8 @@ export default function SaturnScene({
       flightHUD.crashFlash = 0
       flightHUD.heading = yawRef.current
       state.scene.fog = new THREE.Fog(WORLD.background, WORLD.fogNear, WORLD.fogFar)
+      companionRegionRef.current = null
+      pendingRegionRef.current = null
       frontierCleanupRef.current?.()
       state.resetOrbit()
     }
@@ -1638,6 +1625,28 @@ export default function SaturnScene({
       orbit: { center: solarCenter, radius: 43800, periodDays: 60182, phase: -0.15, vertical: -220, inclination: 0.03 },
     })
 
+    makePlanet({
+      name: 'PLUTO',
+      position: getOrbitPosition({ center: solarCenter, radius: 56400, phase: 0.41, vertical: 310, inclination: 0.22 }),
+      radius: 0.9,
+      texture: createGradientTexture([
+        { at: 0, color: '#cda87a' },
+        { at: 0.42, color: '#f0d8b9' },
+        { at: 0.7, color: '#8d6f63' },
+        { at: 1, color: '#d9c7ba' },
+      ], 768, 384),
+      emissive: 0x241913,
+      emissiveIntensity: 0.08,
+      mapColor: '#d9c7ba',
+      flightScale: 3.4,
+      roughness: 0.96,
+      glowColor: 0xe8d9cf,
+      glowOpacity: 0.05,
+      spinRate: 0.0005,
+      approachRange: 180,
+      orbit: { center: solarCenter, radius: 56400, periodDays: 90560, phase: 0.41, vertical: 310, inclination: 0.22 },
+    })
+
     const beltParticleCount = isMobile ? 1700 : 4200
     const beltGeometry = new THREE.BufferGeometry()
     const beltPositions = new Float32Array(beltParticleCount * 3)
@@ -1823,7 +1832,7 @@ export default function SaturnScene({
     })
     const engineGlowMaterial = new THREE.MeshBasicMaterial({ color: 0xff7733, transparent: true, opacity: 0.92 })
     const reverseGlowMaterial = new THREE.MeshBasicMaterial({ color: 0x6fc6ff, transparent: true, opacity: 0.1 })
-    const rcsLeftMaterial = new THREE.MeshBasicMaterial({ color: 0xb8f4ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+    const rcsLeftMaterial = new THREE.MeshBasicMaterial({ color: 0xcff8ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
     const rcsRightMaterial = rcsLeftMaterial.clone()
     const rcsUpMaterial = rcsLeftMaterial.clone()
     const rcsDownMaterial = rcsLeftMaterial.clone()
@@ -1961,25 +1970,25 @@ export default function SaturnScene({
     reverseLight.position.set(0, 0, -3.78)
     ship.add(reverseLight)
 
-    const rcsGeometry = new THREE.SphereGeometry(0.18, 8, 6)
+    const rcsGeometry = new THREE.SphereGeometry(0.28, 10, 8)
     const rcsLeft = new THREE.Mesh(rcsGeometry, rcsLeftMaterial)
     rcsLeft.position.set(-2.62, 0.03, -0.55)
-    rcsLeft.scale.set(1.75, 0.34, 0.34)
+    rcsLeft.scale.set(2.45, 0.58, 0.58)
     ship.add(rcsLeft)
 
     const rcsRight = new THREE.Mesh(rcsGeometry, rcsRightMaterial)
     rcsRight.position.set(2.62, 0.03, -0.55)
-    rcsRight.scale.set(1.75, 0.34, 0.34)
+    rcsRight.scale.set(2.45, 0.58, 0.58)
     ship.add(rcsRight)
 
     const rcsUp = new THREE.Mesh(rcsGeometry, rcsUpMaterial)
     rcsUp.position.set(0, 0.64, -0.86)
-    rcsUp.scale.set(0.36, 1.4, 0.36)
+    rcsUp.scale.set(0.58, 2.05, 0.58)
     ship.add(rcsUp)
 
     const rcsDown = new THREE.Mesh(rcsGeometry, rcsDownMaterial)
     rcsDown.position.set(0, -0.42, -0.86)
-    rcsDown.scale.set(0.36, 1.4, 0.36)
+    rcsDown.scale.set(0.58, 2.05, 0.58)
     ship.add(rcsDown)
 
     ship.visible = false
@@ -1999,11 +2008,7 @@ export default function SaturnScene({
     const getFlightScale = (body: BodyInfo) => body.flightScale * FLIGHT.planetScaleMult
     const collisionScaleMult = isMobile ? 0.86 : 1
     const collisionShipRadius = isMobile ? FLIGHT.shipCollisionRadius * 0.72 : FLIGHT.shipCollisionRadius
-    let hasShownCrashWarning = false
-    let suppressInitialSaturnWarning = true
     let flightElapsedMs = 0
-    let nextAmbientDialogueAtMs = 0
-    let lastAmbientLine: string | null = null
 
     const updateChartedOrbits = (now: number) => {
       const orbitTime = now * SOLAR.orbitTimeScale
@@ -2045,6 +2050,86 @@ export default function SaturnScene({
       zodiacalLight.visible = solarDistance < 9000
     }
 
+    const drawRegionLine = (region: RegionKey) => {
+      let pool = regionPoolRef.current.get(region)
+      if (!pool || pool.length === 0) {
+        pool = shuffleLines(REGION_DIALOGUE[region])
+      }
+      if (pool.length > 1 && pool[0] === lastCompanionLineRef.current) {
+        pool.push(pool.shift()!)
+      }
+      const line = pool.shift() ?? ''
+      regionPoolRef.current.set(region, pool)
+      lastCompanionLineRef.current = line
+      return line
+    }
+
+    const getRegionForFlightContext = (nearestBody: BodyInfo, nearestDistance: number) => {
+      const solarDistance = ship.position.distanceTo(solarCenter)
+      const chartedDistance = ship.position.length()
+      const nearThreshold = nearestBody.approachRange * getFlightScale(nearestBody) * 1.5
+      const nearBody = nearestDistance <= nearThreshold
+
+      if (solarDistance >= SOLAR.heliopauseRadius * 0.82) return 'cometsOort'
+      if (solarDistance >= 50000) {
+        if (nearBody && nearestBody.name === 'PLUTO') return 'kuiperBeltPluto'
+        return solarDistance >= 66000 ? 'cometsOort' : 'kuiperBeltPluto'
+      }
+
+      if (nearBody) {
+        switch (nearestBody.name) {
+          case 'SUN':
+            return 'sun'
+          case 'MERCURY':
+            return 'mercury'
+          case 'VENUS':
+            return 'venus'
+          case 'EARTH':
+          case 'MOON':
+            return 'earthMoon'
+          case 'MARS':
+            return 'mars'
+          case 'CERES':
+            return 'asteroidBelt'
+          case 'JUPITER':
+          case 'IO':
+          case 'EUROPA':
+            return 'jupiterSystem'
+          case 'SATURN':
+          case 'TITAN':
+          case 'ENCELADUS':
+            return 'saturnSystem'
+          case 'URANUS':
+            return 'uranusSystem'
+          case 'NEPTUNE':
+            return 'neptuneSystem'
+          case 'PLUTO':
+            return 'kuiperBeltPluto'
+          default:
+            if (nearestBody.name.startsWith('UNKNOWN SECTOR')) return 'deepAstrophysics'
+        }
+      }
+
+      if (solarDistance >= 3300 && solarDistance <= 6200) return 'asteroidBelt'
+      if (chartedDistance > FRONTIER.chartedRadius) return 'deepAstrophysics'
+      return 'deepAstrophysics'
+    }
+
+    const maybeQueueRegionalFact = (region: RegionKey) => {
+      if (flightCompanion.visible) return
+      if (region !== companionRegionRef.current) {
+        companionRegionRef.current = region
+        pendingRegionRef.current = region
+      }
+      if (!pendingRegionRef.current) return
+      if (flightElapsedMs - lastCompanionAtRef.current < COMPANION_REGION_COOLDOWN_MS) return
+      const line = drawRegionLine(pendingRegionRef.current)
+      if (!line) return
+      queueFlightMessage(line)
+      lastCompanionAtRef.current = flightElapsedMs
+      pendingRegionRef.current = null
+    }
+
     const positionShipAtSpawn = () => {
       saturn.root.getWorldPosition(saturnCenter)
       ship.position.copy(saturnCenter).add(FLIGHT.spawn)
@@ -2072,11 +2157,6 @@ export default function SaturnScene({
       resetFlightInput()
       renderer.domElement.style.filter = ''
       flightElapsedMs = 0
-      nextAmbientDialogueAtMs = 48000 + Math.random() * 22000
-      const launchLine = pickRobotLine(ROBOT_DIALOGUE.launch, lastAmbientLine)
-      lastAmbientLine = launchLine
-      queueFlightMessage(launchLine)
-      suppressInitialSaturnWarning = true
     }
 
     const clearFrontierSectors = () => {
@@ -2100,9 +2180,6 @@ export default function SaturnScene({
       frontierSectors.clear()
       frontierBodies.length = 0
       frontierRingHazards.length = 0
-      frontierEntryAnnouncedRef.current = false
-      frontierLastSectorKeyRef.current = ''
-      frontierLastAnnounceAtRef.current = 0
     }
     frontierCleanupRef.current = clearFrontierSectors
 
@@ -2294,14 +2371,6 @@ export default function SaturnScene({
         return
       }
 
-      if (!frontierEntryAnnouncedRef.current) {
-        const line = pickRobotLine(ROBOT_DIALOGUE.frontier, lastAmbientLine)
-        lastAmbientLine = line
-        queueFlightMessage(line)
-        frontierEntryAnnouncedRef.current = true
-        frontierLastAnnounceAtRef.current = flightElapsedMs
-      }
-
       const coords = sectorCoordsFromPosition(ship.position)
       const wanted = new Set<string>()
       for (let dx = -FRONTIER.keepRadius; dx <= FRONTIER.keepRadius; dx++) {
@@ -2319,18 +2388,6 @@ export default function SaturnScene({
       frontierSectors.forEach((sector, key) => {
         if (!wanted.has(key)) disposeFrontierSector(key)
       })
-
-      const currentKey = `${coords.x},${coords.y},${coords.z}`
-      if (currentKey !== frontierLastSectorKeyRef.current) {
-        frontierLastSectorKeyRef.current = currentKey
-        if (flightElapsedMs - frontierLastAnnounceAtRef.current > FRONTIER.announceCooldownMs) {
-          frontierLastAnnounceAtRef.current = flightElapsedMs
-          const line = pickRobotLine(ROBOT_DIALOGUE.discovery, lastAmbientLine)
-          lastAmbientLine = line
-          queueFlightMessage(line)
-        }
-      }
-
     }
 
     stateRef.current = {
@@ -2364,28 +2421,6 @@ export default function SaturnScene({
       }
 
       return false
-    }
-
-    const maybeQueueAmbientDialogue = (nearestBody: BodyInfo, warpActive: boolean) => {
-      if (flightCompanion.visible) return
-      if (flightElapsedMs < nextAmbientDialogueAtMs) return
-
-      const pools: Array<readonly string[]> = [ROBOT_DIALOGUE.facts, ROBOT_DIALOGUE.humor]
-      if (warpActive) pools.push(ROBOT_DIALOGUE.mechanics, ROBOT_DIALOGUE.astrophysics)
-      if (CHARTED_MARKER_NAMES.has(nearestBody.name)) {
-        pools.push(ROBOT_DIALOGUE.facts)
-      }
-      if (nearestBody.name.startsWith('UNKNOWN SECTOR')) {
-        pools.push(ROBOT_DIALOGUE.frontier, ROBOT_DIALOGUE.discovery)
-      }
-      if (Math.random() < 0.45) pools.push(ROBOT_DIALOGUE.mechanics)
-      if (Math.random() < 0.33) pools.push(ROBOT_DIALOGUE.astrophysics)
-
-      const selectedPool = pools[Math.floor(Math.random() * pools.length)]
-      const line = pickRobotLine(selectedPool, lastAmbientLine)
-      lastAmbientLine = line
-      queueFlightMessage(line)
-      nextAmbientDialogueAtMs = flightElapsedMs + 62000 + Math.random() * 62000
     }
 
     const animate = (now: number) => {
@@ -2466,15 +2501,19 @@ export default function SaturnScene({
         reverseGlowMaterial.opacity = 0.08 + reverseStrength * 0.62
         reverseGlow.scale.z = 0.55 + reverseStrength * 1.05
         reverseLight.intensity = reverseStrength * 1.05
-        const rcsPulse = 0.65 + Math.sin(now * 0.028) * 0.22
-        rcsLeftMaterial.opacity = THREE.MathUtils.lerp(rcsLeftMaterial.opacity, Math.max(0, jx) * 0.58 * rcsPulse, 0.34)
-        rcsRightMaterial.opacity = THREE.MathUtils.lerp(rcsRightMaterial.opacity, Math.max(0, -jx) * 0.58 * rcsPulse, 0.34)
-        rcsUpMaterial.opacity = THREE.MathUtils.lerp(rcsUpMaterial.opacity, Math.max(0, jy) * 0.46 * rcsPulse, 0.34)
-        rcsDownMaterial.opacity = THREE.MathUtils.lerp(rcsDownMaterial.opacity, Math.max(0, -jy) * 0.46 * rcsPulse, 0.34)
-        rcsLeft.scale.x = 1.1 + Math.max(0, jx) * 1.15
-        rcsRight.scale.x = 1.1 + Math.max(0, -jx) * 1.15
-        rcsUp.scale.y = 0.9 + Math.max(0, jy) * 1.05
-        rcsDown.scale.y = 0.9 + Math.max(0, -jy) * 1.05
+        const rcsPulse = 0.82 + Math.sin(now * 0.028) * 0.3
+        const yawLeft = Math.max(0, jx)
+        const yawRight = Math.max(0, -jx)
+        const pitchUp = Math.max(0, jy)
+        const pitchDown = Math.max(0, -jy)
+        rcsLeftMaterial.opacity = THREE.MathUtils.lerp(rcsLeftMaterial.opacity, yawLeft * 0.92 * rcsPulse, 0.42)
+        rcsRightMaterial.opacity = THREE.MathUtils.lerp(rcsRightMaterial.opacity, yawRight * 0.92 * rcsPulse, 0.42)
+        rcsUpMaterial.opacity = THREE.MathUtils.lerp(rcsUpMaterial.opacity, pitchUp * 0.82 * rcsPulse, 0.42)
+        rcsDownMaterial.opacity = THREE.MathUtils.lerp(rcsDownMaterial.opacity, pitchDown * 0.82 * rcsPulse, 0.42)
+        rcsLeft.scale.set(1.85 + yawLeft * 1.95, 0.58 + yawLeft * 0.24, 0.58 + yawLeft * 0.24)
+        rcsRight.scale.set(1.85 + yawRight * 1.95, 0.58 + yawRight * 0.24, 0.58 + yawRight * 0.24)
+        rcsUp.scale.set(0.58 + pitchUp * 0.24, 1.55 + pitchUp * 2.15, 0.58 + pitchUp * 0.24)
+        rcsDown.scale.set(0.58 + pitchDown * 0.24, 1.55 + pitchDown * 2.15, 0.58 + pitchDown * 0.24)
         updateSolarLighting()
 
         updateFrontierSectors()
@@ -2498,30 +2537,10 @@ export default function SaturnScene({
           }
         })
 
-        saturn.root.getWorldPosition(saturnCenter)
-        if (suppressInitialSaturnWarning && (nearestBody.name !== 'SATURN' || ship.position.distanceTo(saturnCenter) > FLIGHT.spawn.length() * 1.25)) {
-          suppressInitialSaturnWarning = false
-        }
-
-        const crashWarningThreshold = Math.max(
-          120,
-          nearestBody.approachRange * getFlightScale(nearestBody) * collisionScaleMult * 0.16
-        )
-        const canWarnForCrash =
-          !hasShownCrashWarning && (!suppressInitialSaturnWarning || nearestBody.name !== 'SATURN')
-        if (nearestDistance < crashWarningThreshold && canWarnForCrash) {
-          const line = pickRobotLine(ROBOT_DIALOGUE.impactWarning, lastAmbientLine)
-          lastAmbientLine = line
-          queueFlightMessage(line)
-          hasShownCrashWarning = true
-        }
-
-        maybeQueueAmbientDialogue(nearestBody, warpActive)
+        const activeRegion = getRegionForFlightContext(nearestBody, nearestDistance)
+        maybeQueueRegionalFact(activeRegion)
 
         if (detectCollision()) {
-          const line = pickRobotLine(ROBOT_DIALOGUE.recovery, lastAmbientLine)
-          lastAmbientLine = line
-          queueFlightMessage(line)
           positionShipAtSpawn()
         }
 
