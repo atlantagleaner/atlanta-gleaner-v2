@@ -37,7 +37,7 @@ const MARKER_FILTER_OPTIONS: Array<{
   { value: 'everything', label: 'EVERYTHING', description: 'All charted markers and frontier anomalies' },
   { value: 'planets', label: 'PLANETS', description: 'Sun and major planetary bodies' },
   { value: 'moons', label: 'MOONS', description: 'Major moons in active systems' },
-  { value: 'phenomena', label: 'OTHER', description: 'Dwarf bodies, asteroids, and frontier anomalies' },
+  { value: 'phenomena', label: 'PHENOMENA', description: 'Dwarf bodies, asteroids, and frontier anomalies' },
 ]
 
 const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
@@ -562,6 +562,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
             gap: isMobile ? 10 : 14,
             alignItems: 'stretch',
             overflow: 'visible',
+            pointerEvents: 'auto',
             background: 'rgba(3, 4, 10, 0.58)',
             backdropFilter: 'blur(12px)',
             border: '1px solid rgba(184, 134, 11, 0.26)',
@@ -585,6 +586,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
               display: 'flex',
               alignItems: 'center',
               alignSelf: 'center',
+              pointerEvents: 'auto',
             }}
           >
             <button

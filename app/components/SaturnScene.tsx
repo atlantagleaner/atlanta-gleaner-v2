@@ -1159,13 +1159,21 @@ export default function SaturnScene({
     const container = containerRef.current
     const width = container.clientWidth || window.innerWidth
     const height = container.clientHeight || window.innerHeight
+    const solarCenter = new THREE.Vector3(-scaleSolarDistance(13800), 20, 0)
+    const saturnOrbitFocus = getOrbitPosition({
+      center: solarCenter,
+      radius: scaleSolarDistance(13800),
+      phase: 0,
+      vertical: scaleSolarDistance(-20),
+      inclination: 0.015,
+    })
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(WORLD.background)
     scene.fog = new THREE.Fog(WORLD.background, WORLD.fogNear, WORLD.fogFar)
 
     const camera = new THREE.PerspectiveCamera(FLIGHT.fovNormal, width / height, 0.1, 220000)
-    camera.position.set(0, 18, 65)
+    camera.position.copy(saturnOrbitFocus).add(new THREE.Vector3(0, 18, 65))
 
     const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true })
     renderer.setSize(width, height)
@@ -1192,19 +1200,17 @@ export default function SaturnScene({
     controls.dampingFactor = 0.05
     controls.minDistance = 18
     controls.maxDistance = 280
-    controls.target.set(0, 0, 0)
+    controls.target.copy(saturnOrbitFocus)
     controls.update()
 
     const resetOrbit = () => {
-      camera.position.set(0, 18, 65)
-      camera.lookAt(0, 0, 0)
-      controls.target.set(0, 0, 0)
+      camera.position.copy(saturnOrbitFocus).add(new THREE.Vector3(0, 18, 65))
+      camera.lookAt(saturnOrbitFocus)
+      controls.target.copy(saturnOrbitFocus)
       controls.update()
     }
 
     onSceneReady?.(camera, resetOrbit)
-
-    const solarCenter = new THREE.Vector3(-scaleSolarDistance(13800), 20, 0)
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.15)
     scene.add(ambientLight)
