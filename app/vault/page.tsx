@@ -175,7 +175,7 @@ export default function VaultPage() {
     letterSpacing: '0.15em',
     fontFamily: 'monospace',
     zIndex: 1100,
-    minWidth: '180px'
+    minWidth: '160px'
   }
 
   const dropdownItemStyle: React.CSSProperties = {

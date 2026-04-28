@@ -35,7 +35,7 @@ export function SiteDropdownMenu({
   onSelect,
   align = 'left',
   variant = 'dark',
-  width = 180,
+  width = 160,
   position = 'absolute',
 }: SiteDropdownMenuProps) {
   const pathname = usePathname()

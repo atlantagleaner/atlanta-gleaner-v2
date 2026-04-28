@@ -52,10 +52,18 @@ This document locks the intended V1 behavior for the Saturn flight module.
 
 ## Companion
 
-- Playful small service-droid tone.
+- Former U.S. Marine Corps machine with a grizzled veteran presence.
+- Dry, deadpan, and lightly sarcastic without ever sounding cruel or smug.
+- Built for maximum utility first, but deliberately engineered to steady emotional humans.
+- Zero ego. Absolute duty. Serves as an emotional anchor when the player gets overwhelmed.
+- Speaks like someone who has seen danger before and does not need to raise his voice to control the room.
+- Provides practical flight guidance, atmospheric worldbuilding, and memorable scientific observations.
+- Delivers both solar-system facts and advanced astrophysics in plain, human-ready language.
 - Text plus avatar.
 - Dialogue appears automatically at key moments, then disappears.
-- Reset after a crash should be silent except for the cinematic crash moment itself.
+- Dialogue categories should include arrival, flight guidance, dry humor, awe science, deep-space physics, frontier reconnaissance, impact warning, and crash recovery.
+- Humor should build rapport and lower tension, not turn the companion into a mascot.
+- Reset after a crash should feel controlled, unsentimental, and lightly wry rather than chatty.
 
 ## World Rules
 

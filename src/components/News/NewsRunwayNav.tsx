@@ -54,6 +54,8 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
     fontFamily: 'monospace',
     transition: `all ${ANIMATION.fast} ${ANIMATION.ease}`,
     userSelect: 'none',
+    boxSizing: 'border-box',
+    flexShrink: 0,
   }
 
   const dropdownMenuStyle: CSSProperties = {
@@ -70,7 +72,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
     letterSpacing: '0.15em',
     fontFamily: 'monospace',
     zIndex: 1100,
-    minWidth: '180px',
+    minWidth: '160px',
   }
 
   const dropdownItemStyle: CSSProperties = {
@@ -84,12 +86,13 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
     textDecoration: 'none',
     display: 'inline-flex',
     alignItems: 'center',
+    flexShrink: 0,
   }
 
   const titleBlock = (
     <button
       onClick={() => setIsMenuOpen((value) => !value)}
-      style={{ ...glassButton, border: `1px solid ${PALETTE_CSS.ruleMd}`, textAlign: 'left' }}
+      style={{ ...glassButton, border: `1px solid ${PALETTE_CSS.ruleMd}`, textAlign: 'left', width: 'fit-content' }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
         {mounted && dateStr ? (
@@ -132,7 +135,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
     >
       {isMobile ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'stretch', width: '100%' }}>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', width: 'fit-content' }}>
             {titleBlock}
             {isMenuOpen && (
               <div ref={dropdownRef}>
@@ -140,6 +143,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
                   open={isMenuOpen}
                   align="right"
                   variant="dark"
+                  width={160}
                   position="absolute"
                   onSelect={() => setIsMenuOpen(false)}
                 />
@@ -147,7 +151,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexShrink: 0 }}>
             <button
               onClick={onToggleNews}
               style={{
@@ -162,20 +166,21 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
         </div>
       ) : (
         <>
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <div style={{ position: 'relative' }}>
-            {titleBlock}
-            {isMenuOpen && (
-              <div ref={dropdownRef}>
-                <SiteDropdownMenu
-                  open={isMenuOpen}
-                  align="left"
-                  variant="dark"
-                  position="absolute"
-                  onSelect={() => setIsMenuOpen(false)}
-                />
-              </div>
-            )}
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'nowrap' }}>
+            <div style={{ position: 'relative', width: 'fit-content', flexShrink: 0 }}>
+              {titleBlock}
+              {isMenuOpen && (
+                <div ref={dropdownRef}>
+                  <SiteDropdownMenu
+                    open={isMenuOpen}
+                    align="left"
+                    variant="dark"
+                    width={160}
+                    position="absolute"
+                    onSelect={() => setIsMenuOpen(false)}
+                  />
+                </div>
+              )}
             </div>
 
             <button

@@ -219,7 +219,7 @@ export default function OrbitalPage() {
     letterSpacing: '0.15em',
     fontFamily: 'monospace',
     zIndex: 1100,
-    minWidth: '180px'
+    minWidth: '160px'
   }
 
   const dropdownItemStyle: React.CSSProperties = {
@@ -271,7 +271,7 @@ export default function OrbitalPage() {
             </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" width={160} position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
           </div>
@@ -323,7 +323,7 @@ export default function OrbitalPage() {
             </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="left" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="left" variant="dark" width={160} position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
           </div>
