@@ -15,7 +15,15 @@ export interface FlightControlsProps {
   isMobile?: boolean
 }
 
-const JOY_RADIUS = 44
+const JOY_RADIUS = 34
+const JOY_BASE_SIZE = {
+  mobile: 108,
+  desktop: 112,
+}
+const JOY_THUMB_SIZE = {
+  mobile: 46,
+  desktop: 48,
+}
 const DRIVE_GEAR_ORDER = DRIVE_GEARS
 const GEAR_TRAVEL_INSET = 0.16
 const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
@@ -561,8 +569,8 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
             position: 'absolute',
             bottom: isMobile ? 22 : 28,
             left: isMobile ? 18 : 28,
-            width: isMobile ? 138 : 130,
-            height: isMobile ? 138 : 130,
+            width: isMobile ? JOY_BASE_SIZE.mobile : JOY_BASE_SIZE.desktop,
+            height: isMobile ? JOY_BASE_SIZE.mobile : JOY_BASE_SIZE.desktop,
             borderRadius: '50%',
             border: '1.5px dashed rgba(184, 134, 11, 0.52)',
             background: 'rgba(2, 1, 1, 0.34)',
@@ -589,13 +597,13 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
           />
           <div
             ref={joyThumbRef}
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 58,
-              height: 58,
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+              width: isMobile ? JOY_THUMB_SIZE.mobile : JOY_THUMB_SIZE.desktop,
+              height: isMobile ? JOY_THUMB_SIZE.mobile : JOY_THUMB_SIZE.desktop,
               borderRadius: '50%',
               background: 'radial-gradient(circle at 35% 30%, #ffd680, #b8860b 60%, #5a3f00 100%)',
               border: '1px solid rgba(255, 200, 100, 0.72)',
@@ -790,7 +798,19 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
 
 function HudMarkers({ isMobile }: { isMobile: boolean }) {
   const markers = flightHUD.hudMarkers
-  const priorityNames = new Set(['SATURN', 'EARTH', 'SUN'])
+  const priorityNames = new Set([
+    'SUN',
+    'MERCURY',
+    'VENUS',
+    'EARTH',
+    'MOON',
+    'MARS',
+    'CERES',
+    'JUPITER',
+    'SATURN',
+    'URANUS',
+    'NEPTUNE',
+  ])
 
   return (
     <>

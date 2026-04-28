@@ -67,6 +67,30 @@ const FRONTIER = {
   announceCooldownMs: 52000,
 }
 
+const SOLAR = {
+  orbitTimeScale: 0.000018,
+  earthOrbitRadius: 1360,
+  heliopauseRadius: 78000,
+}
+
+const CHARTED_MARKER_NAMES = new Set([
+  'SUN',
+  'MERCURY',
+  'VENUS',
+  'EARTH',
+  'MOON',
+  'MARS',
+  'CERES',
+  'JUPITER',
+  'IO',
+  'EUROPA',
+  'SATURN',
+  'TITAN',
+  'ENCELADUS',
+  'URANUS',
+  'NEPTUNE',
+])
+
 const ROBOT_DIALOGUE = {
   launch: [
     'Bweeoop. Pilot, look at Saturn. We are officially inside a postcard.',
@@ -162,6 +186,14 @@ const ROBOT_DIALOGUE = {
     'A perfectly straight line in space is harder than it sounds because everything keeps moving.',
     'The same physics that guides galaxies is quietly helping you steer a little fighter right now.',
     'Astronomy is mostly learning that things are bigger, older, hotter, and stranger than expected.',
+    'Europa looks like a cracked shell of ice because long reddish lineae cross its surface.',
+    'Io is volcanic enough to paint itself in sulfur yellows, greens, and black scars.',
+    'Titan hides behind orange haze, which is very dramatic behavior for a moon.',
+    'Enceladus throws bright icy plumes into space from fractures near its south pole.',
+    'Uranus is pale because methane absorbs red light and lets blue-green light win.',
+    'Neptune is so far out that sunlight there is a cold suggestion, but the blue still sings.',
+    'The asteroid belt is less obstacle course and more enormous quiet room with rocks in it.',
+    'Near the heliopause, the Suns influence fades into a faint wall of interstellar hydrogen.',
   ],
   humor: [
     'This is the part of the voyage where a sensible species would stay home and write about it instead.',
@@ -229,6 +261,16 @@ interface BodyInfo {
   atmosphere?: THREE.Mesh
   spinTarget?: THREE.Object3D
   spinRate?: number
+  orbit?: {
+    center?: THREE.Vector3
+    centerBody?: BodyInfo
+    radius: number
+    periodDays: number
+    phase: number
+    vertical?: number
+    inclination?: number
+  }
+  baseGlowOpacity?: number
 }
 
 interface RingHazard {
@@ -305,6 +347,43 @@ function createRockTexture(base: string, accent: string, width = 512, height = 2
   return texture
 }
 
+function createCraterTexture(base: string, accent: string, width = 512, height = 256) {
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  ctx.fillStyle = base
+  ctx.fillRect(0, 0, width, height)
+
+  for (let i = 0; i < 90; i++) {
+    const x = Math.random() * width
+    const y = Math.random() * height
+    const r = 3 + Math.random() * 18
+    ctx.strokeStyle = Math.random() > 0.45 ? accent : 'rgba(0,0,0,0.35)'
+    ctx.lineWidth = 1 + Math.random() * 2
+    ctx.beginPath()
+    ctx.arc(x, y, r, 0, Math.PI * 2)
+    ctx.stroke()
+    if (Math.random() > 0.65) {
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'
+      ctx.beginPath()
+      ctx.arc(x + r * 0.25, y + r * 0.25, r * 0.55, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }
+
+  for (let i = 0; i < 2200; i++) {
+    ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.16)'
+    ctx.fillRect(Math.random() * width, Math.random() * height, 1 + Math.random() * 2, 1 + Math.random() * 2)
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+
 function createEarthTexture(width = 1024, height = 512) {
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -329,6 +408,90 @@ function createEarthTexture(width = 1024, height = 512) {
   for (let i = 0; i < 600; i++) {
     ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.16})`
     ctx.fillRect(Math.random() * width, Math.random() * height, 8 + Math.random() * 26, 1 + Math.random() * 3)
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+
+function createMarsTexture(width = 1024, height = 512) {
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  ctx.fillStyle = '#b76543'
+  ctx.fillRect(0, 0, width, height)
+
+  for (let i = 0; i < 160; i++) {
+    ctx.fillStyle = i % 3 === 0 ? 'rgba(232,170,105,0.34)' : 'rgba(78,41,28,0.26)'
+    ctx.beginPath()
+    ctx.ellipse(Math.random() * width, Math.random() * height, 18 + Math.random() * 80, 4 + Math.random() * 18, Math.random() * Math.PI, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  ctx.strokeStyle = 'rgba(42,24,22,0.76)'
+  ctx.lineWidth = 10
+  ctx.beginPath()
+  for (let i = 0; i < 11; i++) {
+    const x = width * (0.18 + i * 0.066)
+    const y = height * (0.5 + Math.sin(i * 1.3) * 0.075)
+    if (i === 0) ctx.moveTo(x, y)
+    else ctx.lineTo(x, y)
+  }
+  ctx.stroke()
+
+  ctx.fillStyle = 'rgba(245,214,178,0.82)'
+  ctx.beginPath()
+  ctx.ellipse(width * 0.72, height * 0.42, 46, 18, -0.4, 0, Math.PI * 2)
+  ctx.fill()
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+
+function createEuropaTexture(width = 768, height = 384) {
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  ctx.fillStyle = '#e9edf0'
+  ctx.fillRect(0, 0, width, height)
+
+  for (let i = 0; i < 32; i++) {
+    ctx.strokeStyle = i % 3 === 0 ? 'rgba(116,58,45,0.7)' : 'rgba(150,86,64,0.42)'
+    ctx.lineWidth = 1 + Math.random() * 3
+    ctx.beginPath()
+    const y = Math.random() * height
+    ctx.moveTo(0, y)
+    for (let x = 0; x <= width; x += 70) ctx.lineTo(x, y + Math.sin(x * 0.018 + i) * 20 + (Math.random() - 0.5) * 18)
+    ctx.stroke()
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+
+function createIoTexture(width = 768, height = 384) {
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  ctx.fillStyle = '#d9bd55'
+  ctx.fillRect(0, 0, width, height)
+  for (let i = 0; i < 180; i++) {
+    ctx.fillStyle = ['rgba(50,44,24,0.32)', 'rgba(236,214,82,0.38)', 'rgba(118,153,67,0.28)'][i % 3]
+    ctx.beginPath()
+    ctx.ellipse(Math.random() * width, Math.random() * height, 8 + Math.random() * 42, 5 + Math.random() * 22, Math.random() * Math.PI, 0, Math.PI * 2)
+    ctx.fill()
   }
 
   const texture = new THREE.CanvasTexture(canvas)
@@ -374,6 +537,57 @@ function createAtmosphereShell(radius: number, color: number, opacity: number, s
       blending: THREE.AdditiveBlending,
     })
   )
+}
+
+function getOrbitPosition({
+  center,
+  radius,
+  phase,
+  vertical = 0,
+  inclination = 0,
+}: {
+  center: THREE.Vector3
+  radius: number
+  phase: number
+  vertical?: number
+  inclination?: number
+}) {
+  return new THREE.Vector3(
+    center.x + Math.cos(phase) * radius,
+    center.y + vertical + Math.sin(phase) * radius * Math.sin(inclination),
+    center.z + Math.sin(phase) * radius * Math.cos(inclination)
+  )
+}
+
+function createPlume({
+  color,
+  height,
+  count,
+}: {
+  color: string
+  height: number
+  count: number
+}) {
+  const group = new THREE.Group()
+  const plumeColor = new THREE.Color(color)
+
+  for (let i = 0; i < count; i++) {
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        color: plumeColor,
+        transparent: true,
+        opacity: 0.08 + Math.random() * 0.09,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      })
+    )
+    sprite.position.set((Math.random() - 0.5) * 0.4, height * (0.32 + Math.random() * 0.68), (Math.random() - 0.5) * 0.4)
+    const scale = height * (0.16 + Math.random() * 0.2)
+    sprite.scale.set(scale, scale * 1.8, 1)
+    group.add(sprite)
+  }
+
+  return group
 }
 
 function pickRobotLine(lines: readonly string[], exclude?: string | null) {
@@ -850,11 +1064,13 @@ export default function SaturnScene({
 
     onSceneReady?.(camera, resetOrbit)
 
+    const solarCenter = new THREE.Vector3(-13800, 20, 0)
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.15)
     scene.add(ambientLight)
 
     const sunLight = new THREE.DirectionalLight(0xfff6e0, 1.45)
-    sunLight.position.set(-140, 60, 55)
+    sunLight.position.copy(solarCenter)
     sunLight.castShadow = true
     sunLight.shadow.mapSize.width = 2048
     sunLight.shadow.mapSize.height = 2048
@@ -895,6 +1111,7 @@ export default function SaturnScene({
       tiltZ?: number
       spinRate?: number
       approachRange?: number
+      orbit?: BodyInfo['orbit']
     }) => {
       const root = new THREE.Group()
       root.position.copy(opts.position)
@@ -946,62 +1163,83 @@ export default function SaturnScene({
         atmosphere,
         spinTarget: mesh,
         spinRate: opts.spinRate,
+        orbit: opts.orbit,
+        baseGlowOpacity: opts.glowOpacity ?? 0,
       })
     }
 
-    makePlanet({
+    const sun = makePlanet({
       name: 'SUN',
-      position: new THREE.Vector3(-13800, 20, -180),
-      radius: 13,
-      color: 0xffe89d,
-      emissive: 0xffc963,
-      emissiveIntensity: 0.9,
+      position: solarCenter.clone(),
+      radius: 18,
+      color: 0xffffff,
+      emissive: 0xffffff,
+      emissiveIntensity: 1.18,
       roughness: 0.5,
-      glowColor: 0xffd88a,
-      glowOpacity: 0.22,
-      mapColor: '#ffd77a',
+      glowColor: 0xffffff,
+      glowOpacity: 0.32,
+      mapColor: '#ffffff',
       flightScale: 1.4,
       spinRate: 0.0003,
-      approachRange: 110,
+      approachRange: 180,
     })
+
+    const corona = createPlanetGlow(54, 0xdff5ff, 0.11, Math.max(32, sphereSegments / 2))
+    sun.root.add(corona)
+    for (let i = 0; i < 5; i++) {
+      const arc = new THREE.Mesh(
+        new THREE.TorusGeometry(24 + i * 4, 0.08, 6, 40, Math.PI * (0.55 + Math.random() * 0.35)),
+        new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0xffffff : 0xffd7a0,
+          transparent: true,
+          opacity: 0.18,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        })
+      )
+      arc.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI)
+      sun.root.add(arc)
+    }
 
     makePlanet({
       name: 'MERCURY',
-      position: new THREE.Vector3(-13250, 30, -420),
+      position: getOrbitPosition({ center: solarCenter, radius: 520, phase: -0.42, vertical: 8, inclination: 0.07 }),
       radius: 1.4,
-      texture: createRockTexture('#726459', '#988b7f'),
+      texture: createCraterTexture('#5b5750', '#d8d0c3'),
       mapColor: '#9f9488',
       flightScale: 2.8,
       roughness: 1,
       spinRate: 0.0018,
       approachRange: 180,
+      orbit: { center: solarCenter, radius: 520, periodDays: 88, phase: -0.42, vertical: 8, inclination: 0.07 },
     })
 
     makePlanet({
       name: 'VENUS',
-      position: new THREE.Vector3(-12850, -120, 540),
+      position: getOrbitPosition({ center: solarCenter, radius: 920, phase: 0.28, vertical: -16, inclination: 0.02 }),
       radius: 2.8,
       texture: createGradientTexture([
-        { at: 0, color: '#b18b4f' },
-        { at: 0.45, color: '#ddbe7a' },
-        { at: 1, color: '#a67a44' },
+        { at: 0, color: '#f7efd7' },
+        { at: 0.46, color: '#f0dfad' },
+        { at: 1, color: '#fff7dc' },
       ]),
-      emissive: 0x4a2c14,
-      emissiveIntensity: 0.12,
-      mapColor: '#ddb671',
+      emissive: 0x6d542b,
+      emissiveIntensity: 0.18,
+      mapColor: '#fff0bd',
       flightScale: 3.8,
       roughness: 0.92,
-      glowColor: 0xf0d49a,
-      glowOpacity: 0.08,
-      atmosphereColor: 0xf3d29a,
-      atmosphereOpacity: 0.055,
+      glowColor: 0xfff0bd,
+      glowOpacity: 0.13,
+      atmosphereColor: 0xfff0bd,
+      atmosphereOpacity: 0.09,
       spinRate: 0.0011,
       approachRange: 240,
+      orbit: { center: solarCenter, radius: 920, periodDays: 224.7, phase: 0.28, vertical: -16, inclination: 0.02 },
     })
 
     const earth = makePlanet({
       name: 'EARTH',
-      position: new THREE.Vector3(-12440, 60, 900),
+      position: getOrbitPosition({ center: solarCenter, radius: SOLAR.earthOrbitRadius, phase: 0.95, vertical: 6, inclination: 0.03 }),
       radius: 3,
       texture: createEarthTexture(),
       emissive: 0x0f2a55,
@@ -1015,13 +1253,27 @@ export default function SaturnScene({
       atmosphereOpacity: 0.075,
       spinRate: 0.0019,
       approachRange: 300,
+      orbit: { center: solarCenter, radius: SOLAR.earthOrbitRadius, periodDays: 365.25, phase: 0.95, vertical: 6, inclination: 0.03 },
+    })
+
+    makePlanet({
+      name: 'MOON',
+      position: getOrbitPosition({ center: earth.root.position as THREE.Vector3, radius: 90, phase: 1.1, vertical: 2, inclination: 0.08 }),
+      radius: 0.82,
+      texture: createCraterTexture('#777a80', '#c4c8cc', 512, 256),
+      mapColor: '#b4b7bb',
+      flightScale: 3.2,
+      roughness: 1,
+      spinRate: 0.0008,
+      approachRange: 120,
+      orbit: { centerBody: earth, radius: 90, periodDays: 27.3, phase: 1.1, vertical: 2, inclination: 0.08 },
     })
 
     makePlanet({
       name: 'MARS',
-      position: new THREE.Vector3(-11680, -180, -1200),
+      position: getOrbitPosition({ center: solarCenter, radius: 2120, phase: -0.62, vertical: -30, inclination: 0.06 }),
       radius: 2.2,
-      texture: createRockTexture('#8d492b', '#c76843'),
+      texture: createMarsTexture(),
       emissive: 0x2c120a,
       emissiveIntensity: 0.08,
       mapColor: '#d06d4b',
@@ -1032,11 +1284,40 @@ export default function SaturnScene({
       atmosphereOpacity: 0.035,
       spinRate: 0.0014,
       approachRange: 220,
+      orbit: { center: solarCenter, radius: 2120, periodDays: 687, phase: -0.62, vertical: -30, inclination: 0.06 },
     })
 
+    const ceres = makePlanet({
+      name: 'CERES',
+      position: getOrbitPosition({ center: solarCenter, radius: 4100, phase: 1.52, vertical: 42, inclination: 0.18 }),
+      radius: 0.95,
+      texture: createCraterTexture('#4d4e50', '#8a8d90', 512, 256),
+      mapColor: '#85888c',
+      flightScale: 4.1,
+      roughness: 1,
+      spinRate: 0.0013,
+      approachRange: 160,
+      orbit: { center: solarCenter, radius: 4100, periodDays: 1682, phase: 1.52, vertical: 42, inclination: 0.18 },
+    })
+    ceres.root.scale.set(1.16, 0.92, 1)
+
     makePlanet({
+      name: 'PSYCHE',
+      position: getOrbitPosition({ center: solarCenter, radius: 4550, phase: -1.05, vertical: -70, inclination: 0.13 }),
+      radius: 0.72,
+      texture: createRockTexture('#594338', '#b47d5c', 512, 256),
+      mapColor: '#b47d5c',
+      flightScale: 3.9,
+      roughness: 0.72,
+      metalness: 0.22,
+      spinRate: 0.0021,
+      approachRange: 130,
+      orbit: { center: solarCenter, radius: 4550, periodDays: 1825, phase: -1.05, vertical: -70, inclination: 0.13 },
+    })
+
+    const jupiter = makePlanet({
       name: 'JUPITER',
-      position: new THREE.Vector3(-6350, 260, -2400),
+      position: getOrbitPosition({ center: solarCenter, radius: 7800, phase: -0.31, vertical: 70, inclination: 0.05 }),
       radius: 9,
       texture: createGradientTexture([
         { at: 0, color: '#5f3a2c' },
@@ -1057,10 +1338,52 @@ export default function SaturnScene({
       atmosphereOpacity: 0.05,
       spinRate: 0.001,
       approachRange: 540,
+      orbit: { center: solarCenter, radius: 7800, periodDays: 4332.6, phase: -0.31, vertical: 70, inclination: 0.05 },
+    })
+
+    const redSpot = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 18, 10),
+      new THREE.MeshBasicMaterial({ color: 0xa64232, transparent: true, opacity: 0.72 })
+    )
+    redSpot.position.set(2.4, -1.2, 8.72)
+    redSpot.scale.set(1.9, 0.72, 0.14)
+    jupiter.root.add(redSpot)
+
+    const io = makePlanet({
+      name: 'IO',
+      position: getOrbitPosition({ center: jupiter.root.position as THREE.Vector3, radius: 125, phase: 1.8, vertical: 4, inclination: 0.04 }),
+      radius: 0.9,
+      texture: createIoTexture(),
+      emissive: 0x4d3a14,
+      emissiveIntensity: 0.12,
+      mapColor: '#d9bd55',
+      flightScale: 3.5,
+      roughness: 0.9,
+      spinRate: 0.0011,
+      approachRange: 130,
+      orbit: { centerBody: jupiter, radius: 125, periodDays: 1.77, phase: 1.8, vertical: 4, inclination: 0.04 },
+    })
+    const ioPlume = createPlume({ color: '#fff0a8', height: 2.4, count: isMobile ? 6 : 12 })
+    ioPlume.position.set(0, io.radius * 0.9, 0)
+    io.root.add(ioPlume)
+
+    makePlanet({
+      name: 'EUROPA',
+      position: getOrbitPosition({ center: jupiter.root.position as THREE.Vector3, radius: 178, phase: -0.65, vertical: -6, inclination: 0.05 }),
+      radius: 0.78,
+      texture: createEuropaTexture(),
+      mapColor: '#f2f0e9',
+      flightScale: 3.4,
+      roughness: 0.96,
+      glowColor: 0xcfe8ff,
+      glowOpacity: 0.035,
+      spinRate: 0.0009,
+      approachRange: 125,
+      orbit: { centerBody: jupiter, radius: 178, periodDays: 3.55, phase: -0.65, vertical: -6, inclination: 0.05 },
     })
 
     const saturnRoot = new THREE.Group()
-    saturnRoot.position.set(0, 0, 0)
+    saturnRoot.position.copy(getOrbitPosition({ center: solarCenter, radius: 13800, phase: 0, vertical: -20, inclination: 0.015 }))
     saturnRoot.rotation.z = SATURN.tilt
 
     const saturnMesh = new THREE.Mesh(
@@ -1126,7 +1449,7 @@ export default function SaturnScene({
     saturnRoot.add(ringParticles)
     scene.add(saturnRoot)
 
-    registerBody({
+    const saturn = registerBody({
       name: 'SATURN',
       root: saturnRoot,
       radius: SATURN.radius,
@@ -1135,6 +1458,7 @@ export default function SaturnScene({
       flightScale: 3.8,
       spinTarget: saturnMesh,
       spinRate: 0.0015,
+      orbit: { center: solarCenter, radius: 13800, periodDays: 10759, phase: 0, vertical: -20, inclination: 0.015 },
     })
 
     ringHazards.push({
@@ -1146,8 +1470,52 @@ export default function SaturnScene({
     })
 
     makePlanet({
+      name: 'TITAN',
+      position: getOrbitPosition({ center: saturn.root.position as THREE.Vector3, radius: 155, phase: 2.25, vertical: -6, inclination: 0.08 }),
+      radius: 1.15,
+      texture: createGradientTexture([
+        { at: 0, color: '#c56f2e' },
+        { at: 0.5, color: '#f0a24f' },
+        { at: 1, color: '#9e5428' },
+      ], 768, 384),
+      emissive: 0x3b1d0b,
+      emissiveIntensity: 0.14,
+      mapColor: '#f0a24f',
+      flightScale: 4.2,
+      glowColor: 0xffb26a,
+      glowOpacity: 0.09,
+      atmosphereColor: 0xff9d52,
+      atmosphereOpacity: 0.12,
+      roughness: 0.94,
+      spinRate: 0.0007,
+      approachRange: 150,
+      orbit: { centerBody: saturn, radius: 155, periodDays: 15.95, phase: 2.25, vertical: -6, inclination: 0.08 },
+    })
+
+    const enceladus = makePlanet({
+      name: 'ENCELADUS',
+      position: getOrbitPosition({ center: saturn.root.position as THREE.Vector3, radius: 96, phase: -1.35, vertical: 7, inclination: 0.05 }),
+      radius: 0.58,
+      texture: createCraterTexture('#f3fbff', '#d7e5ee', 512, 256),
+      emissive: 0xdcecff,
+      emissiveIntensity: 0.18,
+      mapColor: '#f4fbff',
+      flightScale: 3.5,
+      glowColor: 0xdaf4ff,
+      glowOpacity: 0.06,
+      roughness: 0.78,
+      spinRate: 0.001,
+      approachRange: 110,
+      orbit: { centerBody: saturn, radius: 96, periodDays: 1.37, phase: -1.35, vertical: 7, inclination: 0.05 },
+    })
+    const icePlume = createPlume({ color: '#dff8ff', height: 2.0, count: isMobile ? 7 : 14 })
+    icePlume.position.set(0, -enceladus.radius * 0.9, 0)
+    icePlume.rotation.x = Math.PI
+    enceladus.root.add(icePlume)
+
+    makePlanet({
       name: 'URANUS',
-      position: new THREE.Vector3(14000, 900, 4200),
+      position: getOrbitPosition({ center: solarCenter, radius: 27800, phase: 0.07, vertical: 160, inclination: 0.04 }),
       radius: 4.6,
       texture: createGradientTexture([
         { at: 0, color: '#a0d8e6' },
@@ -1163,11 +1531,12 @@ export default function SaturnScene({
       atmosphereOpacity: 0.055,
       spinRate: 0.001,
       approachRange: 380,
+      orbit: { center: solarCenter, radius: 27800, periodDays: 30688, phase: 0.07, vertical: 160, inclination: 0.04 },
     })
 
     makePlanet({
       name: 'NEPTUNE',
-      position: new THREE.Vector3(30000, -1100, -5600),
+      position: getOrbitPosition({ center: solarCenter, radius: 43800, phase: -0.15, vertical: -220, inclination: 0.03 }),
       radius: 4.3,
       texture: createGradientTexture([
         { at: 0, color: '#365dc6' },
@@ -1185,7 +1554,82 @@ export default function SaturnScene({
       atmosphereOpacity: 0.06,
       spinRate: 0.001,
       approachRange: 360,
+      orbit: { center: solarCenter, radius: 43800, periodDays: 60182, phase: -0.15, vertical: -220, inclination: 0.03 },
     })
+
+    const beltParticleCount = isMobile ? 1700 : 4200
+    const beltGeometry = new THREE.BufferGeometry()
+    const beltPositions = new Float32Array(beltParticleCount * 3)
+    const beltColors = new Float32Array(beltParticleCount * 3)
+    const beltPalette = ['#262626', '#7a7470', '#8d5943', '#9a8775']
+    const beltColor = new THREE.Color()
+    for (let i = 0; i < beltParticleCount; i++) {
+      const radius = 3300 + Math.random() * 2700
+      const theta = Math.random() * Math.PI * 2
+      beltPositions[i * 3] = solarCenter.x + Math.cos(theta) * radius
+      beltPositions[i * 3 + 1] = solarCenter.y + (Math.random() - 0.5) * 260
+      beltPositions[i * 3 + 2] = solarCenter.z + Math.sin(theta) * radius
+      beltColor.set(beltPalette[Math.floor(Math.random() * beltPalette.length)])
+      const brightness = 0.32 + Math.random() * 0.42
+      beltColors[i * 3] = beltColor.r * brightness
+      beltColors[i * 3 + 1] = beltColor.g * brightness
+      beltColors[i * 3 + 2] = beltColor.b * brightness
+    }
+    beltGeometry.setAttribute('position', new THREE.BufferAttribute(beltPositions, 3))
+    beltGeometry.setAttribute('color', new THREE.BufferAttribute(beltColors, 3))
+    const asteroidBelt = new THREE.Points(
+      beltGeometry,
+      new THREE.PointsMaterial({
+        size: isMobile ? 2.8 : 2.1,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.46,
+        depthWrite: false,
+      })
+    )
+    scene.add(asteroidBelt)
+
+    const zodiacalLight = new THREE.Mesh(
+      new THREE.RingGeometry(420, 6500, 96),
+      new THREE.MeshBasicMaterial({
+        color: 0xfff1c2,
+        transparent: true,
+        opacity: 0.045,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      })
+    )
+    zodiacalLight.position.copy(solarCenter)
+    zodiacalLight.rotation.x = Math.PI / 2
+    scene.add(zodiacalLight)
+
+    const milkyWayBand = new THREE.Mesh(
+      new THREE.TorusGeometry(72000, 720, 8, 160),
+      new THREE.MeshBasicMaterial({
+        color: 0xbddcff,
+        transparent: true,
+        opacity: 0.035,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      })
+    )
+    milkyWayBand.rotation.set(1.18, 0.18, -0.42)
+    scene.add(milkyWayBand)
+
+    const hydrogenWall = new THREE.Mesh(
+      new THREE.SphereGeometry(SOLAR.heliopauseRadius, 48, 24),
+      new THREE.MeshBasicMaterial({
+        color: 0x86dfff,
+        transparent: true,
+        opacity: 0.016,
+        side: THREE.BackSide,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      })
+    )
+    hydrogenWall.position.copy(solarCenter)
+    scene.add(hydrogenWall)
 
     const starLayers = [
       createStarLayer({
@@ -1298,6 +1742,10 @@ export default function SaturnScene({
     })
     const engineGlowMaterial = new THREE.MeshBasicMaterial({ color: 0xff7733, transparent: true, opacity: 0.92 })
     const reverseGlowMaterial = new THREE.MeshBasicMaterial({ color: 0x6fc6ff, transparent: true, opacity: 0.1 })
+    const rcsLeftMaterial = new THREE.MeshBasicMaterial({ color: 0xb8f4ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+    const rcsRightMaterial = rcsLeftMaterial.clone()
+    const rcsUpMaterial = rcsLeftMaterial.clone()
+    const rcsDownMaterial = rcsLeftMaterial.clone()
 
     const fuselage = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.5, 3.3), bodyMaterial)
     fuselage.position.set(0, 0.02, -0.12)
@@ -1432,6 +1880,27 @@ export default function SaturnScene({
     reverseLight.position.set(0, 0, -3.78)
     ship.add(reverseLight)
 
+    const rcsGeometry = new THREE.SphereGeometry(0.18, 8, 6)
+    const rcsLeft = new THREE.Mesh(rcsGeometry, rcsLeftMaterial)
+    rcsLeft.position.set(-2.62, 0.03, -0.55)
+    rcsLeft.scale.set(1.75, 0.34, 0.34)
+    ship.add(rcsLeft)
+
+    const rcsRight = new THREE.Mesh(rcsGeometry, rcsRightMaterial)
+    rcsRight.position.set(2.62, 0.03, -0.55)
+    rcsRight.scale.set(1.75, 0.34, 0.34)
+    ship.add(rcsRight)
+
+    const rcsUp = new THREE.Mesh(rcsGeometry, rcsUpMaterial)
+    rcsUp.position.set(0, 0.64, -0.86)
+    rcsUp.scale.set(0.36, 1.4, 0.36)
+    ship.add(rcsUp)
+
+    const rcsDown = new THREE.Mesh(rcsGeometry, rcsDownMaterial)
+    rcsDown.position.set(0, -0.42, -0.86)
+    rcsDown.scale.set(0.36, 1.4, 0.36)
+    ship.add(rcsDown)
+
     ship.visible = false
     ship.scale.setScalar(isMobile ? 0.11 : 0.22)
     scene.add(ship)
@@ -1441,7 +1910,8 @@ export default function SaturnScene({
     const tmpLookAt = new THREE.Vector3()
     const localPoint = new THREE.Vector3()
     const shipForwardLocal = new THREE.Vector3(0, 0, -1)
-    const saturnCenter = new THREE.Vector3(0, 0, 0)
+    const saturnCenter = new THREE.Vector3()
+    const orbitCenter = new THREE.Vector3()
     const frontierBodies: BodyInfo[] = []
     const frontierRingHazards: RingHazard[] = []
     const frontierSectors = new Map<string, FrontierSector>()
@@ -1454,8 +1924,49 @@ export default function SaturnScene({
     let nextAmbientDialogueAtMs = 0
     let lastAmbientLine: string | null = null
 
+    const updateChartedOrbits = (now: number) => {
+      const orbitTime = now * SOLAR.orbitTimeScale
+      bodies.forEach((body) => {
+        if (!body.orbit) return
+        const center = body.orbit.centerBody
+          ? body.orbit.centerBody.root.getWorldPosition(orbitCenter)
+          : body.orbit.center ?? solarCenter
+        const phase = body.orbit.phase + (orbitTime / body.orbit.periodDays) * Math.PI * 2
+        body.root.position.copy(
+          getOrbitPosition({
+            center,
+            radius: body.orbit.radius,
+            phase,
+            vertical: body.orbit.vertical,
+            inclination: body.orbit.inclination,
+          })
+        )
+      })
+    }
+
+    const updateSolarLighting = () => {
+      const solarDistance = Math.max(220, ship.position.distanceTo(solarCenter))
+      const inverseSquare = Math.pow(SOLAR.earthOrbitRadius / solarDistance, 2)
+      const displayLight = 0.14 + Math.min(2.8, Math.sqrt(inverseSquare) * 1.2)
+      sunLight.intensity = THREE.MathUtils.lerp(sunLight.intensity, displayLight, 0.05)
+      ambientLight.intensity = THREE.MathUtils.lerp(ambientLight.intensity, 0.05 + displayLight * 0.08, 0.05)
+      fillLight.intensity = THREE.MathUtils.lerp(fillLight.intensity, 0.04 + Math.min(0.22, displayLight * 0.06), 0.05)
+
+      const frontierDarkness = THREE.MathUtils.clamp((solarDistance - 18000) / 62000, 0, 1)
+      starLayers.forEach(({ material }, index) => {
+        const baseOpacity = [0.32, 0.56, 0.84, 0.62, 0.22][index] ?? 0.4
+        material.opacity = THREE.MathUtils.lerp(material.opacity, baseOpacity + frontierDarkness * 0.34, 0.045)
+      })
+
+      const hydrogenMaterial = hydrogenWall.material as THREE.MeshBasicMaterial
+      const boundaryProximity = THREE.MathUtils.clamp((solarDistance - SOLAR.heliopauseRadius * 0.62) / (SOLAR.heliopauseRadius * 0.38), 0, 1)
+      hydrogenMaterial.opacity = THREE.MathUtils.lerp(hydrogenMaterial.opacity, 0.016 + boundaryProximity * 0.085, 0.04)
+      zodiacalLight.visible = solarDistance < 9000
+    }
+
     const positionShipAtSpawn = () => {
-      ship.position.copy(FLIGHT.spawn)
+      saturn.root.getWorldPosition(saturnCenter)
+      ship.position.copy(saturnCenter).add(FLIGHT.spawn)
       tmpForward.copy(saturnCenter).sub(ship.position).normalize()
       yawRef.current = Math.atan2(-tmpForward.x, -tmpForward.z)
       pitchRef.current = Math.asin(tmpForward.y)
@@ -1780,7 +2291,7 @@ export default function SaturnScene({
 
       const pools: Array<readonly string[]> = [ROBOT_DIALOGUE.facts, ROBOT_DIALOGUE.humor]
       if (warpActive) pools.push(ROBOT_DIALOGUE.mechanics, ROBOT_DIALOGUE.humor)
-      if (nearestBody.name === 'SATURN' || nearestBody.name === 'EARTH' || ['VENUS', 'MARS', 'JUPITER', 'SUN'].includes(nearestBody.name)) {
+      if (CHARTED_MARKER_NAMES.has(nearestBody.name)) {
         pools.push(ROBOT_DIALOGUE.facts)
       }
       if (nearestBody.name.startsWith('UNKNOWN SECTOR')) {
@@ -1807,6 +2318,8 @@ export default function SaturnScene({
       const orbitEnabled = activeMode === 'orbit' && isInteractive && !isGamePortalOpen
       state.controls.enabled = orbitEnabled
       state.controlLayer.style.pointerEvents = orbitEnabled ? 'auto' : 'none'
+
+      updateChartedOrbits(now)
 
       bodies.forEach((body) => {
         body.root.scale.setScalar(activeMode === 'flight' ? getFlightScale(body) : 1)
@@ -1871,6 +2384,16 @@ export default function SaturnScene({
         reverseGlowMaterial.opacity = 0.08 + reverseStrength * 0.62
         reverseGlow.scale.z = 0.55 + reverseStrength * 1.05
         reverseLight.intensity = reverseStrength * 1.05
+        const rcsPulse = 0.65 + Math.sin(now * 0.028) * 0.22
+        rcsLeftMaterial.opacity = THREE.MathUtils.lerp(rcsLeftMaterial.opacity, Math.max(0, jx) * 0.58 * rcsPulse, 0.34)
+        rcsRightMaterial.opacity = THREE.MathUtils.lerp(rcsRightMaterial.opacity, Math.max(0, -jx) * 0.58 * rcsPulse, 0.34)
+        rcsUpMaterial.opacity = THREE.MathUtils.lerp(rcsUpMaterial.opacity, Math.max(0, jy) * 0.46 * rcsPulse, 0.34)
+        rcsDownMaterial.opacity = THREE.MathUtils.lerp(rcsDownMaterial.opacity, Math.max(0, -jy) * 0.46 * rcsPulse, 0.34)
+        rcsLeft.scale.x = 1.1 + Math.max(0, jx) * 1.15
+        rcsRight.scale.x = 1.1 + Math.max(0, -jx) * 1.15
+        rcsUp.scale.y = 0.9 + Math.max(0, jy) * 1.05
+        rcsDown.scale.y = 0.9 + Math.max(0, -jy) * 1.05
+        updateSolarLighting()
 
         updateFrontierSectors()
 
@@ -1893,6 +2416,7 @@ export default function SaturnScene({
           }
         })
 
+        saturn.root.getWorldPosition(saturnCenter)
         if (suppressInitialSaturnWarning && (nearestBody.name !== 'SATURN' || ship.position.distanceTo(saturnCenter) > FLIGHT.spawn.length() * 1.25)) {
           suppressInitialSaturnWarning = false
         }
@@ -1940,7 +2464,7 @@ export default function SaturnScene({
           .slice(0, 4)
           .map(({ body }) => body)
         const markerBodies = [
-          ...bodies.filter((body) => ['SATURN', 'EARTH', 'SUN', 'JUPITER', 'MARS', 'VENUS'].includes(body.name)),
+          ...bodies.filter((body) => CHARTED_MARKER_NAMES.has(body.name) || body.name === nearestBody.name),
           ...frontierMarkerBodies,
         ]
         flightHUD.hudMarkers = markerBodies.map((body) => {
