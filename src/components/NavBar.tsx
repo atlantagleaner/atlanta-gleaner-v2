@@ -139,7 +139,7 @@ export function NavBar({ publishedDate }: { publishedDate?: string } = {}) {
             open={open}
             align="left"
             variant="light"
-            position="static"
+            position="absolute"
             onSelect={() => setOpen(false)}
           />
         </div>

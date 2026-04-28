@@ -140,7 +140,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
                   open={isMenuOpen}
                   align="right"
                   variant="dark"
-                  position="static"
+                  position="absolute"
                   onSelect={() => setIsMenuOpen(false)}
                 />
               </div>
@@ -171,7 +171,7 @@ export function NewsRunwayNav({ newsOpen, onToggleNews }: NewsRunwayNavProps) {
                   open={isMenuOpen}
                   align="left"
                   variant="dark"
-                  position="static"
+                  position="absolute"
                   onSelect={() => setIsMenuOpen(false)}
                 />
               </div>

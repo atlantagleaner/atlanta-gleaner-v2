@@ -195,7 +195,7 @@ export default function AboutPage() {
             </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
           </div>
@@ -237,7 +237,7 @@ export default function AboutPage() {
             </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="left" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="left" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
           </div>

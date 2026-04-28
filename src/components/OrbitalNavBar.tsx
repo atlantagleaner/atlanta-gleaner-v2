@@ -159,7 +159,7 @@ export function OrbitalNavBar({
               </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
             </div>
@@ -256,7 +256,7 @@ export function OrbitalNavBar({
                 </button>
                 {isPlusOpen && (
                   <div>
-                    <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                    <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                   </div>
                 )}
               </div>
@@ -350,7 +350,7 @@ export function OrbitalNavBar({
               </button>
               {isPlusOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                  <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                 </div>
               )}
             </div>
@@ -454,7 +454,7 @@ export function OrbitalNavBar({
                   </button>
                   {isPlusOpen && (
                     <div>
-                      <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusOpen(false)} />
+                      <SiteDropdownMenu open={isPlusOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusOpen(false)} />
                     </div>
                   )}
                 </div>

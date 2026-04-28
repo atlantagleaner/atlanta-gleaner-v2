@@ -192,7 +192,7 @@ export default function Saturn2Page() {
             </button>
               {isPlusMenuOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusMenuOpen} align="right" variant="dark" position="static" onSelect={() => setIsPlusMenuOpen(false)} />
+                  <SiteDropdownMenu open={isPlusMenuOpen} align="right" variant="dark" position="absolute" onSelect={() => setIsPlusMenuOpen(false)} />
                 </div>
               )}
           </div>
@@ -232,7 +232,7 @@ export default function Saturn2Page() {
             </button>
               {isPlusMenuOpen && (
                 <div>
-                  <SiteDropdownMenu open={isPlusMenuOpen} align="left" variant="dark" position="static" onSelect={() => setIsPlusMenuOpen(false)} />
+                  <SiteDropdownMenu open={isPlusMenuOpen} align="left" variant="dark" position="absolute" onSelect={() => setIsPlusMenuOpen(false)} />
                 </div>
               )}
           </div>
