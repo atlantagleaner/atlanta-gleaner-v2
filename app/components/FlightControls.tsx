@@ -32,12 +32,11 @@ type MarkerFilterMode = 'everything' | 'planets' | 'moons' | 'phenomena'
 const MARKER_FILTER_OPTIONS: Array<{
   value: MarkerFilterMode
   label: string
-  description: string
 }> = [
-  { value: 'everything', label: 'EVERYTHING', description: 'All charted markers and frontier anomalies' },
-  { value: 'planets', label: 'PLANETS', description: 'Sun and major planetary bodies' },
-  { value: 'moons', label: 'MOONS', description: 'Major moons in active systems' },
-  { value: 'phenomena', label: 'PHENOMENA', description: 'Dwarf bodies, asteroids, and frontier anomalies' },
+  { value: 'everything', label: 'EVERYTHING' },
+  { value: 'planets', label: 'PLANETS' },
+  { value: 'moons', label: 'MOONS' },
+  { value: 'phenomena', label: 'PHENOMENA' },
 ]
 
 const DRIVE_GEAR_LABELS: Record<(typeof DRIVE_GEARS)[number], string> = {
@@ -651,7 +650,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                         style={{
                           width: '100%',
                           textAlign: 'left',
-                          padding: '8px 10px',
+                          padding: '10px 10px',
                           borderRadius: 12,
                           border: `1px solid ${isActive ? 'rgba(255, 220, 156, 0.48)' : 'rgba(255, 255, 255, 0.08)'}`,
                           background: isActive
@@ -661,10 +660,7 @@ export default function FlightControls({ isMobile = false }: FlightControlsProps
                           cursor: 'pointer',
                         }}
                       >
-                        <div style={{ fontSize: 9, letterSpacing: '0.16em', marginBottom: 3 }}>{option.label}</div>
-                        <div style={{ fontSize: 10, letterSpacing: '0.03em', color: 'rgba(238, 231, 219, 0.72)' }}>
-                          {option.description}
-                        </div>
+                        <div style={{ fontSize: 9, letterSpacing: '0.16em' }}>{option.label}</div>
                       </button>
                     )
                   })}
